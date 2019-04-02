@@ -1,0 +1,9 @@
+@media (max-width: 768px) { 
+	.panel-default {
+    	border-color: #ddd;
+    	width: 100%;
+    	overflow-x: scroll;
+	}
+	
+}@media (min-width: 769px) {
+}

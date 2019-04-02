@@ -1,0 +1,43 @@
+/* line 1, ../scss/main.scss */
+a {
+  cursor: pointer;
+}
+
+/* line 4, ../scss/main.scss */
+.title-left {
+  float: left;
+}
+
+/* line 7, ../scss/main.scss */
+.btn-right {
+  float: right;
+  margin-top: 20px;
+  margin-right: 30px;
+  margin-bottom: 10px;
+}
+
+/* line 13, ../scss/main.scss */
+.oprate-right {
+  margin-right: 10px;
+  cursor: pointer;
+}
+
+/* line 18, ../scss/main.scss */
+.nav-ul-right {
+  float: right;
+}
+
+/* line 22, ../scss/main.scss */
+.navbar-right p {
+  display: inline-block;
+}
+
+/* line 26, ../scss/main.scss */
+.sidebar {
+  margin: 1px;
+}
+
+/* line 30, ../scss/main.scss */
+.form-horizontal .checkbox-inline {
+  margin-left: 10px;
+}

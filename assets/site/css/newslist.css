@@ -1,0 +1,160 @@
+.np_{
+    padding: 0px!important;
+}
+@media (max-width: 768px) {
+    .panel-body-background{
+        min-height: 80vh;
+        background-color: #425a5a;
+        border:5px solid #987413;        
+    }
+    .newsbox{
+        height: 300px;
+    }
+    .newsleft{
+
+        height: 100%;
+    }
+    .newsright{
+        height: 100%;
+        padding-top: 10px!important;
+        padding-bottom: 10px!important;
+        padding-left: 0px!important;
+        padding-right: 0px!important;
+    }
+    .lefttop,.leftbottom{
+        border-left:2px solid white;
+        height: 50%;
+    }
+    .lefttop{
+        border-bottom: 2px solid white;
+    }
+    .lefttop:after{
+        position: absolute;
+        content: "";
+        width: 10px;
+        height: 10px;
+        background-color: white;
+        display: block;
+        left:-6px;
+        bottom: -6px;
+        border-radius: 50%;
+    }
+    .newsmain{
+        height: 100%;
+        border:2px solid white;
+
+    }
+    .lastbot{
+        border: 0px;
+    }
+    .saw{
+        color: white;
+        border:1px solid white;
+        position: absolute;
+        right: 4px;
+        bottom: 4px;
+        transition-duration: 0.7s;
+    }
+    .saw:hover{
+        background-color: white;
+        color: #425a5a;
+    }   
+    /*公布內容*/
+    .newsmain h4{
+        font-weight: 900;
+    }
+    .newsmain h4 ,.newsmain p{
+        color: white;
+    }
+    .about{
+      position: absolute;
+      left:2px;
+      bottom: 2px;
+      color:white;
+    }                              
+}
+@media (min-width: 768px) { 
+    .panel-body-background{
+        min-height: 80vh;
+        background-color: #425a5a;
+        border:10px solid #987413;
+    }
+    .newsbox{
+        height: 300px;
+    }
+    .newsleft{
+
+        height: 100%;
+    }
+    .newsright{
+        height: 100%;
+        padding-top: 10px!important;
+        padding-bottom: 10px!important;
+        padding-left: 0px!important;
+        padding-right: 0px!important;
+    }
+    .lefttop,.leftbottom{
+        border-left:5px solid white;
+        height: 50%;
+    }
+    .lefttop{
+        border-bottom: 5px solid white;
+    }
+    .lefttop:after{
+        position: absolute;
+        content: "";
+        width: 20px;
+        height: 20px;
+        background-color: white;
+        display: block;
+        left:-12px;
+        bottom: -12px;
+        border-radius: 50%;
+    }
+    .newsmain{
+        height: 100%;
+        border:5px solid white;
+
+    }
+    .lastbot{
+        border: 0px;
+    }
+    .saw{
+        color: white;
+        border:1px solid white;
+        position: absolute;
+        right: 4px;
+        bottom: 4px;
+        transition-duration: 0.7s;
+    }
+    .saw:hover{
+        background-color: white;
+        color: #425a5a;
+    }
+    .heavsaw{
+        background-color: white;
+        color: #425a5a;        
+    }
+
+    /*公布內容*/
+    .newsmain h4{
+        font-weight: 900;
+    }
+    .newsmain h4 ,.newsmain p{
+        color: white;
+    }
+    .about{
+      position: absolute;
+      left:2px;
+      bottom: 2px;
+      color:white;
+    }
+    .downloadBtn{
+        color: white;
+        border:1px solid white;
+        position: absolute;
+        right: 100px;
+        bottom: 4px;
+        transition-duration: 0.7s;
+    }
+}

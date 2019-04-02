@@ -1,0 +1,133 @@
+body{
+  overflow-x: hidden;
+  font-family: "微軟正黑體";
+}
+#main{
+  overflow: hidden;
+  
+}
+.np_{
+  padding: 0px!important;
+}
+.lSGallery > li{
+  border:1px solid #c3c3c3;
+  border-radius: 5px;
+}
+#twzipcode > select {
+  float: left!important;
+  width: 32%!important;
+  margin-bottom: 10px;
+}
+#twzipcode > select:nth-child(2) {
+  margin-left: 2%;
+  margin-right: 2%;
+}
+#twzipcode > input {
+  float: left!important;
+  width: 32%!important;
+  margin-bottom: 10px;
+}
+#ck_box img{
+  max-width: 100%;
+}
+.bootstrap-touchspin-up,.bootstrap-touchspin-down{
+  cursor: pointer!important;
+}
+
+@media (min-width: 0px) and (max-width: 768px) {
+  #main{
+     padding-right: 0px!important;
+     padding-left: 0px!important;
+  }
+.w_{
+  display: none; 
+}
+#memcontent{
+  margin-top: 120px;
+  margin-bottom: 40px;
+  min-height: calc(100vh - 200px );
+  height: auto;
+}
+#goods_area{
+  padding: 20px;
+}
+select[name=year],select[name=month],select[name=days]{
+  width: 33%!important;
+  float: left;
+  margin-bottom: 15px;
+}
+#bdbox{
+  height: auto;
+}
+#phonebox{
+  margin-top: 15px;
+}
+input[type=submit]{
+  background-color: #779452;
+  border-color:#779452;
+}
+input[type=submit]:hover{
+  background-color: #779452;
+  border-color:#779452;
+
+}
+input[type=submit]:active:focus{
+  background-color: #779452;
+  border-color:#779452;
+  box-shadow:1px 1px 2px 2px rgba(104,129,72,0.5) inset;
+}
+input[type=submit]:focus{
+  background-color: #779452;
+  border-color:#779452;
+  box-shadow:1px 1px 2px 2px rgba(104,129,72,0.5) inset;
+}
+label {
+  color: #333;
+}
+}
+@media (min-width:769px){
+
+.p_{
+  display: none;
+}
+#memcontent{
+  margin-top: 120px;
+  margin-bottom: 40px;
+  min-height: calc(100vh - 200px );
+  height: auto;
+}
+#goods_area{
+  padding: 20px;
+}
+select[name=year],select[name=month],select[name=days]{
+  width: 32.7%!important;
+}
+#bdbox{
+  height: auto;
+}
+#phonebox{
+  margin-top: 15px;
+}
+input[type=submit]{
+  background-color: #779452;
+  border-color:#779452;
+}
+input[type=submit]:hover{
+  background-color: #779452;
+  border-color:#779452;
+
+}
+input[type=submit]:active:focus{
+  background-color: #779452;
+  border-color:#779452;
+  box-shadow:1px 1px 2px 2px rgba(104,129,72,0.5) inset;
+}
+input[type=submit]:focus{
+  background-color: #779452;
+  border-color:#779452;
+  box-shadow:1px 1px 2px 2px rgba(104,129,72,0.5) inset;
+}
+label {
+  color: #333;
+}
+}

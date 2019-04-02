@@ -1,0 +1,864 @@
+/* 首頁 */
+/* 只有手機板跟電腦版 */
+button:focus {outline:0;}
+@media (max-width: 768px) {                 
+    #headimg{
+        padding-left: 0px;
+        padding-right: 0px;
+        margin-top: 43px;
+    	background-color: #45bba5;
+        /*background: url(../images/pbanner.png);
+        background-size: 100% 340px;
+        background-repeat: no-repeat;*/
+    }
+    #banner{
+        display: none;
+    }
+    #tbn{
+        display: none;
+    }
+    #index-main{
+    	height: 93px;
+    	background-color: #f65c67;
+    }
+    #footer{
+    	height: 258px;
+    	background-color: #45bba5;
+    }
+    #invbb{
+        position: absolute;
+        z-index: 2;
+        top:-128px;
+        left: 4%;
+        width: 30%;
+        height: 400px;
+    }
+    #invbb>img{
+        width: 100%;
+    }   
+    #btnbox{
+    	display: none;
+    }
+    #iconbox{
+        height: 43px;
+        margin-top: 50px;
+    }
+    #iconbox>div{
+        width: 151px;
+        height: 43px;
+        margin:0 auto;
+    }
+    #iconbox>div>img{
+        float: left;
+    }
+    #iconbox>div>img:nth-child(1){
+        width: 45px;
+        height: 43px;
+    }
+    #iconbox>div>img:nth-child(2){
+        width: 43px;
+        height: 43px;
+        margin-left: 10px;
+    }
+    #iconbox>div>img:nth-child(3){
+        width: 43px;
+        height: 43px;
+        margin-left: 10px;
+    }
+    #textbox{
+        margin-top: 23px;
+        height: 47px;
+        background-color: red;
+        background:url(../images/icon4.png);
+        background-size: 223px 47px;
+        background-position: center;
+        background-repeat: no-repeat;
+    }
+    .row{
+        background-color: rgb(239,239,239)!important;
+    }    
+    #pbtnbox{
+    	padding-bottom: 113px;
+    }
+    #pbtnbox>div>form>button{
+    	margin-top: 50px;
+    	border-color: #445ce3;
+    	font-family: '微軟正黑體';
+    	color: white;
+    	font-weight: 900;
+    	font-size: 24px;
+    	height: 80px;
+    	width: 177px;
+    	border-radius: 10px;
+/* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#6db3f2+0,54a3ee+50,3690f0+51,1e69de+100;Blue+Gloss+%233 */
+background: rgb(109,179,242); /* Old browsers */
+background: -moz-linear-gradient(top, rgba(109,179,242,1) 0%, rgba(84,163,238,1) 50%, rgba(54,144,240,1) 51%, rgba(30,105,222,1) 100%); /* FF3.6-15 */
+background: -webkit-linear-gradient(top, rgba(109,179,242,1) 0%,rgba(84,163,238,1) 50%,rgba(54,144,240,1) 51%,rgba(30,105,222,1) 100%); /* Chrome10-25,Safari5.1-6 */
+background: linear-gradient(to bottom, rgba(109,179,242,1) 0%,rgba(84,163,238,1) 50%,rgba(54,144,240,1) 51%,rgba(30,105,222,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#6db3f2', endColorstr='#1e69de',GradientType=0 ); /* IE6-9 */    	
+    } 
+    /*donate*/
+    #pmenu{
+        height: 43px;
+        background-color: #f65c67;
+        position: absolute;
+        z-index: 4;
+
+    }
+    #pmenu>div>img{
+        margin-top: 10px;
+    }
+    #ppanel{
+        height: 200px;
+        background-color: #f65c67;
+        display: none;
+        position: absolute;
+        z-index: 3;
+        top:83;
+    }
+    #donatemain{
+        padding-left: 0px;
+        padding-right: 0px;
+        padding-bottom: 40px;
+    }
+    #donatebar{
+        height: 41px;
+        background-color: #f65c67;
+    }
+    #donatetop{
+        margin-top: 83px;
+        height: 76px;
+    }
+    #Remain,#chpoint{
+        padding-left: 0px;
+        padding-right: 0px;
+        height: 100%;
+    }
+    #Remain{
+        padding-top: 9px;
+        font-family:'微軟正黑體';
+        font-size: 18px;
+        font-weight: 900;
+        color:rgb(70,96,133);
+    }
+    #Remain>span{
+        font-size: 28px;
+    }
+    #chpoint>form>button{
+        border-color: #56ded8;
+        font-family: '微軟正黑體';
+        color: white;
+        font-weight: 900;
+        font-size: 24px;
+        height: 56px;
+        width: 100%;
+        border-radius: 4px;
+/* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#56ded8+0,23ded5+49,28bbb4+51,28bbb4+100 */
+background: rgb(86,222,216); /* Old browsers */
+background: -moz-linear-gradient(top, rgba(86,222,216,1) 0%, rgba(35,222,213,1) 50%, rgba(40,187,180,1) 50%, rgba(40,187,180,1) 100%); /* FF3.6-15 */
+background: -webkit-linear-gradient(top, rgba(86,222,216,1) 0%,rgba(35,222,213,1) 50%,rgba(40,187,180,1) 50%,rgba(40,187,180,1) 100%); /* Chrome10-25,Safari5.1-6 */
+background: linear-gradient(to bottom, rgba(86,222,216,1) 0%,rgba(35,222,213,1) 50%,rgba(40,187,180,1) 50%,rgba(40,187,180,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#56ded8', endColorstr='#28bbb4',GradientType=0 ); /* IE6-9 */ 
+}
+    #chpoint>form>button:hover{
+        border-color: #28bbb4;
+        font-family: '微軟正黑體';
+        color: white;
+        font-weight: 900;
+        font-size: 24px;
+        height: 56px;
+        width: 100%;
+        border-radius: 4px;
+/* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#1fc6bc+0,1fc6bc+50,0a8a81+51,0a8a81+100 */
+background: rgb(31,198,188); /* Old browsers */
+background: -moz-linear-gradient(top, rgba(31,198,188,1) 0%, rgba(31,198,188,1) 50%, rgba(10,138,129,1) 50%, rgba(10,138,129,1) 100%); /* FF3.6-15 */
+background: -webkit-linear-gradient(top, rgba(31,198,188,1) 0%,rgba(31,198,188,1) 50%,rgba(10,138,129,1) 50%,rgba(10,138,129,1) 100%); /* Chrome10-25,Safari5.1-6 */
+background: linear-gradient(to bottom, rgba(31,198,188,1) 0%,rgba(31,198,188,1) 50%,rgba(10,138,129,1) 50%,rgba(10,138,129,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#1fc6bc', endColorstr='#0a8a81',GradientType=0 ); /* IE6-9 */                
+    }
+    #donaterule{
+        padding-left: 0px;
+        padding-right: 0px;
+    }
+    #donatetle{
+        margin-top: 0px;
+        font-family:'微軟正黑體';
+        font-size: 20px;
+        font-weight: 900;
+        color:rgb(249,131,143);
+    }
+  
+    #donatetle>ul>li{
+        padding-left: 0px;
+        padding-right: 0px;
+        color: rgb(120,120,120);
+        font-size: 12px;
+    }
+    #donateopt{
+        padding-left: 0px;
+        padding-right: 0px;        
+        height: 61px;
+        margin-top: 40px;
+    }
+    #donateopt>div>form>button{
+        border-color:rgb(86,222,216);
+        font-family: '微軟正黑體';
+        color: white;
+        font-weight: 900;
+        font-size: 14px;
+        height: 36px;
+        width: 100%;
+        border-radius: 4px;
+/* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#56ded8+0,23ded5+49,28bbb4+51,28bbb4+100 */
+background: rgb(86,222,216); /* Old browsers */
+background: -moz-linear-gradient(top, rgba(86,222,216,1) 0%, rgba(35,222,213,1) 50%, rgba(40,187,180,1) 50%, rgba(40,187,180,1) 100%); /* FF3.6-15 */
+background: -webkit-linear-gradient(top, rgba(86,222,216,1) 0%,rgba(35,222,213,1) 50%,rgba(40,187,180,1) 50%,rgba(40,187,180,1) 100%); /* Chrome10-25,Safari5.1-6 */
+background: linear-gradient(to bottom, rgba(86,222,216,1) 0%,rgba(35,222,213,1) 50%,rgba(40,187,180,1) 50%,rgba(40,187,180,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#56ded8', endColorstr='#28bbb4',GradientType=0 ); /* IE6-9 */ 
+}
+    #donateopt>div>form>button:hover{
+border-color: #28bbb4;
+        font-family: '微軟正黑體';
+        color: white;
+        font-weight: 900;
+        font-size: 14px;
+        width: 100%;
+        border-radius: 4px;
+/* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#1fc6bc+0,1fc6bc+50,0a8a81+51,0a8a81+100 */
+background: rgb(31,198,188); /* Old browsers */
+background: -moz-linear-gradient(top, rgba(31,198,188,1) 0%, rgba(31,198,188,1) 50%, rgba(10,138,129,1) 50%, rgba(10,138,129,1) 100%); /* FF3.6-15 */
+background: -webkit-linear-gradient(top, rgba(31,198,188,1) 0%,rgba(31,198,188,1) 50%,rgba(10,138,129,1) 50%,rgba(10,138,129,1) 100%); /* Chrome10-25,Safari5.1-6 */
+background: linear-gradient(to bottom, rgba(31,198,188,1) 0%,rgba(31,198,188,1) 50%,rgba(10,138,129,1) 50%,rgba(10,138,129,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#1fc6bc', endColorstr='#0a8a81',GradientType=0 ); /* IE6-9 */                
+    }
+    #donatetable{
+        margin-top: 45px;
+    }
+    #donatebtm{
+        height: 33px;
+    }
+    #totalpoint{
+        font-family:'微軟正黑體';
+        font-size: 18px;
+        font-weight: 900;
+        color:rgb(70,96,133);
+    }
+    #totalpoint>span{
+        font-size: 28px;
+    }
+    #pagist{
+        padding-left: 0px;
+        padding-right: 0px;
+    }
+    .pagination {
+        height: 100%;
+        display: inline-block;
+        margin: 0px;
+    }
+    .pagination a {
+        color: black;
+        float: left;
+        height: 100%;
+        padding: 3px 6px;
+        text-decoration: none;
+        border:1px solid gray;
+        background-color:white;
+    }
+    .pagination a:hover{
+        background-color: gray;
+    }    
+    /* 學習區塊learn */
+    #learn_main{
+        padding-bottom: 40px;
+    }         
+    #learn_tle{
+        margin-top: 39px;
+        font-size:20px;
+        font-family: '微軟正黑體';
+        font-weight: 900;
+        color:rgb(249,131,143);
+    }   
+    #learn_des{
+        font-size:22px;
+        font-family: '微軟正黑體';
+        font-weight: 900;
+        color:rgb(70,96,133);
+    }
+    #learn_vdo{
+        padding-left: 0px;
+        padding-right: 0px;
+        margin-top: 39px;
+        height: 181px;
+    }
+    #fuckpic{
+
+    }
+    #fuckpic:after{
+        content: '';
+        display: inline-block;
+        width: 170px;
+        height: 83px;
+        background:url(../images/picture.png);
+        position: relative;
+        z-index: 2;
+        top:0px;
+
+    }    
+    #learn_ans{
+        padding-left: 0px;
+        padding-right: 0px;
+        background-color: #E2E0CD;
+        margin-top: -45px;
+        height: 309px;
+        border: 1px solid gray;
+    }
+    .question{
+        padding-left: 0px;
+        padding-right: 0px;        
+        font-size:13.3px;
+        font-family: '微軟正黑體';
+        font-weight: 900;
+        height: 48px;
+        padding-top: 26px;
+        color:gray;
+    }
+    .question:first-child{
+        padding-top: 39px;
+        height: 63px!important;
+    }
+    .question{
+        padding-left: 0px;
+        margin-left: 0px;
+    }
+    .ansbox{
+        padding-left: 20px;
+    } 
+    .yb{
+        padding: 0px;
+        width: 52px;
+        height: 41px;
+        background: url(../images/botton-01.png);
+        background-size: contain;
+        border:0px;
+        background-repeat: no-repeat;
+
+    }
+    .yb:hover{
+        background: url(../images/botton-01-01.png);
+        background-size: contain;
+        background-repeat: no-repeat;
+    }
+    .nb{
+        margin-left: 23px;
+        padding: 0px;
+        width: 52px;
+        height: 41px;
+        background: url(../images/botton-02.png);
+        background-size: contain;
+        background-repeat: no-repeat;
+        border:0px;
+
+    }
+    .nb:hover{
+        background: url(../images/botton-02-02.png);
+        background-size: contain;
+        background-repeat: no-repeat;
+    }      
+  /* 體驗活動 */
+    #try_main{
+        /*padding-top: 40px;*/
+        padding-bottom: 80px;
+    }
+    #try_tle{
+        margin-top: 19px;
+        font-size:18px;
+        font-family: '微軟正黑體';
+        font-weight: 900;
+        color:rgb(249,131,143);
+    }
+    #try_des{
+        font-size:17px;
+        font-family: '微軟正黑體';
+        font-weight: 900;
+        color:rgb(70,96,133);
+    }
+    #try_bar{
+        margin-top: 6px;
+        height: auto;
+    }
+    #try_list{
+        margin-top: 0px; 
+        height: auto;       
+    }
+    .listtype{
+        padding-right: 0px;
+        padding-left: 0px;
+        margin-top: 81px;
+        /*height: 89px;*/
+    }
+    .listbtn{
+        padding-left: 0px;
+        padding-right: 0px;
+        margin-top: 81px;
+        height: 89px;
+    }
+    .listbtn>div{
+        padding-left: 0px;
+        padding-right: 0px;
+        height: 50%;
+    }
+    .try_ch1,.try_ch2{
+        width: 85%;
+        height: 35px;
+        margin-top:calc(23px - 20px);
+    }
+    .try_ch1{
+/* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#5793de+0,5793de+52,2a6cbe+55,2a6cbe+100 */
+background: rgb(87,147,222); /* Old browsers */
+background: -moz-linear-gradient(top, rgba(87,147,222,1) 0%, rgba(87,147,222,1) 52%, rgba(42,108,190,1) 55%, rgba(42,108,190,1) 100%); /* FF3.6-15 */
+background: -webkit-linear-gradient(top, rgba(87,147,222,1) 0%,rgba(87,147,222,1) 52%,rgba(42,108,190,1) 55%,rgba(42,108,190,1) 100%); /* Chrome10-25,Safari5.1-6 */
+background: linear-gradient(to bottom, rgba(87,147,222,1) 0%,rgba(87,147,222,1) 52%,rgba(42,108,190,1) 55%,rgba(42,108,190,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#5793de', endColorstr='#2a6cbe',GradientType=0 ); /* IE6-9 */border-color: rgb(87,147,222);
+    border-radius: 5px;
+        font-size:12px;
+        font-family: '微軟正黑體';
+        font-weight: 900;
+        color: white;    
+    }
+    .try_ch2{
+/* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#ff9d60+0,ff9d60+49,fb6915+51,fb6915+100 */
+background: rgb(255,157,96); /* Old browsers */
+background: -moz-linear-gradient(top, rgba(255,157,96,1) 0%, rgba(255,157,96,1) 49%, rgba(251,105,21,1) 51%, rgba(251,105,21,1) 100%); /* FF3.6-15 */
+background: -webkit-linear-gradient(top, rgba(255,157,96,1) 0%,rgba(255,157,96,1) 49%,rgba(251,105,21,1) 51%,rgba(251,105,21,1) 100%); /* Chrome10-25,Safari5.1-6 */
+background: linear-gradient(to bottom, rgba(255,157,96,1) 0%,rgba(255,157,96,1) 49%,rgba(251,105,21,1) 51%,rgba(251,105,21,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ff9d60', endColorstr='#fb6915',GradientType=0 ); /* IE6-9 */
+    border-color: rgb(255,155,99);
+    border-radius: 5px;
+    font-size:12px;
+    font-family: '微軟正黑體';
+    font-weight: 900;
+    color: white;      
+}
+.try_ch1:hover,.try_ch2:hover{
+    border-color: #ababab;
+    /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#d4d4d4+0,d4d4d4+49,ababab+51,ababab+100 */
+background: rgb(212,212,212); /* Old browsers */
+background: -moz-linear-gradient(top, rgba(212,212,212,1) 0%, rgba(212,212,212,1) 49%, rgba(171,171,171,1) 51%, rgba(171,171,171,1) 100%); /* FF3.6-15 */
+background: -webkit-linear-gradient(top, rgba(212,212,212,1) 0%,rgba(212,212,212,1) 49%,rgba(171,171,171,1) 51%,rgba(171,171,171,1) 100%); /* Chrome10-25,Safari5.1-6 */
+background: linear-gradient(to bottom, rgba(212,212,212,1) 0%,rgba(212,212,212,1) 49%,rgba(171,171,171,1) 51%,rgba(171,171,171,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#d4d4d4', endColorstr='#ababab',GradientType=0 ); /* IE6-9 */
+}                                                 
+} 
+@media (min-width: 768px) {
+
+    #headimg{
+        padding-right: 0px;
+        padding-left: 0px;
+        background-color: #f65c67;
+        /*
+    	height: 410px;
+    	background-color: #45bba5;
+        background: url(../images/tbn.jpg);*/
+    }
+    #pbanner{
+        display: none;
+    }
+    #index-main{
+    	height: 110px;
+    	background-color: #f65c67;
+    }
+    #footer{
+    	height: 194px;
+    	background-color: #45bba5;
+    }
+    #invbb{
+    	position: absolute;
+    	z-index: 2;
+    	top:-466px;
+    	left: 6%;
+    	width: 30%;
+    	height: 400px;
+    }
+    #invbb>img{
+        width: 100%;
+    }
+    #btnbox{
+    	height: 80px;
+    }
+    #btnbox>div>form{
+        margin-top: 22px;
+        float:left;
+    }
+    #btnbox>div>form>button{
+        
+    	border-color: #F2323C;
+    	font-family: '微軟正黑體';
+    	color: white;
+    	font-weight: 900;
+    	font-size: 24px;
+    	height: 63px;
+    	width: 163px;
+/* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#f5656f+0,f5656f+53,f0363e+53,f0363e+100 */
+background: rgb(245,101,111); /* Old browsers */
+background: -moz-linear-gradient(top, rgba(245,101,111,1) 0%, rgba(245,101,111,1) 50%, rgba(240,54,62,1) 50%, rgba(240,54,62,1) 100%); /* FF3.6-15 */
+background: -webkit-linear-gradient(top, rgba(245,101,111,1) 0%,rgba(245,101,111,1) 50%,rgba(240,54,62,1) 50%,rgba(240,54,62,1) 100%); /* Chrome10-25,Safari5.1-6 */
+background: linear-gradient(to bottom, rgba(245,101,111,1) 0%,rgba(245,101,111,1) 50%,rgba(240,54,62,1) 50%,rgba(240,54,62,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f5656f', endColorstr='#f0363e',GradientType=0 ); /* IE6-9 */}
+    #iconbox{
+        margin-top:29px;
+        height: 38px;
+    }
+    #iconbox>div{
+        margin:0 auto;
+        padding: 0px;
+        height: 38px;
+        width: 132px;
+    }
+    #iconbox>div>img{
+        float:left;
+    }
+    #iconbox>div>img:nth-child(2),#iconbox>div>img:nth-child(3){
+        float:left;
+        margin-left: 7px;
+    }
+    #textbox{
+        padding: 0px;
+        margin-top: 20px;
+        height: 47px;
+        width: 223px;
+        background:url(../images/icon4.png);
+        background-position: center;
+        background-size: 223px 47px;
+        background-repeat: no-repeat;
+    }    
+    .row{
+        background-color: rgb(239,239,239)!important;
+    }
+    #pbtnbox{
+    	display: none;
+    }
+    /*donate*/
+    #pmenu{
+        display: none;
+    }
+    #donatebar{
+        height: 107px;
+        background-color:#f65c67;
+    }
+    #donatemain{
+        margin-top: 50px;
+        margin-bottom: 50px;
+        padding-right: 0px;
+        padding-left: 0px;
+    }
+    #donatetop{
+        padding-left: 0px;
+        padding-right: 0px;
+        height: 76px;
+    }
+    #Remain,#chpoint{
+        height: 100%;
+    }
+    #Remain{
+        font-family:'微軟正黑體';
+        font-size: 26px;
+        font-weight: 900;
+        color:rgb(70,96,133);
+    }
+    #Remain>span{
+        font-size: 43px;
+    }
+    #chpoint>form>button{
+        border-color: rgb(86,222,216);
+        font-family: '微軟正黑體';
+        color: white;
+        font-weight: 900;
+        font-size: 24px;
+        height: 54px;
+        width: 161px;
+        border-radius: 4px;
+/* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#56ded8+0,23ded5+49,28bbb4+51,28bbb4+100 */
+background: rgb(86,222,216); /* Old browsers */
+background: -moz-linear-gradient(top, rgba(86,222,216,1) 0%, rgba(35,222,213,1) 50%, rgba(40,187,180,1) 50%, rgba(40,187,180,1) 100%); /* FF3.6-15 */
+background: -webkit-linear-gradient(top, rgba(86,222,216,1) 0%,rgba(35,222,213,1) 50%,rgba(40,187,180,1) 50%,rgba(40,187,180,1) 100%); /* Chrome10-25,Safari5.1-6 */
+background: linear-gradient(to bottom, rgba(86,222,216,1) 0%,rgba(35,222,213,1) 50%,rgba(40,187,180,1) 50%,rgba(40,187,180,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#56ded8', endColorstr='#28bbb4',GradientType=0 ); /* IE6-9 */ 
+}    
+    #chpoint>form>button:hover{
+        border-color: #28bbb4;
+        font-family: '微軟正黑體';
+        color: white;
+        font-weight: 900;
+        font-size: 24px;
+        border-radius: 4px;
+/* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#1fc6bc+0,1fc6bc+50,0a8a81+51,0a8a81+100 */
+background: rgb(31,198,188); /* Old browsers */
+background: -moz-linear-gradient(top, rgba(31,198,188,1) 0%, rgba(31,198,188,1) 50%, rgba(10,138,129,1) 50%, rgba(10,138,129,1) 100%); /* FF3.6-15 */
+background: -webkit-linear-gradient(top, rgba(31,198,188,1) 0%,rgba(31,198,188,1) 50%,rgba(10,138,129,1) 50%,rgba(10,138,129,1) 100%); /* Chrome10-25,Safari5.1-6 */
+background: linear-gradient(to bottom, rgba(31,198,188,1) 0%,rgba(31,198,188,1) 50%,rgba(10,138,129,1) 50%,rgba(10,138,129,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#1fc6bc', endColorstr='#0a8a81',GradientType=0 ); /* IE6-9 */                
+    }
+    #donaterule{
+        padding-left: 0px;
+        padding-right: 0px;
+    }
+    #donatetle{
+        margin-top: 40px;
+        font-family:'微軟正黑體';
+        font-size: 28px;
+        font-weight: 900;
+        color:rgb(249,131,143);
+    }
+    #donatetle>ul>li{
+        color: rgb(120,120,120);
+        font-size: 20px;
+    }
+    #donateopt{
+        padding-left: 0px;
+        padding-right: 0px;        
+        height: 61px;
+        margin-top: 40px;
+    }
+    #donateopt>div>form>button{
+        border-color: #56ded8;
+        font-family: '微軟正黑體';
+        color: white;
+        font-weight: 900;
+        font-size: 24px;
+        height: 46px;
+        width: 132px;
+        border-radius: 4px;
+/* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#56ded8+0,23ded5+49,28bbb4+51,28bbb4+100 */
+background: rgb(86,222,216); /* Old browsers */
+background: -moz-linear-gradient(top, rgba(86,222,216,1) 0%, rgba(35,222,213,1) 50%, rgba(40,187,180,1) 50%, rgba(40,187,180,1) 100%); /* FF3.6-15 */
+background: -webkit-linear-gradient(top, rgba(86,222,216,1) 0%,rgba(35,222,213,1) 50%,rgba(40,187,180,1) 50%,rgba(40,187,180,1) 100%); /* Chrome10-25,Safari5.1-6 */
+background: linear-gradient(to bottom, rgba(86,222,216,1) 0%,rgba(35,222,213,1) 50%,rgba(40,187,180,1) 50%,rgba(40,187,180,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#56ded8', endColorstr='#28bbb4',GradientType=0 ); /* IE6-9 */ 
+}
+    #donateopt>div>form>button:hover{
+        border-color: #28bbb4;
+        font-family: '微軟正黑體';
+        color: white;
+        font-weight: 900;
+        font-size: 24px;
+        height: 46px;
+        width: 132px;
+        border-radius: 4px;
+/* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#1fc6bc+0,1fc6bc+50,0a8a81+51,0a8a81+100 */
+background: rgb(31,198,188); /* Old browsers */
+background: -moz-linear-gradient(top, rgba(31,198,188,1) 0%, rgba(31,198,188,1) 50%, rgba(10,138,129,1) 50%, rgba(10,138,129,1) 100%); /* FF3.6-15 */
+background: -webkit-linear-gradient(top, rgba(31,198,188,1) 0%,rgba(31,198,188,1) 50%,rgba(10,138,129,1) 50%,rgba(10,138,129,1) 100%); /* Chrome10-25,Safari5.1-6 */
+background: linear-gradient(to bottom, rgba(31,198,188,1) 0%,rgba(31,198,188,1) 50%,rgba(10,138,129,1) 50%,rgba(10,138,129,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#1fc6bc', endColorstr='#0a8a81',GradientType=0 ); /* IE6-9 */                
+    }
+    #donatetable{
+        margin-top: 32px;
+    }
+    #donatebtm{
+        height: 33px;
+    }
+    #totalpoint{
+        font-family:'微軟正黑體';
+        font-size: 26px;
+        font-weight: 900;
+        color:rgb(70,96,133);
+        padding-left: 0px;
+    }
+    #totalpoint>span{
+        font-size: 32px;
+    }
+    #pagist{
+        padding-right: 0px;
+        padding-left: 0px;
+    }
+    .pagination {
+        height: 100%;
+        display: inline-block;
+        margin: 0px;
+    }
+    .pagination a {
+        color: black;
+        float: left;
+        height: 100%;
+        padding: 6px 16px;
+        text-decoration: none;
+        border:1px solid gray;
+        background-color:white;
+    }
+    .nowpage{
+        background-color:#45bba5!important;
+    }
+    .pagination a:hover{
+        background-color: gray;
+    } 
+    /* 學習區塊 */
+    #learn_main{
+        padding-top: 40px;
+        padding-bottom: 40px;
+    }       
+    #learn_tle{
+        font-size:26px;
+        font-family: '微軟正黑體';
+        font-weight: 900;
+        color:rgb(249,131,143);
+    }
+    #learn_des{
+        font-size:30px;
+        font-family: '微軟正黑體';
+        font-weight: 900;
+        color:rgb(70,96,133);
+    }
+    #learn_vdo{
+        padding-left: 0px;
+        padding-right: 0px;
+        margin-top: 40px;
+        height: 445px;
+    }
+    #learn_ans{
+        padding-left: 0px;
+        padding-right: 0px;
+        background-color: #E2E0CD;
+        margin-top: 61px;
+        height: 378px;
+        border: 1px solid gray;
+    }
+    #fuckpic{
+
+    }
+    #fuckpic:after{
+        content: '';
+        display: inline-block;
+        width: 170px;
+        height: 83px;
+        background:url(../images/picture.png);
+        position: relative;
+        z-index: 2;
+        top:110px;
+
+    }
+    .question{
+
+        font-size:28px;
+        font-family: '微軟正黑體';
+        font-weight: 900;
+        color:gray;
+        height: 66px;
+        padding-top: 26px;
+    }
+    .question:first-child{
+        padding-top: 39px;
+        height: 79px!important;
+    }
+    .question,.ansbox{
+        padding-left: 0px;
+        margin-left: 76px;
+    } 
+    .yb{
+        padding: 0px;
+        width: 58px;
+        height: 45px;
+        background: url(../images/botton-01.png);
+        background-size: contain;
+        border:0px;
+        background-repeat: no-repeat;
+
+    }
+    .yb:hover{
+        background: url(../images/botton-01-01.png);
+        background-size: contain;
+        background-repeat: no-repeat;
+    }
+    .nb{
+        margin-left: 23px;
+        padding: 0px;
+        width: 58px;
+        height: 45px;
+        background: url(../images/botton-02.png);
+        background-size: contain;
+        background-repeat: no-repeat;
+        border:0px;
+
+    }
+    .nb:hover{
+        background: url(../images/botton-02-02.png);
+        background-size: contain;
+        background-repeat: no-repeat;
+    }    
+    /* 體驗活動 */
+    #try_main{
+        padding-top: 0px;
+        padding-bottom: 40px;
+    }
+    #try_tle{
+        margin-top: 70px;
+        font-size:26px;
+        font-family: '微軟正黑體';
+        font-weight: 900;
+        color:rgb(249,131,143);
+    }
+    #try_des{
+        font-size:30px;
+        font-family: '微軟正黑體';
+        font-weight: 900;
+        color:rgb(70,96,133);
+    }
+    #try_bar{
+        margin-top: 70px;
+        height:352px;
+    }
+    #try_list{
+        margin-top: 0px;        
+    }
+    .listtype{
+        margin-top: 81px;
+        height: auto;
+    }
+    .listbtn{
+        margin-top: 81px;
+        height: 214px;
+    }
+    .listbtn>div{
+        height: 50%;
+    }
+    .try_ch1,.try_ch2{
+        width: 175px;
+        height: 59px;
+        margin-top:calc(52px - 29px);
+    }
+    .try_ch1{
+/* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#5793de+0,5793de+52,2a6cbe+55,2a6cbe+100 */
+background: rgb(87,147,222); /* Old browsers */
+background: -moz-linear-gradient(top, rgba(87,147,222,1) 0%, rgba(87,147,222,1) 52%, rgba(42,108,190,1) 55%, rgba(42,108,190,1) 100%); /* FF3.6-15 */
+background: -webkit-linear-gradient(top, rgba(87,147,222,1) 0%,rgba(87,147,222,1) 52%,rgba(42,108,190,1) 55%,rgba(42,108,190,1) 100%); /* Chrome10-25,Safari5.1-6 */
+background: linear-gradient(to bottom, rgba(87,147,222,1) 0%,rgba(87,147,222,1) 52%,rgba(42,108,190,1) 55%,rgba(42,108,190,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#5793de', endColorstr='#2a6cbe',GradientType=0 ); /* IE6-9 */border-color: rgb(87,147,222);
+    border-radius: 5px;
+        font-size:26px;
+        font-family: '微軟正黑體';
+        font-weight: 900;
+        color: white;    
+    }
+    .try_ch2{
+/* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#ff9d60+0,ff9d60+49,fb6915+51,fb6915+100 */
+background: rgb(255,157,96); /* Old browsers */
+background: -moz-linear-gradient(top, rgba(255,157,96,1) 0%, rgba(255,157,96,1) 49%, rgba(251,105,21,1) 51%, rgba(251,105,21,1) 100%); /* FF3.6-15 */
+background: -webkit-linear-gradient(top, rgba(255,157,96,1) 0%,rgba(255,157,96,1) 49%,rgba(251,105,21,1) 51%,rgba(251,105,21,1) 100%); /* Chrome10-25,Safari5.1-6 */
+background: linear-gradient(to bottom, rgba(255,157,96,1) 0%,rgba(255,157,96,1) 49%,rgba(251,105,21,1) 51%,rgba(251,105,21,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ff9d60', endColorstr='#fb6915',GradientType=0 ); /* IE6-9 */border-color: rgb(255,155,99);
+    border-radius: 5px;
+    font-size:26px;
+    font-family: '微軟正黑體';
+    font-weight: 900;
+    color: white;      
+}
+.try_ch1:hover,.try_ch2:hover{
+    border-color: #ababab;
+    /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#d4d4d4+0,d4d4d4+49,ababab+51,ababab+100 */
+background: rgb(212,212,212); /* Old browsers */
+background: -moz-linear-gradient(top, rgba(212,212,212,1) 0%, rgba(212,212,212,1) 49%, rgba(171,171,171,1) 51%, rgba(171,171,171,1) 100%); /* FF3.6-15 */
+background: -webkit-linear-gradient(top, rgba(212,212,212,1) 0%,rgba(212,212,212,1) 49%,rgba(171,171,171,1) 51%,rgba(171,171,171,1) 100%); /* Chrome10-25,Safari5.1-6 */
+background: linear-gradient(to bottom, rgba(212,212,212,1) 0%,rgba(212,212,212,1) 49%,rgba(171,171,171,1) 51%,rgba(171,171,171,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#d4d4d4', endColorstr='#ababab',GradientType=0 ); /* IE6-9 */
+}
+
+}

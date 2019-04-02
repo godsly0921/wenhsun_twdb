@@ -1,0 +1,15 @@
+#AuthType Basic
+#AuthName "Password Protected Area"
+#AuthUserFile /home/isgoodtime/.htpasswd
+#Require valid-user
+
+Options +FollowSymLinks
+IndexIgnore */*
+RewriteEngine on
+
+# if a directory or a file exists, use it directly
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# otherwise forward it to index.php
+RewriteRule . index.php

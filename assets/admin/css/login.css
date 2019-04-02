@@ -1,0 +1,16 @@
+@media (max-width: 768px) { 
+	.join {
+    	position: relative;
+        display: block;
+        margin-top: 10px;
+        margin-bottom: 10px;
+	}	
+}
+@media (min-width: 769px) {
+	.join {
+    	position: relative;
+        display: block;
+        margin-top: 10px;
+        margin-bottom: 10px;
+	}
+}

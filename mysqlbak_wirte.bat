@@ -1,0 +1,2 @@
+C:\xampp\php\php C:\xampp\htdocs\chingda\cron.php Cronjob3
+
