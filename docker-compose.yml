@@ -1,0 +1,31 @@
+version: '3.1'
+services:
+  app:
+    build: .
+    restart: unless-stopped
+    environment:
+      - DATABASE_NAME=wenhsun_hr
+      - MYSQL_USER=admin
+      - MYSQL_PASSWORD=secret
+    ports:
+      - "8080:80"
+    volumes:
+      - .:/var/www/html/
+    logging:
+      options:
+        max-size: "200M"
+        max-file: "2"
+  db:
+    image: mariadb
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_DATABASE: wenhsun_hr
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: admin
+    ports:
+      - "33061:3306"
+    logging:
+      options:
+        max-size: "200M"
+        max-file: "2"
