@@ -20,7 +20,7 @@ services:
     restart: unless-stopped
     environment:
       MYSQL_ROOT_PASSWORD: secret
-      MYSQL_DATABASE: wenhsun_hr
+      MYSQL_DATABASE: wenhsun
       MYSQL_USER: admin
       MYSQL_PASSWORD: admin
     ports:

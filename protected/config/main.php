@@ -65,23 +65,12 @@ return array(
 
 
 		'db'=>array(
-			'connectionString' => 'mysql:host=127.0.0.1;dbname=wenhsun',
+			'connectionString' => 'mysql:host=db;dbname=wenhsun',
 			'emulatePrepare' => true,
-			'username' => 'root',
-			'password' => 'cute0921',
+			'username' => 'admin',
+			'password' => 'admin',
 			'charset' => 'utf8',
 		),
-
-		'db2'=>array(
-			'connectionString' => 'mysql:host=127.0.0.1;dbname=wenhsun',
-			'emulatePrepare' => true,
-			'username' => 'root',
-			'password' => 'isgoodtime1111',
-			'charset' => 'BIG5',
-		),
-
-
-		
 		'errorHandler'=>array(
 			// use 'site/error' action to display errors
 			'errorAction'=>'site/error',
