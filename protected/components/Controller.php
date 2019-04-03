@@ -3,8 +3,19 @@
  * Controller is the customized base controller class.
  * All controller classes for this application should extend from this base class.
  */
-class Controller extends CController
+abstract class Controller extends CController
 {
+    protected abstract function needLogin(): bool;
+
+    protected function beforeAction($action)
+    {
+        if ($this->needLogin()) {
+            return RequestLogin::checkLogin($action) ? true : $this->redirect(Yii::app()->createUrl('admin/index'));
+        }
+
+        return true;
+    }
+
 	/**
 	 * @var string the default layout for the controller view. Defaults to '//layouts/column1',
 	 * meaning using a single column layout. See 'protected/views/layouts/column1.php'.
@@ -26,5 +37,4 @@ class Controller extends CController
         unset(Yii::app()->session['error_msg']);
         unset(Yii::app()->session['success_msg']);
     }
-
 }
