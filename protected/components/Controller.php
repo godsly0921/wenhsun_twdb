@@ -26,6 +26,35 @@ abstract class Controller extends CController
         }
     }
 
+    public function checkCsrfAjax()
+    {
+        if (!CsrfProtector::comparePost()) {
+            $this->sendErrAjaxRsp(403, "Forbidden");
+        }
+    }
+
+    public function sendSuccAjaxRsp()
+    {
+        $rsp = new AjaxResponse();
+        $rsp->statusCode = 200;
+        $rsp->message = 'ok';
+
+        echo json_encode($rsp);
+        exit;
+    }
+
+    public function sendErrAjaxRsp($code, $msg)
+    {
+        $rsp = new AjaxResponse();
+        $rsp->statusCode = $code;
+        $rsp->message = $msg;
+
+        http_response_code($code);
+
+        echo json_encode($rsp);
+        exit;
+    }
+
 	/**
 	 * @var string the default layout for the controller view. Defaults to '//layouts/column1',
 	 * meaning using a single column layout. See 'protected/views/layouts/column1.php'.

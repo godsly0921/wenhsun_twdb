@@ -17,6 +17,7 @@ return array(
 		'application.components.*',
         'application.service.*',
         'application.repo.*',
+        'application.vo.*',
         'application.utils.*',
 		'application.extensions.sftp.*',
 		'application.extensions.phpexcel.*',

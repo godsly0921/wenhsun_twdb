@@ -25,6 +25,8 @@
                         <tr>
                             <th>座位號碼</th>
                             <th>座位名稱</th>
+                            <th>建立時間</th>
+                            <th>更新時間</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -37,6 +39,8 @@
                                     </a>
                                 </td>
                                 <td><?=$seat->seat_name?></td>
+                                <td><?=$seat->create_at?></td>
+                                <td><?=$seat->update_at?></td>
                             </tr>
                             <?php endforeach;?>
                         <?php else:?>

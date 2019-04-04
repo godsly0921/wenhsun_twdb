@@ -30,7 +30,7 @@ class CsrfProtector
     {
         $token = self::getToken();
 
-        $hiddenField = '<input type="hidden" name="_token" value="' . $token . '" />';
+        $hiddenField = '<input type="hidden" id="_token" name="_token" value="' . $token . '" />';
 
         echo $hiddenField;
     }

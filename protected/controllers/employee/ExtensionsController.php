@@ -76,7 +76,21 @@ class ExtensionsController extends Controller
 
     public function actionDelete()
     {
+        try {
+            $this->checkCsrfAjax();
 
+            $pk = filter_input(INPUT_POST, 'id');
+            $ext = EmployeeExtensions::model()->findByPk($pk);
+            if (!$ext) {
+                $this->sendErrAjaxRsp(404, "資料不存在");
+            }
+
+            $ext->delete();
+            $this->sendSuccAjaxRsp();
+
+        } catch (Throwable $ex) {
+            $this->sendErrAjaxRsp(500, "系統錯誤");
+        }
     }
 
     protected function needLogin(): bool
