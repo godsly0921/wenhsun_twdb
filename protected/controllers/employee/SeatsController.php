@@ -67,7 +67,7 @@ class SeatsController extends Controller
     {
         $this->checkCSRF('index');
 
-        $pk = filter_input(INPUT_POST, 'seat_id');
+        $pk = filter_input(INPUT_POST, 'id');
         $seatName = filter_input(INPUT_POST, 'seat_name');
         $seatNumber = filter_input(INPUT_POST, 'seat_number');
 
@@ -85,6 +85,20 @@ class SeatsController extends Controller
 
     public function actionDelete()
     {
+        try {
+            $this->checkCsrfAjax();
 
+            $pk = filter_input(INPUT_POST, 'id');
+            $ext = EmployeeSeats::model()->findByPk($pk);
+            if (!$ext) {
+                $this->sendErrAjaxRsp(404, "資料不存在");
+            }
+
+            $ext->delete();
+            $this->sendSuccAjaxRsp();
+
+        } catch (Throwable $ex) {
+            $this->sendErrAjaxRsp(500, "系統錯誤");
+        }
     }
 }
