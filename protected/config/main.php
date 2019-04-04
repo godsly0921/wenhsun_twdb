@@ -16,6 +16,7 @@ return array(
 		'application.models.ext.*',
 		'application.components.*',
         'application.service.*',
+        'application.repo.*',
         'application.utils.*',
 		'application.extensions.sftp.*',
 		'application.extensions.phpexcel.*',

@@ -5,6 +5,9 @@
  */
 abstract class Controller extends CController
 {
+    const ERR_MSG_KEY = 'error_msg';
+    const SUCCESS_MSG_KEY = 'success';
+
     protected abstract function needLogin(): bool;
 
     protected function beforeAction($action)
@@ -14,6 +17,13 @@ abstract class Controller extends CController
         }
 
         return true;
+    }
+
+    public function checkCSRF($redirectURL)
+    {
+        if (!CsrfProtector::comparePost()) {
+            $this->redirect($redirectURL);
+        }
     }
 
 	/**

@@ -126,7 +126,7 @@
 <script>
     $(function() {
         if ($('#error_alert').html() != '') {
-            $('#error_alert').show().fadeOut(3500);
+            $('#error_alert').show().fadeOut(2000);
         }
     });
 </script>

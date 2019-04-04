@@ -4,37 +4,54 @@ class MemberController extends Controller
 {
     public $layout = "//layouts/back_end";
 
-    protected function beforeAction($action)
-    {   
-        return RequestLogin::checkLogin($action) ? true : $this->redirect(Yii::app()->createUrl('admin/index'));
+    protected function needLogin(): bool
+    {
+        return true;
     }
 
-    public function actionDoorAndTimeUpdate(){
+    //-------- 員工座位相關 --------
+
+    public function actionSeats()
+    {
+        $this->clearMsg();
+        $employeeSeatsRepo = new EmployeeSeatsRepo();
+        $seats = $employeeSeatsRepo->getAll();
+
+        $this->render('seats/list', ['seats' => $seats]);
+    }
+
+    public function actionSeatsCreate()
+    {
+        $this->render('seats/create');
+    }
+
+    //-------- END --------
+
+    public function actionDoorAndTimeUpdate()
+    {
 
         $inputs['id'] = filter_input(INPUT_POST, 'id');
         $inputs['card'] = filter_input(INPUT_POST, 'card');
         $inputs['door'] = filter_input(INPUT_POST, 'door');
         $inputs['time'] = filter_input(INPUT_POST, 'time');
 
-
-
-        if(!isset($inputs['id']) || $inputs['id']=="" || $inputs['id']==NULL){
+        if (!isset($inputs['id']) || $inputs['id'] == "" || $inputs['id'] == NULL) {
             echo '沒有傳送用戶ID';
             exit();
         }
 
-        if(!isset($inputs['card']) || $inputs['card']=="" || $inputs['card']==NULL){
+        if (!isset($inputs['card']) || $inputs['card'] == "" || $inputs['card'] == NULL) {
             echo '使用者沒有卡號';
             exit();
         }
 
 
-        if(!isset($inputs['door']) || $inputs['door']=="" || $inputs['door']==NULL){
+        if (!isset($inputs['door']) || $inputs['door'] == "" || $inputs['door'] == NULL) {
             echo '使用者沒有設定門組';
             exit();
         }
 
-        if(!isset($inputs['time']) || $inputs['time']=="" || $inputs['time']==NULL){
+        if (!isset($inputs['time']) || $inputs['time'] == "" || $inputs['time'] == NULL) {
             echo '使用者沒有設定門組';
             exit();
         }
@@ -45,20 +62,20 @@ class MemberController extends Controller
         $time = $inputs['time'];
 
         $stcard_door = new StcardService();
-        $res_door = $stcard_door->st_change_door($card,$door);
+        $res_door = $stcard_door->st_change_door($card, $door);
 
         $stcard_time = new StcardService();
-        $res_time = $stcard_time->st_change_time($card,$time);
+        $res_time = $stcard_time->st_change_time($card, $time);
 
-        if($res_door == true && $res_time ==true){
+        if ($res_door == true && $res_time == true) {
             $download_service = new StcardService();
             $card_download_res = $download_service->st_card_download();
-            if($card_download_res==false){
+            if ($card_download_res == false) {
                 echo 'Door group/time slot upload failed';
                 exit();
             }
 
-            if($card_download_res==true){
+            if ($card_download_res == true) {
 
                 $model = Member::model()->findByPk($id);
 
@@ -68,10 +85,10 @@ class MemberController extends Controller
                     $model->update();
                 }
 
-                if($model->update()){
-                    header ('Content-Type: text/html; charset=utf8');
+                if ($model->update()) {
+                    header('Content-Type: text/html; charset=utf8');
                     Yii::app()->session['error_msg'] = array(array('門組/時段上傳卡機成功,資料庫更新成功'));
-                    $this->redirect('update/'.$inputs['id']);
+                    $this->redirect('update/' . $inputs['id']);
 
                     set_time_limit(10);
                     exec('START C:\xampp\htdocs\chingda\stserver_open.bat');
@@ -80,18 +97,18 @@ class MemberController extends Controller
                     exit();
 
 
-                }else{
-                    header ('Content-Type: text/html; charset=utf8');
+                } else {
+                    header('Content-Type: text/html; charset=utf8');
                     Yii::app()->session['error_msg'] = array(array('門組/時段上傳卡機成功,資料庫更新失敗'));
-                    $this->redirect('update/'.$inputs['id']);
+                    $this->redirect('update/' . $inputs['id']);
                     exit();
                 }
 
             }
-        }else{
-            header ('Content-Type: text/html; charset=utf8');
+        } else {
+            header('Content-Type: text/html; charset=utf8');
             Yii::app()->session['error_msg'] = array(array('Door/time period write to cardinfo failed'));
-            $this->redirect('update/'.$inputs['id']);
+            $this->redirect('update/' . $inputs['id']);
             exit();
         }
 
@@ -434,7 +451,7 @@ class MemberController extends Controller
         $service = new MemberService();
         $professor = $service->get_all_professor(2);
 
-        $this->render('black_recovery_list', array('datas' => $datas, 'groups' => $groups, 'grp_data' => $grp_data, 'professor' => $professor, 'grp_data2' => $grp_data2,'accounts'=>$accounts));
+        $this->render('black_recovery_list', array('datas' => $datas, 'groups' => $groups, 'grp_data' => $grp_data, 'professor' => $professor, 'grp_data2' => $grp_data2, 'accounts' => $accounts));
     }
 
     public function actionGet_black_recovery_list()
@@ -470,7 +487,7 @@ class MemberController extends Controller
 
         $datas = $memberService->findProfessorMemberBlacklist($inputs);
 
-        $this->render('black_recovery_list', array('datas' => $datas, 'groups' => $groups, 'grp_data' => $grp_data, 'professor' => $professor, 'grp_data2' => $grp_data2,'accounts'=>$accounts));
+        $this->render('black_recovery_list', array('datas' => $datas, 'groups' => $groups, 'grp_data' => $grp_data, 'professor' => $professor, 'grp_data2' => $grp_data2, 'accounts' => $accounts));
     }
 
     public function actionGet_professor_detail_list()
@@ -543,7 +560,7 @@ class MemberController extends Controller
     }
 
     private function doPostCreate()
-    {   
+    {
 
         if (!CsrfProtector::comparePost())
             $this->redirect('index');
@@ -573,35 +590,35 @@ class MemberController extends Controller
         $inputs['grp_lv2'] = filter_input(INPUT_POST, 'grp2');
         $inputs['level'] = filter_input(INPUT_POST, 'level');
         $inputs['professor'] = filter_input(INPUT_POST, 'professor');
-        
 
-        $big5Name   = iconv("UTF-8","big5",$inputs['name']);
+
+        $big5Name = iconv("UTF-8", "big5", $inputs['name']);
         $big5Lenght = strlen($big5Name);
 
-        
-        if( $big5Lenght > 20){
+
+        if ($big5Lenght > 20) {
 
             Yii::app()->session['error_msg'] = array(array('姓名中文限制為10個字,英文為20個字'));
             $this->redirect('create');
             exit;
 
         }
-    
+
         // 測試
         $stcard_sv = new StcardService();
         $cardexist = $stcard_sv->if_cardnum_exist($inputs['card_number']);
-        
+
         $sycard_sv = new SycardService();
-        $sycard_sv->modifyCard( '',$inputs['card_number'] ,$inputs['name'], "1xxxx\r" );    
-        
-        if( !$cardexist && strlen($inputs['card_number'])== 10){
-            
-            $createcard_res = $stcard_sv->create_cardnum( $inputs['card_number'] , $inputs['name'] );
-            
+        $sycard_sv->modifyCard('', $inputs['card_number'], $inputs['name'], "1xxxx\r");
+
+        if (!$cardexist && strlen($inputs['card_number']) == 10) {
+
+            $createcard_res = $stcard_sv->create_cardnum($inputs['card_number'], $inputs['name']);
+
         }
 
         $service = new MemberService();
-        $model   = $service->create($inputs);
+        $model = $service->create($inputs);
 
         if ($model->hasErrors()) {
             Yii::app()->session['error_msg'] = $model->getErrors();
@@ -618,36 +635,36 @@ class MemberController extends Controller
     private function doGetCreate()
     {
 
-        $years  = Common::years();
+        $years = Common::years();
         $months = Common::months();
-        $days   = Common::days();
+        $days = Common::days();
 
         $grp_service = new UsergrpService();
-        $grp_data    = $grp_service->getLevelOneAll();
-        $grp_data2   = $grp_service->getLevelTwoAll();
+        $grp_data = $grp_service->getLevelOneAll();
+        $grp_data2 = $grp_service->getLevelTwoAll();
 
-        $service     = new MemberService();
-        $professor   = $service->get_all_professor(2);
-        
-        $groups      = ExtGroup::model()->group_list();
-        
-        $service     = new AccountService();
-        $accounts    = $service->findAccounts();
+        $service = new MemberService();
+        $professor = $service->get_all_professor(2);
 
-        $this->render('create', ['years'     => $years, 
-                                 'months'    => $months, 
-                                 'days'      => $days, 
-                                 'grp_data'  => $grp_data, 
-                                 'professor' => $professor, 
-                                 'grp_data2' => $grp_data2,
-                                 'accounts'  => $accounts,
-                                 'groups'    => $groups
-                                ]);
+        $groups = ExtGroup::model()->group_list();
+
+        $service = new AccountService();
+        $accounts = $service->findAccounts();
+
+        $this->render('create', ['years' => $years,
+            'months' => $months,
+            'days' => $days,
+            'grp_data' => $grp_data,
+            'professor' => $professor,
+            'grp_data2' => $grp_data2,
+            'accounts' => $accounts,
+            'groups' => $groups
+        ]);
         $this->clearMsg();
     }
 
     public function actionCreate_Register()
-    { 
+    {
         $method = $_SERVER['REQUEST_METHOD'];
 
         if ($method === "POST") {
@@ -665,7 +682,7 @@ class MemberController extends Controller
         $inputs['name'] = filter_input(INPUT_POST, 'name');
         $inputs['account'] = filter_input(INPUT_POST, 'account');
         $inputs['password'] = filter_input(INPUT_POST, 'password');
-        $inputs['password_confirm'] = filter_input(INPUT_POST, 'password_confirm');       
+        $inputs['password_confirm'] = filter_input(INPUT_POST, 'password_confirm');
         $inputs['sex'] = filter_input(INPUT_POST, 'sex');
         $inputs['phone1'] = filter_input(INPUT_POST, 'phone1');
         $inputs['phone2'] = filter_input(INPUT_POST, 'phone2');
@@ -697,7 +714,6 @@ class MemberController extends Controller
     }
 
 
-
     private function doGetCreate_Register()
     {
 
@@ -715,7 +731,7 @@ class MemberController extends Controller
         $service = new AccountService();
         $accounts = $service->findAccounts();
 
-        $this->render('create', ['years' => $years, 'months' => $months, 'days' => $days, 'grp_data' => $grp_data, 'professor' => $professor, 'grp_data2' => $grp_data2,'accounts'=>$accounts]);
+        $this->render('create', ['years' => $years, 'months' => $months, 'days' => $days, 'grp_data' => $grp_data, 'professor' => $professor, 'grp_data2' => $grp_data2, 'accounts' => $accounts]);
         $this->clearMsg();
     }
 
@@ -753,7 +769,6 @@ class MemberController extends Controller
         $device_all = DeviceService::findDeviceList();
 
 
-
         $service = new AccountService();
         $accounts = $service->findAccounts();
 
@@ -786,15 +801,15 @@ class MemberController extends Controller
 
 
         if ($data !== null) {
-            $this->render('update', ['device_all'=>$device_all,'data' => $data, 'years' => $years, 'months' => $months, 'days' => $days, 'grp_data' => $grp_data, 'groups' => $groups, 'grp_array' => $grp_array, 'professor' => $professor,'accounts'=>$accounts,'door_group'=>  $door_group,'door_time'=>$door_time]);
+            $this->render('update', ['device_all' => $device_all, 'data' => $data, 'years' => $years, 'months' => $months, 'days' => $days, 'grp_data' => $grp_data, 'groups' => $groups, 'grp_array' => $grp_array, 'professor' => $professor, 'accounts' => $accounts, 'door_group' => $door_group, 'door_time' => $door_time]);
         } else {
             $this->redirect(['index']);
         }
     }
 
     private function doPostUpdate()
-    {   
-        header ('Content-Type: text/html; charset=big5');
+    {
+        header('Content-Type: text/html; charset=big5');
         if (!CsrfProtector::comparePost())
             $this->redirect('list');
         $inputs['id'] = filter_input(INPUT_POST, 'id');
@@ -819,10 +834,10 @@ class MemberController extends Controller
         $inputs['grp_lv1'] = filter_input(INPUT_POST, 'grp1');
         $inputs['grp_lv2'] = filter_input(INPUT_POST, 'grp2');
         $inputs['professor'] = filter_input(INPUT_POST, 'professor');
-        
+
         // 更新卡片狀態
         $stcard_sv = new StcardService();
-        $card_change_err = $stcard_sv->card_switch($inputs['card_number'],$inputs['status']);
+        $card_change_err = $stcard_sv->card_switch($inputs['card_number'], $inputs['status']);
         $card_download_res = $stcard_sv->st_card_download();
 
 
@@ -836,12 +851,12 @@ class MemberController extends Controller
             Yii::app()->session['success_msg'] = '使用者資料設定更新成功';
         }
 
-        if($card_change_err){
+        if ($card_change_err) {
 
             Yii::app()->session['error_msg'] = array(array('改變卡機資料失敗,請稍後再嘗試'));
         }
-        
-        if($card_download_res == false){
+
+        if ($card_download_res == false) {
 
             Yii::app()->session['error_msg'] = array(array('資料下載至卡機失敗,請稍後再嘗試'));
 
@@ -856,12 +871,12 @@ class MemberController extends Controller
 
         if ($method === 'POST') {
 
-            if(!isset($_POST['device_permission'])){
-                $inputs["device_permission"]= array();
+            if (!isset($_POST['device_permission'])) {
+                $inputs["device_permission"] = array();
                 $inputs["device_permission_type"] = array();
                 $inputs["id"] = filter_input(INPUT_POST, "id");
 
-            }else{
+            } else {
                 $inputs["device_permission"] = $_POST['device_permission'];
                 $inputs["device_permission_type"] = $_POST['device_permission_type'];
                 //var_dump($inputs["device_permission_type"]);
@@ -906,7 +921,7 @@ class MemberController extends Controller
 
     private function doPostUpdatePasswd()
     {
-        if (!CsrfProtector::comparePost()){
+        if (!CsrfProtector::comparePost()) {
             $this->redirect('list');
         }
         $this->clearMsg();
@@ -976,39 +991,38 @@ class MemberController extends Controller
 
     }
 
-    public function actioncardmodify(){
-        
+    public function actioncardmodify()
+    {
+
         //var_dump($_POST);
 
-        if( strlen($_POST['card']) != 10){
+        if (strlen($_POST['card']) != 10) {
 
             Yii::app()->session['error_msg'] = array(array('卡片號碼應為十碼'));
             $this->redirect('update/' . $_POST['id']);
             exit;
 
         }
-        
+
         $stcard_sv = new SycardService();
-        $stcard_sv->modifyCard( $_POST['card'],$_POST['ocard'],$_POST['name'], "1xxxx\r" );   
+        $stcard_sv->modifyCard($_POST['card'], $_POST['ocard'], $_POST['name'], "1xxxx\r");
 
         $stcard_sv = new StcardService();
-        $motify_res =  $stcard_sv->card_motify($_POST['id'],$_POST['name'],$_POST['ocard'],$_POST['card']);
+        $motify_res = $stcard_sv->card_motify($_POST['id'], $_POST['name'], $_POST['ocard'], $_POST['card']);
 
-       
-        
 
-        if( $motify_res == false){
+        if ($motify_res == false) {
 
             Yii::app()->session['error_msg'] = array(array('改變卡號失敗'));
             $this->redirect('update/' . $_POST['id']);
-            exit; 
+            exit;
 
-        }else{
+        } else {
 
             $service = new MemberService();
-            $dbcres = $service->updatecardnum($_POST['id'],$_POST['card']);
-            
-            if($dbcres == true){
+            $dbcres = $service->updatecardnum($_POST['id'], $_POST['card']);
+
+            if ($dbcres == true) {
                 Yii::app()->session['success_msg'] = '改變卡號成功';
                 $this->redirect('update/' . $_POST['id']);
             }
@@ -1016,7 +1030,8 @@ class MemberController extends Controller
         }
     }
 
-    public function actiondownloadtoca(){
+    public function actiondownloadtoca()
+    {
 
         $stcard_sv = new StcardService();
         $res = $stcard_sv->st_card_download();

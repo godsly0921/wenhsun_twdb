@@ -7,14 +7,8 @@
  */
 class SystemController extends Controller
 {
-
     public $layout = "//layouts/back_end";
 
-    protected function beforeAction($action)
-    {
-        return RequestLogin::checkLogin($action) ? true : $this->redirect(Yii::app()->createUrl('admin/index'));
-    }
-	
 	public function actionIndex()
     {
         $this->clearMsg();
@@ -150,5 +144,9 @@ class SystemController extends Controller
         $this->redirect('update/'.$inputs['system_id']);
     }
 
+    protected function needLogin(): bool
+    {
+        return true;
+    }
 }
 

@@ -11,11 +11,6 @@ class PowerController extends Controller
 	private $defaultPowerDisplay = ["1" => "顯示", "0" => "隱藏"];
     public $layout = "//layouts/back_end";
 
-    protected function beforeAction($action)
-    {
-        return RequestLogin::checkLogin($action) ? true : $this->redirect(Yii::app()->createUrl('admin/index'));
-    }
-	
 	public function actionIndex() {
 
         $this->clearMsg();
@@ -173,4 +168,8 @@ class PowerController extends Controller
     }
 
 
+    protected function needLogin(): bool
+    {
+        return true;
+    }
 }

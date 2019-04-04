@@ -7,13 +7,7 @@
  */
 class GroupController extends Controller
 {
-
     public $layout = "//layouts/back_end";
-
-    protected function beforeAction($action)
-    {
-        return RequestLogin::checkLogin($action) ? true : $this->redirect(Yii::app()->createUrl('admin/index'));
-    }
 
 	public function actionIndex() {
 
@@ -173,5 +167,8 @@ class GroupController extends Controller
         $this->clearMsg();
     }
 
-
+    protected function needLogin(): bool
+    {
+        return true;
+    }
 }

@@ -7,6 +7,11 @@
  */
 class Common
 {
+    public static function now($format = 'Y-m-d H:i:s')
+    {
+        return date($format);
+    }
+
     public static function years()
     {
         //取得現在年份

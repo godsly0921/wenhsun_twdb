@@ -11,11 +11,11 @@ class NewsController extends Controller
     private $defaultLanguageType = ["zh-tw"=>"繁體中文","zh-cn"=>"简体中文","en"=> "English"];
     public $layout = "//layouts/back_end";
 
-    protected function beforeAction($action)
+    protected function needLogin(): bool
     {
-        return RequestLogin::checkLogin($action) ? true : $this->redirect(Yii::app()->createUrl('admin/index'));
+        return true;
     }
-
+    
     public function actionIndex()
     {
         $newsService = new NewsService();

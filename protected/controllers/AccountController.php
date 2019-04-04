@@ -1,14 +1,10 @@
 <?php
+
 class AccountController extends Controller
 {
     private $defaultAccountType = ["0" => "啟用", "1" => "停權"];
     public $layout = "//layouts/back_end";
-	
-	protected function beforeAction($action)
-    {
-        return RequestLogin::checkLogin($action) ? true : $this->redirect(Yii::app()->createUrl('admin/index'));
-	}
-	
+
 	public function actionIndex()
     {
         $this->clearMsg();
@@ -184,5 +180,8 @@ class AccountController extends Controller
         }
     }
 
-
+    protected function needLogin(): bool
+    {
+        return true;
+    }
 }
