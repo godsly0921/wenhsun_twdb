@@ -5,6 +5,9 @@
  * @since 2015-06-30
  * @return Yii 程式載入頁
  */
+
+require __DIR__ . 'vendor/autoload.php';
+
 ini_set('mbstring.internal_encoding','UTF-8');
 //避免中文亂碼
 header('Content-Type: text/html; charset=utf-8');

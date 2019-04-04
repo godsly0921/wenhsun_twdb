@@ -1,0 +1,23 @@
+{
+  "name": "wenhsun",
+  "authors": [
+    {
+      "name": "Eric G. Huang",
+      "email": "eric.g.yuan@gmail.com"
+    }
+  ],
+  "require": {
+
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^8",
+    "mockery/mockery": "dev-master"
+  },
+  "autoload": {
+    "psr-4": {
+      "Wenhsun\\": "protected/app/"
+    }
+  }
+}
+
+
