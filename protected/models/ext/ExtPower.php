@@ -65,7 +65,7 @@ class ExtPower extends Power
 
 	public static function findByPowerMasterNumber($account_group_list){
         $sql = "SELECT s.system_number,s.system_name ,s.system_controller ,s.system_type, s.system_range 
-                FROM `power` p INNER JOIN system s on 
+                FROM `power` p INNER JOIN `system` s on 
                 p.power_master_number = s.system_number and p.power_display = 1 and p.power_number in($account_group_list)
                 group by p.power_master_number";
         $result = Yii::app()->db->createCommand($sql)->queryAll($sql);
