@@ -1,12 +1,6 @@
 <?php
-/**
- * @author Neil Kuo
- * @copyright Neil Kuo
- * @since 2015-06-30
- * @return Yii 程式載入頁
- */
 
-require __DIR__ . 'vendor/autoload.php';
+require __DIR__ . '/vendor/autoload.php';
 
 ini_set('mbstring.internal_encoding','UTF-8');
 //避免中文亂碼
