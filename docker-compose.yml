@@ -16,7 +16,7 @@ services:
         max-size: "200M"
         max-file: "2"
   db:
-    image: mariadb
+    image: mysql
     restart: unless-stopped
     environment:
       MYSQL_ROOT_PASSWORD: secret
