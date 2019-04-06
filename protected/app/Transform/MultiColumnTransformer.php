@@ -6,9 +6,9 @@ namespace Wenhsun\Transform;
 
 class MultiColumnTransformer
 {
-    public function toJson(string $split, string $text): string
+    public function toJson(string $split, ?string $text): string
     {
-        if ($text === '') {
+        if ($text === '' || $text === null) {
             return json_encode([]);
         }
 

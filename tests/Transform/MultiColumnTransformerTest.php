@@ -23,6 +23,14 @@ class MultiColumnTransformerTest extends TestCase
         return new MultiColumnTransformer();
     }
 
+    public function testToJson_TextNull_ReturnEmptyJson()
+    {
+        $sut = $this->makeSUT();
+        $r = $sut->toJson(';', null);
+
+        $this->assertEquals('[]', $r);
+    }
+
     public function testToJson_NoSplitText_ReturnJsonWithOneProp()
     {
         $sut = $this->makeSUT();

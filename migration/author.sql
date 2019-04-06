@@ -32,7 +32,9 @@ CREATE TABLE `author_bank` (
   `bank_name` varchar(128) NOT NULL,
   `bank_code` INT(3) NOT NULL,
   `branch_name` varchar(64) NOT NULL,
+  `branch_code` varchar(8) NOT NULL,
   `bank_account` INT(20) NOT NULL,
+  `account_name` varchar(64),
   `create_at` datetime NOT NULL,
   `update_at` datetime NOT NULL,
 PRIMARY KEY (`id`)
