@@ -14,6 +14,10 @@ class MultiColumnTransformer
 
         $data = explode($split, $text);
 
+        foreach ($data as $k => $v) {
+            $data[$k] = trim($v);
+        }
+
         $r = json_encode($data);
 
         return $r;

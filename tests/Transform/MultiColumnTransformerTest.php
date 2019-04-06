@@ -31,6 +31,14 @@ class MultiColumnTransformerTest extends TestCase
         $this->assertEquals('[]', $r);
     }
 
+    public function testToJson_ToTrimEveryProperties()
+    {
+        $sut = $this->makeSUT();
+        $r = $sut->toJson(';', "abc\n;def ;ghi\r\n");
+
+        $this->assertEquals('["abc","def","ghi"]', $r);
+    }
+
     public function testToJson_NoSplitText_ReturnJsonWithOneProp()
     {
         $sut = $this->makeSUT();
