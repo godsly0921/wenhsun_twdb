@@ -226,4 +226,37 @@ class AuthorController extends Controller
             Yii::app()->session[Controller::ERR_MSG_KEY] = '更新失敗';
         }
     }
+
+    public function actionDelete()
+    {
+        try {
+            $this->checkCsrfAjax();
+
+            $pk = filter_input(INPUT_POST, 'id');
+
+            $author = Author::model()->findByPk($pk);
+
+            if (!$author) {
+                $this->sendErrAjaxRsp(404, "資料不存在");
+            }
+
+            $author->delete();
+
+            $banks = AuthorBank::model()->findAll(
+                'author_id=:author_id',
+                [':author_id' => $pk]
+            );
+
+            if ($banks) {
+                foreach($banks as $bank) {
+                    $bank->delete();
+                }
+            }
+
+            $this->sendSuccAjaxRsp();
+
+        } catch (Throwable $ex) {
+            $this->sendErrAjaxRsp(500, "系統錯誤");
+        }
+    }
 }

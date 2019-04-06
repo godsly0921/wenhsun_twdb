@@ -16,15 +16,14 @@
                 <?php endif; ?>
                 <div class="x_panel">
                     <div class="x_title">
-                        <h2>作家編輯</h2>
+                        <h2>作家編輯</h2><button id="delete-btn" class="btn btn-danger pull-right">刪除</button>
                         <div class="clearfix"></div>
                     </div>
                     <div class="x_content">
-                        <br />
                         <form id="demo-form2" method="post" action="/author/update" data-parsley-validate class="form-horizontal form-label-left">
-
+                            <p>基本資料</p>
                             <?php CsrfProtector::genHiddenField(); ?>
-                            <input type="hidden" value="<?=$data->id?>" name="author_id">
+                            <input type="hidden" value="<?=$data->id?>" name="author_id" id="author_id">
                             <input type="hidden" value="<?=$bank_list[0]->id?>" name="author_bank_id">
                             <input type="hidden" value="<?=$bank_list[1]->id?>" name="author_bank_id_2">
                             <div class="form-group">
@@ -195,7 +194,7 @@
                             </div>
 
                             <div class="ln_solid"></div>
-
+                            <p>銀行資料-1</p>
                             <div class="form-group">
                                 <label class="control-label col-md-3 col-sm-3 col-xs-12" for="bank_name">銀行名稱
                                 </label>
@@ -245,7 +244,7 @@
                             </div>
 
                             <div class="ln_solid"></div>
-
+                            <p>銀行資料-2</p>
                             <div class="form-group">
                                 <label class="control-label col-md-3 col-sm-3 col-xs-12" for="bank_name2">銀行名稱
                                 </label>
@@ -298,7 +297,6 @@
 
                             <div class="form-group">
                                 <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
-                                    <a href="/author"><button type="button" class="btn btn-default">返回</button></a>
                                     <button type="submit" class="btn btn-primary">修改</button>
                                 </div>
                             </div>
@@ -310,3 +308,29 @@
         </div>
     </div>
 </div>
+<script>
+    $(function(){
+
+        $("#delete-btn").click(function(){
+            let r = confirm("確認要刪除資料?");
+            if (r === true) {
+                var token = $("#_token").prop("value");
+                var id = $("#author_id").prop("value");
+                var request = $.ajax({
+                    url: "<?=Yii::app()->createUrl('author/delete'); ?>",
+                    method: "POST",
+                    data: {"id":id, "_token":token},
+                    dataType: "json"
+                });
+
+                request.done(function(data) {
+                    location.href = "<?=Yii::app()->createUrl('author'); ?>";
+                });
+
+                request.fail(function(jqXHR, textStatus) {
+                    alert(jqXHR.responseJSON.message);
+                });
+            }
+        });
+    });
+</script>
