@@ -30,6 +30,10 @@ class CsrfProtector
     {
         $token = self::getToken();
 
+        if ($token === null) {
+            $token = static::putToken(true);
+        }
+
         $hiddenField = '<input type="hidden" id="_token" name="_token" value="' . $token . '" />';
 
         echo $hiddenField;
@@ -43,7 +47,6 @@ class CsrfProtector
     }
 
     /**
-     * @param $token
      * @param $inputToken
      * @return bool
      */
