@@ -149,7 +149,7 @@ class NewsController extends Controller
 
         $newService = new NewsService;
         $accountService = new AccountService();
-        $deviceService = new Deviceservice;
+        $deviceService = new DeviceService;
         $recordService = new Recordservice;
         $doorService = new Doorservice;
         $data    = $newService -> findNews();
