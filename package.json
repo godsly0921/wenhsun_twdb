@@ -1,0 +1,29 @@
+{
+  "name": "wenhsun_hr",
+  "version": "1.0.0",
+  "description": "文訊雜誌社_人資系統",
+  "main": "index.js",
+  "directories": {
+    "test": "jest"
+  },
+  "dependencies": {
+    "gentelella": "^1.4.0",
+    "puppeteer": "^1.14.0"
+  },
+  "devDependencies": {
+    "jest": "^24.7.1"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/godsly0921/wenhsun_hr.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/godsly0921/wenhsun_hr/issues"
+  },
+  "homepage": "https://github.com/godsly0921/wenhsun_hr#readme"
+}

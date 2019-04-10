@@ -8,7 +8,7 @@
                 <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
                     <div class="input-group">
                         <a href="/author/new">
-                            <button class="btn btn-primary" type="button">新增作家</button>
+                            <button id="new-btn" class="btn btn-primary" type="button">新增作家</button>
                         </a>
                     </div>
                 </div>
@@ -33,9 +33,7 @@
                             <?php foreach($list as $data):?>
                                 <tr>
                                     <td>
-                                        <a href="/author/edit?id=<?=$data->id?>">
-                                            <?=$data->author_name?>
-                                        </a>
+                                        <a href="/author/edit?id=<?=$data->id?>"><?=$data->author_name?></a>
                                     </td>
                                     <td><?=$data->create_at?></td>
                                     <td><?=$data->update_at?></td>

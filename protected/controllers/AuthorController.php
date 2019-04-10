@@ -13,7 +13,7 @@ class AuthorController extends Controller
 
     public function actionIndex()
     {
-        $authors = Author::model()->findAll();
+        $authors = Author::model()->byUpdateAt()->findAll();
 
         $this->render('list', ['list' => $authors]);
     }

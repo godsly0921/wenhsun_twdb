@@ -34,9 +34,7 @@
                             <?php foreach($seats as $seat):?>
                             <tr>
                                 <td>
-                                    <a href="/employee/seats/edit?id=<?=$seat->id?>">
-                                        <?=$seat->seat_number?>
-                                    </a>
+                                    <a href="/employee/seats/edit?id=<?=$seat->id?>"><?=$seat->seat_number?></a>
                                 </td>
                                 <td><?=$seat->seat_name?></td>
                                 <td><?=$seat->create_at?></td>
@@ -44,7 +42,7 @@
                             </tr>
                             <?php endforeach;?>
                         <?php else:?>
-                        <tr><td>查無資料, 快去<a href="/employee/seats/new">新增資料</a>吧</td></tr>
+                        <tr><td colspan="4">查無資料, 快去<a href="/employee/seats/new">新增資料</a>吧</td></tr>
                         <?php endif; ?>
                         </tbody>
                     </table>

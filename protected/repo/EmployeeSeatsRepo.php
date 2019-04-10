@@ -7,19 +7,15 @@ class EmployeeSeatsRepo
         return Yii::app()->db->createCommand(
             '
               UPDATE employee_seats
-              SET seat_name = :seat_name, seat_number = :seat_number
+              SET seat_name = :seat_name, seat_number = :seat_number, update_at = :update_at
               WHERE id = :id
-              AND NOT EXISTS(
-                select 1 from employee_seats
-                where seat_name = :seat_name
-                and seat_number = :seat_number 
-              )
             '
         )
         ->bindValues([
             ':id' => $id,
             ':seat_name' => $seatName,
             ':seat_number' => $seatNumber,
+            ':update_at' => Common::now(),
         ])
         ->execute();
     }

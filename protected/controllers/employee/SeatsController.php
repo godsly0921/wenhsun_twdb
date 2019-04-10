@@ -9,7 +9,7 @@ class SeatsController extends Controller
 
     public function actionIndex()
     {
-        $seats = EmployeeSeats::model()->findAll();
+        $seats = EmployeeSeats::model()->byUpdateAt()->findAll();
 
         $this->render('list', ['seats' => $seats]);
     }
@@ -71,13 +71,23 @@ class SeatsController extends Controller
         $seatName = filter_input(INPUT_POST, 'seat_name');
         $seatNumber = filter_input(INPUT_POST, 'seat_number');
 
+        $seats = EmployeeSeats::model()->find(
+            'seat_name=:seat_name AND seat_number=:seat_number',
+            [':seat_name' => $seatName, ':seat_number' => $seatNumber]
+        );
+
+        if ($seats) {
+            Yii::app()->session[Controller::ERR_MSG_KEY] = '資料已存在';
+            $this->redirect("edit?id={$pk}");
+        }
+
         $repo = new EmployeeSeatsRepo();
         $seats = $repo->update($pk, $seatName, $seatNumber);
 
         if ($seats) {
             Yii::app()->session[Controller::SUCCESS_MSG_KEY] = '更新成功';
         } else {
-            Yii::app()->session[Controller::ERR_MSG_KEY] = '座位已存在';
+            Yii::app()->session[Controller::ERR_MSG_KEY] = '更新失敗';
         }
 
         $this->redirect("edit?id={$pk}");

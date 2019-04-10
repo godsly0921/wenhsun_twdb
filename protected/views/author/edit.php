@@ -30,7 +30,7 @@
                                 <label class="control-label col-md-3 col-sm-3 col-xs-12">筆名
                                 </label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
-                                    <textarea class="form-control" rows="3" name="pen_name"><?=$data->pen_name?></textarea>
+                                    <textarea class="form-control" rows="3" id="pen_name" name="pen_name"><?=$data->pen_name?></textarea>
                                 </div>
                             </div>
 
@@ -45,7 +45,7 @@
                             <div class="form-group">
                                 <label class="control-label col-md-3 col-sm-3 col-xs-12">性別</label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
-                                    <select class="form-control" name="gender">
+                                    <select class="form-control" id="gender" name="gender">
                                         <option <?php if($data->gender === \Wenhsun\Enum\Gender::MALE):?>selected<?php endif;?> value="M">男</option>
                                         <option <?php if($data->gender === \Wenhsun\Enum\Gender::FEMALE):?>selected<?php endif;?> value="F">女</option>
                                     </select>
@@ -72,7 +72,7 @@
                                 <label class="control-label col-md-3 col-sm-3 col-xs-12">公司 郵遞區號/地址
                                 </label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
-                                    <textarea class="form-control" rows="3" name="office_address"><?=$data->office_address?></textarea>
+                                    <textarea class="form-control" rows="3" id="office_address" name="office_address"><?=$data->office_address?></textarea>
                                 </div>
                             </div>
 
@@ -96,7 +96,7 @@
                                 <label class="control-label col-md-3 col-sm-3 col-xs-12">辦公電話
                                 </label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
-                                    <textarea class="form-control" rows="3" name="office_phone"><?=$data->office_phone?></textarea>
+                                    <textarea class="form-control" rows="3" id="office_phone" name="office_phone"><?=$data->office_phone?></textarea>
                                 </div>
                             </div>
 
@@ -104,7 +104,7 @@
                                 <label class="control-label col-md-3 col-sm-3 col-xs-12">辦公傳真
                                 </label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
-                                    <textarea class="form-control" rows="3" name="office_fax"><?=$data->office_fax?></textarea>
+                                    <textarea class="form-control" rows="3" id="office_fax" name="office_fax"><?=$data->office_fax?></textarea>
                                 </div>
                             </div>
 
@@ -112,7 +112,7 @@
                                 <label class="control-label col-md-3 col-sm-3 col-xs-12">住家 郵遞區號/地址
                                 </label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
-                                    <textarea class="form-control" rows="3" name="home_address"><?=$data->home_address?></textarea>
+                                    <textarea class="form-control" rows="3" id="home_address" name="home_address"><?=$data->home_address?></textarea>
                                 </div>
                             </div>
 
@@ -120,7 +120,7 @@
                                 <label class="control-label col-md-3 col-sm-3 col-xs-12">住家電話
                                 </label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
-                                    <textarea class="form-control" rows="3" name="home_phone"><?=$data->home_phone?></textarea>
+                                    <textarea class="form-control" rows="3" id="home_phone" name="home_phone"><?=$data->home_phone?></textarea>
                                 </div>
                             </div>
 
@@ -128,7 +128,7 @@
                                 <label class="control-label col-md-3 col-sm-3 col-xs-12">住家傳真
                                 </label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
-                                    <textarea class="form-control" rows="3" name="home_fax"><?=$data->home_fax?></textarea>
+                                    <textarea class="form-control" rows="3" id="home_fax" name="home_fax"><?=$data->home_fax?></textarea>
                                 </div>
                             </div>
 
@@ -136,19 +136,19 @@
                                 <label class="control-label col-md-3 col-sm-3 col-xs-12">手機
                                 </label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
-                                    <textarea class="form-control" rows="3" name="mobile"><?=$data->mobile?></textarea>
+                                    <textarea class="form-control" rows="3" id="mobile" name="mobile"><?=$data->mobile?></textarea>
                                 </div>
                             </div>
 
                             <div class="form-group">
                                 <label class="control-label col-md-3 col-sm-3 col-xs-12">身份類型</label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
-                                    <select class="select2_multiple form-control" multiple="multiple" name="identity_type[]">
-                                        <option <?php if($data->gender === "作家"):?>selected<?php endif;?> value="作家">作家</option>
-                                        <option <?php if($data->gender === "出版社"):?>selected<?php endif;?> value="出版社">出版社</option>
-                                        <option <?php if($data->gender === "公部門"):?>selected<?php endif;?> value="公部門">公部門</option>
-                                        <option <?php if($data->gender === "廠商"):?>selected<?php endif;?> value="廠商">廠商</option>
-                                        <option <?php if($data->gender === "會員"):?>selected<?php endif;?> value="會員">會員</option>
+                                    <select id="identity_type" class="select2_multiple form-control" multiple="multiple" name="identity_type[]">
+                                        <option <?php if($data->identity_type === "作家"):?>selected<?php endif;?> value="作家">作家</option>
+                                        <option <?php if($data->identity_type === "出版社"):?>selected<?php endif;?> value="出版社">出版社</option>
+                                        <option <?php if($data->identity_type === "公部門"):?>selected<?php endif;?> value="公部門">公部門</option>
+                                        <option <?php if($data->identity_type === "廠商"):?>selected<?php endif;?> value="廠商">廠商</option>
+                                        <option <?php if($data->identity_type === "會員"):?>selected<?php endif;?> value="會員">會員</option>
                                     </select>
                                 </div>
                             </div>
@@ -157,7 +157,7 @@
                                 <label class="control-label col-md-3 col-sm-3 col-xs-12">網路社群帳號
                                 </label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
-                                    <textarea class="form-control" rows="3" name="social_account"><?=$data->social_account?></textarea>
+                                    <textarea class="form-control" rows="3" id="social_account" name="social_account"><?=$data->social_account?></textarea>
                                 </div>
                             </div>
 
@@ -165,7 +165,7 @@
                                 <label class="control-label col-md-3 col-sm-3 col-xs-12">備註
                                 </label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
-                                    <textarea class="form-control" rows="3" name="memo"><?=$data->memo?></textarea>
+                                    <textarea class="form-control" rows="3" id="memo" name="memo"><?=$data->memo?></textarea>
                                 </div>
                             </div>
 
@@ -181,12 +181,12 @@
                                 <label class="control-label col-md-3 col-sm-3 col-xs-12">身分證字號/護照號碼/統一編號
                                 </label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
-                                    <textarea class="form-control" rows="3" name="identity_number"><?=$data->identity_number?></textarea>
+                                    <textarea class="form-control" rows="3" id="identity_number" name="identity_number"><?=$data->identity_number?></textarea>
                                 </div>
                             </div>
 
                             <div class="form-group">
-                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="nationality">戶籍地
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="residence_address">戶籍地
                                 </label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
                                     <input type="text" value="<?=$data->residence_address?>" id="residence_address" name="residence_address" class="form-control col-md-7 col-xs-12">
@@ -297,7 +297,7 @@
 
                             <div class="form-group">
                                 <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
-                                    <button type="submit" class="btn btn-primary">修改</button>
+                                    <button type="submit" id="modify-btn" class="btn btn-primary">修改</button>
                                 </div>
                             </div>
 

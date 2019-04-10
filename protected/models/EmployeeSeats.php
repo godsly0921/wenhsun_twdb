@@ -26,4 +26,10 @@ class EmployeeSeats extends CActiveRecord
     {
         return parent::model($className);
     }
+
+    public function scopes() {
+        return array(
+            'byUpdateAt' => array('order' => 'update_at DESC'),
+        );
+    }
 }

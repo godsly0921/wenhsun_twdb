@@ -33,9 +33,7 @@
                             <?php foreach($exts as $ext):?>
                             <tr>
                                 <td>
-                                    <a href="/employee/extensions/edit?id=<?=$ext->id?>">
-                                        <?=$ext->ext_number?>
-                                    </a>
+                                    <a href="/employee/extensions/edit?id=<?=$ext->id?>"><?=$ext->ext_number?></a>
                                 </td>
                                 <td><?=$ext->create_at?></td>
                                 <td><?=$ext->update_at?></td>

@@ -23,7 +23,7 @@
                             <div class="form-group">
                                 <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
                                     <a href="/employee/extensions"><button type="button" class="btn btn-default">返回</button></a>
-                                    <button type="submit" class="btn btn-primary">修改</button>
+                                    <button type="submit" id="modify-btn" class="btn btn-primary">修改</button>
                                     <button type="button" class="btn btn-danger" id="delete-btn">刪除</button>
                                 </div>
                             </div>

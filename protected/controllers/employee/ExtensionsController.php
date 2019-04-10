@@ -4,7 +4,7 @@ class ExtensionsController extends Controller
 {
     public function actionIndex()
     {
-        $exts = EmployeeExtensions::model()->findAll();
+        $exts = EmployeeExtensions::model()->byUpdateAt()->findAll();
         $this->render('list', ['exts' => $exts]);
     }
 
@@ -62,13 +62,23 @@ class ExtensionsController extends Controller
         $pk = filter_input(INPUT_POST, 'id');
         $extNumber = filter_input(INPUT_POST, 'ext_number');
 
+        $exts = EmployeeExtensions::model()->find(
+            'ext_number=:ext_number',
+            [':ext_number' => $extNumber]
+        );
+
+        if ($exts) {
+            Yii::app()->session[Controller::ERR_MSG_KEY] = '資料已存在';
+            $this->redirect("edit?id={$pk}");
+        }
+
         $repo = new EmployeeExtensionsRepo();
         $seats = $repo->update($pk, $extNumber);
 
         if ($seats) {
             Yii::app()->session[Controller::SUCCESS_MSG_KEY] = '更新成功';
         } else {
-            Yii::app()->session[Controller::ERR_MSG_KEY] = '分機已存在';
+            Yii::app()->session[Controller::ERR_MSG_KEY] = '更新失敗';
         }
 
         $this->redirect("edit?id={$pk}");

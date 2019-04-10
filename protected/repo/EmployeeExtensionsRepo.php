@@ -7,17 +7,14 @@ class EmployeeExtensionsRepo
         return Yii::app()->db->createCommand(
             '
               UPDATE employee_extensions
-              SET ext_number = :ext_number
-              WHERE id = :id
-              AND NOT EXISTS(
-                select 1 from employee_extensions
-                where ext_number = :ext_number 
-              )
+              SET ext_number = :ext_number, update_at = :update_at
+              WHERE id = :id 
             '
         )
             ->bindValues([
                 ':id' => $id,
                 ':ext_number' => $extNumber,
+                ':update_at' => Common::now(),
             ])
             ->execute();
     }
