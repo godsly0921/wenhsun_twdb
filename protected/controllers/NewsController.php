@@ -149,9 +149,9 @@ class NewsController extends Controller
 
         $newService = new NewsService;
         $accountService = new AccountService();
-        $deviceService = new Deviceservice;
-        $recordService = new Recordservice;
-        $doorService = new Doorservice;
+        $deviceService = new DeviceService;
+        $recordService = new RecordService;
+        $doorService = new DoorService;
         $data    = $newService -> findNews();
         $saw     = $newService -> havesaw(Yii::app()->session['uid']);
         $total   = count( $data );
