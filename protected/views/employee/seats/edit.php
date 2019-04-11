@@ -4,7 +4,7 @@
             <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="x_panel">
                     <div class="x_title">
-                        <h2>員工座位編輯</h2>
+                        <h2>員工座位編輯</h2><button id="delete-btn" class="btn btn-danger pull-right">刪除</button>
                         <div class="clearfix"></div>
                     </div>
                     <div class="x_content">
@@ -31,7 +31,6 @@
                                 <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
                                     <a href="/employee/seats"><button type="button" class="btn btn-default">返回</button></a>
                                     <button type="submit" class="btn btn-primary">修改</button>
-                                    <button type="button" id="delete-btn" class="btn btn-danger">刪除</button>
                                 </div>
                             </div>
                         </form>
