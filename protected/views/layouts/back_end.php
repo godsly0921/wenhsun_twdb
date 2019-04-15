@@ -56,7 +56,7 @@
                                             <?php elseif($jsons['system_range'] == 6):?>
                                                 <i class="fa fa-dollar    fa-fw"></i>
                                             <?php elseif($jsons['system_range'] == 7):?>
-                                                <i class="fa fa-check-square-o fa-fw"></i>
+                                                <i class="fa fa-image fa-fw"></i>
                                             <?php elseif($jsons['system_range'] == 8):?>
                                                 <i class="fa fa-pencil-square fa-fw"></i>
                                             <?php elseif($jsons['system_range'] == 9):?>
@@ -116,7 +116,9 @@
             <!-- /top navigation -->
 
             <!-- page content -->
-            <?= $content ?>
+            <div class="right_col">
+                <?= $content ?>
+            </div>
             <!-- /page content -->
         </div>
         <script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/gentelella/vendors/bootstrap/dist/js/bootstrap.min.js"></script>
