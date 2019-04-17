@@ -1,10 +1,9 @@
-<!-- Dropzone.js -->
-<link href="<?php echo Yii::app()->request->baseUrl; ?>/assets/gentelella/vendors/dropzone/dist/min/dropzone.min.css" rel="stylesheet">
-<!-- bootstrap-tagsinput.css -->
-<link href="<?php echo Yii::app()->request->baseUrl; ?>/assets/gentelella/vendors/bootstrap-tagsinput/bootstrap-tagsinput.css" rel="stylesheet">
 <!-- bootstrap-fileinput.css -->
 <link href="<?php echo Yii::app()->request->baseUrl; ?>/assets/bootstrap_fileinput/css/fileinput.min.css" rel="stylesheet">
-
+<!-- bootstrap-daterangepicker -->
+<link href="<?php echo Yii::app()->request->baseUrl; ?>/assets/gentelella/vendors/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
+<!-- bootstrap-datetimepicker -->
+<link href="<?php echo Yii::app()->request->baseUrl; ?>/assets/gentelella/vendors/bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.css" rel="stylesheet">
 <!-- page content -->
 <div class="">
   <div class="page-title">
@@ -78,45 +77,178 @@
                   <div class="clearfix"></div>
                 </div>
                 <div class="x_conetne">
-                    <input type="text" data-role="tagsinput">
+                  <div class="col-md-12 col-sm-12 col-xs-12">
+                    <input id="tags_1" type="text" class="tags form-control" name="keyword" value="" />
+                  </div>
                 </div>
               </div>
             </div>
             <div id="step-2">
-              <h2 class="StepTitle">Step 2 Content</h2>
-              <p>
-                do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-              </p>
-              <p>
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor
-                in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-              </p>
+              <h2 class="StepTitle">圖片上架(全釋資料)</h2>
+              <div class="x_panel">
+                <div class="x_title"></div>
+                <div class="x_conetne">
+                  <form id="demo-form2" data-parsley-validate class="form-horizontal form-label-left">
+                    <div class="form-group">
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">照片類型 <span class="required">*</span>
+                      </label>
+                      <div class="col-md-9 col-sm-9 col-xs-12">
+                        <select class="select2_multiple form-control" name="category_id[]" multiple="multiple" required>
+                          <option value="0">請選擇照片分類型</option>
+                          <?php foreach ($category_data as $key => $value) { ?>
+                            <option value="<?=$value['category_id']?>?>"><?=$value['parents_name']?>_<?=$value['child_name']?></option>
+                          <?php }?>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="single_cal2">攝影日期
+                      </label>
+                      <div class="col-md-9 col-sm-9 col-xs-12">
+                        <input type="text" class="form-control has-feedback-left" id="single_cal2" name="filming_date" placeholder="攝影日期" aria-describedby="inputSuccess2Status2">
+                        <span class="fa fa-calendar-o form-control-feedback left" aria-hidden="true"></span>
+                        <span id="inputSuccess2Status2" class="sr-only">(success)</span>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12">拍攝地點</label>
+                      <div class="col-md-9 col-sm-9 col-xs-12">
+                        <input type="text" class="form-control" name="filming_location" placeholder="拍攝地點">
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12">攝影名稱</label>
+                      <div class="col-md-9 col-sm-9 col-xs-12">
+                        <input type="text" class="form-control" name="filming_name" placeholder="攝影名稱">
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12">保存狀況</label>
+                      <div class="col-md-9 col-sm-9 col-xs-12">
+                        <select id="store_status" class="form-control" name="store_status" required>
+                          <option value="1">良好</option>
+                          <option value="2">輕度破損</option>
+                          <option value="3">嚴重破損</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12">人物資訊</label>
+                      <div class="col-md-9 col-sm-9 col-xs-12">
+                        <input type="text" class="form-control" name="people_info" placeholder="人物資訊">
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12">物件名稱</label>
+                      <div class="col-md-9 col-sm-9 col-xs-12">
+                        <input type="text" class="form-control" name="object_name" placeholder="物件名稱">
+                      </div>
+                    </div>
+                     <div class="form-group">
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12">索引使用限制</label>
+                      <div class="col-md-9 col-sm-9 col-xs-12">
+                        <select id="index_limit" class="form-control" name="index_limit" required>
+                          <option value="0">不開放</option>
+                          <option value="1">開放</option>
+                          <option value="2">限制</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12">原件使用限制</label>
+                      <div class="col-md-9 col-sm-9 col-xs-12">
+                        <select id="original_limit" class="form-control" name="original_limit" required>
+                          <option value="0">不開放</option>
+                          <option value="1">開放</option>
+                          <option value="2">限閱</option>
+                          <option value="3">限印</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12">影像使用限制</label>
+                      <div class="col-md-9 col-sm-9 col-xs-12">
+                        <select id="photo_limit" class="form-control" name="photo_limit" required>
+                          <option value="0">不開放</option>
+                          <option value="1">開放</option>
+                          <option value="2">限文訊內部使用</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12">內容描述</label>
+                      <div class="col-md-9 col-sm-9 col-xs-12">
+                        <textarea id="description" required="required" class="form-control" name="description"></textarea>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12">備註一</label>
+                      <div class="col-md-9 col-sm-9 col-xs-12">
+                        <textarea id="memo1" required="required" class="form-control" name="memo1"></textarea>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12">備註二</label>
+                      <div class="col-md-9 col-sm-9 col-xs-12">
+                        <textarea id="memo2" required="required" class="form-control" name="memo2"></textarea>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
             </div>
             <div id="step-3">
-              <h2 class="StepTitle">Step 3 Content</h2>
-              <p>
-                sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore
-                eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-              </p>
-              <p>
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor
-                in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-              </p>
+              <h2 class="StepTitle"></h2>
+              <div class="x_panel">
+                <div class="x_title">圖片上架(定價)</div>
+                <div class="x_conetne">
+                  <form id="demo-form2" data-parsley-validate class="form-horizontal form-label-left">
+                    <div class="form-group">
+                      <div class="col-lg-6">
+                        <label class="control-label">L 台幣： <span class="required">*</span></label>
+                        <input type="text" class="form-control" placeholder="L 台幣" name="twd[l]">
+                      </div>
+                      <div class="col-lg-6">
+                        <label class="control-label">L 點數： <span class="required">*</span></label>
+                        <input type="text" class="form-control" placeholder="L 點數" name="point[l]">
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <div class="col-lg-6">
+                        <label class="control-label">M 台幣： <span class="required">*</span></label>
+                        <input type="text" class="form-control" placeholder="M 台幣" name="twd[m]">
+                      </div>
+                      <div class="col-lg-6">
+                        <label class="control-label">M 點數： <span class="required">*</span></label>
+                        <input type="text" class="form-control" placeholder="M 點數" name="point[m]">
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <div class="col-lg-6">
+                        <label class="control-label">S 台幣： <span class="required">*</span></label>
+                        <input type="text" class="form-control" placeholder="S 台幣" name="twd[s]">
+                      </div>
+                      <div class="col-lg-6">
+                        <label class="control-label">S 點數： <span class="required">*</span></label>
+                        <input type="text" class="form-control" placeholder="S 點數" name="point[s]">
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <div class="col-lg-6">
+                        <label class="control-label">XL 台幣： <span class="required">*</span></label>
+                        <input type="text" class="form-control" placeholder="XL 台幣" name="twd[xl]">
+                      </div>
+                      <div class="col-lg-6">
+                        <label class="control-label">XL 點數： <span class="required">*</span></label>
+                        <input type="text" class="form-control" placeholder="XL 點數" name="point[xl]">
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
             </div>
             <div id="step-4">
-              <h2 class="StepTitle">Step 4 Content</h2>
-              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-              </p>
-              <p>
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor
-                in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-              </p>
-              <p>
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor
-                in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-              </p>
+
             </div>
 
           </div>
@@ -129,10 +261,13 @@
 <!-- /page content -->
 <!-- jQuery Smart Wizard -->
 <script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/gentelella/vendors/jQuery-Smart-Wizard/js/jquery.smartWizard.js"></script>
-<!-- Dropzone.js -->
-<script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/gentelella/vendors/dropzone/dist/min/dropzone.min.js"></script>
-<!-- bootstrap-tagsinput.js -->
-<script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/gentelella/vendors/bootstrap-tagsinput/bootstrap-tagsinput.min.js"></script>
+<!-- bootstrap-daterangepicker -->
+<script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/gentelella/vendors/moment/min/moment.min.js"></script>
+<script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/gentelella/vendors/bootstrap-daterangepicker/daterangepicker.js"></script>
+<!-- bootstrap-datetimepicker -->    
+<script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/gentelella/vendors/bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
+<!-- jQuery Tags Input -->
+<script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/gentelella/vendors/jquery.tagsinput/src/jquery.tagsinput.js"></script>
 <!-- bootstrap-fileinput.js -->
 <script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/bootstrap_fileinput/js/plugins/piexif.js" type="text/javascript"></script>
 <script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/bootstrap_fileinput/js/plugins/sortable.js" type="text/javascript"></script>
@@ -140,18 +275,31 @@
 <script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/bootstrap_fileinput/js/locales/zh-TW.js" type="text/javascript"></script>
 <script>
 $(document).ready(function () {
+  var actions='<div class="file-actions">\n' +
+        '    <div class="file-footer-buttons">\n' +
+        '        {delete}' +
+        '    </div>\n' +
+        '    {drag}\n' +
+        '    <div class="clearfix"></div>\n' +
+        '</div>';
 $("#kv-explorer").fileinput({
-      'theme': 'explorer-fas',
-      'uploadUrl': '#',
+      'theme': 'fas',
+      uploadUrl: "<?php echo Yii::app()->createUrl('photograph/fileupload'); ?>",
       overwriteInitial: false,
+      enableResumableUpload: true,
+      layoutTemplates:{actions:actions},
+      resumableUploadOptions: {
+           // uncomment below if you wish to test the file for previous partial uploaded chunks
+           // to the server and resume uploads from that point afterwards
+           // testUrl: "http://localhost/test-upload.php"
+      },
+      showCancel: false,
+      showRemove: false,
+      showUpload: false,
       initialPreviewAsData: true,
-      showBrowse: false,
-      initialPreview: [
-          
-      ],
-      initialPreviewConfig: [
-          
-      ]
-  });
+      // initialPreview: [],          // if you have previously uploaded preview files
+      // initialPreviewConfig: [],    // if you have previously uploaded preview files
+      theme: 'fas',
+    });
 })
 </script>

@@ -7,6 +7,12 @@
  */
 class CategoryService
 {
+    public function findCategoryMate(){
+        $sql = "SELECT b.category_id,a.name as parents_name,b.name as child_name from `category` a JOIN category b on a.category_id = b.parents order by b.sort";
+        $data = Yii::app()->db->createCommand($sql)->queryAll();
+        return $data;
+    }
+
     public function findAllCategory(){
         $accountService = new AccountService();
         $category_data = array();

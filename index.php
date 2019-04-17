@@ -19,6 +19,8 @@ $file=dirname(__FILE__).'/assets/uploads/file/';
 define ('FILE_STORAGE_DIR',$file);
 define ('FILE_DOWNLOAD_DIR',$file);
 define ('FILE_SHOW_DIR','/assets/uploads/file/');
+$photograph_storage=dirname(__FILE__).'/image_storage/';
+define ('PHOTOGRAPH_STORAGE_DIR',$photograph_storage);
 //載入系統設定檔
 $config=dirname(__FILE__).'/protected/config/main.php';
 //Yii Debug models開啟
