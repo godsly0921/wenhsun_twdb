@@ -2,6 +2,9 @@
 <link href="<?php echo Yii::app()->request->baseUrl; ?>/assets/gentelella/vendors/dropzone/dist/min/dropzone.min.css" rel="stylesheet">
 <!-- bootstrap-tagsinput.css -->
 <link href="<?php echo Yii::app()->request->baseUrl; ?>/assets/gentelella/vendors/bootstrap-tagsinput/bootstrap-tagsinput.css" rel="stylesheet">
+<!-- bootstrap-fileinput.css -->
+<link href="<?php echo Yii::app()->request->baseUrl; ?>/assets/bootstrap_fileinput/css/fileinput.min.css" rel="stylesheet">
+
 <!-- page content -->
 <div class="">
   <div class="page-title">
@@ -63,7 +66,9 @@
                   <div class="clearfix"></div>
                 </div>
                 <div class="x_content">
-                  <form action="<?php echo Yii::app()->createUrl('photograph/upload')?>" class="dropzone"></form>
+                  <div class="file-loading">
+                    <input id="kv-explorer" type="file" multiple>
+                </div>
                 </div>
               </div>
 
@@ -128,3 +133,25 @@
 <script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/gentelella/vendors/dropzone/dist/min/dropzone.min.js"></script>
 <!-- bootstrap-tagsinput.js -->
 <script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/gentelella/vendors/bootstrap-tagsinput/bootstrap-tagsinput.min.js"></script>
+<!-- bootstrap-fileinput.js -->
+<script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/bootstrap_fileinput/js/plugins/piexif.js" type="text/javascript"></script>
+<script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/bootstrap_fileinput/js/plugins/sortable.js" type="text/javascript"></script>
+<script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/bootstrap_fileinput/js/fileinput.js" type="text/javascript"></script>
+<script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/bootstrap_fileinput/js/locales/zh-TW.js" type="text/javascript"></script>
+<script>
+$(document).ready(function () {
+$("#kv-explorer").fileinput({
+      'theme': 'explorer-fas',
+      'uploadUrl': '#',
+      overwriteInitial: false,
+      initialPreviewAsData: true,
+      showBrowse: false,
+      initialPreview: [
+          
+      ],
+      initialPreviewConfig: [
+          
+      ]
+  });
+})
+</script>
