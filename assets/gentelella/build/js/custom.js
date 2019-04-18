@@ -1738,7 +1738,10 @@ if (typeof NProgress != 'undefined') {
 			});
 			$('#single_cal2').daterangepicker({
 			  singleDatePicker: true,
-			  singleClasses: "picker_2"
+			  singleClasses: "picker_2",
+			  locale: {
+				format: 'YYYY-MM-DD HH:MM:ss'
+			  }
 			}, function(start, end, label) {
 			  console.log(start.toISOString(), end.toISOString(), label);
 			});

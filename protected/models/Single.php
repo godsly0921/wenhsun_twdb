@@ -12,12 +12,12 @@
  * @property integer $direction
  * @property integer $author_id
  * @property integer $photo_source
- * @property integer $category_id
+ * @property string $category_id
  * @property string $filming_date
  * @property string $filming_location
  * @property string $filming_name
  * @property integer $store_status
- * @property string $phople_info
+ * @property string $people_info
  * @property string $object_name
  * @property string $keyword
  * @property integer $index_limit
@@ -49,16 +49,16 @@ class Single extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('photo_name, ext, dpi, color, direction, author_id, category_id, create_time, create_account_id', 'required'),
-			array('dpi, direction, author_id, photo_source, category_id, store_status, index_limit, original_limit, photo_limit, publish, copyright, create_account_id', 'numerical', 'integerOnly'=>true),
-			array('photo_name, filming_location, filming_name, object_name', 'length', 'max'=>100),
+			array('photo_name, ext, category_id, create_time, create_account_id', 'required'),
+			array('dpi, direction, author_id, photo_source, store_status, index_limit, original_limit, photo_limit, publish, copyright, create_account_id', 'numerical', 'integerOnly'=>true),
+			array('photo_name, category_id, filming_location, filming_name, object_name', 'length', 'max'=>100),
 			array('ext', 'length', 'max'=>6),
 			array('color', 'length', 'max'=>12),
-			array('phople_info', 'length', 'max'=>256),
+			array('people_info', 'length', 'max'=>256),
 			array('filming_date, keyword, description, memo1, memo2', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('single_id, photo_name, ext, dpi, color, direction, author_id, photo_source, category_id, filming_date, filming_location, filming_name, store_status, phople_info, object_name, keyword, index_limit, original_limit, photo_limit, description, publish, copyright, memo1, memo2, create_time, create_account_id', 'safe', 'on'=>'search'),
+			array('single_id, photo_name, ext, dpi, color, direction, author_id, photo_source, category_id, filming_date, filming_location, filming_name, store_status, people_info, object_name, keyword, index_limit, original_limit, photo_limit, description, publish, copyright, memo1, memo2, create_time, create_account_id', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -92,7 +92,7 @@ class Single extends CActiveRecord
 			'filming_location' => '拍攝地點',
 			'filming_name' => '攝影名稱',
 			'store_status' => '保存狀況(1：良好；2：輕度破損；3：嚴重破損)',
-			'phople_info' => '人物資訊',
+			'people_info' => '人物資訊',
 			'object_name' => '物件名稱',
 			'keyword' => '圖片關鍵字(用半形逗號區隔)',
 			'index_limit' => '索引使用限制(0：不開放；1：開放；2：限制)',
@@ -134,12 +134,12 @@ class Single extends CActiveRecord
 		$criteria->compare('direction',$this->direction);
 		$criteria->compare('author_id',$this->author_id);
 		$criteria->compare('photo_source',$this->photo_source);
-		$criteria->compare('category_id',$this->category_id);
+		$criteria->compare('category_id',$this->category_id,true);
 		$criteria->compare('filming_date',$this->filming_date,true);
 		$criteria->compare('filming_location',$this->filming_location,true);
 		$criteria->compare('filming_name',$this->filming_name,true);
 		$criteria->compare('store_status',$this->store_status);
-		$criteria->compare('phople_info',$this->phople_info,true);
+		$criteria->compare('people_info',$this->people_info,true);
 		$criteria->compare('object_name',$this->object_name,true);
 		$criteria->compare('keyword',$this->keyword,true);
 		$criteria->compare('index_limit',$this->index_limit);

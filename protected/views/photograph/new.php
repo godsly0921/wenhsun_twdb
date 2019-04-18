@@ -66,7 +66,7 @@
                 </div>
                 <div class="x_content">
                   <div class="file-loading">
-                    <input id="kv-explorer" type="file" multiple>
+                    <input id="upload_file" type="file" multiple name="file">
                 </div>
                 </div>
               </div>
@@ -78,7 +78,7 @@
                 </div>
                 <div class="x_conetne">
                   <div class="col-md-12 col-sm-12 col-xs-12">
-                    <input id="tags_1" type="text" class="tags form-control" name="keyword" value="" />
+                    <input id="keywords" type="text" class="tags form-control" name="keyword" value="" />
                   </div>
                 </div>
               </div>
@@ -86,17 +86,15 @@
             <div id="step-2">
               <h2 class="StepTitle">圖片上架(全釋資料)</h2>
               <div class="x_panel">
-                <div class="x_title"></div>
                 <div class="x_conetne">
-                  <form id="demo-form2" data-parsley-validate class="form-horizontal form-label-left">
+                  <form id="single_data" data-parsley-validate class="form-horizontal form-label-left">
                     <div class="form-group">
                       <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">照片類型 <span class="required">*</span>
                       </label>
                       <div class="col-md-9 col-sm-9 col-xs-12">
                         <select class="select2_multiple form-control" name="category_id[]" multiple="multiple" required>
-                          <option value="0">請選擇照片分類型</option>
                           <?php foreach ($category_data as $key => $value) { ?>
-                            <option value="<?=$value['category_id']?>?>"><?=$value['parents_name']?>_<?=$value['child_name']?></option>
+                            <option value="<?=$value['category_id']?>" <?=$key==0?'selected':''?>><?=$value['parents_name']?>_<?=$value['child_name']?></option>
                           <?php }?>
                         </select>
                       </div>
@@ -198,11 +196,10 @@
               </div>
             </div>
             <div id="step-3">
-              <h2 class="StepTitle"></h2>
+              <h2 class="StepTitle">圖片上架(定價)</h2>
               <div class="x_panel">
-                <div class="x_title">圖片上架(定價)</div>
                 <div class="x_conetne">
-                  <form id="demo-form2" data-parsley-validate class="form-horizontal form-label-left">
+                  <form id="single_size_price" data-parsley-validate class="form-horizontal form-label-left">
                     <div class="form-group">
                       <div class="col-lg-6">
                         <label class="control-label">L 台幣： <span class="required">*</span></label>
@@ -243,14 +240,31 @@
                         <input type="text" class="form-control" placeholder="XL 點數" name="point[xl]">
                       </div>
                     </div>
+                    <div class="form-group">
+                      <div class="col-lg-6">
+                        <label class="control-label">Source 台幣： <span class="required">*</span></label>
+                        <input type="text" class="form-control" placeholder="Source 台幣" name="twd[source]">
+                      </div>
+                      <div class="col-lg-6">
+                        <label class="control-label">Source 點數： <span class="required">*</span></label>
+                        <input type="text" class="form-control" placeholder="Source 點數" name="point[source]">
+                      </div>
+                    </div>
                   </form>
                 </div>
               </div>
             </div>
             <div id="step-4">
+              <div class="x_panel">
+                <div class="x_title">
+                  <h2>切圖進度</h2>
+                  <div class="clearfix"></div>
+                </div>
+                <div class="x_content">
 
+                </div>
+              </div>
             </div>
-
           </div>
           <!-- End SmartWizard Content -->
         </div>
@@ -275,6 +289,11 @@
 <script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/bootstrap_fileinput/js/locales/zh-TW.js" type="text/javascript"></script>
 <script>
 $(document).ready(function () {
+  if(typeof $.fn.tagsInput !== 'undefined'){        
+    $('#keywords').tagsInput({
+      width: 'auto'
+    }); 
+  }
   var actions='<div class="file-actions">\n' +
         '    <div class="file-footer-buttons">\n' +
         '        {delete}' +
@@ -282,24 +301,45 @@ $(document).ready(function () {
         '    {drag}\n' +
         '    <div class="clearfix"></div>\n' +
         '</div>';
-$("#kv-explorer").fileinput({
-      'theme': 'fas',
-      uploadUrl: "<?php echo Yii::app()->createUrl('photograph/fileupload'); ?>",
-      overwriteInitial: false,
-      enableResumableUpload: true,
-      layoutTemplates:{actions:actions},
-      resumableUploadOptions: {
-           // uncomment below if you wish to test the file for previous partial uploaded chunks
-           // to the server and resume uploads from that point afterwards
-           // testUrl: "http://localhost/test-upload.php"
-      },
-      showCancel: false,
-      showRemove: false,
-      showUpload: false,
-      initialPreviewAsData: true,
-      // initialPreview: [],          // if you have previously uploaded preview files
-      // initialPreviewConfig: [],    // if you have previously uploaded preview files
-      theme: 'fas',
-    });
+  var data = {
+    single_data : $("#single_data").serialize(),
+    single_size_price:$("#single_size_price").serialize(),
+    keywords_data:$("#keywords").val()
+  };
+  var plugin = $("#upload_file").fileinput({
+    language: 'zh-TW',  //語言設定
+    uploadUrl: "<?php echo Yii::app()->createUrl('photograph/fileupload'); ?>",
+    overwriteInitial: false,
+    enableResumableUpload: true,
+    initialPreviewAsData: true,
+    uploadAsync: true,
+    showCancel: false,
+    showRemove: false,
+    showUpload: false,
+    layoutTemplates:{actions:actions},
+    uploadExtraData:function() {
+      var ExtraData = {
+        single_data : $("#single_data").serialize(),
+        single_size_price:$("#single_size_price").serialize(),
+        keywords_data:$("#keywords").val()
+      };
+      return ExtraData;
+    },
+  }).on('fileuploaded', function(event, data, previewId, index) {
+    var index = index.split("_");
+    var filename = ''
+    for (i = 1; i < index.length; i++) {
+      filename += index[i];
+    }
+    console.log(filename);
+  });
+
+  $('#wizard').smartWizard({
+    onFinish:onFinishCallback
+  });
+  function onFinishCallback(){
+    console.log(plugin.initialPreview); // get initialPreview
+    $('#upload_file').fileinput('upload');
+  } 
 })
 </script>
