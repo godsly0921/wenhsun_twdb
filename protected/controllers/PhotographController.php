@@ -14,6 +14,84 @@ class PhotographController extends Controller{
         $category_data = $category_service->findCategoryMate();
         $this->render('new',array('category_data'=>$category_data));
     }
+    public function ActionBatUploadFile(){
+        // 如果檔案不為空，則上傳
+        $time_start = microtime(true);
+        //var_dump($_POST);exit();
+        if (!empty($_FILES['file'])) { 
+            $return_data = array();
+            $ds          = DIRECTORY_SEPARATOR; // '/'
+            $storeFolder = PHOTOGRAPH_STORAGE_DIR; //檔案儲存的路徑
+            $targetPath = $storeFolder . 'source' . $ds; // 原始檔存放路徑
+            // foreach ($_FILES['file']['tmp_name'] as $file_key => $file_value) {
+                $tempFile   = $_FILES['file']['tmp_name']; //上傳檔案的暫存
+                $fileName = $_FILES['file']['name']; //上傳檔案的檔名
+                $fileSize = $_FILES['file']['size']; //上傳檔案的檔案大小
+                $targetFile = $targetPath . $fileName;
+                if ( move_uploaded_file($tempFile,$targetFile) ) {
+                    $return_data[] = array(
+                        'fileName' => $fileName,
+                        'fileSize' => $fileSize,
+                        'status' => true,
+                    );
+                }else{
+                    $return_data[] = array(
+                        'fileName' => $fileName,
+                        'fileSize' => $fileSize,
+                        'status' => false,
+                    );
+                }
+            // }
+        }else{
+            $return_data[] = array(
+                'fileName' => '',
+                'fileSize' => '',
+                'status' => false,
+            );
+        }
+        $time = microtime(true) - $time_start;
+        $return_data['runtime'] = $time;
+        echo json_encode($return_data);exit();
+    }
+    public function ActionUploadFile(){
+        // 如果檔案不為空，則上傳
+        $time_start = microtime(true);
+        //var_dump($_POST);exit();
+        if (!empty($_FILES['file'])) { 
+            $return_data = array();
+            $ds          = DIRECTORY_SEPARATOR; // '/'
+            $storeFolder = PHOTOGRAPH_STORAGE_DIR; //檔案儲存的路徑
+            $targetPath = $storeFolder . 'source' . $ds; // 原始檔存放路徑
+            foreach ($_FILES['file']['tmp_name'] as $file_key => $file_value) {
+                $tempFile   = $file_value; //上傳檔案的暫存
+                $fileName = $_FILES['file']['name'][$file_key]; //上傳檔案的檔名
+                $fileSize = $_FILES['file']['size'][$file_key]; //上傳檔案的檔案大小
+                $targetFile = $targetPath . $fileName;
+                if ( move_uploaded_file($tempFile,$targetFile) ) {
+                    $return_data[] = array(
+                        'fileName' => $fileName,
+                        'fileSize' => $fileSize,
+                        'status' => true,
+                    );
+                }else{
+                    $return_data[] = array(
+                        'fileName' => $fileName,
+                        'fileSize' => $fileSize,
+                        'status' => false,
+                    );
+                }
+            }
+        }else{
+            $return_data[] = array(
+                'fileName' => '',
+                'fileSize' => '',
+                'status' => false,
+            );
+        }
+        $time = microtime(true) - $time_start;
+        $return_data['runtime'] = $time;
+        echo json_encode($return_data);exit();
+    }
 
     public function ActionFileUpload(){
         $photographService = new PhotographService();
@@ -24,18 +102,17 @@ class PhotographController extends Controller{
         $ds          = DIRECTORY_SEPARATOR;
         $storeFolder = PHOTOGRAPH_STORAGE_DIR;
         $targetPath = $storeFolder . 'source' . $ds;
+        var_dump($_FILES['file']);exit();
         // 如果檔案不為空，則上傳
         if (!empty($_FILES)) { 
-            $tempFile   = $_FILES['fileBlob']['tmp_name'];
-            $fileName = $_POST['fileName'];          // you receive the file name as a separate post data
-            $fileSize = $_POST['fileSize'];          // you receive the file size as a separate post data
+            $tempFile   = $_FILES['file']['tmp_name'];
+            $fileName = $_FILES['file']['name'];          // you receive the file name as a separate post data
+            $fileSize = $_FILES['file']['size'];          // you receive the file size as a separate post data
             $single_data['category_id'] = implode(',', $single_data['category_id']);
             $single_data['photo_name'] = $fileName;
             $ext = explode('.', $fileName)[1];
             $single_data['ext'] = $ext;
             $single = $photographService->createSingleBase($single_data);
-            $index =  $_POST['chunkIndex'];          // the current file chunk index
-            $totalChunks = $_POST['chunkCount'];     // the total number of chunks for this file
             $targetFile =  $targetPath . $single->single_id . "." . $ext;
             if ( move_uploaded_file($tempFile,$targetFile) ) {
                 $single_size = $photographService->getPhotographData($targetFile);

@@ -306,40 +306,36 @@ $(document).ready(function () {
     single_size_price:$("#single_size_price").serialize(),
     keywords_data:$("#keywords").val()
   };
-  var plugin = $("#upload_file").fileinput({
+  var fileinput_upload = $("#upload_file").fileinput({
     language: 'zh-TW',  //語言設定
-    uploadUrl: "<?php echo Yii::app()->createUrl('photograph/fileupload'); ?>",
+    uploadUrl: "<?php echo Yii::app()->createUrl('photograph/BatUploadFile'); ?>",
     overwriteInitial: false,
-    enableResumableUpload: true,
+    enableResumableUpload: false,
+    initialPreviewFileType: 'image',
     initialPreviewAsData: true,
     uploadAsync: true,
     showCancel: false,
     showRemove: false,
     showUpload: false,
     layoutTemplates:{actions:actions},
-    uploadExtraData:function() {
-      var ExtraData = {
-        single_data : $("#single_data").serialize(),
-        single_size_price:$("#single_size_price").serialize(),
-        keywords_data:$("#keywords").val()
-      };
-      return ExtraData;
-    },
+  }).on("filebatchselected", function(event, files) {
+    fileinput_upload.fileinput("upload");
   }).on('fileuploaded', function(event, data, previewId, index) {
-    var index = index.split("_");
-    var filename = ''
-    for (i = 1; i < index.length; i++) {
-      filename += index[i];
-    }
-    console.log(filename);
+    console.log('fileuploaded');
+    console.log(index);
+    console.log(data);
+  }).on('filepreupload', function(event, data, previewId, index) {
+    console.log("filepreupload");
+    console.log(data.files[0].name);
+    console.log(data.files[0].size);
+    console.log(data);
   });
 
-  $('#wizard').smartWizard({
-    onFinish:onFinishCallback
-  });
-  function onFinishCallback(){
-    console.log(plugin.initialPreview); // get initialPreview
-    $('#upload_file').fileinput('upload');
-  } 
+  // $('#wizard').smartWizard({
+  //   onFinish:onFinishCallback
+  // });
+  // function onFinishCallback(){
+  //   fileinput_upload.fileinput('upload');
+  // } 
 })
 </script>
