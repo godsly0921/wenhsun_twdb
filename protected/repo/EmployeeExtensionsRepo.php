@@ -18,4 +18,14 @@ class EmployeeExtensionsRepo
             ])
             ->execute();
     }
+
+    public function getAvailableExts()
+    {
+        return Yii::app()->db->createCommand(
+            '
+              SELECT * FROM employee_extensions e
+              WHERE NOT EXISTS(SELECT 1 FROM employee_info i WHERE i.ext_num = e.id)
+            '
+        )->queryAll();
+    }
 }

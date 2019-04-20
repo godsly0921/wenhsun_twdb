@@ -25,8 +25,10 @@ class InfoController extends Controller
 
     public function actionNew()
     {
-        $seats = EmployeeSeats::model()->findAll();
-        $exts = EmployeeExtensions::model()->findAll();
+        $extRepo = new EmployeeExtensionsRepo();
+        $exts = $extRepo->getAvailableExts();
+        $seatsRepo = new EmployeeSeatsRepo();
+        $seats = $seatsRepo->getAvailableSeats();
 
         $data = [
             'seats' => $seats,
@@ -39,21 +41,36 @@ class InfoController extends Controller
     public function actionCreate()
     {
         try {
-
-            if (
-                EmployeeInfoModel::model()->find("user_name=:user_name", [':user_name' => $_POST['user_name']])
-            ) {
-                Yii::log("帳號已存在({$_POST['user_name']})", CLogger::LEVEL_ERROR);
-                Yii::app()->session[Controller::ERR_MSG_KEY] = '帳號已存在';
-                $this->redirect('new');
-            }
-
+            $this->validateBeforePersist($_POST);
             $employeeInfo = $this->createEmployeeInfo($_POST);
             $employeeInfo->persist();
             $this->redirect('index');
         } catch (Throwable $ex) {
             Yii::log($ex->getMessage(), CLogger::LEVEL_ERROR);
             Yii::app()->session[Controller::ERR_MSG_KEY] = '新增錯誤';
+            $this->redirect('new');
+        }
+    }
+
+    private function validateBeforePersist(array $post)
+    {
+        if (empty($post['ext_num'])) {
+            Yii::log("無可用分機號碼", CLogger::LEVEL_ERROR);
+            Yii::app()->session[Controller::ERR_MSG_KEY] = '無可用分機號碼';
+            $this->redirect('new');
+        }
+
+        if (empty($post['ext_num'])) {
+            Yii::log("無可用座位", CLogger::LEVEL_ERROR);
+            Yii::app()->session[Controller::ERR_MSG_KEY] = '無可用座位';
+            $this->redirect('new');
+        }
+
+        if (
+        EmployeeInfoModel::model()->find("user_name=:user_name", [':user_name' => $post['user_name']])
+        ) {
+            Yii::log("帳號已存在({$post['user_name']})", CLogger::LEVEL_ERROR);
+            Yii::app()->session[Controller::ERR_MSG_KEY] = '帳號已存在';
             $this->redirect('new');
         }
     }

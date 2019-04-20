@@ -150,9 +150,13 @@
                                 <label class="control-label col-md-3 col-sm-3 col-xs-12">分機號碼</label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
                                     <select class="form-control" id="ext_num" name="ext_num">
-                                        <?php foreach ($exts as $ext):?>
-                                            <option value="<?=$ext->id?>"><?=$ext->ext_number?></option>
-                                        <?php endforeach;?>
+                                        <?php if(!empty($exts)):?>
+                                            <?php foreach ($exts as $ext):?>
+                                                <option value="<?=$ext['id']?>"><?=$ext['ext_number']?></option>
+                                            <?php endforeach;?>
+                                        <?php else:?>
+                                            <option value="">無可用分機號碼</option>
+                                        <?php endif;?>
                                     </select>
                                 </div>
                             </div>
@@ -161,9 +165,13 @@
                                 <label class="control-label col-md-3 col-sm-3 col-xs-12">座位號碼</label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
                                     <select class="form-control" id="seat_num" name="seat_num">
-                                        <?php foreach ($seats as $seat):?>
-                                            <option value="<?=$seat->id?>"><?=$seat->seat_number?></option>
-                                        <?php endforeach;?>
+                                        <?php if(!empty($seats)):?>
+                                            <?php foreach ($seats as $seat):?>
+                                                <option value="<?=$seat['id']?>"><?=$seat['seat_number']?></option>
+                                            <?php endforeach;?>
+                                        <?php else:?>
+                                            <option value="">無可用座位</option>
+                                        <?php endif;?>
                                     </select>
                                 </div>
                             </div>
