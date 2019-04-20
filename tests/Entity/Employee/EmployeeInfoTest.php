@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Wenhsun\Employee;
+namespace Wenhsun\Entity\Employee;
 
 use PHPUnit\Framework\TestCase;
 

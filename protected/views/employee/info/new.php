@@ -1,13 +1,13 @@
-<?php if (!empty(Yii::app()->session[Controller::ERR_MSG_KEY])): ?>
-    <div id="error_alert" class="alert alert-danger alert-dismissible fade in" role="alert">
-        <?php echo Yii::app()->session[Controller::ERR_MSG_KEY];?>
-        <?php unset(Yii::app()->session[Controller::ERR_MSG_KEY]);?>
-    </div>
-<?php endif; ?>
 <div role="main">
-    <div class="">
+    <div>
         <div class="row">
             <div class="col-md-12 col-sm-12 col-xs-12">
+                <?php if (!empty(Yii::app()->session[Controller::ERR_MSG_KEY])): ?>
+                    <div id="error_alert" class="alert alert-danger alert-dismissible fade in" role="alert">
+                        <?php echo Yii::app()->session[Controller::ERR_MSG_KEY];?>
+                        <?php unset(Yii::app()->session[Controller::ERR_MSG_KEY]);?>
+                    </div>
+                <?php endif; ?>
                 <div class="x_panel">
                     <div class="x_title">
                         <h2>新增員工資料</h2>
@@ -96,20 +96,12 @@
                             <div id="twzipcode">
                                 <div class="form-group">
                                     <label class="control-label col-md-3 col-sm-3 col-xs-12">縣市</label>
-                                    <div class="col-md-6 col-sm-6 col-xs-12" data-role="county">
-<!--                                        <select class="form-control" id="city" name="city">-->
-<!---->
-<!--                                        </select>-->
-                                    </div>
+                                    <div class="col-md-6 col-sm-6 col-xs-12" data-role="county"></div>
                                 </div>
 
                                 <div class="form-group">
                                     <label class="control-label col-md-3 col-sm-3 col-xs-12">鄉鎮</label>
-                                    <div class="col-md-6 col-sm-6 col-xs-12" data-role="district">
-<!--                                        <select class="form-control" id="dist" name="dist">-->
-<!---->
-<!--                                        </select>-->
-                                    </div>
+                                    <div class="col-md-6 col-sm-6 col-xs-12" data-role="district"></div>
                                 </div>
                             </div>
 
@@ -147,7 +139,7 @@
                             <div class="form-group">
                                 <label class="control-label col-md-3 col-sm-3 col-xs-12">是否啟用</label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
-                                    <select class="form-control" id="available" name="available">
+                                    <select class="form-control" id="available" name="enable">
                                         <option value="Y">是</option>
                                         <option value="N">否</option>
                                     </select>
@@ -157,7 +149,7 @@
                             <div class="form-group">
                                 <label class="control-label col-md-3 col-sm-3 col-xs-12">分機號碼</label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
-                                    <select class="form-control" id="ext" name="ext">
+                                    <select class="form-control" id="ext_num" name="ext_num">
                                         <?php foreach ($exts as $ext):?>
                                             <option value="<?=$ext->id?>"><?=$ext->ext_number?></option>
                                         <?php endforeach;?>
@@ -168,7 +160,7 @@
                             <div class="form-group">
                                 <label class="control-label col-md-3 col-sm-3 col-xs-12">座位號碼</label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
-                                    <select class="form-control" id="seat" name="seat">
+                                    <select class="form-control" id="seat_num" name="seat_num">
                                         <?php foreach ($seats as $seat):?>
                                             <option value="<?=$seat->id?>"><?=$seat->seat_number?></option>
                                         <?php endforeach;?>
@@ -230,7 +222,7 @@
                             <div class="ln_solid"></div>
                             <div class="form-group">
                                 <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
-                                    <a href="/employee/seats"><button type="button" class="btn btn-default">返回</button></a>
+                                    <a href="/employee/info"><button type="button" class="btn btn-default">返回</button></a>
                                     <button type="submit" class="btn btn-primary">新增</button>
                                 </div>
                             </div>
@@ -247,7 +239,7 @@
     $('#twzipcode').twzipcode(
         {
             css: ['form-control', 'form-control'],
-            countyName: "city",
+            countyName: "country",
             districtName: "dist",
             zipcodeIntoDistrict: true
         }
