@@ -1,9 +1,13 @@
+<!-- bootstrap-datetimepicker -->
+<link href="<?php echo Yii::app()->request->baseUrl; ?>/assets/gentelella/vendors/jQuery-Smart-Wizard/styles/smart_wizard.css" rel="stylesheet">
 <!-- bootstrap-fileinput.css -->
 <link href="<?php echo Yii::app()->request->baseUrl; ?>/assets/bootstrap_fileinput/css/fileinput.min.css" rel="stylesheet">
 <!-- bootstrap-daterangepicker -->
 <link href="<?php echo Yii::app()->request->baseUrl; ?>/assets/gentelella/vendors/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
 <!-- bootstrap-datetimepicker -->
 <link href="<?php echo Yii::app()->request->baseUrl; ?>/assets/gentelella/vendors/bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.css" rel="stylesheet">
+<!-- bootstrap-progressbar -->
+<link href="<?php echo Yii::app()->request->baseUrl; ?>/assets/gentelella/vendors/bootstrap-progressbar/css/bootstrap-progressbar-3.3.4.min.css" rel="stylesheet">
 <!-- page content -->
 <div class="">
   <div class="page-title">
@@ -53,7 +57,7 @@
                   <span class="step_no">4</span>
                   <span class="step_descr">
                     Step 4<br />
-                    <small>切圖進度</small>
+                    <small>圖片上傳進度</small>
                   </span>
                 </a>
               </li>
@@ -257,11 +261,36 @@
             <div id="step-4">
               <div class="x_panel">
                 <div class="x_title">
-                  <h2>切圖進度</h2>
+                  <h2>圖片上傳進度</h2>
                   <div class="clearfix"></div>
                 </div>
                 <div class="x_content">
-
+                  <div class="row">
+                    <div class="col-xs-2 text-right">
+                      <span>檔案編號 12345</span>
+                    </div>
+                    <div class="col-xs-8">
+                      <div class="progress progress_sm">
+                        <div class="progress-bar bg-green" role="progressbar" data-transitiongoal="100"></div>
+                      </div>
+                    </div>
+                    <div class="col-xs-2 more_info">
+                      <span>100%</span>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-xs-2 text-right">
+                      <span>檔案編號 12345</span>
+                    </div>
+                    <div class="col-xs-8">
+                      <div class="progress progress_sm">
+                        <div class="progress-bar bg-green" role="progressbar" data-transitiongoal="100"></div>
+                      </div>
+                    </div>
+                    <div class="col-xs-2 more_info">
+                      <span>100%</span>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -287,6 +316,8 @@
 <script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/bootstrap_fileinput/js/plugins/sortable.js" type="text/javascript"></script>
 <script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/bootstrap_fileinput/js/fileinput.js" type="text/javascript"></script>
 <script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/bootstrap_fileinput/js/locales/zh-TW.js" type="text/javascript"></script>
+<!-- bootstrap-progressbar -->
+<script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/gentelella/vendors/bootstrap-progressbar/bootstrap-progressbar.min.js"></script>
 <script>
 $(document).ready(function () {
   if(typeof $.fn.tagsInput !== 'undefined'){        
@@ -322,20 +353,32 @@ $(document).ready(function () {
     fileinput_upload.fileinput("upload");
   }).on('fileuploaded', function(event, data, previewId, index) {
     console.log('fileuploaded');
-    console.log(index);
-    console.log(data);
+    var response = data.response[0];
+    var status = response.status;
+    if(status == true){
+      console.log('index : ' + index);
+      console.log('single_id : ' + response.single_id)
+    }else{
+      alert(response.errorMsg);
+    }
+    // console.log(index);
+    // console.log(data);
   }).on('filepreupload', function(event, data, previewId, index) {
     console.log("filepreupload");
-    console.log(data.files[0].name);
-    console.log(data.files[0].size);
-    console.log(data);
+    console.log('index : ' + index);
+    console.log('filename : ' + data.files[0].name);
+    console.log('filesize : ' + data.files[0].size);
   });
 
-  // $('#wizard').smartWizard({
-  //   onFinish:onFinishCallback
-  // });
-  // function onFinishCallback(){
-  //   fileinput_upload.fileinput('upload');
-  // } 
+  $('#wizard').smartWizard({
+    cycleSteps:true,
+    labelNext: '下一步',
+    labelPrevious: '上一步',
+    labelFinish: '送出表單',
+    onFinish:onFinishCallback,
+  });
+  function onFinishCallback(){
+    fileinput_upload.fileinput('upload');
+  }
 })
 </script>

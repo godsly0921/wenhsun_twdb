@@ -17,69 +17,90 @@ class PhotographController extends Controller{
     public function ActionBatUploadFile(){
         // 如果檔案不為空，則上傳
         $time_start = microtime(true);
-        //var_dump($_POST);exit();
         if (!empty($_FILES['file'])) { 
-            $return_data = array();
+            $photographService = new PhotographService();
+            $return_data = $single_data = array();
             $ds          = DIRECTORY_SEPARATOR; // '/'
             $storeFolder = PHOTOGRAPH_STORAGE_DIR; //檔案儲存的路徑
             $targetPath = $storeFolder . 'source' . $ds; // 原始檔存放路徑
-            // foreach ($_FILES['file']['tmp_name'] as $file_key => $file_value) {
-                $tempFile   = $_FILES['file']['tmp_name']; //上傳檔案的暫存
-                $fileName = $_FILES['file']['name']; //上傳檔案的檔名
-                $fileSize = $_FILES['file']['size']; //上傳檔案的檔案大小
-                $targetFile = $targetPath . $fileName;
-                if ( move_uploaded_file($tempFile,$targetFile) ) {
-                    $return_data[] = array(
-                        'fileName' => $fileName,
-                        'fileSize' => $fileSize,
-                        'status' => true,
-                    );
+            $tempFile   = $_FILES['file']['tmp_name']; //上傳檔案的暫存
+            $fileName = $_FILES['file']['name']; //上傳檔案的檔名
+            $fileSize = $_FILES['file']['size']; //上傳檔案的檔案大小
+            $transaction = Yii::app()->db->beginTransaction();
+            try {
+                $exist_filename = $photographService->existPhotoNameExist($fileName);
+                if(!$exist_filename){
+                    $single_data['photo_name'] = $fileName;
+                    $ext = explode('.', $fileName)[1];
+                    $single_data['ext'] = $ext;
+                    $single = $photographService->createSingleBase($single_data); // 先存圖片檔名、檔案格式進資料庫
+                    if($single['status']){
+                         $single =  $single['data'];
+                        $targetFile =  $targetPath . $single->single_id . "." . $ext; // 暫時用 single 資料表的流水號做圖檔命名
+                        if ( move_uploaded_file($tempFile,$targetFile) ) {
+                            list($width, $height) = getimagesize($targetFile);
+                            $create_image_queue = $photographService->createImageQueue( $single->single_id, $width, $height );
+                            if($create_image_queue['status'] == true){
+                                $return_data[] = array(
+                                    'single_id' => $single->single_id,
+                                    'fileName' => $fileName,
+                                    'fileSize' => $fileSize,
+                                    'status' => true,
+                                    'errorMsg' => ''
+                                );
+                                $time = microtime(true) - $time_start;
+                                $return_data['runtime'] = $time;
+                            }else{
+                                $return_data[] = array(
+                                    'fileName' => $fileName,
+                                    'fileSize' => $fileSize,
+                                    'status' => false,
+                                    'errorMsg' => 'create image info failed'
+                                );
+                                $time = microtime(true) - $time_start;
+                                $return_data['runtime'] = $time;
+                                unlink($targetFile);
+                                echo json_encode($return_data);exit();
+                            }
+                        }else{
+                            $return_data[] = array(
+                                'fileName' => $fileName,
+                                'fileSize' => $fileSize,
+                                'status' => false,
+                                'errorMsg' => 'upload image failed'
+                            );
+                            $time = microtime(true) - $time_start;
+                            $return_data['runtime'] = $time;
+                            echo json_encode($return_data);exit();
+                        }
+                    }
                 }else{
                     $return_data[] = array(
                         'fileName' => $fileName,
                         'fileSize' => $fileSize,
                         'status' => false,
+                        'errorMsg' => $fileName . ' is already exists'
                     );
-                }
-            // }
-        }else{
-            $return_data[] = array(
-                'fileName' => '',
-                'fileSize' => '',
-                'status' => false,
-            );
-        }
-        $time = microtime(true) - $time_start;
-        $return_data['runtime'] = $time;
-        echo json_encode($return_data);exit();
-    }
-    public function ActionUploadFile(){
-        // 如果檔案不為空，則上傳
-        $time_start = microtime(true);
-        //var_dump($_POST);exit();
-        if (!empty($_FILES['file'])) { 
-            $return_data = array();
-            $ds          = DIRECTORY_SEPARATOR; // '/'
-            $storeFolder = PHOTOGRAPH_STORAGE_DIR; //檔案儲存的路徑
-            $targetPath = $storeFolder . 'source' . $ds; // 原始檔存放路徑
-            foreach ($_FILES['file']['tmp_name'] as $file_key => $file_value) {
-                $tempFile   = $file_value; //上傳檔案的暫存
-                $fileName = $_FILES['file']['name'][$file_key]; //上傳檔案的檔名
-                $fileSize = $_FILES['file']['size'][$file_key]; //上傳檔案的檔案大小
-                $targetFile = $targetPath . $fileName;
-                if ( move_uploaded_file($tempFile,$targetFile) ) {
-                    $return_data[] = array(
-                        'fileName' => $fileName,
-                        'fileSize' => $fileSize,
-                        'status' => true,
-                    );
-                }else{
-                    $return_data[] = array(
-                        'fileName' => $fileName,
-                        'fileSize' => $fileSize,
-                        'status' => false,
-                    );
-                }
+                    $return_data['append'] = false;
+                    $time = microtime(true) - $time_start;
+                    $return_data['runtime'] = $time;
+                    echo json_encode($return_data);exit();
+                }                
+                $transaction->commit();
+                echo json_encode($return_data);exit();
+            }catch(Exception $e){
+                $transaction->rollback();
+                $return_data[] = array(
+                    'fileName' => '',
+                    'fileSize' => '',
+                    'status' => false,
+                    'errorMsg' => 'unknown failed'
+                );
+                unlink($targetFile);
+                $time = microtime(true) - $time_start;
+                $return_data['runtime'] = $time;
+                echo json_encode($return_data);exit();
+                exit();
             }
         }else{
             $return_data[] = array(
@@ -87,10 +108,10 @@ class PhotographController extends Controller{
                 'fileSize' => '',
                 'status' => false,
             );
+            $time = microtime(true) - $time_start;
+            $return_data['runtime'] = $time;
+            echo json_encode($return_data);exit();
         }
-        $time = microtime(true) - $time_start;
-        $return_data['runtime'] = $time;
-        echo json_encode($return_data);exit();
     }
 
     public function ActionFileUpload(){

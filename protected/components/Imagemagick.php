@@ -57,37 +57,87 @@ class Imagemagick {
 		'P'=>'略縮圖',
 	);
 	public static $size_bound_settings = array(
-		'XL'=>array('dpi'=>'300','>'=>3500),
-		'L'=>array('dpi'=>'300','bound'=>3500,'>'=>2000,'<='=>3500),
-		'M'=>array('dpi'=>'300','bound'=>2000,'>'=>1200,'<='=>2000),
-		'S'=>array('dpi'=>'72','bound'=>1200,'>'=>600,'<='=>1200),
+		'XL' => array( 'dpi' => '300', '>' => 3500 ),
+		'L' => array( 'dpi' => '300', 'bound' => 3500, '>' => 2000, '<=' => 3500 ),
+		'M' => array( 'dpi' => '300', 'bound' => 2000, '>' => 1200, '<=' => 2000 ),
+		'S' => array( 'dpi' => '72', 'bound' => 1200, '>' => 600, '<=' => 1200 ),
 	);
+
+	private static function getPhotographscale($w_h, $bound) {
+		$w_h = explode('x', $w_h);
+		$width = $w_h[0];
+		$height = $w_h[1];
+		$pre_compare = 0;
+		$output_width = 0;
+		$output_height = 0;
+		if ($width > $height) {
+			$output_width = $bound;
+			$output_height = intval(($bound / $width) * $height);
+		} else if ($width < $height) {
+			$output_width = intval(($bound / $height) * $width);
+			$output_height = $bound;
+		} else {
+			$output_width = $bound;
+			$output_height = $bound;
+		}
+		return $output_width . 'x' . $output_height;
+	}
+	public static function getPhotographMP( $w_h ){
+		$w_h = explode('x', $w_h);
+		$width = $w_h[0];
+		$height = $w_h[1];
+		return (int) $width * $height;
+	}
+	public static function getPhotographMaxSize( $width, $height ){
+		$max_width_height = max( array( $width, $height ) );
+		//找出最大尺寸應在範圍
+		$max_size_data = "";
+		foreach (Imagemagick::$size_bound_settings as $size => $datas) {
+			$in_checked = false;
+			if (isset($datas['>']) && isset($datas['<='])) {
+				if ($datas['>'] < $max_width_height && $max_width_height <= $datas['<=']) {
+					$in_checked = true;
+				}
+			} else {
+				if (isset($datas['>']) && $datas['>'] < $max_width_height) {
+					$in_checked = true;
+				}
+				if (isset($datas['<=']) && $max_width_height <= $datas['<=']) {
+					$in_checked = true;
+				}
+			}
+			if ($in_checked && $max_size_data == '') {
+				$max_size_data = $size;
+			}
+		}
+		return $max_size_data;
+	}
 
 	public static function get_graph_convert($path,$file_path,$single_id) {
 		$file_name = basename($file_path);
 		$ex_file_name = explode('.', $file_name);
 		$source_to_jpg = IMAGE_STORAGE . "source_to_jpg";
 		if($ex_file_name[1]==='gif' || $ex_file_name[1]==='psd'){
-			$exec = "/usr/local/bin/convert ".$file_path."[0]  -units PixelsPerInch ".$source_to_jpg."/".$ex_file_name[0].".jpg";	
+			$exec = "convert ".$file_path."[0]  -units PixelsPerInch ".$source_to_jpg."/".$ex_file_name[0].".jpg";	
 			exec($exec);
 		}elseif ($ex_file_name[1]==='eps'){
-			$exec = "/usr/local/bin/convert ".$file_path."  -units PixelsPerInch ".$source_to_jpg."/".$ex_file_name[0].".png";	
+			$exec = "convert ".$file_path."  -units PixelsPerInch ".$source_to_jpg."/".$ex_file_name[0].".png";	
 	 		exec($exec);
-	 		$exec = "/usr/local/bin/convert ".$path . "/" . $ex_file_name[0] . ".png  -units PixelsPerInch ".$source_to_jpg."/".$ex_file_name[0].".jpg";	
+	 		$exec = "convert ".$path . "/" . $ex_file_name[0] . ".png  -units PixelsPerInch ".$source_to_jpg."/".$ex_file_name[0].".jpg";	
 			exec($exec);
 			unlink($path . "/" . $ex_file_name[0] . ".png");
 		}elseif($ex_file_name[1]==='ai'){
-			$exec = "/usr/local/bin/convert ".$file_path." ".$path."/".$ex_file_name[0].".png";	
+			$exec = "convert ".$file_path." ".$path."/".$ex_file_name[0].".png";	
 	 		exec($exec);
-	 		$exec = "/usr/local/bin/convert ".$path . "/" . $ex_file_name[0] . ".png  ".$source_to_jpg."/".$ex_file_name[0].".jpg";	
+	 		$exec = "convert ".$path . "/" . $ex_file_name[0] . ".png  ".$source_to_jpg."/".$ex_file_name[0].".jpg";	
 			exec($exec);
 			unlink($path . "/" . $ex_file_name[0] . ".png");
 		}elseif($ex_file_name[1]==='tiff' || $ex_file_name[1]==='tif'){
-			$exec = "/usr/local/bin/convert ".$file_path."[0]  -units PixelsPerInch ".$source_to_jpg."/".$ex_file_name[0].".jpg";
+			$exec = "convert ".$file_path."[0]  -units PixelsPerInch ".$source_to_jpg."/".$ex_file_name[0].".jpg";
 			//var_dump($exec);exit();
 			exec($exec);
 		}else{
-			$exec = "/usr/local/bin/convert ".$file_path."[0]  -units PixelsPerInch ".$source_to_jpg."/".$ex_file_name[0].".jpg";
+			$exec = "convert ".$file_path."[0]  -units PixelsPerInch ".$source_to_jpg."/".$ex_file_name[0].".jpg";
 			exec($exec);
 		}
 		return;
@@ -99,7 +149,7 @@ class Imagemagick {
 		$results = array('w_h' => '0x0', 'direction' => '', 'resolution' => 0, 'colorspace' => '', 'print_w_h' => '0.0x0.0');
 		$accept_array = array('jpg', 'jpeg', 'tiff', 'tif','BMP', 'png');
 		if (count($ex_file_name) >= 2 && in_array($ex_file_name[count($ex_file_name) - 1], $accept_array)) {
-			exec('/usr/local/bin/identify -verbose "' . $file_path . '"', $graph_results,$outdata);
+			exec('identify -verbose "' . $file_path . '"', $graph_results,$outdata);
 			$outputs = array('geometry', 'resolution', 'printsize', 'colorspace');
 			$type = '';
 			foreach ($graph_results as $graph_result) {
@@ -147,13 +197,13 @@ class Imagemagick {
 		//p
 		$target_p_path = IMAGE_STORAGE . 'P';
 		$file_path = IMAGE_STORAGE . 'source_to_jpg' . '/' . $file_name ;
-		exec('/usr/local/bin/convert -strip -density 72 -geometry 150x150 ' . $file_path . ' ' . $target_p_path . '/' . $file_rename . '');
+		exec('convert -strip -density 72 -geometry 150x150 ' . $file_path . ' ' . $target_p_path . '/' . $file_rename . '');
 		//o
 		$target_o_path = IMAGE_STORAGE . 'O';
-		exec('/usr/local/bin/convert -strip -density 72 -geometry 500x500 "' . $file_path . '" "' . $target_o_path . '/' . $file_rename . '"');
+		exec('convert -strip -density 72 -geometry 500x500 "' . $file_path . '" "' . $target_o_path . '/' . $file_rename . '"');
 		//var_dump('convert -strip -density 72 -geometry 500x500 ' . $file_path . '/' . $file_name . ' ' . $target_o_path . '/' . $file_rename . '');
 		//exit();
-		exec('/usr/local/bin/composite -dissolve 100% -gravity center "' . WATERMARK . '" "' . $target_o_path . '/' . $file_rename . '" "' . $target_o_path . '/' . $file_rename . '"');
+		exec('composite -dissolve 100% -gravity center "' . WATERMARK . '" "' . $target_o_path . '/' . $file_rename . '" "' . $target_o_path . '/' . $file_rename . '"');
 		return array('p_path' => $target_p_path, 'o_path' => $target_o_path);
 	}
 
@@ -167,13 +217,13 @@ class Imagemagick {
 			$w = $ex_w_h[0];
 			$h = $ex_w_h[1];
 			if ($w > $h) {
-				$direction = 'h';
+				$direction = 2;
 			}
 			if ($w < $h) {
-				$direction = 'v';
+				$direction = 1;
 			}
 			if ($w == $h) {
-				$direction = 's';
+				$direction = 3;
 			}
 		}
 		return array('w_h' => $w . 'x' . $h, 'direction' => $direction);
@@ -313,7 +363,7 @@ class Imagemagick {
 	private static function build_graph_sizes($file_path, $file_name, $size, $file_rename) {
 		$geometry = $bound . 'x' . $bound;
 		$target_path = STORAGE_DIR . '/' . $size;
-		exec('/usr/local/bin/convert -geometry ' . $geometry . ' "' . $file_path . '/' . $file_name . '" "' . $target_path . '/' . $file_rename . '"');
+		exec('convert -geometry ' . $geometry . ' "' . $file_path . '/' . $file_name . '" "' . $target_path . '/' . $file_rename . '"');
 		return array('path' => $target_path, 'file' => $file_rename);
 	}
 
@@ -328,19 +378,19 @@ class Imagemagick {
 		$file_path = IMAGE_STORAGE . 'source_to_jpg' . '/' . $file_name ;
 		switch ($graph_type) {
 			case "XL" :
-				exec('/usr/local/bin/convert -strip -density ' . $dpi . ' "' . $file_path . '" "' . $target_path . '/' . $file_rename . '"');
+				exec('convert -strip -density ' . $dpi . ' "' . $file_path . '" "' . $target_path . '/' . $file_rename . '"');
 				break;
 				
 			case "L" :
-				exec('/usr/local/bin/convert -strip -density ' . $dpi . ' -geometry 2000x2000 "' . $file_path . '" "' . $target_path . '/' . $file_rename . '"');
+				exec('convert -strip -density ' . $dpi . ' -geometry 2000x2000 "' . $file_path . '" "' . $target_path . '/' . $file_rename . '"');
 				break;
 
 			case "M" :
-				exec('/usr/local/bin/convert -strip -density ' . $dpi . ' -geometry 1200x1200 "' . $file_path . '" "' . $target_path . '/' . $file_rename . '"');
+				exec('convert -strip -density ' . $dpi . ' -geometry 1200x1200 "' . $file_path . '" "' . $target_path . '/' . $file_rename . '"');
 				break;
 
 			case "S" :
-				exec('/usr/local/bin/convert -strip -density ' . $dpi . ' -geometry 600x600 "' . $file_path . '" "' . $target_path . '/' . $file_rename . '"');
+				exec('convert -strip -density ' . $dpi . ' -geometry 600x600 "' . $file_path . '" "' . $target_path . '/' . $file_rename . '"');
 				break;
 			default :
 				break;
