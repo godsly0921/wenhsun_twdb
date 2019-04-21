@@ -73,6 +73,34 @@ class InfoController extends Controller
         $this->render('edit', ['data' => $data, 'exts' => $exts, 'seats' => $seats]);
     }
 
+    public function actionUpdatePassword()
+    {
+        $this->checkCSRF('index');
+
+        try {
+
+            $employeeInfoModel = EmployeeInfoModel::model()->findByPk($_POST['id']);
+
+            if (!$employeeInfoModel) {
+                Yii::log("employee info not found by id ({$_POST['id']})", CLogger::LEVEL_ERROR);
+                Yii::app()->session[Controller::ERR_MSG_KEY] = '更新失敗';
+                $this->redirect("edit?id={$_POST['id']}");
+            }
+
+            $employeeInfo = new EmployeeInfo(new EmployeeId());
+            $employeeInfoModel->password = $employeeInfo->hashPassword($_POST['password']);
+            $employeeInfoModel->update();
+
+            Yii::app()->session[Controller::SUCCESS_MSG_KEY] = '更新成功';
+            $this->redirect("edit?id={$_POST['id']}");
+
+        } catch (Throwable $ex) {
+            Yii::log($ex->getMessage(), CLogger::LEVEL_ERROR);
+            Yii::app()->session[Controller::ERR_MSG_KEY] = '更新失敗';
+            $this->redirect("edit?id={$_POST['id']}");
+        }
+    }
+
     private function validateBeforePersist(array $post)
     {
         if (empty($post['ext_num'])) {

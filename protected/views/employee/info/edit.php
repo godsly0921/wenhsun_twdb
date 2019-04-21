@@ -8,6 +8,12 @@
                         <?php unset(Yii::app()->session[Controller::ERR_MSG_KEY]);?>
                     </div>
                 <?php endif; ?>
+                <?php if (!empty(Yii::app()->session[Controller::SUCCESS_MSG_KEY])): ?>
+                    <div id="succ-alert" class="alert alert-success alert-dismissible fade in" role="alert">
+                        <?php echo Yii::app()->session[Controller::SUCCESS_MSG_KEY];?>
+                        <?php unset(Yii::app()->session[Controller::SUCCESS_MSG_KEY]);?>
+                    </div>
+                <?php endif; ?>
                 <div class="x_panel">
                     <div class="x_title">
                         <h2>修改員工資料</h2>
@@ -230,7 +236,9 @@
                     </div>
                     <div class="x_content">
                         <br>
-                        <form id="password_form" method="post" action="/employee/info/update" data-parsley-validate class="form-horizontal form-label-left" novalidate>
+                        <form id="password_form" method="post" action="/employee/info/updatepassword" data-parsley-validate class="form-horizontal form-label-left" novalidate>
+                            <input type="hidden" name="id" value="<?=$data->id?>">
+                            <?php CsrfProtector::genHiddenField(); ?>
                             <div class="form-group">
                                 <label class="control-label col-md-3 col-sm-3 col-xs-12" for="password">密碼</label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">

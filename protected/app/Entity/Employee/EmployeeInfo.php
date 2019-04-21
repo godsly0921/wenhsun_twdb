@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Wenhsun\Entity\Employee;
 
 use EmployeeInfo as EmployeeInfoModel;
+use RuntimeException;
 
 class EmployeeInfo
 {
@@ -45,7 +46,12 @@ class EmployeeInfo
 
     public function setPassword($password)
     {
-        $this->password = md5($password);
+        $this->password = $this->hashPassword($password);
+    }
+
+    public function hashPassword($password)
+    {
+        return md5($password);
     }
 
     public function getPassword()
