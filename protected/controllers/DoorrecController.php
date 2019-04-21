@@ -2,7 +2,10 @@
 ini_set('memory_limit', '256M');
 class DoorrecController extends Controller
 {
-    public $layout = "//layouts/back_end";
+    protected function needLogin(): bool
+    {
+        return true;
+    }
 
     protected function beforeAction($action)
     {
@@ -247,4 +250,6 @@ class DoorrecController extends Controller
 
 
     }
+
+
 }

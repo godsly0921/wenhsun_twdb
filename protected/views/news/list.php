@@ -2,8 +2,8 @@
 <ul class="nav nav-tabs">
     <li class="active"><a data-toggle="tab" href="#news">公布欄</a></li>
     <?php if(Yii::app()->session['personal'] == false){?>
-        <li><a data-toggle="tab" href="#device">儀器即時監控</a></li>
-        <li><a data-toggle="tab" href="#door">門禁即時監控</a></li>
+      <!--  <li><a data-toggle="tab" href="#device">儀器即時監控</a></li>-->
+       <!-- <li><a data-toggle="tab" href="#door">門禁即時監控</a></li>-->
     <?php }?>
 </ul>
 

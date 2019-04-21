@@ -12,7 +12,8 @@
     <link href="<?php echo Yii::app()->request->baseUrl; ?>/assets/gentelella/build/css/custom.min.css" rel="stylesheet">
     <script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/gentelella/vendors/jquery/dist/jquery.min.js"></script>
     <script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/gentelella/vendors/parsley/parsley.min.js"></script>
-    <script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/gentelella/vendors/parsley/i18n/zh_tw.js"></script>
+    <script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/gentelella/build/js/i18n/zh_tw.js"></script>
+
 </head>
 <body class="nav-md">
     <div class="container body">
@@ -126,5 +127,6 @@
         <script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/gentelella/vendors/bootstrap/dist/js/bootstrap.min.js"></script>
         <script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/gentelella/vendors/fastclick/lib/fastclick.js"></script>
         <script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/gentelella/vendors/nprogress/nprogress.js"></script>
-        <script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/gentelella/build/js/custom.min.js"></script>
+       <!-- <script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/gentelella/build/js/custom.min.js"></script>-->
+        <script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/gentelella/build/js/custom.js"></script>
 </body>

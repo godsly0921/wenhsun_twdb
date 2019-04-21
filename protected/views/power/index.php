@@ -4,7 +4,7 @@
 </div>
 <div class="panel panel-default" style="width=100%; overflow-y:scroll;">
     <div class="panel-body">
-        <table id="specialcaseTable" width="100%" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid">
+        <table id="powerTable" width="100%" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid">
             <thead>
             <tr role="row">
                 <!--<th>功能編號</th>-->
@@ -38,30 +38,15 @@
 <script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/admin/ext/js/dataTables.bootstrap.min.js"></script>
 <script>
     $(document).ready(function() {
-        $('#specialcaseTable').DataTable( {
+        $('#powerTable').DataTable( {
             "scrollX": true,
             "lengthChange": false,
             "oLanguage": {
                 "oPaginate": {"sFirst": "第一頁", "sPrevious": "上一頁", "sNext": "下一頁", "sLast": "最後一頁"},
-                "sEmptyTable": "無任何聯繫資料"
+                "sEmptyTable": "無任何功能資料"
             }
         } );
     } );
-   /* $(document).ready(function () {
-        var powerTable = $('#powerTable').DataTable({
-            'iDisplayLength': 10,
-            "lengthChange": false,
-            "paging": true,
-            "responsive": true,
-            "info": false,
-            "order": [[4, "desc"]],
-            "columnDefs": [{"targets": 2, "orderable": false}],
-            "oLanguage": {
-                "oPaginate": {"sFirst": "第一頁", "sPrevious": "上一頁", "sNext": "下一頁", "sLast": "最後一頁"},
-                "sEmptyTable": "無任何功能資料"
-            }
-        });
-    });*/
     $(".oprate-del").on('click', function () {
         var powId = $(this).data("pow-id");
         var powName = $(this).data("pow-neme");
