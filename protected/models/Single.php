@@ -49,7 +49,7 @@ class Single extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('photo_name, ext, category_id, create_time, create_account_id', 'required'),
+			array('photo_name, ext, create_time, create_account_id', 'required'),
 			array('dpi, direction, author_id, photo_source, store_status, index_limit, original_limit, photo_limit, publish, copyright, create_account_id', 'numerical', 'integerOnly'=>true),
 			array('photo_name, category_id, filming_location, filming_name, object_name', 'length', 'max'=>100),
 			array('ext', 'length', 'max'=>6),

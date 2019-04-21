@@ -11,6 +11,17 @@ class PhotographService{
         }
     }
 
+    public function existPhotoNameExist( $photo_name ){
+         $result = Single::model()->find(array(
+            'condition'=>'photo_name=:photo_name',
+            'params'=>array(
+                ':photo_name' => $photo_name,
+            )
+        ));
+
+        return ($result == false) ? false : true;
+    }
+
     // 圖片上架時儲存的圖片資訊 - 是最初始的值
     public function createSingleBase( $input ){
     	$single = new Single();
@@ -48,17 +59,50 @@ class PhotographService{
     		return array('status'=>false,'data'=>$single);
     	}
     }
-    public function getPhotographData($targetFile){
-    	$single_size = array();
-    	$photograph_data = Imagemagick::get_graph_data( $targetFile );
-    	$photograph_data['mp'] = Imagemagick::get_pixel_sizes( $photograph_data['w_h'], $photograph_data['colorspace'] );
-    	$single_size['dpi'] = $photograph_data['resolution'];
-    	$single_size['mp'] = $photograph_data['mp'];
-    	$single_size['w_h'] = $photograph_data['w_h'];
-    	$single_size['print_w_h'] = $photograph_data['print_w_h'];
-    	return array( 'single_size'=>$single_size, 'photograph_data' => $photograph_data);
+
+    public function storeUpdataSingle( $single_id, $photograph_data ){
+        $single = Single::model()->findByPk($single_id);;
+        $single_data = array();
+        $single_data['dpi'] = $photograph_data['resolution'];
+        $single_data['color'] = $photograph_data['colorspace'];
+        $single_data['direction'] = $photograph_data['direction'];
+        $update_single = $this->updateSingle( $single->single_id, $single_data );
+        //var_dump($update_single);exit();
+        if( $update_single['status'] ){
+            return array( 'status' => true, 'data' => $update_single['data'] );
+        }else{
+            return array( 'status' => false, 'data' => $update_single['data'] );
+        }
     }
-    public function getPhotographMaxSize( $single_id, $single_size_price, $photograph_data ){
+
+    public function createImageQueue( $single_id, $width, $height ){
+        $max_size_type = Imagemagick::getPhotographMaxSize( $width, $heigh );
+        if( $max_size_type == '') {
+            $max_size_type = 'source';
+        }
+        $image_queue = new imagequeue();
+        $image_queue->single_id = $single_id;
+        $image_queue->size_type = $max_size_type;
+        $image_queue->create_time = date('Y-m-d h:i:s');
+        if($image_queue->save()){
+            return array('status'=>true,'data'=>$image_queue);
+        }else{
+            return array('status'=>false,'data'=>$image_queue);
+        }
+    }
+    public function getPhotographData($targetFile){
+    	$photograph_data = Imagemagick::get_graph_data( $targetFile );
+    	$photograph_data['mp'] = Imagemagick::getPhotographMP( $photograph_data['w_h'] );
+    	return $photograph_data;
+    }
+    public function getPhotographMaxSize( $single_id, $width, $height ){
+        $single_size = array();
+        $single_size['single_id'] =  $single_id;
+        $single_size['size_type'] =  $single_id;
+        $single_size['size_description'] =  $single_id;
+        $single_size['single_id'] =  $single_id;
+        $single_size['single_id'] =  $single_id;
+        $single_size['single_id'] =  $single_id;
     	$max_size_data = Imagemagick::get_size_datas($w_h, $photograph_data['dpi'], $photograph_data['colorspace']);
     	foreach ($max_size_data as $key => $value) {
  			$single_size = array();
