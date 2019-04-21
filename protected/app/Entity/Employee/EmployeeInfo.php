@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Wenhsun\Entity\Employee;
 
 use EmployeeInfo as EmployeeInfoModel;
-use RuntimeException;
 
 class EmployeeInfo
 {

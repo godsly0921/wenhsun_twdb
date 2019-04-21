@@ -24,7 +24,7 @@
                         <form id="form" method="post" action="/employee/info/update" data-parsley-validate class="form-horizontal form-label-left" novalidate>
 
                             <?php CsrfProtector::genHiddenField(); ?>
-
+                            <input type="hidden" name="id" value="<?=$data->id?>">
                             <p>帳號設定</p>
 
                             <div class="form-group">
@@ -144,7 +144,7 @@
                                     <select class="form-control" id="ext_num" name="ext_num">
                                         <?php if(!empty($exts)):?>
                                             <?php foreach ($exts as $ext):?>
-                                                <option value="<?=$ext['id']?>" <?php if($ext['ext_number'] === $data->ext->ext_number):?>selected<?php endif;?>><?=$ext['ext_number']?></option>
+                                                <option value="<?=$ext['id']?>" <?php if($ext['id'] === $data->ext->id):?>selected<?php endif;?>><?=$ext['ext_number']?></option>
                                             <?php endforeach;?>
                                         <?php else:?>
                                             <option value="">無可用分機號碼</option>
@@ -159,7 +159,7 @@
                                     <select class="form-control" id="seat_num" name="seat_num">
                                         <?php if(!empty($seats)):?>
                                             <?php foreach ($seats as $seat):?>
-                                                <option value="<?=$seat['id']?>" <?php if($seat['seat_number'] === $data->seat->seat_number):?>selected<?php endif;?>><?=$seat['seat_number']?></option>
+                                                <option value="<?=$seat['id']?>" <?php if($seat['id'] === $data->seat->id):?>selected<?php endif;?>><?=$seat['seat_number']?></option>
                                             <?php endforeach;?>
                                         <?php else:?>
                                             <option value="">無可用座位</option>
@@ -235,10 +235,9 @@
                         <div class="clearfix"></div>
                     </div>
                     <div class="x_content">
-                        <br>
                         <form id="password_form" method="post" action="/employee/info/updatepassword" data-parsley-validate class="form-horizontal form-label-left" novalidate>
-                            <input type="hidden" name="id" value="<?=$data->id?>">
                             <?php CsrfProtector::genHiddenField(); ?>
+                            <input type="hidden" name="id" value="<?=$data->id?>">
                             <div class="form-group">
                                 <label class="control-label col-md-3 col-sm-3 col-xs-12" for="password">密碼</label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
@@ -260,6 +259,7 @@
                                 </div>
                             </div>
                         </form>
+                        <br>
                     </div>
                 </div>
             </div>

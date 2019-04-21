@@ -41,7 +41,10 @@ class InfoController extends Controller
     public function actionCreate()
     {
         try {
-            $this->validateBeforePersist($_POST);
+
+            $this->checkCSRF('index');
+
+            $this->validateBeforeCreate($_POST);
             $employeeInfo = $this->createEmployeeInfo($_POST);
             $employeeInfo->persist();
             $this->redirect('index');
@@ -65,11 +68,10 @@ class InfoController extends Controller
 
         $extRepo = new EmployeeExtensionsRepo();
         $exts = $extRepo->getAvailableExts();
-        $exts = array_merge($exts, [['ext_number' => $data->ext->ext_number]]);
+        $exts = array_merge($exts, [['id' => $data->ext->id,'ext_number' => $data->ext->ext_number]]);
         $seatsRepo = new EmployeeSeatsRepo();
         $seats = $seatsRepo->getAvailableSeats();
-        $seats = array_merge($seats, [['seat_number' => $data->seat->seat_number]]);
-
+        $seats = array_merge($seats, [['id' => $data->seat->id, 'seat_number' => $data->seat->seat_number]]);
         $this->render('edit', ['data' => $data, 'exts' => $exts, 'seats' => $seats]);
     }
 
@@ -79,16 +81,11 @@ class InfoController extends Controller
 
         try {
 
-            $employeeInfoModel = EmployeeInfoModel::model()->findByPk($_POST['id']);
-
-            if (!$employeeInfoModel) {
-                Yii::log("employee info not found by id ({$_POST['id']})", CLogger::LEVEL_ERROR);
-                Yii::app()->session[Controller::ERR_MSG_KEY] = '更新失敗';
-                $this->redirect("edit?id={$_POST['id']}");
-            }
+            $employeeInfoModel = $this->validateBeforeUpdate($_POST['id']);
 
             $employeeInfo = new EmployeeInfo(new EmployeeId());
             $employeeInfoModel->password = $employeeInfo->hashPassword($_POST['password']);
+            $employeeInfoModel->update_at = Common::now();
             $employeeInfoModel->update();
 
             Yii::app()->session[Controller::SUCCESS_MSG_KEY] = '更新成功';
@@ -101,7 +98,47 @@ class InfoController extends Controller
         }
     }
 
-    private function validateBeforePersist(array $post)
+    public function actionUpdate()
+    {
+        try {
+
+            $this->checkCSRF('index');
+            $employeeInfoModel = $this->validateBeforeUpdate($_POST['id']);
+
+            foreach ($_POST as $key => $val) {
+                if ($key === "_token" || $key === "id" || $key === "zipcode") {
+                    continue;
+                }
+                $employeeInfoModel->{$key} = $val;
+            }
+
+            $employeeInfoModel->update_at = Common::now();
+            $employeeInfoModel->update();
+
+            Yii::app()->session[Controller::SUCCESS_MSG_KEY] = '更新成功';
+            $this->redirect("edit?id={$_POST['id']}");
+
+        } catch (Throwable $ex) {
+            Yii::log($ex->getMessage(), CLogger::LEVEL_ERROR);
+            Yii::app()->session[Controller::ERR_MSG_KEY] = '更新失敗';
+            $this->redirect("edit?id={$_POST['id']}");
+        }
+    }
+
+    private function validateBeforeUpdate($id)
+    {
+        $employeeInfoModel = EmployeeInfoModel::model()->findByPk($id);
+
+        if (!$employeeInfoModel) {
+            Yii::log("employee info not found by id ({$_POST['id']})", CLogger::LEVEL_ERROR);
+            Yii::app()->session[Controller::ERR_MSG_KEY] = '更新失敗';
+            $this->redirect("edit?id={$id}");
+        }
+
+        return $employeeInfoModel;
+    }
+
+    private function validateBeforeCreate(array $post)
     {
         if (empty($post['ext_num'])) {
             Yii::log("無可用分機號碼", CLogger::LEVEL_ERROR);
@@ -116,7 +153,7 @@ class InfoController extends Controller
         }
 
         if (
-        EmployeeInfoModel::model()->find("user_name=:user_name", [':user_name' => $post['user_name']])
+            EmployeeInfoModel::model()->find("user_name=:user_name", [':user_name' => $post['user_name']])
         ) {
             Yii::log("帳號已存在({$post['user_name']})", CLogger::LEVEL_ERROR);
             Yii::app()->session[Controller::ERR_MSG_KEY] = '帳號已存在';
@@ -137,7 +174,10 @@ class InfoController extends Controller
                 $employeeInfo->{$key} = $val;
             }
         }
-        $employeeInfo->setPassword($post['password']);
+
+        if (!empty($post['password'])) {
+            $employeeInfo->setPassword($post['password']);
+        }
 
         return $employeeInfo;
     }

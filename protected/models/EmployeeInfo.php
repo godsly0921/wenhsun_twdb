@@ -40,8 +40,8 @@ class EmployeeInfo extends CActiveRecord
     public function relations()
     {
         return [
-            'ext' => [self::BELONGS_TO, 'EmployeeExtensions', 'id'],
-            'seat' => [self::BELONGS_TO, 'EmployeeSeats', 'id'],
+            'ext' => [self::BELONGS_TO, 'EmployeeExtensions', 'ext_num'],
+            'seat' => [self::BELONGS_TO, 'EmployeeSeats', 'seat_num'],
         ];
     }
 
