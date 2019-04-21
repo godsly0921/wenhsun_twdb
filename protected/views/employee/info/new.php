@@ -15,7 +15,7 @@
                     </div>
                     <div class="x_content">
                         <br />
-                        <form id="demo-form2" method="post" action="/employee/info/create" data-parsley-validate class="form-horizontal form-label-left">
+                        <form id="form" method="post" action="/employee/info/create" data-parsley-validate class="form-horizontal form-label-left" novalidate>
 
                             <?php CsrfProtector::genHiddenField(); ?>
 
@@ -45,7 +45,7 @@
                             <div class="form-group">
                                 <label class="control-label col-md-3 col-sm-3 col-xs-12" for="password_confirm">密碼確認</label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
-                                    <input type="password" id="password_confirm" name="password_confirm" required="required" class="form-control col-md-7 col-xs-12">
+                                    <input type="password" id="password_confirm" name="password_confirm" data-parsley-equalto="#password" required="required" class="form-control col-md-7 col-xs-12">
                                 </div>
                             </div>
 
