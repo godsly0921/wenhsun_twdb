@@ -264,33 +264,7 @@
                   <h2>圖片上傳進度</h2>
                   <div class="clearfix"></div>
                 </div>
-                <div class="x_content">
-                  <div class="row">
-                    <div class="col-xs-2 text-right">
-                      <span>檔案編號 12345</span>
-                    </div>
-                    <div class="col-xs-8">
-                      <div class="progress progress_sm">
-                        <div class="progress-bar bg-green" role="progressbar" data-transitiongoal="100"></div>
-                      </div>
-                    </div>
-                    <div class="col-xs-2 more_info">
-                      <span>100%</span>
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="col-xs-2 text-right">
-                      <span>檔案編號 12345</span>
-                    </div>
-                    <div class="col-xs-8">
-                      <div class="progress progress_sm">
-                        <div class="progress-bar bg-green" role="progressbar" data-transitiongoal="100"></div>
-                      </div>
-                    </div>
-                    <div class="col-xs-2 more_info">
-                      <span>100%</span>
-                    </div>
-                  </div>
+                <div class="x_content file_progress">
                 </div>
               </div>
             </div>
@@ -352,23 +326,51 @@ $(document).ready(function () {
   }).on("filebatchselected", function(event, files) {
     fileinput_upload.fileinput("upload");
   }).on('fileuploaded', function(event, data, previewId, index) {
-    console.log('fileuploaded');
     var response = data.response[0];
     var status = response.status;
+    var size = response.fileSize;
+    var file_name = response.fileName;
     if(status == true){
-      console.log('index : ' + index);
-      console.log('single_id : ' + response.single_id)
+      var single_id = response.single_id;    
+      update_progress(index, file_name, size, single_id);
     }else{
+      delete_progress(index, file_name, size);
       alert(response.errorMsg);
     }
-    // console.log(index);
-    // console.log(data);
   }).on('filepreupload', function(event, data, previewId, index) {
-    console.log("filepreupload");
-    console.log('index : ' + index);
-    console.log('filename : ' + data.files[0].name);
-    console.log('filesize : ' + data.files[0].size);
+    var size = data.files[0].size;
+    var file_name = data.files[0].name;
+    create_progress(index, file_name, size);
   });
+
+  function create_progress( index, filename, filesize ){
+    var html = '<div class="row '+ index + '_' + filesize + '">'+
+      '<div class="col-xs-2 text-right">'+
+        '<span class="file_id_name">檔案名稱：' + filename + '</span>'+
+      '</div>'+
+      '<div class="col-xs-8">'+
+        '<div class="progress progress_sm">'+
+          '<div class="progress-bar bg-green" role="progressbar" data-transitiongoal="0" aria-valuenow="0" style="width: 0%;"></div>'+
+        '</div>'+
+      '</div>'+
+      '<div class="col-xs-2 more_info">'+
+        '<span class="progress_status">0%</span>'+
+      '</div>'+
+    '</div>';
+    $('.file_progress').append(html);
+  }
+
+  function update_progress(index, filename, filesize, single_id){
+    $('.' + index + '_' + filesize + ' .file_id_name').text('檔案名稱：' + filename + ' 編號：' + single_id);
+    $('.' + index + '_' + filesize + ' .progress-bar').attr('data-transitiongoal','100');
+    $('.' + index + '_' + filesize + ' .progress-bar').attr('aria-valuenow','100');
+    $('.' + index + '_' + filesize + ' .progress-bar').attr('style','width: 100%;');
+    $('.' + index + '_' + filesize + ' .progress_status').text('100%');
+  }
+
+  function delete_progress( index, filename, filesize ){
+    $('.' + index + '_' + filesize).remove();
+  }
 
   $('#wizard').smartWizard({
     cycleSteps:true,
