@@ -52,6 +52,27 @@ class InfoController extends Controller
         }
     }
 
+    public function actionEdit($id)
+    {
+        $data = EmployeeInfoModel::model()->findByPk($id);
+
+        if (!$data) {
+            $this->redirect('index');
+        }
+
+        $data->birth = str_replace("-", "/", $data->birth);
+        $data->birth = explode(" ", $data->birth)[0];
+
+        $extRepo = new EmployeeExtensionsRepo();
+        $exts = $extRepo->getAvailableExts();
+        $exts = array_merge($exts, [['ext_number' => $data->ext->ext_number]]);
+        $seatsRepo = new EmployeeSeatsRepo();
+        $seats = $seatsRepo->getAvailableSeats();
+        $seats = array_merge($seats, [['seat_number' => $data->seat->seat_number]]);
+
+        $this->render('edit', ['data' => $data, 'exts' => $exts, 'seats' => $seats]);
+    }
+
     private function validateBeforePersist(array $post)
     {
         if (empty($post['ext_num'])) {
