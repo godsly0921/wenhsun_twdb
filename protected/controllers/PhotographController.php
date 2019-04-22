@@ -96,7 +96,6 @@ class PhotographController extends Controller{
                     'status' => false,
                     'errorMsg' => 'unknown failed'
                 );
-                unlink($targetFile);
                 $time = microtime(true) - $time_start;
                 $return_data['runtime'] = $time;
                 echo json_encode($return_data);exit();

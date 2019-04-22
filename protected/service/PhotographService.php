@@ -76,7 +76,7 @@ class PhotographService{
     }
 
     public function createImageQueue( $single_id, $width, $height ){
-        $max_size_type = Imagemagick::getPhotographMaxSize( $width, $heigh );
+        $max_size_type = Imagemagick::getPhotographMaxSize( $width, $height );
         if( $max_size_type == '') {
             $max_size_type = 'source';
         }

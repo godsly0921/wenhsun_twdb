@@ -294,6 +294,8 @@
 <script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/gentelella/vendors/bootstrap-progressbar/bootstrap-progressbar.min.js"></script>
 <script>
 $(document).ready(function () {
+  var fileupload_count = 0;
+  var finishupload_count =0;
   if(typeof $.fn.tagsInput !== 'undefined'){        
     $('#keywords').tagsInput({
       width: 'auto'
@@ -324,6 +326,7 @@ $(document).ready(function () {
     showUpload: false,
     layoutTemplates:{actions:actions},
   }).on("filebatchselected", function(event, files) {
+    fileupload_count += Object.keys(files).length;
     fileinput_upload.fileinput("upload");
   }).on('fileuploaded', function(event, data, previewId, index) {
     var response = data.response[0];
@@ -331,35 +334,39 @@ $(document).ready(function () {
     var size = response.fileSize;
     var file_name = response.fileName;
     if(status == true){
-      var single_id = response.single_id;    
+      var single_id = response.single_id; 
+      finishupload_count++;
       update_progress(index, file_name, size, single_id);
     }else{
       delete_progress(index, file_name, size);
+      fileupload_count = fileupload_count -1;
       alert(response.errorMsg);
     }
   }).on('filepreupload', function(event, data, previewId, index) {
-    var size = data.files[0].size;
-    var file_name = data.files[0].name;
+    var size = data.files[index].size;
+    var file_name = data.files[index].name;
     create_progress(index, file_name, size);
   });
 
+  //在選取檔案開始上傳時建立進度條，進度為0%
   function create_progress( index, filename, filesize ){
     var html = '<div class="row '+ index + '_' + filesize + '">'+
-      '<div class="col-xs-2 text-right">'+
+      '<div class="col-xs-4 text-right">'+
         '<span class="file_id_name">檔案名稱：' + filename + '</span>'+
       '</div>'+
-      '<div class="col-xs-8">'+
+      '<div class="col-xs-7">'+
         '<div class="progress progress_sm">'+
           '<div class="progress-bar bg-green" role="progressbar" data-transitiongoal="0" aria-valuenow="0" style="width: 0%;"></div>'+
         '</div>'+
       '</div>'+
-      '<div class="col-xs-2 more_info">'+
+      '<div class="col-xs-1 more_info">'+
         '<span class="progress_status">0%</span>'+
       '</div>'+
     '</div>';
     $('.file_progress').append(html);
   }
 
+  //檔案上傳完成後更新進度條進度，進度為100%
   function update_progress(index, filename, filesize, single_id){
     $('.' + index + '_' + filesize + ' .file_id_name').text('檔案名稱：' + filename + ' 編號：' + single_id);
     $('.' + index + '_' + filesize + ' .progress-bar').attr('data-transitiongoal','100');
@@ -368,6 +375,7 @@ $(document).ready(function () {
     $('.' + index + '_' + filesize + ' .progress_status').text('100%');
   }
 
+  //檔案上傳失敗移除該檔案的進度條
   function delete_progress( index, filename, filesize ){
     $('.' + index + '_' + filesize).remove();
   }
@@ -378,9 +386,33 @@ $(document).ready(function () {
     labelPrevious: '上一步',
     labelFinish: '送出表單',
     onFinish:onFinishCallback,
+    //onLeaveStep:onLeaveStepCallback
   });
   function onFinishCallback(){
-    fileinput_upload.fileinput('upload');
+    if(fileupload_count == finishupload_count){
+      alert('send');
+    }else{
+      alert('請等圖片全數上傳完畢，再按「送出表單」');
+    }
+  }
+  function onLeaveStepCallback(obj, context){
+    console.log("Leaving step "+context.fromStep+" to go to step "+context.toStep);
+    return validateSteps(context.fromStep,context.toStep); // return false to stay on step and true to continue navigation  
+  }
+
+  function validateSteps(fromStep,toStep){
+    if(toStep == 4){
+      return false;
+    }else if(fromStep == 2 && toStep == 3){
+      $("#wizard").smartWizard('enableStep', 4);
+      $('.buttonNext').addClass("buttonDisabled");
+      return true;
+    }else{
+      if($('.buttonNext').hasClass('buttonDisabled')){
+        $('.buttonNext').removeClass("buttonDisabled");
+      }
+      return true;
+    }    
   }
 })
 </script>
