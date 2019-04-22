@@ -16,19 +16,17 @@
                     <input type="hidden" name="filter" value="1">
                     <div class="form-group col-md-12">
                         <label for="date_start" class="col-sm-2 control-label">開始日期:</label>
-                        <div class="col-sm-2">
-                        <input type="text" class="form-control"  id="date_start" name="date_start" placeholder="請匯出開始日期" >
+                        <div class="col-sm-3">
+                        <input type="text" class="form-control"  id="date_start" name="date_start" placeholder="請填入開始日期" >
                         </div>
 
-                    </div>
-
-                    <div class="form-group col-md-12">
                         <label for="date_start" class="col-sm-2 control-label">結束日期:</label>
-                        <div class="col-sm-2">
-                            <input type="text" class="form-control"  id="date_end" name="date_start" placeholder="請匯出開始日期" >
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control"  id="date_end" name="date_end" placeholder="請填入結束日期" >
                         </div>
 
                     </div>
+
 
 
 
@@ -98,7 +96,7 @@
                             <tbody>
                             <?php foreach ($rcdata as $key => $value): ?>
                                 <tr class="gradeC" role="row">
-                                    <td><?=$value['positionname']?></td>
+                                    <td><?=$value['position_name']?></td>
                                     <td><?=$value['username']?></td>
                                     <td><?=$value['card_number']?></td>
                                     <td><?=$value['flashDate']?></td>
@@ -160,7 +158,7 @@ $('#date_start').daterangepicker({
 singleDatePicker: true,
 singleClasses: "picker_2",
 locale: {
-format: 'YYYY-MM-DD HH:MM:ss'
+format: 'YYYY-MM-DD'
 }
 }, function(start, end, label) {
 console.log(start.toISOString(), end.toISOString(), label);
@@ -171,7 +169,7 @@ $('#date_end').daterangepicker({
     singleDatePicker: true,
     singleClasses: "picker_2",
     locale: {
-        format: 'YYYY-MM-DD HH:MM:ss'
+        format: 'YYYY-MM-DD'
     }
 }, function(start, end, label) {
     console.log(start.toISOString(), end.toISOString(), label);

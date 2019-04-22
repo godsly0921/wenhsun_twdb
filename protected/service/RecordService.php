@@ -159,29 +159,14 @@ class RecordService{
     /*----------------------------------------------------------------
      | 根據卡號及關鍵字抓取資料
      |----------------------------------------------------------------
-     | $sw - 是否要使用關鍵字
-     | $keycol - 關鍵字查詢欄位
+     | $key_sw - 是否要使用關鍵字
+     | $key_col - 關鍵字查詢欄位
      | $card - 卡號
      | $start - 開始時間
      | $end - 結束時間
      |
      */
-    public function get_by_card_and_key( $sw , $keycol , $card , $start , $end ,$keyword){
-      /*  echo $sw;
-        echo "<br/>";
-        echo $keycol;
-        echo "<br/>";
-        echo $card;
-        echo "<br/>";
-        echo $start;
-        echo "<br/>";
-        echo $end;
-        echo "<br/>";
-        echo $keyword;
-        echo "<br/>"; 
-        echo '------------------------------';
-        echo "<br/>";*/
-
+    public function get_by_card_and_key( $key_sw , $key_col , $card , $start , $end ,$keyword){
         // 優先判斷卡號       
         $car_arr = str_split( $card , 5 );
 
@@ -189,83 +174,70 @@ class RecordService{
             $car_arr[1] = '';        
         }
 
+
         // 如果卡號可以分成前五後五才繼續
-        if( !empty($car_arr[0]) && !empty($car_arr[1]) ){
+        if(!empty($car_arr[0]) && !empty($car_arr[1])){
             
-            if( $sw == 1){
+            if( $key_sw == 1){//有關鍵字
                 
-                // 找學生
-                if($keycol == 0){
-                    
+                // 找姓名
+                if($key_col == 0){
+
                     $data = Yii::app()->db->createCommand()
-                    ->select('l.name as positionname,
-                              m.name as username,
-                              m.card_number as card_number,
-                               m.professor as professor,
-                              ug.name as usergrp,
+                    ->select('l.name as position_name,
+                              e.name as username,
+                              e.door_card_num as card_number,
                               r.*')
                     ->from('record r')
                     ->leftjoin('door d', 'r.reader_num = d.station')
                     ->leftjoin('local l', 'd.position  = l.id')
-                    ->leftjoin('member m', 'start_five=:start_five and end_five=:end_five')
-                    ->leftjoin('user_grp ug', 'ug.id = m.grp_lv2')
+                    ->leftjoin('employee_info e', 'start_five=:start_five and end_five=:end_five')
                     ->where('r.start_five = :start_five', array(':start_five'=>$car_arr[0]))
                     ->andwhere('r.end_five = :end_five', array(':end_five'=>$car_arr[1]))
-                    ->andwhere(array('like', 'm.name', "%$keyword%"))
+                    ->andwhere(array('like', 'e.name', "%$keyword%"))
                     ->andwhere('r.flashDate >= :start', array(':start'=>$start))
                     ->andwhere('r.flashDate <= :end', array(':end'=>$end))
                     ->queryAll();
                     return $data;
 
-                // 找教授
-                }else{
+
+                }else{ //卡號
 
                     $data = Yii::app()->db->createCommand()
-                    ->select('l.name as positionname,
-                              m.name as username,
-                              m.card_number as card_number,
-                              m.professor as professor,
-                              ug.name as usergrp,
-                              flashDate,r.*')
-                    ->from('record r')
-                    ->leftjoin('door d', 'r.reader_num = d.station')
-                    ->leftjoin('local l', 'd.position  = l.id')
-                    ->leftjoin('member m', 'start_five=:start_five and end_five=:end_five')
-                    ->leftjoin('user_grp ug', 'ug.id = m.grp_lv2')
-                    ->where('start_five=:start_five', array(':start_five'=>$car_arr[0]))
-                    ->andwhere('end_five=:end_five', array(':end_five'=>$car_arr[1]))
-                    ->andwhere(array('like', 'm.name', "%$keyword%"))
-                    ->andwhere('user_group=:user_group', array(':user_group'=>2))
-                    ->andwhere('flashDate >:start', array(':start'=>$start))
-                    ->andwhere('flashDate <:end', array(':end'=>$end))
-                    ->queryAll();
-
-                     return $data;
+                        ->select('l.name as position_name,
+                              e.name as username,
+                              e.door_card_num as card_number,
+                              r.*')
+                        ->from('record r')
+                        ->leftjoin('door d', 'r.reader_num = d.station')
+                        ->leftjoin('local l', 'd.position  = l.id')
+                        ->leftjoin('employee_info e', 'start_five=:start_five and end_five=:end_five')
+                        ->where('r.start_five = :start_five', array(':start_five'=>$car_arr[0]))
+                        ->andwhere('r.end_five = :end_five', array(':end_five'=>$car_arr[1]))
+                        ->andwhere(array('like', 'e.door_card_num', "%$keyword%"))
+                        ->andwhere('r.flashDate >= :start', array(':start'=>$start))
+                        ->andwhere('r.flashDate <= :end', array(':end'=>$end))
+                        ->queryAll();
+                    return $data;
 
                 }
 
-            }else{
-                
+            }else{//沒關鍵字則單純搜尋日期
 
                 $data = Yii::app()->db->createCommand()
-                ->select('l.name as positionname,
-                              m.name as username,
-                              m.card_number as card_number,
-                              m.card_number as card_number,
-                              flashDate')
+                ->select('l.name as position_name,
+                              e.user_name as username,
+                              e.door_card_num as card_number,flashDate')
                 ->from('record r')
                 ->leftjoin('door d', 'r.reader_num = d.station')
-                ->leftjoin('local l', 'd.position  = l.id')
-                ->leftjoin('member m', 'r.mem_num = m.id')
-                ->where('start_five=:start_five', array(':start_five'=>$car_arr[0]))
-                ->andwhere('end_five=:end_five', array(':end_five'=>$car_arr[1]))
+                ->leftjoin('local l', 'd.position = l.id')
+                ->leftjoin('employee_info e', 'r.mem_num = e.id')
                 ->andwhere('flashDate >:start', array(':start'=>$start))
                 ->andwhere('flashDate <:end', array(':end'=>$end))
                 ->queryAll();
 
+
                 return $data;
-
-
             }
         } 
     }
