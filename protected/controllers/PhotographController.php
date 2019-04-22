@@ -9,6 +9,11 @@ class PhotographController extends Controller{
         return true;
     }
 
+    public function ActionImageQueue(){
+        $photographService = new PhotographService();
+        $photographService->doImageQueue();
+    }
+
     public function Actionnew(){
         $category_service = new CategoryService();
         $category_data = $category_service->findCategoryMate();
@@ -32,7 +37,7 @@ class PhotographController extends Controller{
                 if(!$exist_filename){
                     $single_data['photo_name'] = $fileName;
                     $ext = explode('.', $fileName)[1];
-                    $single_data['ext'] = $ext;
+                    $single_data['ext'] = strtolower($ext);
                     $single = $photographService->createSingleBase($single_data); // 先存圖片檔名、檔案格式進資料庫
                     if($single['status']){
                          $single =  $single['data'];
@@ -40,28 +45,15 @@ class PhotographController extends Controller{
                         if ( move_uploaded_file($tempFile,$targetFile) ) {
                             list($width, $height) = getimagesize($targetFile);
                             $create_image_queue = $photographService->createImageQueue( $single->single_id, $width, $height );
-                            if($create_image_queue['status'] == true){
-                                $return_data[] = array(
-                                    'single_id' => $single->single_id,
-                                    'fileName' => $fileName,
-                                    'fileSize' => $fileSize,
-                                    'status' => true,
-                                    'errorMsg' => ''
-                                );
-                                $time = microtime(true) - $time_start;
-                                $return_data['runtime'] = $time;
-                            }else{
-                                $return_data[] = array(
-                                    'fileName' => $fileName,
-                                    'fileSize' => $fileSize,
-                                    'status' => false,
-                                    'errorMsg' => 'create image info failed'
-                                );
-                                $time = microtime(true) - $time_start;
-                                $return_data['runtime'] = $time;
-                                unlink($targetFile);
-                                echo json_encode($return_data);exit();
-                            }
+                            $return_data[] = array(
+                                'single_id' => $single->single_id,
+                                'fileName' => $fileName,
+                                'fileSize' => $fileSize,
+                                'status' => true,
+                                'errorMsg' => ''
+                            );
+                            $time = microtime(true) - $time_start;
+                            $return_data['runtime'] = $time;
                         }else{
                             $return_data[] = array(
                                 'fileName' => $fileName,

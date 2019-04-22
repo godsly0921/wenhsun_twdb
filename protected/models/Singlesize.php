@@ -35,7 +35,7 @@ class Singlesize extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('single_id, size_type, size_description, sale_twd, sale_point', 'required'),
+			array('single_id, size_type, size_description', 'required'),
 			array('single_id, dpi, file_size, sale_twd', 'numerical', 'integerOnly'=>true),
 			array('sale_point', 'numerical'),
 			array('size_type, mp, w_h, print_w_h', 'length', 'max'=>20),

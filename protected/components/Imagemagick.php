@@ -63,13 +63,12 @@ class Imagemagick {
 		'S' => array( 'dpi' => '72', 'bound' => 1200, '>' => 600, '<=' => 1200 ),
 	);
 
-	private static function getPhotographscale($w_h, $bound) {
-		$w_h = explode('x', $w_h);
-		$width = $w_h[0];
-		$height = $w_h[1];
+	//計算各個尺寸的長與寬
+	private static function getPhotographscale( $width, $height, $size_type ) {
 		$pre_compare = 0;
 		$output_width = 0;
 		$output_height = 0;
+		$bound = Imagemagick::$size_bound_settings[$size_type]['bound'];
 		if ($width > $height) {
 			$output_width = $bound;
 			$output_height = intval(($bound / $width) * $height);
@@ -82,16 +81,16 @@ class Imagemagick {
 		}
 		return $output_width . 'x' . $output_height;
 	}
-	public static function getPhotographMP( $w_h ){
-		$w_h = explode('x', $w_h);
-		$width = $w_h[0];
-		$height = $w_h[1];
+	//計算各個尺寸的像素尺寸
+	public static function getPhotographMP( $width, $height ){
 		return (int) $width * $height;
 	}
+
+	//取得圖片可切圖的最大尺寸
 	public static function getPhotographMaxSize( $width, $height ){
 		$max_width_height = max( array( $width, $height ) );
 		//找出最大尺寸應在範圍
-		$max_size_data = "";
+		$max_size_data = array();
 		foreach (Imagemagick::$size_bound_settings as $size => $datas) {
 			$in_checked = false;
 			if (isset($datas['>']) && isset($datas['<='])) {
@@ -107,12 +106,43 @@ class Imagemagick {
 				}
 			}
 			if ($in_checked && $max_size_data == '') {
-				$max_size_data = $size;
+				$max_size_data[] = $size;
 			}
 		}
+		if(count($max_size_data) == 0 ) $max_size_data = array_keys(Imagemagick::$size_bound_settings);
 		return $max_size_data;
 	}
 
+	public static function SourcePhotographToJpgConvert( $filename, $ext ){
+		$ds          = DIRECTORY_SEPARATOR;
+        $storeFolder = PHOTOGRAPH_STORAGE_DIR;
+        $sourcePath = $storeFolder . 'source' . $ds . $filename . "." . $ext;
+        $jpgPath = $storeFolder . 'source_to_jpg' . $ds . $filename . ".jpg";
+        
+		if($ext==='gif' || $ext==='psd'){
+			$exec = "convert " . $sourcePath. "[0]  -units PixelsPerInch " . $jpgPath;	
+			exec($exec);
+		}elseif ($ext==='eps'){
+			$exec = "convert " . $sourcePath . "  -units PixelsPerInch " . $storeFolder . 'source_to_jpg' . $ds . $filename . ".png";	
+	 		exec($exec);
+	 		$exec = "convert " . $storeFolder . 'source_to_jpg' . $ds . $filename . ".png  -units PixelsPerInch " . $jpgPath;	
+			exec($exec);
+			unlink($storeFolder . 'source_to_jpg' . $ds . $filename . ".png");
+		}elseif($ext==='ai'){
+			$exec = "convert " . $sourcePath . " " . $storeFolder . 'source_to_jpg' . $ds . $filename . ".png";	
+	 		exec($exec);
+	 		$exec = "convert " . $storeFolder . 'source_to_jpg' . $ds . $filename . ".png  " . $jpgPath;	
+			exec($exec);
+			unlink($storeFolder . 'source_to_jpg' . $ds . $filename . ".png");
+		}elseif($ext ==='tiff' || $ext==='tif'){
+			$exec = "convert " . $sourcePath . "[0]  -units PixelsPerInch " . $jpgPath;
+			exec($exec);
+		}else{
+			$exec = "convert " . $sourcePath . "[0]  -units PixelsPerInch " . $jpgPath;
+			exec($exec);
+		}
+		return;
+	}
 	public static function get_graph_convert($path,$file_path,$single_id) {
 		$file_name = basename($file_path);
 		$ex_file_name = explode('.', $file_name);
@@ -232,13 +262,13 @@ class Imagemagick {
 	/**
 	 * return array('print_w_h'=>輸出寬x輸出高)，計算後結果顯示到小數點後1位
 	 */
-	private static function get_print_datas($print_size) {
+	private static function get_print_datas($print_size, $dpi) {
 		$explode_print_size = explode('x', $print_size);
 		$print_w = 0.0;
 		$print_h = 0.0;
 		if (count($explode_print_size) > 1) {
-			$print_w = number_format($explode_print_size[0] * 2.54, 2);
-			$print_h = number_format($explode_print_size[1] * 2.54, 2);
+			$print_w = number_format($explode_print_size[0]/$dpi * 2.54, 2);
+			$print_h = number_format($explode_print_size[1]/$dpi * 2.54, 2);
 		}
 		return $print_w . 'x' . $print_h;
 	}
@@ -374,8 +404,10 @@ class Imagemagick {
 	 * 程式功能:建立五種(h、m、l、w、b)尺寸檔案
 	 */
 	public static function buildFiveKindsSizes($file_name, $file_rename, $graph_type, $dpi) {
-		$target_path = IMAGE_STORAGE . $graph_type;//切圖完後存放路徑
-		$file_path = IMAGE_STORAGE . 'source_to_jpg' . '/' . $file_name ;
+		$ds          = DIRECTORY_SEPARATOR;
+        $storeFolder = PHOTOGRAPH_STORAGE_DIR;
+		$target_path = $storeFolder . $graph_type;//切圖完後存放路徑
+		$file_path = $storeFolder . 'source_to_jpg' . '/' . $file_name ;
 		switch ($graph_type) {
 			case "XL" :
 				exec('convert -strip -density ' . $dpi . ' "' . $file_path . '" "' . $target_path . '/' . $file_rename . '"');
