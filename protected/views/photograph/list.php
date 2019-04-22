@@ -26,7 +26,7 @@
                     <td><?=$value['single_id']?></td>
                     <td><?=$value['single_id']?></td>
                     <td><?=$value['copyright']?></td>
-                    <td><?=$value['process']?></td>
+                    <td><?=round($value['percent'],2)?></td>
                     <td><?=$value['create_time']?></td>                    
                     <td>
                         <a class="oprate-right" href="<?php echo Yii::app()->createUrl('category/update/id/') ?>/<?= $key ?>">
