@@ -110,6 +110,27 @@ class PhotographController extends Controller{
         }
     }
 
+    public function ActionPhotographData(){
+        if( Yii::app()->request->isPostRequest ){
+            $single = array();
+            $photographService = new PhotographService();
+            $single_size_price = $single_data = $single_size = array();
+            parse_str($_POST['single_size_price'], $single_size_price);
+            parse_str($_POST['single_data'], $single_data);
+            $single_data['category_id'] = implode(',', $single_data['category_id']);
+            $single_data['keyword'] = $_POST['keywords_data'];
+            $photographService->updateAllSingle($_POST['update_single_ids'], $single_data);
+            foreach ($single_size_price['twd'] as $key => $value) {
+                $single_size = array();
+                $single_size['sale_twd'] = $value;
+                $single_size['sale_point'] = $single_size_price['point'][$key];
+                $photographService->updateAllSingleSize($_POST['update_single_ids'], $key, $single_size);
+            }
+            echo true;exit();
+        }else{
+            echo false;exit();
+        }
+    }
     public function ActionFileUpload(){
         $photographService = new PhotographService();
         $single_size_price = $single_data = $single_size = array();

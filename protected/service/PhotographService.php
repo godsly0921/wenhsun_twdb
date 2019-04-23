@@ -81,6 +81,13 @@ class PhotographService{
     	}
     }
 
+    public function updateAllSingle ( $single_id, $input ){
+        Single::model()->updateAll($input, 'single_id in('.$single_id.')');
+    }
+
+    public function updateAllSingleSize ( $single_id, $size_type, $input ){
+        Singlesize::model()->updateAll($input, 'single_id in('.$single_id.') and size_type="' . $size_type . '"');
+    }
     public function storeUpdataSingle( $single_id, $photograph_data ){
         $single = Single::model()->findByPk($single_id);
         $single_data = array();
@@ -124,8 +131,22 @@ class PhotographService{
         }       
     }
 
+    public function updateImageQueue($single_id, $size_type){
+        $result = imagequeue::model()->find(array(
+            'condition'=>'single_id=:single_id and size_type=:size_type',
+            'params'=>array(
+                ':single_id' => $single_id,
+                ':size_type' => $size_type,
+            )
+        ));
+        $image_queue = Imagequeue::model()->findByPk($result->image_queue_id);
+        $image_queue->queue_status =1;
+        $image_queue->done_time = date('Y-m-d h:i:s');
+        $image_queue->save();
+    }
+
     public function doImageQueue(){
-        $sql = "SELECT iq.*,s.ext,s.dpi,s.color,s.direction FROM `image_queue` iq LEFT JOIN single s on iq.single_id = s.single_id where iq.queue_status = 0 order by iq.single_id";
+        $sql = "SELECT iq.*,s.ext,s.dpi,s.color,s.direction FROM `image_queue` iq LEFT JOIN single s on iq.single_id = s.single_id where iq.queue_status = 0";
         $result = Yii::app()->db->createCommand($sql)->queryAll();
         $single_id = '';
         $ds          = DIRECTORY_SEPARATOR;
@@ -133,16 +154,15 @@ class PhotographService{
         $size_bound_settings = Imagemagick::$size_bound_settings;
         foreach ($result as $key => $value) {
             $update_single_size = array();
-            $targetPath = $storeFolder . 'source' . $ds;
-            $targetFile = $targetPath . $value['single_id'] . "." . $value['ext'];
-            if( $value['ext'] != 'jpg' ){
-                $targetPath = $storeFolder . 'source_to_jpg' . $ds;
-                $targetFile = $targetPath . $value['single_id'] . ".jpg";
-            }      
-            if($value['dpi'] == '' || $value['color'] == '' || $value['direction'] == '' || $value['size_type'] == 'source'){                  
+               
+            if($value['dpi'] == '' || $value['color'] == '' || $value['direction'] == '' || $value['size_type'] == 'source'){$targetPath =$storeFolder . 'source' . $ds;
+                $targetFile = $targetPath . $value['single_id'] . "." . $value['ext'];
+                if( $value['ext'] != 'jpg' ){
+                    $targetPath = $storeFolder . 'source_to_jpg' . $ds;
+                    $targetFile = $targetPath . $value['single_id'] . ".jpg";
+                }                     
                 $single_size = $this->getPhotographData($targetFile);
                 $single = array();
-                $value['dpi'] = $single_size['resolution'];
                 $single['dpi'] = $single_size['resolution'];
                 $single['color'] = $single_size['colorspace'];
                 $single['direction'] = $single_size['direction'];
@@ -154,21 +174,20 @@ class PhotographService{
                 $update_single_size['print_w_h'] = $single_size['print_w_h'];
                 $update_single_size['file_size'] = $file_size;
                 $update_single_size['ext'] = $value['ext'];
-                $this->updateSingleSize( $value['single_id'], $update_single_size, $value['size_type'] );
+                $this->updateSingleSize( $value['single_id'], $update_single_size, 'source' );
+                $this->updateImageQueue($value['single_id'],'source');
             }else{
-                list($width, $height) = getimagesize($targetFile);
-                if($value['size_type'] != 'XL'){
-                    $getPhotographScale = Imagemagick::getPhotographscale( $width, $height, $value['size_type'] );
-                }else{
-                    $getPhotographScale = $width . 'x' . $height;
-                }
-                
-                $getPhotographMP = Imagemagick::getPhotographMP( $width, $height );
-                $dpi = $size_bound_settings[$value['size_type']]['dpi'];
-                $print_w_h = Imagemagick::get_print_datas( $width . 'x' . $height, $value['dpi'] );
+                $targetPath = $storeFolder . $value['size_type'] . $ds;
+                $targetFile = $targetPath . $value['single_id'] . ".jpg";
                 if($value['size_type'] != 'source'){
                     Imagemagick::PhotographScaleConvert( $targetPath, $value['single_id'], $value['size_type'] );
                 }
+                list($width, $height) = getimagesize($targetFile);
+                $getPhotographScale = $width . 'x' . $height;
+                $getPhotographMP = Imagemagick::getPhotographMP( $width, $height );
+                $dpi = $size_bound_settings[$value['size_type']]['dpi'];
+                $print_w_h = Imagemagick::get_print_datas( $width/$dpi . 'x' . $height/$dpi, $value['dpi'] );
+                
                 $file_size = filesize($targetFile);
                 $update_single_size['dpi'] = $dpi;
                 $update_single_size['mp'] = $getPhotographMP;
@@ -177,6 +196,7 @@ class PhotographService{
                 $update_single_size['file_size'] = $file_size;
                 $update_single_size['ext'] = 'jpg';
                 $this->updateSingleSize( $value['single_id'], $update_single_size, $value['size_type'] );
+                $this->updateImageQueue($value['single_id'],$value['size_type']);
             }
                     
         }
@@ -186,7 +206,8 @@ class PhotographService{
     public function getPhotographData($targetFile){
     	$photograph_data = Imagemagick::get_graph_data( $targetFile );
         $explode_w_h = explode('x', $photograph_data['w_h']);
-    	$photograph_data['mp'] = Imagemagick::getPhotographMP( $explode_w_h[0], $explode_w_h[1] );
+        $getPhotographMP = Imagemagick::getPhotographMP( $explode_w_h[0], $explode_w_h[1] );
+    	$photograph_data['mp'] = $getPhotographMP;
     	return $photograph_data;
     }
     public function getPhotographMaxSize( $single_id, $width, $height ){

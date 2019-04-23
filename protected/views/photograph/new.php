@@ -207,41 +207,41 @@
                     <div class="form-group">
                       <div class="col-lg-6">
                         <label class="control-label">L 台幣： <span class="required">*</span></label>
-                        <input type="text" class="form-control" placeholder="L 台幣" name="twd[l]">
+                        <input type="text" class="form-control" placeholder="L 台幣" name="twd[L]">
                       </div>
                       <div class="col-lg-6">
                         <label class="control-label">L 點數： <span class="required">*</span></label>
-                        <input type="text" class="form-control" placeholder="L 點數" name="point[l]">
+                        <input type="text" class="form-control" placeholder="L 點數" name="point[L]">
                       </div>
                     </div>
                     <div class="form-group">
                       <div class="col-lg-6">
                         <label class="control-label">M 台幣： <span class="required">*</span></label>
-                        <input type="text" class="form-control" placeholder="M 台幣" name="twd[m]">
+                        <input type="text" class="form-control" placeholder="M 台幣" name="twd[M]">
                       </div>
                       <div class="col-lg-6">
                         <label class="control-label">M 點數： <span class="required">*</span></label>
-                        <input type="text" class="form-control" placeholder="M 點數" name="point[m]">
+                        <input type="text" class="form-control" placeholder="M 點數" name="point[M]">
                       </div>
                     </div>
                     <div class="form-group">
                       <div class="col-lg-6">
                         <label class="control-label">S 台幣： <span class="required">*</span></label>
-                        <input type="text" class="form-control" placeholder="S 台幣" name="twd[s]">
+                        <input type="text" class="form-control" placeholder="S 台幣" name="twd[S]">
                       </div>
                       <div class="col-lg-6">
                         <label class="control-label">S 點數： <span class="required">*</span></label>
-                        <input type="text" class="form-control" placeholder="S 點數" name="point[s]">
+                        <input type="text" class="form-control" placeholder="S 點數" name="point[S]">
                       </div>
                     </div>
                     <div class="form-group">
                       <div class="col-lg-6">
                         <label class="control-label">XL 台幣： <span class="required">*</span></label>
-                        <input type="text" class="form-control" placeholder="XL 台幣" name="twd[xl]">
+                        <input type="text" class="form-control" placeholder="XL 台幣" name="twd[XL]">
                       </div>
                       <div class="col-lg-6">
                         <label class="control-label">XL 點數： <span class="required">*</span></label>
-                        <input type="text" class="form-control" placeholder="XL 點數" name="point[xl]">
+                        <input type="text" class="form-control" placeholder="XL 點數" name="point[XL]">
                       </div>
                     </div>
                     <div class="form-group">
@@ -296,6 +296,8 @@
 $(document).ready(function () {
   var fileupload_count = 0;
   var finishupload_count =0;
+  var upload_single_id = [];
+  var update_single_ids = '';
   if(typeof $.fn.tagsInput !== 'undefined'){        
     $('#keywords').tagsInput({
       width: 'auto'
@@ -308,11 +310,7 @@ $(document).ready(function () {
         '    {drag}\n' +
         '    <div class="clearfix"></div>\n' +
         '</div>';
-  var data = {
-    single_data : $("#single_data").serialize(),
-    single_size_price:$("#single_size_price").serialize(),
-    keywords_data:$("#keywords").val()
-  };
+  
   var fileinput_upload = $("#upload_file").fileinput({
     language: 'zh-TW',  //語言設定
     uploadUrl: "<?php echo Yii::app()->createUrl('photograph/BatUploadFile'); ?>",
@@ -335,6 +333,7 @@ $(document).ready(function () {
     var file_name = response.fileName;
     if(status == true){
       var single_id = response.single_id; 
+      upload_single_id.push(single_id);
       finishupload_count++;
       update_progress(index, file_name, size, single_id);
     }else{
@@ -390,7 +389,8 @@ $(document).ready(function () {
   });
   function onFinishCallback(){
     if(fileupload_count == finishupload_count){
-      alert('send');
+      update_single_ids = upload_single_id.join();
+      photograph_data_submit();
     }else{
       alert('請等圖片全數上傳完畢，再按「送出表單」');
     }
@@ -400,6 +400,22 @@ $(document).ready(function () {
     return validateSteps(context.fromStep,context.toStep); // return false to stay on step and true to continue navigation  
   }
 
+  function photograph_data_submit(){
+    var data = {
+      single_data : $("#single_data").serialize(),
+      single_size_price:$("#single_size_price").serialize(),
+      keywords_data:$("#keywords").val(),
+      update_single_ids:update_single_ids
+    };
+    $.ajax({
+      type:"POST",
+      url: '<?php echo Yii::app()->createUrl('photograph/PhotographData'); ?>',
+      data: data,// serializes the form's elements.
+      success:function(data){
+         alert(data);// show response from the php script.
+      }
+    });
+  }
   function validateSteps(fromStep,toStep){
     if(toStep == 4){
       return false;

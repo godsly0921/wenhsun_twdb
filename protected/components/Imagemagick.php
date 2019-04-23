@@ -83,7 +83,14 @@ class Imagemagick {
 	}
 	//計算各個尺寸的像素尺寸
 	public static function getPhotographMP( $width, $height ){
-		return (int) $width * $height;
+		$getPhotographMP = $width * $height;
+		$result = '';
+        if ($getPhotographMP > 1000000) {
+            $result = round($getPhotographMP / 1024 / 1024, 2) . 'M';
+        } else {
+            $result = round($getPhotographMP / 1024, 2) . 'K';
+        }
+		return $result;
 	}
 
 	//取得圖片可切圖的最大尺寸
@@ -154,23 +161,25 @@ class Imagemagick {
 	public static function PhotographScaleConvert( $file_path, $single_id, $size_type ) {
 		$ds          = DIRECTORY_SEPARATOR;
         $storeFolder = PHOTOGRAPH_STORAGE_DIR;
-		$target_path = $storeFolder . $size_type;//切圖完後存放路徑
-		$file_path = $storeFolder . 'source_to_jpg' . '/' . $file_name ;
-		switch ($graph_type) {
+        $filename = $single_id . '.jpg';
+		$target_path = $storeFolder . $size_type . $ds;//切圖完後存放路徑
+		$file_path = $storeFolder . 'source_to_jpg' . '/' . $filename;
+		$dpi = Imagemagick::$size_bound_settings[$size_type]['dpi'];
+		switch ($size_type) {
 			case "XL" :
-				exec('convert -strip -density ' . $dpi . ' "' . $file_path . '" "' . $target_path . '/' . $file_rename . '"');
+				exec('convert -strip -density ' . $dpi . ' "' . $file_path . '" "' . $target_path . $filename . '"');
 				break;
 				
 			case "L" :
-				exec('convert -strip -density ' . $dpi . ' -geometry 2000x2000 "' . $file_path . '" "' . $target_path . '/' . $file_rename . '"');
+				exec('convert -strip -density ' . $dpi . ' -geometry 2000x2000 "' . $file_path . '" "' . $target_path . $filename . '"');
 				break;
 
 			case "M" :
-				exec('convert -strip -density ' . $dpi . ' -geometry 1200x1200 "' . $file_path . '" "' . $target_path . '/' . $file_rename . '"');
+				exec('convert -strip -density ' . $dpi . ' -geometry 1200x1200 "' . $file_path . '" "' . $target_path . $filename . '"');
 				break;
 
 			case "S" :
-				exec('convert -strip -density ' . $dpi . ' -geometry 600x600 "' . $file_path . '" "' . $target_path . '/' . $file_rename . '"');
+				exec('convert -strip -density ' . $dpi . ' -geometry 600x600 "' . $file_path . '" "' . $target_path . $filename . '"');
 				break;
 			default :
 				break;
@@ -301,8 +310,8 @@ class Imagemagick {
 		$print_w = 0.0;
 		$print_h = 0.0;
 		if (count($explode_print_size) > 1) {
-			$print_w = number_format($explode_print_size[0]/$dpi * 2.54, 2);
-			$print_h = number_format($explode_print_size[1]/$dpi * 2.54, 2);
+			$print_w = number_format($explode_print_size[0] * 2.54, 2);
+			$print_h = number_format($explode_print_size[1] * 2.54, 2);
 		}
 		return $print_w . 'x' . $print_h;
 	}
