@@ -64,7 +64,7 @@ class Imagemagick {
 	);
 
 	//計算各個尺寸的長與寬
-	private static function getPhotographscale( $width, $height, $size_type ) {
+	public static function getPhotographscale( $width, $height, $size_type ) {
 		$pre_compare = 0;
 		$output_width = 0;
 		$output_height = 0;
@@ -113,6 +113,9 @@ class Imagemagick {
 		return $max_size_data;
 	}
 
+	// 非 jpg 的原始檔做轉檔的 function，轉好的檔案存放於 image_storage/source_to_jpg
+	// @in $filename 檔名
+	//     $ext 副檔名
 	public static function SourcePhotographToJpgConvert( $filename, $ext ){
 		$ds          = DIRECTORY_SEPARATOR;
         $storeFolder = PHOTOGRAPH_STORAGE_DIR;
@@ -142,6 +145,37 @@ class Imagemagick {
 			exec($exec);
 		}
 		return;
+	}
+
+	// 建立五種 ( XL、L、M、S ) 尺寸檔案
+	// @in $file_path 檔案路徑 ex. /var/www/html/wenhsun_hr/source/ or /var/www/html/wenhsun_hr/source_to_jpg/
+	//	   $single_id 圖檔編號
+	//     $size_type 尺寸格式 ex. XL、L、M、S
+	public static function PhotographScaleConvert( $file_path, $single_id, $size_type ) {
+		$ds          = DIRECTORY_SEPARATOR;
+        $storeFolder = PHOTOGRAPH_STORAGE_DIR;
+		$target_path = $storeFolder . $size_type;//切圖完後存放路徑
+		$file_path = $storeFolder . 'source_to_jpg' . '/' . $file_name ;
+		switch ($graph_type) {
+			case "XL" :
+				exec('convert -strip -density ' . $dpi . ' "' . $file_path . '" "' . $target_path . '/' . $file_rename . '"');
+				break;
+				
+			case "L" :
+				exec('convert -strip -density ' . $dpi . ' -geometry 2000x2000 "' . $file_path . '" "' . $target_path . '/' . $file_rename . '"');
+				break;
+
+			case "M" :
+				exec('convert -strip -density ' . $dpi . ' -geometry 1200x1200 "' . $file_path . '" "' . $target_path . '/' . $file_rename . '"');
+				break;
+
+			case "S" :
+				exec('convert -strip -density ' . $dpi . ' -geometry 600x600 "' . $file_path . '" "' . $target_path . '/' . $file_rename . '"');
+				break;
+			default :
+				break;
+		}
+
 	}
 	public static function get_graph_convert($path,$file_path,$single_id) {
 		$file_name = basename($file_path);
@@ -197,7 +231,7 @@ class Imagemagick {
 							$explode_dpi = explode('x', $data_value);
 							$results[$data_key] = $explode_dpi[0];
 						} else if ($data_key == 'printsize') {
-							$results['print_w_h'] = Imagemagick::get_print_datas($data_value);
+							$results['print_w_h'] = Imagemagick::get_print_datas($data_value,$results['resolution']);
 						} else {
 							$results[$data_key] = $data_value;
 						}
@@ -262,7 +296,7 @@ class Imagemagick {
 	/**
 	 * return array('print_w_h'=>輸出寬x輸出高)，計算後結果顯示到小數點後1位
 	 */
-	private static function get_print_datas($print_size, $dpi) {
+	public static function get_print_datas($print_size, $dpi) {
 		$explode_print_size = explode('x', $print_size);
 		$print_w = 0.0;
 		$print_h = 0.0;

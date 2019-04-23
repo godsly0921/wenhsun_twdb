@@ -13,8 +13,9 @@
             <thead>
             <tr role="row">
                 <th>圖檔編號</th>
-                <th>分類</th>
-                <th>審核狀態</th>
+                <!-- <th>分類</th> -->
+                <th>著作權審核狀態</th>
+                <th>是否上架</th>
                 <th>切圖進度</th>
                 <th>建立時間</th>               
                 <th>操作</th>
@@ -24,9 +25,10 @@
             <?php foreach($photograph_data as $key => $value){ ?>
                 <tr class="gradeC" role="row">
                     <td><?=$value['single_id']?></td>
-                    <td><?=$value['single_id']?></td>
-                    <td><?=$value['copyright']?></td>
-                    <td><?=round($value['percent'],2)?></td>
+                    <!-- <td><?#=$value['single_id']?></td> -->
+                    <td><?=$value['copyright'] == 0 ?'不通過':'通過'?></td>
+                    <td><?=$value['publish'] == 0 ?'否':'是'?></td>
+                    <td><?=round($value['percent'],2)?> %</td>
                     <td><?=$value['create_time']?></td>                    
                     <td>
                         <a class="oprate-right" href="<?php echo Yii::app()->createUrl('category/update/id/') ?>/<?= $key ?>">
