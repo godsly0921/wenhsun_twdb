@@ -1,4 +1,4 @@
-<div class="right_col" role="main">
+<div role="main">
     <div class="">
         <div class="row">
             <div class="col-md-12 col-sm-12 col-xs-12">
@@ -52,6 +52,14 @@
                                 </label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
                                     <input type="text" id="death" name="death" class="form-control col-md-7 col-xs-12">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="email">電子郵件
+                                </label>
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    <textarea class="form-control" rows="3" id="email" name="email"></textarea>
                                 </div>
                             </div>
 
