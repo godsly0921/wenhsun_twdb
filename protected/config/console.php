@@ -25,7 +25,7 @@ return array(
 		// uncomment the following to use a MySQL database
 		
 		'db'=>array(
-			'connectionString' => 'mysql:host=127.0.0.1;dbname=wenhsun',
+			'connectionString' => 'mysql:host=localhost;dbname=wenhsun',
 			'emulatePrepare' => true,
 			'username' => 'admin',
 			'password' => 'Cute0921',
@@ -33,7 +33,7 @@ return array(
 		),
 		'db2'=>array(
 			'class'=>'CDbConnection',
-			'connectionString' => 'mysql:host=127.0.0.1;dbname=wenhsun',
+			'connectionString' => 'mysql:host=localhost;dbname=wenhsun',
 			'emulatePrepare' => true,
 			'username' => 'admin',
 			'password' => 'Cute0921',
