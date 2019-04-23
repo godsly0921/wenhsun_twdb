@@ -173,8 +173,8 @@ class CronService
                 Yii::log(date('YYYY-MM-DD HH:mm:ss').'====目前無資料====', CLogger::LEVEL_ERROR);
             }
 
-        } catch (Throwable $ex) {
-            Yii::log($ex->getMessage(), CLogger::LEVEL_ERROR);
+        } catch (Exception $e) {
+            Yii::log($e->getMessage(), CLogger::LEVEL_ERROR);
         }
 
     }
