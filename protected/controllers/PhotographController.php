@@ -37,14 +37,19 @@ class PhotographController extends Controller{
                 if(!$exist_filename){
                     $single_data['photo_name'] = $fileName;
                     $ext = explode('.', $fileName)[1];
-                    $single_data['ext'] = strtolower($ext);
+                    $ext = strtolower($ext);
+                    $single_data['ext'] = $ext;
                     $single = $photographService->createSingleBase($single_data); // 先存圖片檔名、檔案格式進資料庫
                     if($single['status']){
-                         $single =  $single['data'];
+                        $single =  $single['data'];
                         $targetFile =  $targetPath . $single->single_id . "." . $ext; // 暫時用 single 資料表的流水號做圖檔命名
                         if ( move_uploaded_file($tempFile,$targetFile) ) {
+                            if($ext !='jpg'){
+                                Imagemagick::SourcePhotographToJpgConvert( $single->single_id, $ext );
+                                $targetFile =  $storeFolder . 'source_to_jpg' . $ds . $single->single_id . ".jpg"; // 暫時用 single 
+                            }
                             list($width, $height) = getimagesize($targetFile);
-                            $create_image_queue = $photographService->createImageQueue( $single->single_id, $width, $height );
+                            $create_image_queue = $photographService->createImageQueue( $single->single_id, $width, $height, $ext );
                             $return_data[] = array(
                                 'single_id' => $single->single_id,
                                 'fileName' => $fileName,
