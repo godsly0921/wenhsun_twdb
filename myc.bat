@@ -1,2 +1,2 @@
-C:\xampp\php\php C:\xampp\htdocs\wenhsun_hr\cron.php Cronjob
+C:\xampp\php\php C:\xampp\htdocs\wenhsun_hr\cron.php Cronjob1
 

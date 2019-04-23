@@ -1,5 +1,5 @@
 <?php
-class CronjobCommand extends CConsoleCommand{
+class Cronjob1Command extends CConsoleCommand{
 	
 	public function run(){
       
