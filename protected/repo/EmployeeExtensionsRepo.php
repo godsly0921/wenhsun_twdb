@@ -24,7 +24,7 @@ class EmployeeExtensionsRepo
         return Yii::app()->db->createCommand(
             '
               SELECT * FROM employee_extensions e
-              WHERE NOT EXISTS(SELECT 1 FROM employee_info i WHERE i.ext_num = e.id)
+              WHERE NOT EXISTS(SELECT 1 FROM employee i WHERE i.ext_num = e.id)
             '
         )->queryAll();
     }

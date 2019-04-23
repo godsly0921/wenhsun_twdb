@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-use EmployeeInfo as EmployeeInfoModel;
+use Employee as EmployeeModel;
 use Wenhsun\Entity\Employee\EmployeeId;
 use Wenhsun\Entity\Employee\EmployeeInfo;
 
-class InfoController extends Controller
+class ManagementController extends Controller
 {
     protected function needLogin(): bool
     {
@@ -15,11 +15,7 @@ class InfoController extends Controller
 
     public function actionIndex()
     {
-        $list = EmployeeInfoModel::model()->byUpdateAt()->findAll();
-        $ext = EmployeeInfoModel::model()->find(
-            "id=:id",
-            [":id" => $list]
-        );
+        $list = EmployeeModel::model()->byUpdateAt()->findAll();
         $this->render('list', ['list' => $list]);
     }
 
@@ -57,7 +53,7 @@ class InfoController extends Controller
 
     public function actionEdit($id)
     {
-        $data = EmployeeInfoModel::model()->findByPk($id);
+        $data = EmployeeModel::model()->findByPk($id);
 
         if (!$data) {
             $this->redirect('index');
@@ -127,7 +123,7 @@ class InfoController extends Controller
 
     private function validateBeforeUpdate($id)
     {
-        $employeeInfoModel = EmployeeInfoModel::model()->findByPk($id);
+        $employeeInfoModel = EmployeeModel::model()->findByPk($id);
 
         if (!$employeeInfoModel) {
             Yii::log("employee info not found by id ({$_POST['id']})", CLogger::LEVEL_ERROR);
@@ -153,7 +149,7 @@ class InfoController extends Controller
         }
 
         if (
-            EmployeeInfoModel::model()->find("user_name=:user_name", [':user_name' => $post['user_name']])
+            EmployeeModel::model()->find("user_name=:user_name", [':user_name' => $post['user_name']])
         ) {
             Yii::log("帳號已存在({$post['user_name']})", CLogger::LEVEL_ERROR);
             Yii::app()->session[Controller::ERR_MSG_KEY] = '帳號已存在';

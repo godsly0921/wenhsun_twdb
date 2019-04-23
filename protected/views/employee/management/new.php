@@ -15,7 +15,7 @@
                     </div>
                     <div class="x_content">
                         <br />
-                        <form id="form" method="post" action="/employee/info/create" data-parsley-validate class="form-horizontal form-label-left" novalidate>
+                        <form id="form" method="post" action="/employee/management/create" data-parsley-validate class="form-horizontal form-label-left" novalidate>
 
                             <?php CsrfProtector::genHiddenField(); ?>
 
@@ -230,7 +230,7 @@
                             <div class="ln_solid"></div>
                             <div class="form-group">
                                 <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
-                                    <a href="/employee/info"><button type="button" class="btn btn-default">返回</button></a>
+                                    <a href="/employee/management"><button type="button" class="btn btn-default">返回</button></a>
                                     <button type="submit" class="btn btn-primary">新增</button>
                                 </div>
                             </div>

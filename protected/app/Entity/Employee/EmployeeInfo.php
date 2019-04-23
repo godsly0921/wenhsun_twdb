@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Wenhsun\Entity\Employee;
 
-use EmployeeInfo as EmployeeInfoModel;
+use Employee as EmployeeModel;
 
 class EmployeeInfo
 {
@@ -60,35 +60,35 @@ class EmployeeInfo
 
     public function persist()
     {
-        $employeeInfoModel = new EmployeeInfoModel();
-        $employeeInfoModel->user_name = $this->user_name;
-        $employeeInfoModel->password = $this->getPassword();
-        $employeeInfoModel->email = $this->email;
-        $employeeInfoModel->name = $this->name;
-        $employeeInfoModel->gender = $this->gender;
-        $employeeInfoModel->birth = $this->birth;
-        $employeeInfoModel->person_id = $this->person_id;
-        $employeeInfoModel->nationality = $this->nationality;
-        $employeeInfoModel->country = $this->country;
-        $employeeInfoModel->dist = $this->dist;
-        $employeeInfoModel->address = $this->address;
-        $employeeInfoModel->mobile = $this->mobile;
-        $employeeInfoModel->phone = $this->phone;
-        $employeeInfoModel->enable = $this->enable;
-        $employeeInfoModel->door_card_num = $this->door_card_num;
-        $employeeInfoModel->ext_num = $this->ext_num;
-        $employeeInfoModel->seat_num = $this->seat_num;
-        $employeeInfoModel->bank_name = $this->bank_name;
-        $employeeInfoModel->bank_code = $this->bank_code;
-        $employeeInfoModel->bank_branch_name = $this->bank_branch_name;
-        $employeeInfoModel->bank_branch_code = $this->bank_branch_code;
-        $employeeInfoModel->bank_account = $this->bank_account;
-        $employeeInfoModel->bank_account_name = $this->bank_account_name;
+        $employeeModel = new EmployeeModel();
+        $employeeModel->user_name = $this->user_name;
+        $employeeModel->password = $this->getPassword();
+        $employeeModel->email = $this->email;
+        $employeeModel->name = $this->name;
+        $employeeModel->gender = $this->gender;
+        $employeeModel->birth = $this->birth;
+        $employeeModel->person_id = $this->person_id;
+        $employeeModel->nationality = $this->nationality;
+        $employeeModel->country = $this->country;
+        $employeeModel->dist = $this->dist;
+        $employeeModel->address = $this->address;
+        $employeeModel->mobile = $this->mobile;
+        $employeeModel->phone = $this->phone;
+        $employeeModel->enable = $this->enable;
+        $employeeModel->door_card_num = $this->door_card_num;
+        $employeeModel->ext_num = $this->ext_num;
+        $employeeModel->seat_num = $this->seat_num;
+        $employeeModel->bank_name = $this->bank_name;
+        $employeeModel->bank_code = $this->bank_code;
+        $employeeModel->bank_branch_name = $this->bank_branch_name;
+        $employeeModel->bank_branch_code = $this->bank_branch_code;
+        $employeeModel->bank_account = $this->bank_account;
+        $employeeModel->bank_account_name = $this->bank_account_name;
 
         $now = date('Y-m-d H:i:s');
-        $employeeInfoModel->create_at = $now;
-        $employeeInfoModel->update_at = $now;
+        $employeeModel->create_at = $now;
+        $employeeModel->update_at = $now;
 
-        $employeeInfoModel->save();
+        $employeeModel->save();
     }
 }

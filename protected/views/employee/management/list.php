@@ -7,7 +7,7 @@
             <div class="title_right">
                 <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
                     <div class="input-group">
-                        <a href="/employee/info/new">
+                        <a href="/employee/management/new">
                             <button class="btn btn-primary" type="button">新增員工</button>
                         </a>
                     </div>
@@ -36,7 +36,7 @@
                             <?php foreach($list as $data):?>
                                 <tr>
                                     <td>
-                                        <a href="/employee/info/edit?id=<?=$data->id?>"><?=$data->user_name?></a>
+                                        <a href="/employee/management/edit?id=<?=$data->id?>"><?=$data->user_name?></a>
                                     </td>
                                     <td><?=$data->name?></td>
                                     <td><?=$data->ext->ext_number?></td>
@@ -46,7 +46,7 @@
                                 </tr>
                             <?php endforeach;?>
                         <?php else:?>
-                            <tr><td colspan="3">查無資料, 快去<a href="/employee/info/new">新增資料</a>吧</td></tr>
+                            <tr><td colspan="6">查無資料, 快去<a href="/employee/management/new">新增資料</a>吧</td></tr>
                         <?php endif; ?>
                         </tbody>
                     </table>

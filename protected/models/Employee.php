@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-class EmployeeInfo extends CActiveRecord
+class Employee extends CActiveRecord
 {
     public function tableName()
     {
-        return 'employee_info';
+        return 'employee';
     }
 
     public function rules()

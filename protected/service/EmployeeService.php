@@ -3,7 +3,7 @@ class EmployeeService
 {
     public static function findEmployeelist()
     {
-        $datas = EmployeeInfo::model()->findAll(array(
+        $datas = Employee::model()->findAll(array(
             'select' => '*',
             'order' => 'id DESC ',
         ));

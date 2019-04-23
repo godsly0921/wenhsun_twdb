@@ -25,7 +25,7 @@ class EmployeeSeatsRepo
         return Yii::app()->db->createCommand(
             '
               SELECT * FROM employee_seats e
-              WHERE NOT EXISTS(SELECT 1 FROM employee_info i WHERE i.seat_num = e.id)
+              WHERE NOT EXISTS(SELECT 1 FROM employee i WHERE i.seat_num = e.id)
             '
         )->queryAll();
     }
