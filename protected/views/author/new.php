@@ -2,6 +2,12 @@
     <div class="">
         <div class="row">
             <div class="col-md-12 col-sm-12 col-xs-12">
+                <?php if (!empty(Yii::app()->session[Controller::ERR_MSG_KEY])): ?>
+                    <div id="error_alert" class="alert alert-danger alert-dismissible fade in" role="alert">
+                        <?php echo Yii::app()->session[Controller::ERR_MSG_KEY];?>
+                        <?php unset(Yii::app()->session[Controller::ERR_MSG_KEY]);?>
+                    </div>
+                <?php endif; ?>
                 <div class="x_panel">
                     <div class="x_title">
                         <h2>作家新增</h2>
@@ -302,10 +308,4 @@
             </div>
         </div>
     </div>
-    <?php if (!empty(Yii::app()->session[Controller::ERR_MSG_KEY])): ?>
-        <div id="error_alert" class="alert alert-danger alert-dismissible fade in" role="alert">
-            <?php echo Yii::app()->session[Controller::ERR_MSG_KEY];?>
-            <?php unset(Yii::app()->session[Controller::ERR_MSG_KEY]);?>
-        </div>
-    <?php endif; ?>
 </div>

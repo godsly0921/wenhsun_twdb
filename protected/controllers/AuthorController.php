@@ -28,14 +28,15 @@ class AuthorController extends Controller
      */
     public function actionCreate()
     {
+        $this->checkCSRF('index');
+        $now = Common::now();
+        $data = filter_input_array(INPUT_POST);
+
         $multiTransfer = new MultiColumnTransformer();
         $author = new Author();
         $transaction = $author->dbConnection->beginTransaction();
 
         try {
-            $this->checkCSRF('index');
-            $now = Common::now();
-            $data = filter_input_array(INPUT_POST);
 
             $author->author_name = $data['author_name'];
             $author->gender = $data['gender'];
@@ -114,6 +115,8 @@ class AuthorController extends Controller
         }
 
         $multiTransfer = new MultiColumnTransformer();
+        $author->birth = str_replace("-", "/", $author->birth);
+        $author->death = str_replace("-", "/", $author->death);
         $author->office_address = $multiTransfer->toText(';', $author->office_address);
         $author->office_phone = $multiTransfer->toText(';', $author->office_phone);
         $author->office_fax = $multiTransfer->toText(';', $author->office_fax);
@@ -124,6 +127,7 @@ class AuthorController extends Controller
         $author->mobile = $multiTransfer->toText(';', $author->mobile);
         $author->social_account = $multiTransfer->toText(';', $author->social_account);
         $author->identity_number = $multiTransfer->toText(';', $author->identity_number);
+        $author->identity_type = explode(',', $author->identity_type);
         $author->pen_name = $multiTransfer->toText(';', $author->pen_name);
 
         $bankList = [];
@@ -139,21 +143,26 @@ class AuthorController extends Controller
         $this->render('edit', ['data' => $author, 'bank_list' => $bankList]);
     }
 
+    /**
+     * @throws CException
+     */
     public function actionUpdate()
     {
+        $this->checkCSRF('index');
+        $now = Common::now();
+        $data = filter_input_array(INPUT_POST);
+
+        $multiTransfer = new MultiColumnTransformer();
+        $authorId = $data['author_id'];
+        $author = Author::model()->findByPk($data['author_id']);
+
+        if (!$author) {
+            $this->redirect("index");
+        }
+
+        $transaction = $author->dbConnection->beginTransaction();
+
         try {
-
-            $this->checkCSRF('index');
-            $now = Common::now();
-            $data = filter_input_array(INPUT_POST);
-
-            $multiTransfer = new MultiColumnTransformer();
-            $authorId = $data['author_id'];
-            $author = Author::model()->findByPk($data['author_id']);
-
-            if (!$author) {
-                $this->redirect("index");
-            }
 
             $author->author_name = $data['author_name'];
             $author->gender = $data['gender'];
@@ -234,11 +243,16 @@ class AuthorController extends Controller
                 $authBank->update();
             }
 
+            $transaction->commit();
+
             Yii::app()->session[Controller::SUCCESS_MSG_KEY] = '更新成功';
             $this->redirect("edit?id={$authorId}");
 
         } catch (Throwable $ex) {
+            $transaction->rollback();
+            Yii::log($ex->getMessage(), CLogger::LEVEL_ERROR);
             Yii::app()->session[Controller::ERR_MSG_KEY] = '更新失敗';
+            $this->redirect("edit?id={$authorId}");
         }
     }
 
