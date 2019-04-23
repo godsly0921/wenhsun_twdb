@@ -16,7 +16,7 @@
                 <?php endif; ?>
                 <div class="x_panel">
                     <div class="x_title">
-                        <h2>修改員工資料</h2>
+                        <h2>修改員工資料</h2><button id="delete-btn" class="btn btn-danger pull-right">刪除</button>
                         <div class="clearfix"></div>
                     </div>
                     <div class="x_content">
@@ -24,7 +24,7 @@
                         <form id="form" method="post" action="/employee/management/update" data-parsley-validate class="form-horizontal form-label-left" novalidate>
 
                             <?php CsrfProtector::genHiddenField(); ?>
-                            <input type="hidden" name="id" value="<?=$data->id?>">
+                            <input type="hidden" id="id" name="id" value="<?=$data->id?>">
                             <p>帳號設定</p>
 
                             <div class="form-group">
@@ -268,14 +268,40 @@
 </div>
 <script src="<?php echo Yii::app()->request->baseUrl;?>/assets/js/twzipcode.js"></script>
 <script>
-    $('#twzipcode').twzipcode(
-        {
-            css: ['form-control', 'form-control'],
-            countyName: "country",
-            districtName: "dist",
-            zipcodeIntoDistrict: true,
-            countySel: "<?=$data->country?>",
-            districtSel: "<?=$data->dist?>"
-        }
-    );
+    $(function(){
+
+        $('#twzipcode').twzipcode(
+            {
+                css: ['form-control', 'form-control'],
+                countyName: "country",
+                districtName: "dist",
+                zipcodeIntoDistrict: true,
+                countySel: "<?=$data->country?>",
+                districtSel: "<?=$data->dist?>"
+            }
+        );
+
+        $("#delete-btn").click(function(){
+            let r = confirm("確認要刪除資料?");
+            if (r === true) {
+                var token = $("#_token").prop("value");
+                var id = $("#id").prop("value");
+                var request = $.ajax({
+                    url: "<?=Yii::app()->createUrl('employee/management/delete'); ?>",
+                    method: "POST",
+                    data: {"id":id, "_token":token},
+                    dataType: "json"
+                });
+
+                request.done(function(data) {
+                    location.href = "<?=Yii::app()->createUrl('employee/management'); ?>";
+                });
+
+                request.fail(function(jqXHR, textStatus) {
+                    alert(jqXHR.responseJSON.message);
+                });
+            }
+        });
+
+    });
 </script>

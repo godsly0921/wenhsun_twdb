@@ -121,6 +121,25 @@ class ManagementController extends Controller
         }
     }
 
+    public function actionDelete()
+    {
+        try {
+            $this->checkCsrfAjax();
+
+            $pk = filter_input(INPUT_POST, 'id');
+            $employee = EmployeeModel::model()->findByPk($pk);
+            if (!$employee) {
+                $this->sendErrAjaxRsp(404, "資料不存在");
+            }
+
+            $employee->delete();
+            $this->sendSuccAjaxRsp();
+
+        } catch (Throwable $ex) {
+            $this->sendErrAjaxRsp(500, "系統錯誤");
+        }
+    }
+
     private function validateBeforeUpdate($id)
     {
         $employeeInfoModel = EmployeeModel::model()->findByPk($id);
