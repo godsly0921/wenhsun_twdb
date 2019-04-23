@@ -256,18 +256,23 @@ class AuthorController extends Controller
         }
     }
 
+    /**
+     * @throws CException
+     */
     public function actionDelete()
     {
+        $this->checkCsrfAjax();
+        $pk = filter_input(INPUT_POST, 'id');
+
+        $author = Author::model()->findByPk($pk);
+
+        if (!$author) {
+            $this->sendErrAjaxRsp(404, "資料不存在");
+        }
+
+        $transaction = $author->dbConnection->beginTransaction();
+
         try {
-            $this->checkCsrfAjax();
-
-            $pk = filter_input(INPUT_POST, 'id');
-
-            $author = Author::model()->findByPk($pk);
-
-            if (!$author) {
-                $this->sendErrAjaxRsp(404, "資料不存在");
-            }
 
             $author->delete();
 
@@ -282,9 +287,13 @@ class AuthorController extends Controller
                 }
             }
 
+            $transaction->commit();
+
             $this->sendSuccAjaxRsp();
 
         } catch (Throwable $ex) {
+            $transaction->rollback();
+            Yii::log($ex->getMessage(), CLogger::LEVEL_ERROR);
             $this->sendErrAjaxRsp(500, "系統錯誤");
         }
     }
