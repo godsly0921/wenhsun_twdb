@@ -27,16 +27,16 @@ return array(
 		'db'=>array(
 			'connectionString' => 'mysql:host=127.0.0.1;dbname=wenhsun',
 			'emulatePrepare' => true,
-			'username' => 'root',
-			'password' => 'cute0921',
+			'username' => 'admin',
+			'password' => 'Cute0921',
 			'charset' => 'utf8',
 		),
 		'db2'=>array(
 			'class'=>'CDbConnection',
 			'connectionString' => 'mysql:host=127.0.0.1;dbname=wenhsun',
 			'emulatePrepare' => true,
-			'username' => 'root',
-			'password' => 'cute0921',
+			'username' => 'admin',
+			'password' => 'Cute0921',
 			'charset' => 'BIG5',
 		),		
 		'log'=>array(
