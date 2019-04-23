@@ -1,4 +1,4 @@
-<div class="right_col" role="main">
+<div role="main">
     <div class="">
         <div class="row">
             <div class="col-md-12 col-sm-12 col-xs-12">
@@ -65,6 +65,14 @@
                                 </label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
                                     <input type="text" value="<?=$data->death?>" id="death" name="death" class="form-control col-md-7 col-xs-12">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12">電子郵件
+                                </label>
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    <textarea class="form-control" rows="3" id="email" name="email"><?=$data->email?></textarea>
                                 </div>
                             </div>
 
@@ -144,11 +152,11 @@
                                 <label class="control-label col-md-3 col-sm-3 col-xs-12">身份類型</label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
                                     <select id="identity_type" class="select2_multiple form-control" multiple="multiple" name="identity_type[]">
-                                        <option <?php if($data->identity_type === "作家"):?>selected<?php endif;?> value="作家">作家</option>
-                                        <option <?php if($data->identity_type === "出版社"):?>selected<?php endif;?> value="出版社">出版社</option>
-                                        <option <?php if($data->identity_type === "公部門"):?>selected<?php endif;?> value="公部門">公部門</option>
-                                        <option <?php if($data->identity_type === "廠商"):?>selected<?php endif;?> value="廠商">廠商</option>
-                                        <option <?php if($data->identity_type === "會員"):?>selected<?php endif;?> value="會員">會員</option>
+                                        <option <?php if(in_array("作家", $data->identity_type)):?>selected<?php endif;?> value="作家">作家</option>
+                                        <option <?php if(in_array("出版社", $data->identity_type)):?>selected<?php endif;?> value="出版社">出版社</option>
+                                        <option <?php if(in_array("公部門", $data->identity_type)):?>selected<?php endif;?> value="公部門">公部門</option>
+                                        <option <?php if(in_array("廠商", $data->identity_type)):?>selected<?php endif;?> value="廠商">廠商</option>
+                                        <option <?php if(in_array("會員", $data->identity_type)):?>selected<?php endif;?> value="會員">會員</option>
                                     </select>
                                 </div>
                             </div>
