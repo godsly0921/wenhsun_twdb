@@ -412,7 +412,7 @@ $(document).ready(function () {
       url: '<?php echo Yii::app()->createUrl('photograph/PhotographData'); ?>',
       data: data,// serializes the form's elements.
       success:function(data){
-         alert(data);// show response from the php script.
+         document.location.href="<?php echo Yii::app()->createUrl('photograph/list'); ?>";
       }
     });
   }

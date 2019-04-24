@@ -11,15 +11,78 @@ class PhotographService{
         }
     }
 
+    public function findSingleAndSinglesize($single_id){
+        $sql = "SELECT * FROM `single` s LEFT JOIN single_size ss on s.single_id = ss.single_id where s.single_id =" . $single_id;
+        $result = Yii::app()->db->createCommand($sql)->queryAll();
+        $data = array();
+        foreach ($result as $key => $value) {
+            if($value['size_type'] != 'source'){
+                $data['size'][] = array(
+                    'size_type' => $value['size_type'],
+                    // 'size_description' => $value['size_description'],
+                    // 'dpi' => $value['dpi'],
+                    // 'mp' => $value['mp'],
+                    'w_h' => $value['w_h'],
+                    // 'print_w_h' => $value['print_w_h'],
+                    'file_size' => round($value['file_size']/1024/1024,2) . " MB",
+                    'sale_twd' => $value['sale_twd'],
+                    'sale_point' => $value['sale_point'],
+                );
+            }else{
+                $data['source'] = array(
+                    'size_type' => $value['size_type'],
+                    'size_description' => $value['size_description'],
+                    'dpi' => $value['dpi'],
+                    'mp' => $value['mp'],
+                    'w_h' => $value['w_h'],
+                    'print_w_h' => $value['print_w_h'],
+                    'file_size' => round($value['file_size']/1024/1024,2) . " MB",
+                    'ext' => $value['ext'],
+                    'color' => $value['color'],
+                );
+                $category_sql = 'SELECT a.name as child_name,b.name as parent_name FROM `category` a join category b on a.parents=b.category_id where a.category_id in('.$value['category_id'].')';
+                $category_result = Yii::app()->db->createCommand($category_sql)->queryAll();
+                $category = array();
+                foreach ($category_result as $category_key => $category_value) {
+                    $txt = $category_value['parent_name'] . ' => ' . $category_value['child_name'];
+                    array_push($category, $txt);
+                }
+                $data['photograph_info'] = array(
+                    'object_name' => $value['object_name'],
+                    'photo_name' => $value['photo_name'],
+                    'single_id' => $value['single_id'],
+                    'description' => $value['description'],
+                    'people_info' => $value['people_info'],
+                    'filming_date' => $value['filming_date'],
+                    'filming_location' => $value['filming_location'],
+                    'filming_name' => $value['filming_name'],
+                    'category_id' => $value['category_id'],
+                    'category_name' => implode('<br/>', $category),
+                    'keyword' => $value['keyword'],
+                    'memo1' => $value['memo1'],
+                    'memo2' => $value['memo2'],
+                    'store_status' => $value['store_status'],
+                    'index_limit' => $value['index_limit'],
+                    'original_limit' => $value['original_limit'],
+                    'photo_limit' => $value['photo_limit'],
+                    'publish' => $value['publish'],
+                    'copyright' => $value['copyright'],
+                );
+            }
+           
+        }
+        echo json_encode($data);exit();
+        return $result;
+    }
+
     //搜尋圖片原始檔名
-    public function existPhotoNameExist( $photo_name ){
-         $result = Single::model()->find(array(
+    public function existPhotoNameExist($photo_name){
+        $result = Single::model()->find(array(
             'condition'=>'photo_name=:photo_name',
             'params'=>array(
-                ':photo_name' => $photo_name,
+                ':photo_name' => $photo_name
             )
         ));
-
         return ($result == false) ? false : true;
     }
 
@@ -155,7 +218,8 @@ class PhotographService{
         foreach ($result as $key => $value) {
             $update_single_size = array();
                
-            if($value['dpi'] == '' || $value['color'] == '' || $value['direction'] == '' || $value['size_type'] == 'source'){$targetPath =$storeFolder . 'source' . $ds;
+            if($value['size_type'] == 'source'){
+                $targetPath =$storeFolder . 'source' . $ds;
                 $targetFile = $targetPath . $value['single_id'] . "." . $value['ext'];
                 if( $value['ext'] != 'jpg' ){
                     $targetPath = $storeFolder . 'source_to_jpg' . $ds;
@@ -166,7 +230,7 @@ class PhotographService{
                 $single['dpi'] = $single_size['resolution'];
                 $single['color'] = $single_size['colorspace'];
                 $single['direction'] = $single_size['direction'];
-                $this->updateSingle( $value['single_id'], $single );
+                $single = $this->updateSingle( $value['single_id'], $single );
                 $file_size = filesize($targetFile);
                 $update_single_size['dpi'] = $single_size['resolution'];
                 $update_single_size['mp'] = $single_size['mp'];
@@ -196,7 +260,7 @@ class PhotographService{
                 $update_single_size['file_size'] = $file_size;
                 $update_single_size['ext'] = 'jpg';
                 $this->updateSingleSize( $value['single_id'], $update_single_size, $value['size_type'] );
-                $this->updateImageQueue($value['single_id'],$value['size_type']);
+                $this->updateImageQueue( $value['single_id'],$value['size_type'] );
             }
                     
         }

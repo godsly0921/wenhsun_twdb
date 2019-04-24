@@ -24,14 +24,18 @@
             <tbody> 
             <?php foreach($photograph_data as $key => $value){ ?>
                 <tr class="gradeC" role="row">
-                    <td><?=$value['single_id']?></td>
+                    <td>
+                        <img src="<?=DOMAIN?>image_storage/P/<?=$value['single_id']?>.jpg">
+                        <br>
+                        <center>圖片編號：<?=$value['single_id']?></center>
+                    </td>
                     <!-- <td><?#=$value['single_id']?></td> -->
                     <td><?=$value['copyright'] == 0 ?'不通過':'通過'?></td>
                     <td><?=$value['publish'] == 0 ?'否':'是'?></td>
                     <td><?=round($value['percent'],2)?> %</td>
                     <td><?=$value['create_time']?></td>                    
                     <td>
-                        <a class="oprate-right" href="<?php echo Yii::app()->createUrl('category/update/id/') ?>/<?= $key ?>">
+                        <a class="oprate-right" href="<?php echo Yii::app()->createUrl('photograph/update/') ?>/<?=$value['single_id']?>">
                             <i class="fa fa-pencil-square-o fa-lg"></i>
                         </a>
                         <a

@@ -186,35 +186,7 @@ class Imagemagick {
 		}
 
 	}
-	public static function get_graph_convert($path,$file_path,$single_id) {
-		$file_name = basename($file_path);
-		$ex_file_name = explode('.', $file_name);
-		$source_to_jpg = IMAGE_STORAGE . "source_to_jpg";
-		if($ex_file_name[1]==='gif' || $ex_file_name[1]==='psd'){
-			$exec = "convert ".$file_path."[0]  -units PixelsPerInch ".$source_to_jpg."/".$ex_file_name[0].".jpg";	
-			exec($exec);
-		}elseif ($ex_file_name[1]==='eps'){
-			$exec = "convert ".$file_path."  -units PixelsPerInch ".$source_to_jpg."/".$ex_file_name[0].".png";	
-	 		exec($exec);
-	 		$exec = "convert ".$path . "/" . $ex_file_name[0] . ".png  -units PixelsPerInch ".$source_to_jpg."/".$ex_file_name[0].".jpg";	
-			exec($exec);
-			unlink($path . "/" . $ex_file_name[0] . ".png");
-		}elseif($ex_file_name[1]==='ai'){
-			$exec = "convert ".$file_path." ".$path."/".$ex_file_name[0].".png";	
-	 		exec($exec);
-	 		$exec = "convert ".$path . "/" . $ex_file_name[0] . ".png  ".$source_to_jpg."/".$ex_file_name[0].".jpg";	
-			exec($exec);
-			unlink($path . "/" . $ex_file_name[0] . ".png");
-		}elseif($ex_file_name[1]==='tiff' || $ex_file_name[1]==='tif'){
-			$exec = "convert ".$file_path."[0]  -units PixelsPerInch ".$source_to_jpg."/".$ex_file_name[0].".jpg";
-			//var_dump($exec);exit();
-			exec($exec);
-		}else{
-			$exec = "convert ".$file_path."[0]  -units PixelsPerInch ".$source_to_jpg."/".$ex_file_name[0].".jpg";
-			exec($exec);
-		}
-		return;
-	}
+
 	public static function get_graph_data($file_path) {	
 		$graph_results;
 		$file_name = basename($file_path);
@@ -260,23 +232,18 @@ class Imagemagick {
 	/**
 	 * return array('p_path'=>target_p_path,'o_path'=>target_o_path,'file'=>file_rename)
 	 */
-	public static function build_o_p($file_path, $file_name, $file_rename) {
-		$filetype = explode('.', $file_name);
-  		$ext=$filetype[1];
-		$file_newname = explode('.', $file_rename);
-  		//$ext=$filetype[1];
-		//s
-		//copy($file_path . '/' . $file_name, IMAGE_STORAGE . '/s/' . $file_newname[0].'.'.$ext);
+
+	public static function build_o_p( $source_folder, $single_id ) {
+		$ds          = DIRECTORY_SEPARATOR;
+        $storeFolder = PHOTOGRAPH_STORAGE_DIR;
+        $filename = $single_id . '.jpg';
 		//p
-		$target_p_path = IMAGE_STORAGE . 'P';
-		$file_path = IMAGE_STORAGE . 'source_to_jpg' . '/' . $file_name ;
-		exec('convert -strip -density 72 -geometry 150x150 ' . $file_path . ' ' . $target_p_path . '/' . $file_rename . '');
+		$target_p_path = $storeFolder . 'P' . $ds;
+		exec('convert -strip -density 72 -geometry 150x150 "' . $source_folder . $filename . '" "' . $target_p_path . $filename . '" &');
 		//o
-		$target_o_path = IMAGE_STORAGE . 'O';
-		exec('convert -strip -density 72 -geometry 500x500 "' . $file_path . '" "' . $target_o_path . '/' . $file_rename . '"');
-		//var_dump('convert -strip -density 72 -geometry 500x500 ' . $file_path . '/' . $file_name . ' ' . $target_o_path . '/' . $file_rename . '');
-		//exit();
-		exec('composite -dissolve 100% -gravity center "' . WATERMARK . '" "' . $target_o_path . '/' . $file_rename . '" "' . $target_o_path . '/' . $file_rename . '"');
+		$target_o_path = $storeFolder . 'O' . $ds;
+		exec('convert -strip -density 72 -geometry 500x500 "' . $source_folder . $filename . '" "' . $target_o_path . $filename . '" &');
+		exec('composite -dissolve 100% -gravity center "' . WATERMARK . '" "' . $target_o_path .$filename . '" "' . $target_o_path . $filename . '" &');
 		return array('p_path' => $target_p_path, 'o_path' => $target_o_path);
 	}
 
