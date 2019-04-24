@@ -88,8 +88,17 @@ class ExtensionsController extends Controller
     {
         try {
             $this->checkCsrfAjax();
-
             $pk = filter_input(INPUT_POST, 'id');
+
+            $employee = Employee::model()->find(
+                'ext_num=:ext_num',
+                [':ext_num' => $pk]
+            );
+
+            if ($employee) {
+                $this->sendErrAjaxRsp(404, "無法刪除，員工({$employee->user_name})正在使用此分機");
+            }
+
             $ext = EmployeeExtensions::model()->findByPk($pk);
             if (!$ext) {
                 $this->sendErrAjaxRsp(404, "資料不存在");

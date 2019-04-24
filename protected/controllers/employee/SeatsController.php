@@ -106,7 +106,7 @@ class SeatsController extends Controller
             );
 
             if ($employee) {
-                $this->sendErrAjaxRsp(404, "無法刪除，員工正在使用此座位");
+                $this->sendErrAjaxRsp(404, "無法刪除，員工({$employee->user_name})正在使用此座位");
             }
 
             $ext = EmployeeSeats::model()->findByPk($pk);
