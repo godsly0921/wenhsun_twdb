@@ -99,6 +99,16 @@ class SeatsController extends Controller
             $this->checkCsrfAjax();
 
             $pk = filter_input(INPUT_POST, 'id');
+
+            $employee = Employee::model()->find(
+                'seat_num=:seat_num',
+                [':seat_num' => $pk]
+            );
+
+            if ($employee) {
+                $this->sendErrAjaxRsp(404, "無法刪除，員工正在使用此座位");
+            }
+
             $ext = EmployeeSeats::model()->findByPk($pk);
             if (!$ext) {
                 $this->sendErrAjaxRsp(404, "資料不存在");
