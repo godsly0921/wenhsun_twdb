@@ -9,11 +9,6 @@ class PhotographController extends Controller{
         return true;
     }
 
-    public function ActionImageQueue(){
-        $photographService = new PhotographService();
-        $photographService->doImageQueue();
-    }
-
     public function Actionnew(){
         $category_service = new CategoryService();
         $category_data = $category_service->findCategoryMate();

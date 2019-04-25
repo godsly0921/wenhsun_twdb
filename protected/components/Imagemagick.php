@@ -163,7 +163,7 @@ class Imagemagick {
         $storeFolder = PHOTOGRAPH_STORAGE_DIR;
         $filename = $single_id . '.jpg';
 		$target_path = $storeFolder . $size_type . $ds;//切圖完後存放路徑
-		$file_path = $storeFolder . 'source_to_jpg' . '/' . $filename;
+		//$file_path = $storeFolder . 'source_to_jpg' . '/' . $filename;
 		$dpi = Imagemagick::$size_bound_settings[$size_type]['dpi'];
 		switch ($size_type) {
 			case "XL" :

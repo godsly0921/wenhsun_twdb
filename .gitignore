@@ -2,3 +2,4 @@
 *.log
 node_modules/
 .phpunit.result.cache
+image_storage/

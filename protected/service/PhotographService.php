@@ -208,65 +208,6 @@ class PhotographService{
         $image_queue->save();
     }
 
-    public function doImageQueue(){
-        $sql = "SELECT iq.*,s.ext,s.dpi,s.color,s.direction FROM `image_queue` iq LEFT JOIN single s on iq.single_id = s.single_id where iq.queue_status = 0";
-        $result = Yii::app()->db->createCommand($sql)->queryAll();
-        $single_id = '';
-        $ds          = DIRECTORY_SEPARATOR;
-        $storeFolder = PHOTOGRAPH_STORAGE_DIR;
-        $size_bound_settings = Imagemagick::$size_bound_settings;
-        foreach ($result as $key => $value) {
-            $update_single_size = array();
-               
-            if($value['size_type'] == 'source'){
-                $targetPath =$storeFolder . 'source' . $ds;
-                $targetFile = $targetPath . $value['single_id'] . "." . $value['ext'];
-                if( $value['ext'] != 'jpg' ){
-                    $targetPath = $storeFolder . 'source_to_jpg' . $ds;
-                    $targetFile = $targetPath . $value['single_id'] . ".jpg";
-                }                     
-                $single_size = $this->getPhotographData($targetFile);
-                $single = array();
-                $single['dpi'] = $single_size['resolution'];
-                $single['color'] = $single_size['colorspace'];
-                $single['direction'] = $single_size['direction'];
-                $single = $this->updateSingle( $value['single_id'], $single );
-                $file_size = filesize($targetFile);
-                $update_single_size['dpi'] = $single_size['resolution'];
-                $update_single_size['mp'] = $single_size['mp'];
-                $update_single_size['w_h'] = $single_size['w_h'];
-                $update_single_size['print_w_h'] = $single_size['print_w_h'];
-                $update_single_size['file_size'] = $file_size;
-                $update_single_size['ext'] = $value['ext'];
-                $this->updateSingleSize( $value['single_id'], $update_single_size, 'source' );
-                $this->updateImageQueue($value['single_id'],'source');
-            }else{
-                $targetPath = $storeFolder . $value['size_type'] . $ds;
-                $targetFile = $targetPath . $value['single_id'] . ".jpg";
-                if($value['size_type'] != 'source'){
-                    Imagemagick::PhotographScaleConvert( $targetPath, $value['single_id'], $value['size_type'] );
-                }
-                list($width, $height) = getimagesize($targetFile);
-                $getPhotographScale = $width . 'x' . $height;
-                $getPhotographMP = Imagemagick::getPhotographMP( $width, $height );
-                $dpi = $size_bound_settings[$value['size_type']]['dpi'];
-                $print_w_h = Imagemagick::get_print_datas( $width/$dpi . 'x' . $height/$dpi, $value['dpi'] );
-                
-                $file_size = filesize($targetFile);
-                $update_single_size['dpi'] = $dpi;
-                $update_single_size['mp'] = $getPhotographMP;
-                $update_single_size['w_h'] = $getPhotographScale;
-                $update_single_size['print_w_h'] = $print_w_h;
-                $update_single_size['file_size'] = $file_size;
-                $update_single_size['ext'] = 'jpg';
-                $this->updateSingleSize( $value['single_id'], $update_single_size, $value['size_type'] );
-                $this->updateImageQueue( $value['single_id'],$value['size_type'] );
-            }
-                    
-        }
-        
-    }
-
     public function getPhotographData($targetFile){
     	$photograph_data = Imagemagick::get_graph_data( $targetFile );
         $explode_w_h = explode('x', $photograph_data['w_h']);
