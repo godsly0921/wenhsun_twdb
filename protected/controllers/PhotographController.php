@@ -139,8 +139,10 @@ class PhotographController extends Controller{
 
     public function ActionUpdate($id){
         $photographService = new PhotographService();
-        $photograph_data = $photographService->findSingleAndSinglesize($id);
-        var_dump($id);exit();
+        $category_service = new CategoryService();
+        $photograph_data = $photographService->findSingleAndSinglesize($id);    
+        $category_data = $category_service->findCategoryMate();
+        $this->render('update',array( 'photograph_data' => $photograph_data, 'category_data' => $category_data ));
     }
 
     public function ActionFileDelete(){

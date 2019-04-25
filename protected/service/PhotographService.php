@@ -12,23 +12,11 @@ class PhotographService{
     }
 
     public function findSingleAndSinglesize($single_id){
-        $sql = "SELECT * FROM `single` s LEFT JOIN single_size ss on s.single_id = ss.single_id where s.single_id =" . $single_id;
+        $sql = "SELECT * FROM `single` s LEFT JOIN single_size ss on s.single_id = ss.single_id where s.single_id =" . $single_id . " order by ss.single_size_id asc";
         $result = Yii::app()->db->createCommand($sql)->queryAll();
         $data = array();
         foreach ($result as $key => $value) {
-            if($value['size_type'] != 'source'){
-                $data['size'][] = array(
-                    'size_type' => $value['size_type'],
-                    // 'size_description' => $value['size_description'],
-                    // 'dpi' => $value['dpi'],
-                    // 'mp' => $value['mp'],
-                    'w_h' => $value['w_h'],
-                    // 'print_w_h' => $value['print_w_h'],
-                    'file_size' => round($value['file_size']/1024/1024,2) . " MB",
-                    'sale_twd' => $value['sale_twd'],
-                    'sale_point' => $value['sale_point'],
-                );
-            }else{
+            if($key == 0){
                 $data['source'] = array(
                     'size_type' => $value['size_type'],
                     'size_description' => $value['size_description'],
@@ -47,6 +35,7 @@ class PhotographService{
                     $txt = $category_value['parent_name'] . ' => ' . $category_value['child_name'];
                     array_push($category, $txt);
                 }
+                $data['image'] = DOMAIN . 'image_storage/S/' . $value['single_id'] . '.jpg';
                 $data['photograph_info'] = array(
                     'object_name' => $value['object_name'],
                     'photo_name' => $value['photo_name'],
@@ -56,7 +45,7 @@ class PhotographService{
                     'filming_date' => $value['filming_date'],
                     'filming_location' => $value['filming_location'],
                     'filming_name' => $value['filming_name'],
-                    'category_id' => $value['category_id'],
+                    'category_id' => explode(',', $value['category_id']),
                     'category_name' => implode('<br/>', $category),
                     'keyword' => $value['keyword'],
                     'memo1' => $value['memo1'],
@@ -68,11 +57,22 @@ class PhotographService{
                     'publish' => $value['publish'],
                     'copyright' => $value['copyright'],
                 );
-            }
-           
+            }else{
+                $data['size'][] = array(
+                    'size_type' => $value['size_type'],
+                    // 'size_description' => $value['size_description'],
+                    // 'dpi' => $value['dpi'],
+                    // 'mp' => $value['mp'],
+                    'w_h' => $value['w_h'],
+                    // 'print_w_h' => $value['print_w_h'],
+                    'file_size' => round($value['file_size']/1024/1024,2) . " MB",
+                    'sale_twd' => $value['sale_twd'],
+                    'sale_point' => $value['sale_point'],
+                );
+            }        
         }
-        echo json_encode($data);exit();
-        return $result;
+        #echo json_encode($data);exit();
+        return $data;
     }
 
     //搜尋圖片原始檔名
@@ -194,6 +194,7 @@ class PhotographService{
         }       
     }
 
+    //更新佇列狀態
     public function updateImageQueue($single_id, $size_type){
         $result = imagequeue::model()->find(array(
             'condition'=>'single_id=:single_id and size_type=:size_type',
