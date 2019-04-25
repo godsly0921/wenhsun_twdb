@@ -2,6 +2,8 @@
 <link href="<?php echo Yii::app()->request->baseUrl; ?>/assets/gentelella/vendors/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
 <!-- bootstrap-datetimepicker -->
 <link href="<?php echo Yii::app()->request->baseUrl; ?>/assets/gentelella/vendors/bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.css" rel="stylesheet">
+<!-- Switchery -->
+<link href="<?php echo Yii::app()->request->baseUrl; ?>/assets/gentelella/vendors/switchery/dist/switchery.min.css" rel="stylesheet">
 <div class="panel panel-default" style="width=100%; overflow-y:scroll;">
     <div class="panel-body">
         <div class="x_panel">
@@ -9,7 +11,7 @@
                 <h2>圖片修改</h2>
                 <div class="clearfix"></div>
             </div>  
-            <div class="x_conetne">
+            <div class="x_content">
                 <div class="col-lg-6">
                     <img src="<?=$photograph_data['image']?>" width='100%'>
                 </div>
@@ -135,20 +137,24 @@
         <div class="x_panel">
             <div class="x_title">       
                 <h2>Source image info</h2>
-                <ul class="nav navbar-right panel_toolbox">
-                    <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a></li>
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>               
-                        <ul class="dropdown-menu" role="menu">
-                            <li><a href="#">Settings 1</a></li>
-                            <li><a href="#">Settings 2</a></li>
-                        </ul>
-                    </li>
-                    <li><a class="close-link"><i class="fa fa-close"></i></a></li>
-                </ul>
+                <div class="nav navbar-right panel_toolbox form-inline">
+                    <div class="form-group">
+                        <label>
+                          <input type="checkbox" class="js-switch" checked /> 著作審核通過
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label>
+                          <input type="checkbox" class="js-switch" checked /> 上架
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <button class="btn btn-primary" style="margin-bottom: 5px !important">圖資修改</button>
+                    </div>
+                </div>
                 <div class="clearfix"></div>
             </div>  
-            <div class="x_conetne">
+            <div class="x_content">
                 <table class="table table-bordered">
                     <tr>
                         <th>Filesize</th>
@@ -180,19 +186,28 @@
         <table id="specialcaseTable" width="100%" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid">
             <thead>
             <tr role="row">
-                <th>圖檔編號</th>
-                <!-- <th>分類</th> -->
-                <th>著作權審核狀態</th>
-                <th>是否上架</th>
-                <th>切圖進度</th>
-                <th>建立時間</th>               
-                <th>操作</th>
+                <th>規格名稱</th>
+                <th>尺寸</th>
+                <th>檔案大小</th>
+                <th>點數價格</th>
+                <th>單圖價格</th>               
             </tr>
             </thead>
             <tbody> 
-
+            <?php foreach ($photograph_data['size'] as $key => $value) { ?>
+                <tr>
+                    <td><?=$value['size_type']?></td>
+                    <td><?=$value['w_h']?></td>
+                    <td><?=$value['file_size']?></td>
+                    <td> <input type="text" class="form-control"  name="sale_point['<?=$value['size_type']?>']" value="<?=$value['sale_point']?>"></td>
+                    <td> <input type="text" class="form-control"  name="sale_twd['<?=$value['size_type']?>']" value="<?=$value['sale_twd']?>"></td>
+                </tr>
+            <?php }?>
             </tbody>
         </table>
+        <div class="form-group">
+            <button class="btn btn-primary pull-right" style="margin-bottom: 5px !important">價格修改</button>
+        </div>
     </div>
 </div>
 <!-- bootstrap-daterangepicker -->
@@ -204,6 +219,8 @@
 <script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/gentelella/vendors/jquery.tagsinput/src/jquery.tagsinput.js"></script>
 <script src="<?php echo Yii::app()->request->baseUrl;?>/assets/admin/ext/js/jquery.dataTables.min.js"></script>
 <script src="<?php echo Yii::app()->request->baseUrl;?>/assets/admin/ext/js/dataTables.bootstrap.min.js"></script>
+<!-- Switchery -->
+<script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/gentelella/vendors/switchery/dist/switchery.min.js"></script>
 <script>
     $(document).ready(function() {
         if(typeof $.fn.tagsInput !== 'undefined'){        

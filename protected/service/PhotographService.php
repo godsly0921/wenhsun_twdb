@@ -17,6 +17,17 @@ class PhotographService{
         $data = array();
         foreach ($result as $key => $value) {
             if($key == 0){
+                $data['size'][] = array(
+                    'size_type' => $value['size_type'],
+                    // 'size_description' => $value['size_description'],
+                    // 'dpi' => $value['dpi'],
+                    // 'mp' => $value['mp'],
+                    'w_h' => $value['w_h'],
+                    // 'print_w_h' => $value['print_w_h'],
+                    'file_size' => round($value['file_size']/1024/1024,2) . " MB",
+                    'sale_twd' => $value['sale_twd'],
+                    'sale_point' => $value['sale_point'],
+                );
                 $data['source'] = array(
                     'size_type' => $value['size_type'],
                     'size_description' => $value['size_description'],
