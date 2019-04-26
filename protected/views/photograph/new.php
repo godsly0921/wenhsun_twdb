@@ -206,6 +206,26 @@
                   <form id="single_size_price" data-parsley-validate class="form-horizontal form-label-left">
                     <div class="form-group">
                       <div class="col-lg-6">
+                        <label class="control-label">Source 台幣： <span class="required">*</span></label>
+                        <input type="text" class="form-control" placeholder="Source 台幣" name="twd[source]">
+                      </div>
+                      <div class="col-lg-6">
+                        <label class="control-label">Source 點數： <span class="required">*</span></label>
+                        <input type="text" class="form-control" placeholder="Source 點數" name="point[source]">
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <div class="col-lg-6">
+                        <label class="control-label">XL 台幣： <span class="required">*</span></label>
+                        <input type="text" class="form-control" placeholder="XL 台幣" name="twd[XL]">
+                      </div>
+                      <div class="col-lg-6">
+                        <label class="control-label">XL 點數： <span class="required">*</span></label>
+                        <input type="text" class="form-control" placeholder="XL 點數" name="point[XL]">
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <div class="col-lg-6">
                         <label class="control-label">L 台幣： <span class="required">*</span></label>
                         <input type="text" class="form-control" placeholder="L 台幣" name="twd[L]">
                       </div>
@@ -233,27 +253,7 @@
                         <label class="control-label">S 點數： <span class="required">*</span></label>
                         <input type="text" class="form-control" placeholder="S 點數" name="point[S]">
                       </div>
-                    </div>
-                    <div class="form-group">
-                      <div class="col-lg-6">
-                        <label class="control-label">XL 台幣： <span class="required">*</span></label>
-                        <input type="text" class="form-control" placeholder="XL 台幣" name="twd[XL]">
-                      </div>
-                      <div class="col-lg-6">
-                        <label class="control-label">XL 點數： <span class="required">*</span></label>
-                        <input type="text" class="form-control" placeholder="XL 點數" name="point[XL]">
-                      </div>
-                    </div>
-                    <div class="form-group">
-                      <div class="col-lg-6">
-                        <label class="control-label">Source 台幣： <span class="required">*</span></label>
-                        <input type="text" class="form-control" placeholder="Source 台幣" name="twd[source]">
-                      </div>
-                      <div class="col-lg-6">
-                        <label class="control-label">Source 點數： <span class="required">*</span></label>
-                        <input type="text" class="form-control" placeholder="Source 點數" name="point[source]">
-                      </div>
-                    </div>
+                    </div>                   
                   </form>
                 </div>
               </div>

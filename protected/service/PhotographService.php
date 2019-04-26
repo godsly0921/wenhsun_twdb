@@ -106,6 +106,9 @@ class PhotographService{
     	$single->create_time = date('Y-m-d h:i:s');
     	$single->create_account_id = Yii::app()->session['uid'];
     	if($single->save()){
+            $input['create_time'] = $single->create_time;
+            $input['create_account_id'] = $single->create_account_id;
+            //Yii::app()->mongodb->single->insert($input);
     		return array('status'=>true,'data'=>$single);
     	}else{
     		return array('status'=>false,'data'=>$single);
@@ -118,6 +121,7 @@ class PhotographService{
     		$single_size->$key = $value;
     	}
     	if($single_size->save()){
+            //Yii::app()->mongodb->single_size->insert($input);
     		return array('status'=>true,'data'=>$single_size);
     	}else{
     		return array('status'=>false,'data'=>$single_size);

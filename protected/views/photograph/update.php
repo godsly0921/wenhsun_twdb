@@ -4,6 +4,11 @@
 <link href="<?php echo Yii::app()->request->baseUrl; ?>/assets/gentelella/vendors/bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.css" rel="stylesheet">
 <!-- Switchery -->
 <link href="<?php echo Yii::app()->request->baseUrl; ?>/assets/gentelella/vendors/switchery/dist/switchery.min.css" rel="stylesheet">
+<style type="text/css">
+    #single_data .form-group{
+        margin: 10px auto;
+    }
+</style>
 <div class="panel panel-default" style="width=100%; overflow-y:scroll;">
     <div class="panel-body">
         <div class="x_panel">
@@ -12,126 +17,142 @@
                 <div class="clearfix"></div>
             </div>  
             <div class="x_content">
-                <form id="single_data">
+                <form id="single_data" class="form-horizontal form-label-left">
                     <div class="col-lg-6">
                         <img src="<?=$photograph_data['image']?>" width='100%'>
                     </div>
                     <div class="col-lg-6">
-                        <form class="form-horizontal form-label-left">
-                            <div class="form-group">
-                                <label class="control-label col-md-3 col-sm-3 col-xs-12">物件名稱</label>
-                                <div class="col-md-9 col-sm-9 col-xs-12">
-                                    <input type="text" class="form-control" placeholder="物件名稱" name="object_name" value="<?=$photograph_data['photograph_info']['object_name']?>">
-                                </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12">物件名稱</label>
+                            <div class="col-md-9 col-sm-9 col-xs-12">
+                                <input type="text" class="form-control" placeholder="物件名稱" name="object_name" value="<?=$photograph_data['photograph_info']['object_name']?>">
                             </div>
-                            <div class="form-group">
-                                <label class="control-label col-md-3 col-sm-3 col-xs-12">圖庫編號</label>
-                                <div class="col-md-9 col-sm-9 col-xs-12">
-                                    <input type="text" class="form-control" placeholder="圖庫編號" name="single_id" readonly="readonly" value="<?=$photograph_data['photograph_info']['single_id']?>">
-                                </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12">圖庫編號</label>
+                            <div class="col-md-9 col-sm-9 col-xs-12">
+                                <input type="text" class="form-control" placeholder="圖庫編號" readonly="readonly" value="<?=$photograph_data['photograph_info']['single_id']?>">
                             </div>
-                            <div class="form-group">
-                                <label class="control-label col-md-3 col-sm-3 col-xs-12">原始檔名</label>
-                                <div class="col-md-9 col-sm-9 col-xs-12">
-                                    <input type="text" class="form-control" placeholder="原始檔名" name="photo_name" readonly="readonly" value="<?=$photograph_data['photograph_info']['photo_name']?>">
-                                </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12">原始檔名</label>
+                            <div class="col-md-9 col-sm-9 col-xs-12">
+                                <input type="text" class="form-control" placeholder="原始檔名" readonly="readonly" value="<?=$photograph_data['photograph_info']['photo_name']?>">
                             </div>
-                            <div class="form-group">
-                                <label class="control-label col-md-3 col-sm-3 col-xs-12">圖片描述</label>
-                                <div class="col-md-9 col-sm-9 col-xs-12">
-                                    <input type="text" class="form-control" placeholder="圖片描述" name="description" value="<?=$photograph_data['photograph_info']['description']?>">
-                                </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12">圖片描述</label>
+                            <div class="col-md-9 col-sm-9 col-xs-12">
+                                <input type="text" class="form-control" placeholder="圖片描述" name="description" value="<?=$photograph_data['photograph_info']['description']?>">
                             </div>
-                            <div class="form-group">
-                                <label class="control-label col-md-3 col-sm-3 col-xs-12">圖片人物</label>
-                                <div class="col-md-9 col-sm-9 col-xs-12">
-                                    <input type="text" class="form-control" placeholder="圖片人物" name="people_info" value="<?=$photograph_data['photograph_info']['people_info']?>">
-                                </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12">圖片人物</label>
+                            <div class="col-md-9 col-sm-9 col-xs-12">
+                                <input type="text" class="form-control" placeholder="圖片人物" name="people_info" value="<?=$photograph_data['photograph_info']['people_info']?>">
                             </div>
-                            <div class="form-group">
-                                <label class="control-label col-md-3 col-sm-3 col-xs-12">圖片年份</label>
-                                <div class="col-md-9 col-sm-9 col-xs-12">
-                                    <input type="text" class="form-control  has-feedback-left" id="filming_date" name="filming_date" placeholder="圖片年份" value="<?=$photograph_data['photograph_info']['filming_date']?>" aria-describedby="inputSuccess2Status2">
-                                    <span class="fa fa-calendar-o form-control-feedback left" aria-hidden="true"></span>
-                                    <span id="inputSuccess2Status2" class="sr-only">(success)</span>
-                                </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12">圖片年份</label>
+                            <div class="col-md-9 col-sm-9 col-xs-12">
+                                <input type="text" class="form-control  has-feedback-left" id="filming_date" name="filming_date" placeholder="圖片年份" value="<?=$photograph_data['photograph_info']['filming_date']?>" aria-describedby="inputSuccess2Status2">
+                                <span class="fa fa-calendar-o form-control-feedback left" aria-hidden="true"></span>
+                                <span id="inputSuccess2Status2" class="sr-only">(success)</span>
                             </div>
-                            <div class="form-group">
-                                <label class="control-label col-md-3 col-sm-3 col-xs-12">圖片場景</label>
-                                <div class="col-md-9 col-sm-9 col-xs-12">
-                                    <input type="text" class="form-control" placeholder="圖片場景" name="filming_location" value="<?=$photograph_data['photograph_info']['filming_location']?>">
-                                </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12">圖片場景</label>
+                            <div class="col-md-9 col-sm-9 col-xs-12">
+                                <input type="text" class="form-control" placeholder="圖片場景" name="filming_location" value="<?=$photograph_data['photograph_info']['filming_location']?>">
                             </div>
-                            <div class="form-group">
-                                <label class="control-label col-md-3 col-sm-3 col-xs-12">場景名稱</label>
-                                <div class="col-md-9 col-sm-9 col-xs-12">
-                                    <input type="text" class="form-control" placeholder="場景名稱" name="filming_name" value="<?=$photograph_data['photograph_info']['filming_name']?>">
-                                </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12">場景名稱</label>
+                            <div class="col-md-9 col-sm-9 col-xs-12">
+                                <input type="text" class="form-control" placeholder="場景名稱" name="filming_name" value="<?=$photograph_data['photograph_info']['filming_name']?>">
                             </div>
-                            <div class="form-group">
-                                <label class="control-label col-md-3 col-sm-3 col-xs-12">保存狀況</label>
-                                <div class="col-md-9 col-sm-9 col-xs-12">
-                                <select id="store_status" class="form-control" name="store_status" required>
-                                    <option value="1">良好</option>
-                                    <option value="2">輕度破損</option>
-                                    <option value="3">嚴重破損</option>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12">保存狀況</label>
+                            <div class="col-md-9 col-sm-9 col-xs-12">
+                            <select id="store_status" class="form-control" name="store_status" required>
+                                <option value="1" <?=$photograph_data['photograph_info']['store_status'] == 1?"selected":""?>>良好</option>
+                                <option value="2" <?=$photograph_data['photograph_info']['store_status'] == 2?"selected":""?>>輕度破損</option>
+                                <option value="3" <?=$photograph_data['photograph_info']['store_status'] == 3?"selected":""?>>嚴重破損</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12">索引使用限制</label>
+                            <div class="col-md-9 col-sm-9 col-xs-12">
+                            <select id="index_limit" class="form-control" name="index_limit" required>
+                                <option value="0" <?=$photograph_data['photograph_info']['index_limit'] == 0?"selected":""?>>不開放</option>
+                                <option value="1" <?=$photograph_data['photograph_info']['index_limit'] == 1?"selected":""?>>開放</option>
+                                <option value="2" <?=$photograph_data['photograph_info']['index_limit'] == 2?"selected":""?>>限制</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12">原件使用限制</label>
+                            <div class="col-md-9 col-sm-9 col-xs-12">
+                            <select id="original_limit" class="form-control" name="original_limit" required>
+                                <option value="0" <?=$photograph_data['photograph_info']['original_limit'] == 0?"selected":""?>>不開放</option>
+                                <option value="1" <?=$photograph_data['photograph_info']['original_limit'] == 1?"selected":""?>>開放</option>
+                                <option value="2" <?=$photograph_data['photograph_info']['original_limit'] == 2?"selected":""?>>限閱</option>
+                                <option value="3" <?=$photograph_data['photograph_info']['original_limit'] == 3?"selected":""?>>限印</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12">影像使用限制</label>
+                            <div class="col-md-9 col-sm-9 col-xs-12">
+                            <select id="photo_limit" class="form-control" name="photo_limit" required>
+                                <option value="0" <?=$photograph_data['photograph_info']['photo_limit'] == 0?"selected":""?>>不開放</option>
+                                <option value="1" <?=$photograph_data['photograph_info']['photo_limit'] == 1?"selected":""?>>開放</option>
+                                <option value="2" <?=$photograph_data['photograph_info']['photo_limit'] == 2?"selected":""?>>限文訊內部使用</option>
+                            </select>
+                          </div>
+                        </div>
+                        <!-- <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12">供圖者</label>
+                            <div class="col-md-9 col-sm-9 col-xs-12">
+                                <input type="text" class="form-control" placeholder="供圖者" value="<?#=$photograph_data['photograph_info']['object_name']?>">
+                            </div>
+                        </div> -->
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12">圖片分類</label>
+                            <div class="col-md-9 col-sm-9 col-xs-12">
+                                <select class="select2_multiple form-control" name="category_id[]" multiple="multiple" required>
+                                  <?php foreach ($category_data as $key => $value) { ?>
+                                    <option value="<?=$value['category_id']?>" <?=in_array($value['category_id'], $photograph_data['photograph_info']['category_id'])?'selected':''?>><?=$value['parents_name']?>_<?=$value['child_name']?></option>
+                                  <?php }?>
                                 </select>
-                              </div>
                             </div>
-                            <div class="form-group">
-                                <label class="control-label col-md-3 col-sm-3 col-xs-12">索引使用限制</label>
-                                <div class="col-md-9 col-sm-9 col-xs-12">
-                                <select id="index_limit" class="form-control" name="index_limit" required>
-                                    <option value="0">不開放</option>
-                                    <option value="1">開放</option>
-                                    <option value="2">限制</option>
-                                </select>
-                              </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12">關鍵字</label>
+                            <div class="col-md-9 col-sm-9 col-xs-12">
+                                <input id="keywords" type="text" class="tags form-control" name="keyword" value="<?=$photograph_data['photograph_info']['keyword']?>" />
                             </div>
-                            <div class="form-group">
-                                <label class="control-label col-md-3 col-sm-3 col-xs-12">原件使用限制</label>
-                                <div class="col-md-9 col-sm-9 col-xs-12">
-                                <select id="original_limit" class="form-control" name="original_limit" required>
-                                    <option value="0">不開放</option>
-                                    <option value="1">開放</option>
-                                    <option value="2">限閱</option>
-                                    <option value="3">限印</option>
-                                </select>
-                              </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12">內容描述</label>
+                            <div class="col-md-9 col-sm-9 col-xs-12">
+                                <textarea id="description" required="required" class="form-control" name="description"><?=$photograph_data['photograph_info']['description']?></textarea>
                             </div>
-                            <div class="form-group">
-                                <label class="control-label col-md-3 col-sm-3 col-xs-12">影像使用限制</label>
-                                <div class="col-md-9 col-sm-9 col-xs-12">
-                                <select id="photo_limit" class="form-control" name="photo_limit" required>
-                                    <option value="0">不開放</option>
-                                    <option value="1">開放</option>
-                                    <option value="2">限文訊內部使用</option>
-                                </select>
-                              </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12">備註一</label>
+                            <div class="col-md-9 col-sm-9 col-xs-12">
+                                <textarea id="memo1" required="required" class="form-control" name="memo1"><?=$photograph_data['photograph_info']['memo1']?></textarea>
                             </div>
-                            <!-- <div class="form-group">
-                                <label class="control-label col-md-3 col-sm-3 col-xs-12">供圖者</label>
-                                <div class="col-md-9 col-sm-9 col-xs-12">
-                                    <input type="text" class="form-control" placeholder="供圖者" value="<?#=$photograph_data['photograph_info']['object_name']?>">
-                                </div>
-                            </div> -->
-                            <div class="form-group">
-                                <label class="control-label col-md-3 col-sm-3 col-xs-12">圖片分類</label>
-                                <div class="col-md-9 col-sm-9 col-xs-12">
-                                    <select class="select2_multiple form-control" name="category_id[]" multiple="multiple" required>
-                                      <?php foreach ($category_data as $key => $value) { ?>
-                                        <option value="<?=$value['category_id']?>" <?=in_array($value['category_id'], $photograph_data['photograph_info']['category_id'])?'selected':''?>><?=$value['parents_name']?>_<?=$value['child_name']?></option>
-                                      <?php }?>
-                                    </select>
-                                </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12">備註二</label>
+                            <div class="col-md-9 col-sm-9 col-xs-12">
+                                <textarea id="memo2" required="required" class="form-control" name="memo2"><?=$photograph_data['photograph_info']['memo2']?></textarea>
                             </div>
-                            <div class="form-group">
-                                <label class="control-label col-md-3 col-sm-3 col-xs-12">關鍵字</label>
-                                <div class="col-md-9 col-sm-9 col-xs-12">
-                                    <input id="keywords" type="text" class="tags form-control" name="keyword" value="<?=$photograph_data['photograph_info']['keyword']?>" />
-                                </div>
-                            </div>
-                        </form>
+                        </div>
                     </div>
                 </form>
             </div>
@@ -142,12 +163,12 @@
                 <div class="nav navbar-right panel_toolbox form-inline">
                     <div class="form-group">
                         <label>
-                          <input type="checkbox" class="js-switch" checked /> 著作審核通過
+                          <input type="checkbox" class="js-switch" id="copyright" <?=$photograph_data['photograph_info']['copyright'] == 1?"checked":""?> /> 著作審核通過
                         </label>
                     </div>
                     <div class="form-group">
                         <label>
-                          <input type="checkbox" class="js-switch" checked /> 上架
+                          <input type="checkbox" class="js-switch" id="publish"  <?=$photograph_data['photograph_info']['publish'] == 1?"checked":""?> /> 上架
                         </label>
                     </div>
                     <div class="form-group">
@@ -202,8 +223,8 @@
                         <td><?=$value['size_type']?></td>
                         <td><?=$value['w_h']?></td>
                         <td><?=$value['file_size']?></td>
-                        <td> <input type="text" class="form-control"  name="sale_point['<?=$value['size_type']?>']" value="<?=$value['sale_point']?>"></td>
-                        <td> <input type="text" class="form-control"  name="sale_twd['<?=$value['size_type']?>']" value="<?=$value['sale_twd']?>"></td>
+                        <td> <input type="text" class="form-control"  name="sale_point[<?=$value['size_type']?>]" value="<?=$value['sale_point']?>"></td>
+                        <td> <input type="text" class="form-control"  name="sale_twd[<?=$value['size_type']?>]" value="<?=$value['sale_twd']?>"></td>
                     </tr>
                 <?php }?>
                 </tbody>
@@ -244,21 +265,45 @@
             $.ajax({
                 type:"POST",
                 url: '<?php echo Yii::app()->createUrl('photograph/UpdateSingleSize'); ?>',
-                data: single_size_price,// serializes the form's elements.
+                data: {
+                    single_size_price:single_size_price,
+                    single_id:'<?=$_GET['id']?>'
+                },
                 success:function(data){
-                    document.location.href="<?php echo Yii::app()->createUrl('photograph/list'); ?>";
+                   result = JSON.parse(data)
+                    if(result.status == true){
+                        location.reload();
+                    }else{
+                        alert('更新失敗');
+                    }
                 }
             });
-            console.log(single_size_price);
         });
         $('#single_data_button').click(function(){
+            var copyright = publish = 0;
+            if ($('#copyright').is(':checked')) {
+                copyright = 1;
+            }
+            if ($('#publish').is(':checked')) {
+                publish = 1;
+            }
             var single_data = $("#single_data").serialize();
             $.ajax({
                 type:"POST",
                 url: '<?php echo Yii::app()->createUrl('photograph/UpdateSingle'); ?>',
-                data: single_data,// serializes the form's elements.
+                data: {
+                    single_data:single_data,
+                    copyright:copyright,
+                    publish:publish,
+                    single_id:'<?=$_GET['id']?>'
+                },
                 success:function(data){
-                    document.location.href="<?php echo Yii::app()->createUrl('photograph/list'); ?>";
+                    result = JSON.parse(data)
+                    if(result.status == true){
+                        location.reload();
+                    }else{
+                        alert('更新失敗');
+                    }
                 }
             });
         });

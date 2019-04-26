@@ -146,14 +146,28 @@ class PhotographController extends Controller{
     }
 
     public function ActionUpdateSingle(){
+        $photographService = new PhotographService();
         $single_data = array();
         parse_str($_POST['single_data'], $single_data);
-        var_dump($single_data);
+        $single_data['copyright'] = $_POST["copyright"];
+        $single_data['publish'] = $_POST["publish"];
+        $single_data['category_id'] = implode(',', $single_data['category_id']);
+        $single_id = $_POST['single_id'];
+        $result = $photographService->updateSingle( $single_id, $single_data );
+        echo json_encode($result);exit();
     }
 
     public function ActionUpdateSingleSize(){
+        $photographService = new PhotographService();
         $single_size_price = array();
         parse_str($_POST['single_size_price'], $single_size_price);
+        foreach ($single_size_price['sale_twd'] as $key => $value) {
+            $single_size = array();
+            $single_size['sale_twd'] = $value==''?0:$value;
+            $single_size['sale_point'] = $single_size_price['sale_point'][$key]==''?0:$single_size_price['sale_point'][$key];
+            $photographService->updateAllSingleSize($_POST['single_id'], $key, $single_size);
+        }
+        echo json_encode(array('status'=>true));exit(); 
     }
 
     public function ActionFileDelete(){
