@@ -145,6 +145,17 @@ class PhotographController extends Controller{
         $this->render('update',array( 'photograph_data' => $photograph_data, 'category_data' => $category_data ));
     }
 
+    public function ActionUpdateSingle(){
+        $single_data = array();
+        parse_str($_POST['single_data'], $single_data);
+        var_dump($single_data);
+    }
+
+    public function ActionUpdateSingleSize(){
+        $single_size_price = array();
+        parse_str($_POST['single_size_price'], $single_size_price);
+    }
+
     public function ActionFileDelete(){
         $category_id = $_POST['id'];
         $post = Category::model()->findByPk( $category_id );
