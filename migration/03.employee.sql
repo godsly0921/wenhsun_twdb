@@ -19,8 +19,15 @@ PRIMARY KEY (`id`)
 
 ALTER TABLE `employee_extensions` ADD UNIQUE (ext_number);
 
+CREATE TABLE employee_seq (
+  current_val int(11) unsigned NOT NULL,
+  PRIMARY KEY(`current_val`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+INSERT INTO employee_seq VALUES (0);
+
 CREATE TABLE `employee` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `id` varchar(12) NOT NULL,
   `user_name` varchar(64) NOT NULL,
   `password` varchar(128) NOT NULL,
   `email` varchar(128) NOT NULL,

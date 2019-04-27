@@ -50,7 +50,7 @@
                                 </tr>
                             <?php endforeach;?>
                         <?php else:?>
-                            <tr><td colspan="6">查無資料, 快去<a href="/employee/management/new">新增資料</a>吧</td></tr>
+                            <tr><td colspan="7">查無資料, 快去<a href="/employee/management/new">新增資料</a>吧</td></tr>
                         <?php endif; ?>
                         </tbody>
                     </table>

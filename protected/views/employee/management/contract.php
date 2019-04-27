@@ -54,6 +54,9 @@
                 top: 80px;
                 cursor: pointer;
             }
+            .paper-id {
+                font-size: 14px;
+            }
             @media print {
                 .page-break  { display:block; page-break-before:always; }
                 section.contract-wrapper {
@@ -70,6 +73,7 @@
             <img src="<?php echo Yii::app()->request->baseUrl; ?>/assets/image/printer-button.png" alt="print button">
         </button>
         <section class="contract-wrapper page-break">
+            <p class="paper-id">員工編號:<?=$data->id?></p>
             <h1>保密合約書</h1>
             <p>
                 茲有
@@ -117,6 +121,7 @@
         </section>
 
         <section class="contract-wrapper page-break">
+            <p class="paper-id">員工編號:<?=$data->id?></p>
             <h1>智慧財產權合約書</h1>
             <p>
                 茲有

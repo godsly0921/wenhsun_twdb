@@ -61,6 +61,7 @@ class EmployeeInfo
     public function persist()
     {
         $employeeModel = new EmployeeModel();
+        $employeeModel->id = $this->employeeId->employeeId();
         $employeeModel->user_name = $this->user_name;
         $employeeModel->password = $this->getPassword();
         $employeeModel->email = $this->email;
