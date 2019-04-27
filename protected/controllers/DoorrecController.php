@@ -22,11 +22,14 @@ class DoorrecController extends Controller
         $idarr = array();
         $cardarrs = array();
 
-        foreach ($choose_employee as $key => $value) {
 
-            array_push($idarr, $value['id']);
-            array_push($cardarrs, $value['door_card_num']);
+        if(!empty($choose_employee)){
+            foreach ($choose_employee as $key => $value) {
 
+                array_push($idarr, $value['id']);
+                array_push($cardarrs, $value['door_card_num']);
+
+            }
         }
 
 
