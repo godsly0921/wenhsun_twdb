@@ -29,6 +29,7 @@
                             <th>座位</th>
                             <th>修改時間</th>
                             <th>建立時間</th>
+                            <th>操作</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -43,6 +44,9 @@
                                     <td><?=$data->seat->seat_number?></td>
                                     <td><?=$data->update_at?></td>
                                     <td><?=$data->create_at?></td>
+                                    <td>
+                                        <a href="/employee/management/contract?id=<?=$data->id?>" target="_blank" class="print-btn" data-id="<?=$data->id?>"><i class="fa fa-print" style="font-size:18px"></i></a>
+                                    </td>
                                 </tr>
                             <?php endforeach;?>
                         <?php else:?>

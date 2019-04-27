@@ -196,4 +196,19 @@ class ManagementController extends Controller
 
         return $employeeInfo;
     }
+
+    /**
+     * @param $id
+     * @throws CException
+     */
+    public function actionContract($id)
+    {
+        $data = EmployeeModel::model()->findByPk($id);
+
+        if (!$data) {
+            $this->redirect('list');
+        }
+
+        $this->renderPartial("contract", ['data' => $data]);
+    }
 }
