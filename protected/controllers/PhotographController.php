@@ -137,14 +137,6 @@ class PhotographController extends Controller{
         $this->render('list',['photograph_data'=>$photograph_data]);
     }
 
-    public function ActionUpdate($id){
-        $photographService = new PhotographService();
-        $category_service = new CategoryService();
-        $photograph_data = $photographService->findSingleAndSinglesize($id);    
-        $category_data = $category_service->findCategoryMate();
-        $this->render('update',array( 'photograph_data' => $photograph_data, 'category_data' => $category_data ));
-    }
-
     public function ActionUpdateSingle(){
         $photographService = new PhotographService();
         $single_data = array();
@@ -170,17 +162,20 @@ class PhotographController extends Controller{
         echo json_encode(array('status'=>true));exit(); 
     }
 
-    public function ActionFileDelete(){
-        $category_id = $_POST['id'];
-        $post = Category::model()->findByPk( $category_id );
-        if($post->isroot==1){
-            Category::model()->deleteAll(array(
-                'condition' => "parents=:parents",   
-                'params' => array(':parents' => $category_id ),    
-            ));    
-        }
-        $post->delete();
-        $this->redirect(Yii::app()->createUrl('category/list'));
+    public function ActionUpdate($id){
+        $photographService = new PhotographService();
+        $category_service = new CategoryService();
+        $photograph_data = $photographService->findSingleAndSinglesize($id);    
+        $category_data = $category_service->findCategoryMate();
+        $this->render('update',array( 'photograph_data' => $photograph_data, 'category_data' => $category_data ));
+    }
+
+    public function ActionDelete(){
+        $id = $_POST['id'];
+        $photographService = new PhotographService();
+        if($id != '')
+            $photograph_delete = $photographService->deletePhotograph($id);
+        $this->redirect(Yii::app()->createUrl('photograph/list'));
     }
 }
 ?>

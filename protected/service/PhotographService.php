@@ -100,6 +100,7 @@ class PhotographService{
     // 圖片上架時儲存的圖片資訊 - 是最初始的值
     public function createSingleBase( $input ){
     	$single = new Single();
+        $mongo = new Mongo();
     	foreach ($input as $key => $value) {
     		$single->$key = $value;
     	}
@@ -108,7 +109,8 @@ class PhotographService{
     	if($single->save()){
             $input['create_time'] = $single->create_time;
             $input['create_account_id'] = $single->create_account_id;
-            //Yii::app()->mongodb->single->insert($input);
+            $input['single_id'] = $single->single_id;
+            $mongo->insert_record('wenhsun', 'single', $input);
     		return array('status'=>true,'data'=>$single);
     	}else{
     		return array('status'=>false,'data'=>$single);
@@ -117,11 +119,13 @@ class PhotographService{
 	// 圖片上架時儲存的圖片資訊 - 是最初始的值
     public function createSingleSize( $input ){
     	$single_size = new Singlesize();
+        $mongo = new Mongo();
     	foreach ($input as $key => $value) {
     		$single_size->$key = $value;
     	}
     	if($single_size->save()){
-            //Yii::app()->mongodb->single_size->insert($input);
+            $input['single_size_id'] = $single_size->single_size_id;
+            $mongo->insert_record('wenhsun', 'single_size', $input);
     		return array('status'=>true,'data'=>$single_size);
     	}else{
     		return array('status'=>false,'data'=>$single_size);
@@ -129,6 +133,7 @@ class PhotographService{
     }
 
     public function updateSingleSize ( $single_id, $input, $size_type ){
+        $mongo = new Mongo();       
         $result = Singlesize::model()->find(array(
             'condition'=>'single_id=:single_id and size_type=:size_type',
             'params'=>array(
@@ -141,6 +146,9 @@ class PhotographService{
             $single->$key = $value;
         }
         if($single->save()){
+            $update_find = array('single_id'=>$single_id, 'size_type'=>$size_type);
+            $update_input = array('$set' => $input);
+            $mongo->update_record('wenhsun', 'single_size', $update_find, $update_input);
             return array('status'=>true,'data'=>$single);
         }else{
             return array('status'=>false,'data'=>$single);
@@ -148,11 +156,15 @@ class PhotographService{
     }
 
     public function updateSingle ( $single_id, $input ){
+        $mongo = new Mongo();  
     	$single = Single::model()->findByPk($single_id);;
     	foreach ($input as $key => $value) {
     		$single->$key = $value;
     	}
     	if($single->save()){
+            $update_find = array('single_id'=>$single_id);
+            $update_input = array('$set' => $input);
+            $mongo->update_record('wenhsun', 'single', $update_find, $update_input);
     		return array('status'=>true,'data'=>$single);
     	}else{
     		return array('status'=>false,'data'=>$single);
@@ -160,19 +172,28 @@ class PhotographService{
     }
 
     public function updateAllSingle ( $single_id, $input ){
+        $mongo = new Mongo();
+        $update_find = array('single_id'=> array('$in'=>explode(',',$single_id)));
+        $update_input = array('$set' => $input);
+        $mongo->update_record('wenhsun', 'single', $update_find, $update_input);
         Single::model()->updateAll($input, 'single_id in('.$single_id.')');
     }
 
     public function updateAllSingleSize ( $single_id, $size_type, $input ){
+        $mongo = new Mongo();
+        $update_find = array('single_id'=> array('$in'=>explode(',',$single_id)), 'size_type' => $size_type);
+        $update_input = array('$set' => $input);
+        $mongo->update_record('wenhsun', 'single_size', $update_find, $update_input);
         Singlesize::model()->updateAll($input, 'single_id in('.$single_id.') and size_type="' . $size_type . '"');
     }
     public function storeUpdataSingle( $single_id, $photograph_data ){
+        $mongo = new Mongo();
         $single = Single::model()->findByPk($single_id);
         $single_data = array();
         $single_data['dpi'] = $photograph_data['resolution'];
         $single_data['color'] = $photograph_data['colorspace'];
         $single_data['direction'] = $photograph_data['direction'];
-        $update_single = $this->updateSingle( $single->single_id, $single_data );
+        $update_single = $this->updateSingle( $single->single_id, $single_data);
         //var_dump($update_single);exit();
         if( $update_single['status'] ){
             return array( 'status' => true, 'data' => $update_single['data'] );
@@ -222,6 +243,43 @@ class PhotographService{
         $image_queue->queue_status =1;
         $image_queue->done_time = date('Y-m-d h:i:s');
         $image_queue->save();
+    }
+
+    public function deletePhotograph($single_id){
+        $single = Single::model()->findByPk($single_id);
+        if($single){
+            $ds          = DIRECTORY_SEPARATOR; // '/'
+            $storeFolder = PHOTOGRAPH_STORAGE_DIR; //檔案儲存的路徑
+            Single::model()->deleteAllByAttributes(array( 'single_id'=>$single_id ));
+            $single_size = Singlesize::model()->findAll(array(
+                'condition'=>'single_id=:single_id',
+                'params'=>array(
+                    ':single_id' => $single_id,
+                )
+            ));
+            $filename = $storeFolder . 'O' . $ds . $single_id . '.jpg';
+            unlink($filename);
+            $filename = $storeFolder . 'P' . $ds . $single_id . '.jpg';
+            unlink($filename);
+            if($single->ext != 'jpg'){
+                $filename = $storeFolder . 'source_to_jpg' . $ds . $single_id . '.jpg';
+                unlink($filename);
+            }
+            foreach ($single_size as $key => $value) {
+                if($value['size_type'] == 'source'){
+                    $ext = $single->ext;
+                }else{
+                    $ext = 'jpg';
+                }
+                $filename = $storeFolder . $value['size_type'] . $ds . $single_id . '.' . $ext;
+                unlink($filename);
+            }
+            Singlesize::model()->deleteAllByAttributes(array( 'single_id'=>$single_id ));
+            $mongo = new Mongo();
+            $delete_find = array('single_id'=>$single_id);
+            $mongo->delete_record( 'wenhsun', 'single', $delete_find );
+            $mongo->delete_record( 'wenhsun', 'single_size', $delete_find );
+        }
     }
 
     public function getPhotographData($targetFile){

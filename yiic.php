@@ -31,4 +31,5 @@ defined('YII_TRACE_LEVEL') or define('YII_TRACE_LEVEL', 3);
 //編輯工具設定路徑
 define('CK_PATH','/gjftamc/assets/');
 define('_PATH','/gjftamc/assets/');
+define('MONGO','mongodb://localhost:27017');
 require_once($yiic);

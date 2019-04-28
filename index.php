@@ -13,7 +13,6 @@ define ('IMAGES_STORAGE_DIR',$image);
 define ('IMAGES_SHOW_DIR','/assets/uploads/');
 define ('mysql_bak',dirname(__FILE__).'/assets/site/mysql_bak/');
 
-
 //載入上傳圖片檔案路徑
 $file=dirname(__FILE__).'/assets/uploads/file/';
 define ('FILE_STORAGE_DIR',$file);
@@ -32,5 +31,6 @@ defined('YII_TRACE_LEVEL') or define('YII_TRACE_LEVEL', 3);
 //編輯工具設定路徑
 define('CK_PATH','/gjftamc/assets/');
 define('_PATH','/gjftamc/assets/');
+define('MONGO','mongodb://localhost:27017');
 require_once($yii);
 Yii::createWebApplication($config)->run();

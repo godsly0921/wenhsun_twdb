@@ -71,7 +71,7 @@
         if (answer == true) {
             var form = document.createElement("form");
             form.setAttribute('method',"POST");
-            form.setAttribute('action', "<?php echo Yii::app()->createUrl('category/delete') ?>");
+            form.setAttribute('action', "<?php echo Yii::app()->createUrl('photograph/Delete') ?>");
             var input = document.createElement("input");
             input.setAttribute('type', 'hidden');
             input.setAttribute('name', '_token');
