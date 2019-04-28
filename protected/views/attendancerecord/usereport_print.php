@@ -1,7 +1,7 @@
 <?php $session_jsons = CJSON::decode(Yii::app()->session['power_session_jsons']); ?>
 <div class="row">
     <div class="title-wrap col-lg-12">
-        <h3 class="title-left">儀器使用明細表</h3>
+        <h3 class="title-left">每日出缺勤一覽表</h3>
     </div>
 
     <DIV class="col-lg-12" id='btnbox'>
@@ -42,21 +42,25 @@
                                class="">
                             <thead>
                             <tr role="row">
-                                <th>使用者姓名</th>
-                                <th>卡號</th>
-                                <th>教授姓名</th>
-                                <th>刷卡次數</th>
-                                <th>總金額</th>
+                                <th>員工姓名</th>
+                                <th>出勤日</th>
+                                <th>首筆出勤紀錄</th>
+                                <th>末筆出勤紀錄</th>
+                                <th>是否異常</th>
+                                <th>說明</th>
+                                <th>建立時間</th>
                             </tr>
                             </thead>
                             <tbody>
                             <?php foreach ($model as $key => $value): ?>
                                 <tr class="gradeC" role="row">
-                                    <td><?=$value['username']?></td>
-                                    <td><?=$value['cardnum']?></td>
-                                    <td><?=$value['pname']?></td>
-                                    <td><?=$value['usetime']?></td>
-                                    <td><?=$value['use_price']?></td>
+                                    <td><?=$value['name']?></td>
+                                    <td><?=$value['day']?></td>
+                                    <td><?=$value['first_time']?></td>
+                                    <td><?=$value['last_time']?></td>
+                                    <td><?=$value['abnormal_type']?></td>
+                                    <td><?=$value['abnormal']?></td>
+                                    <td><?=$value['create_at']?></td>
                                 </tr>
                             <?php endforeach; ?>
                             </tbody>
@@ -67,18 +71,6 @@
         </div>
     </div>
 </div>
-<script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/admin/ext/js/jquery.dataTables.min.js"></script>
-<script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/admin/ext/js/dataTables.bootstrap.min.js"></script>
-<script
-    src="https://blackrockdigital.github.io/startbootstrap-sb-admin-2/vendor/datatables-responsive/dataTables.responsive.js"></script>
-<script type="text/javascript">
-    
-    $( function() {
-        $( "#datepicker_start" ).datepicker({ dateFormat: 'yy-mm-dd' });
-        $( "#datepicker_end" ).datepicker({ dateFormat: 'yy-mm-dd' });
-    });
-
-</script>
 
 <SCRIPT LANGUAGE="JavaScript">
 function varitext(text){

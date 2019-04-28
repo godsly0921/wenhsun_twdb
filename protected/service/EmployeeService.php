@@ -14,4 +14,28 @@ class EmployeeService
 
         return $datas;
     }
+
+
+    public static function getEmployee($employee)
+    {
+
+        if($employee == 'all'){
+            $result = Employee::model()->findAll(array(
+                'select' => '*',
+                'order' => 'id DESC ',
+            ));
+
+        }else{
+            $result = Employee::model()->findAll([
+                'select' => '*',
+                'condition' => 'id=:id',
+                'params' => [
+                    ':id' => $employee,
+                ],
+                'order' => 'id DESC ',
+            ]);
+        }
+
+        return $result;
+    }
 }

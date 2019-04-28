@@ -160,14 +160,6 @@ class DoorrecController extends Controller
         $objPHPExcel->getActiveSheet()->setTitle('文訊人資出勤紀錄明細表');
         // Set active sheet index to the first sheet, so Excel opens this as the first sheet
         $objPHPExcel->setActiveSheetIndex(0);
-
-
-        //目前支援xls匯出
-        $filename = urlencode("文訊人資出勤紀錄明細表" . ".xlsx");
-
-
-
-
         $filename = urlencode( "文訊人資出勤紀錄明細表" . ".xlsx" );
         ob_end_clean();
         header( "Content-type: text/html; charset=utf-8" );
