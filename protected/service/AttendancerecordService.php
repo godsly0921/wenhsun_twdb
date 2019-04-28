@@ -2,32 +2,21 @@
 class AttendancerecordService{
     
     // 新增一筆紀錄
-    public function create( $memid , $in , $out , $oprice ,$door_id){
-
-
-      
+    public function create($employee_id , $day , $first_time , $last_time ,$abnormal_type,$abnormal){
       $transaction = Yii::app()->db->beginTransaction();
       try {
 
-        $post = new Bill_door;
-        $post->member_id   = $memid;
-        $post->in_id       = $in;
-        $post->out_id      = $out;
-        $post->o_price     = $oprice;
-        $post->door_id     = $door_id;
-        $post->create_date = date("Y-m-d H:i:s");
-        $post->edit_date   = date("Y-m-d H:i:s");
+        $post = new Attendancerecord();
+        $post->employee_id   = $employee_id;
+        $post->day       = $day;
+        $post->first_time      = $first_time;
+        $post->last_time     = $last_time;
+        $post->abnormal_type     = $abnormal_type;
+        $post->abnormal = $abnormal;
+        $post->create_at =  date("Y-m-d H:i:s");
+        $post->update_at =  date("Y-m-d H:i:s");
         $post->save();
-        
-        
-        $in_up=Record::model()->findByPk($in);
-        $in_up->tobill=1;
-        $in_up->save();
-        /*
-        $out_up=Record::model()->findByPk($out);
-        $out_up->tobill=1;
-        $out_up->save();*/
-        
+
 
         $transaction->commit();
       }

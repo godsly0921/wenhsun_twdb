@@ -9,7 +9,7 @@
 class RecordService{   
     
     // 根據不同卡號抓出所有紀錄
-    public function get_by_card( $card ){
+    public function get_by_card( $card,$start_date,$end_date ){
         
         // $car_arr[0] = 前5碼
         // $car_arr[1] = 後5碼
@@ -24,9 +24,9 @@ class RecordService{
         
         $criteria = new CDbCriteria; 
 
-        $criteria->condition = "start_five = :start_five AND end_five= :end_five";
+        $criteria->condition = "start_five = :start_five AND end_five= :end_five AND flashDate >=:start_date AND flashDate >=:end_date";
 
-        $criteria->params=(array(':start_five' => $car_arr[0],':end_five' =>$car_arr[1]));
+        $criteria->params=(array(':start_five' => $car_arr[0],':end_five' =>$car_arr[1],':start_date'=>$start_date,':end_date'=>$end_date));
 
         $criteria ->order = "flashDate ASC";
 
