@@ -26,25 +26,24 @@ class AttendancerecordService{
       }
     }
 
-    /*----------------------------------------------------------------
-     | 找出指定每天的門禁帳單資料
-     |----------------------------------------------------------------
-     |
-     |*/
-    public function get_door_daily_price($member_id,$door_id){
-        $start = date('Y-m-d 00:00:00');
-        $end = date('Y-m-d 23:59:59');
-        $data = Yii::app()->db->createCommand()
-            ->select('b.*,sum(b.o_price) as total,d.price as price')
-            ->from('bill_door b')
-            ->where('b.door_id =:door_id', array(':door_id'=>$door_id))
-            ->leftjoin('door d', 'b.door_id = d.id')
-            ->andwhere('b.member_id = :member_id',array(':member_id'=> $member_id ))
-            ->andwhere('b.create_date >= :start',array(':start'=>$start))
-            ->andwhere('b.create_date <= :end',array(':end'=>$end))
-            ->queryRow();
+    /**
+     * @param array $inputs
+     * @return CActiveRecord
+     */
+    public function update(array $inputs)
+    {
+        $model = Attendancerecord::model()->findByPk($inputs["id"]);
 
-        return $data;
+        $model->id = $model->id;
+        $model->take = $inputs['take'];
+        $model->reply_description    = $inputs['reply_description'];
+        $model->reply_update_at = date("Y-m-d H:i:s");
+
+        if ($model->validate()) {
+            $model->update();
+        }
+
+        return $model;
 
     }
 

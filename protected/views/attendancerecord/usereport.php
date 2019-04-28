@@ -92,6 +92,14 @@
                                 <th>是否異常</th>
                                 <th>說明</th>
                                 <th>建立時間</th>
+                                <?php foreach ($session_jsons as $jsons):?>
+
+                                    <?php if ($jsons["power_controller"] == Yii::app()->controller->id.'/update'):?>
+                                        <th>操作</th>
+                                    <?php endif; ?>
+
+                                <?php endforeach; ?>
+
                             </tr>
                             </thead>
                             <tbody>
@@ -104,6 +112,14 @@
                                     <td><?=$value['abnormal_type']?></td>
                                     <td><?=$value['abnormal']?></td>
                                     <td><?=$value['create_at']?></td>
+                                        <?php foreach ($session_jsons as $jsons):?>
+                                            <?php if ($jsons["power_controller"] == Yii::app()->controller->id.'/update'):?>
+                                            <td>
+                                                <a class="oprate-right" href="<?php echo Yii::app()->createUrl(Yii::app()->controller->id.'/update') ?>/<?= $value['id']?>"><i class="fa fa-pencil-square-o fa-lg"></i></a>
+                                            </td>
+                                            <?php endif; ?>
+                                        <?php endforeach; ?>
+
                                 </tr>
                             <?php endforeach; ?>
                             </tbody>
@@ -133,29 +149,6 @@
             }
         } );
     } );
-
-
-    $(".oprate-del").on('click', function () {
-        var calculationfeeId = $(this).data("calculationfee-id");
-        var answer = confirm("確定要刪除 (" + calculationfeeId + ") ?");
-        if (answer == true) {
-            var form = document.createElement("form");
-            form.setAttribute('method', "post");
-            form.setAttribute('action', "<?php echo Yii::app()->createUrl('calculationfee/delete') ?>");
-            var input = document.createElement("input");
-            input.setAttribute('type', 'hidden');
-            input.setAttribute('name', '_token');
-            input.setAttribute('value', "<?php echo CsrfProtector::putToken(true); ?>");
-            var idInput = document.createElement("input");
-            idInput.setAttribute('type', 'hidden');
-            idInput.setAttribute('name', 'id');
-            idInput.setAttribute('value', calculationfeeId);
-            form.appendChild(input);
-            form.appendChild(idInput);
-            document.body.appendChild(form);
-            form.submit();
-        }
-    });
 </script>
 <script>
     $('#date_start').daterangepicker({
