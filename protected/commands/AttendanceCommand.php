@@ -3,7 +3,6 @@
 //寫入每天早上9:30計算 昨天出勤狀況
 class AttendanceCommand extends CConsoleCommand
 {
-
     public function run()
     {
         $model = new EmployeeService();
@@ -26,7 +25,7 @@ class AttendanceCommand extends CConsoleCommand
 
                 if (!empty($record)) {
                     //---------------整理預計要寫入的參數資料
-                    $employee_id = $value->id
+                    $employee_id = $value->id;
                     $first_time = 0;
                     $last_time = 0;
                     $abnormal_type = 0;//正常
@@ -127,7 +126,7 @@ class AttendanceCommand extends CConsoleCommand
                                     $abnormal .= '特殊出勤日 異常，沒有上班紀錄';
                                     $abnormal .= ' ' . $special_attendance_description;
                                 }
-                            } else if ($this->get_chinese_weekday($day) == "星期三" {
+                            } else if ($this->get_chinese_weekday($day) == "星期三") {
                                 $diff_time = strtotime($last_time) - strtotime($first_time);//這個員工一整天上班時間
                                 if ($diff_time > 32400000 && $diff_time < 39600000) {
                                     $abnormal_type = 0;//正常
@@ -146,7 +145,7 @@ class AttendanceCommand extends CConsoleCommand
                                     $abnormal .= '特殊出勤日 異常，沒有上班紀錄';
                                     $abnormal .= ' ' . $special_attendance_description;
                                 }
-                            } else if ($this->get_chinese_weekday($day) == "星期四" {
+                            } else if ($this->get_chinese_weekday($day) == "星期四") {
                                 $diff_time = strtotime($last_time) - strtotime($first_time);//這個員工一整天上班時間
                                 if ($diff_time > 32400000 && $diff_time < 39600000) {
                                     $abnormal_type = 0;//正常
@@ -264,7 +263,7 @@ class AttendanceCommand extends CConsoleCommand
                                     $abnormal .= '特殊休假日';
                                     $abnormal .= ' ' . $special_attendance_description;
                                 }
-                            } else if ($this->get_chinese_weekday($day) == "星期三" {
+                            } else if ($this->get_chinese_weekday($day) == "星期三") {
                                 $diff_time = strtotime($last_time) - strtotime($first_time);//這個員工一整天上班時間
                                 if ($diff_time > 32400000 && $diff_time < 39600000) {
                                     $abnormal_type = 1;
@@ -283,7 +282,7 @@ class AttendanceCommand extends CConsoleCommand
                                     $abnormal .= '特殊休假日';
                                     $abnormal .= ' ' . $special_attendance_description;
                                 }
-                            } else if ($this->get_chinese_weekday($day) == "星期四" {
+                            } else if ($this->get_chinese_weekday($day) == "星期四") {
                                 $diff_time = strtotime($last_time) - strtotime($first_time);//這個員工一整天上班時間
                                 if ($diff_time > 32400000 && $diff_time < 39600000) {
                                     $abnormal_type = 1;
@@ -390,7 +389,7 @@ class AttendanceCommand extends CConsoleCommand
                                 $abnormal_type = 1;
                                 $abnormal .= '出勤日 沒有出勤紀錄';
                             }
-                        } else if ($this->get_chinese_weekday($day) == "星期三" {
+                        } else if ($this->get_chinese_weekday($day) == "星期三") {
                             $diff_time = strtotime($last_time) - strtotime($first_time);//這個員工一整天上班時間
                             if ($diff_time > 32400000 && $diff_time < 39600000) {
                                 $abnormal_type = 0;//正常
@@ -405,7 +404,7 @@ class AttendanceCommand extends CConsoleCommand
                                 $abnormal_type = 1;
                                 $abnormal .= '出勤日 沒有出勤紀錄';
                             }
-                        } else if ($this->get_chinese_weekday($day) == "星期四" {
+                        } else if ($this->get_chinese_weekday($day) == "星期四") {
                             $diff_time = strtotime($last_time) - strtotime($first_time);//這個員工一整天上班時間
                             if ($diff_time > 32400000 && $diff_time < 39600000) {
                                 $abnormal_type = 0;

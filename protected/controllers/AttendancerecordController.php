@@ -78,7 +78,7 @@ class AttendancerecordController extends Controller
         $record_data = $attendance_service->get_by_condition($idarr, $choose_start, $choose_end );
         $finaldata = [];
         foreach ($record_data as $key => $value) {
-
+                $temp['id'] = $value['id'];
                 $temp['name'] = $value['name'];
                 $temp['day'] = $value['day'];
                 $temp['first_time'] = $value['first_time'];
@@ -217,4 +217,62 @@ class AttendancerecordController extends Controller
 
 
     }
+
+    /**
+     * @param $id
+     */
+    public function actionUpdate($id = null)
+    {
+        ($_SERVER['REQUEST_METHOD'] === "POST") ? $this->doPostUpdate() : $this->doGetUpdate($id);
+
+    }
+
+    private function doPostUpdate()
+    {
+        if (!CsrfProtector::comparePost())
+            $this->redirect('list');
+
+        $inputs = [];
+
+
+        $inputs["id"] = filter_input(INPUT_POST, "id");
+        $inputs["reply_description"] = filter_input(INPUT_POST, "reply_description");
+        $inputs["take"] = filter_input(INPUT_POST, "take");
+
+        $service = new AttendancerecordService();
+        $model = $service->update($inputs);
+
+        if ($model->hasErrors()) {
+            Yii::app()->session['error_msg'] = $model->getErrors();
+        } else {
+            Yii::app()->session['success_msg'] = '修改成功';
+        }
+
+        $this->redirect('update/'.$inputs['id']);
+    }
+
+    private function doGetUpdate($id)
+    {
+        $model = Attendancerecord::model()->findByPk($id);
+
+        $data = [
+            0=>'正常',
+            1=>'普通傷病假',
+            2=>'事假',
+            3=>'公假',
+            4=>'公傷病假',
+            5=>'特別休假',
+            6=>'產假含例假日',
+            7=>'婚假',
+            8=>'喪假',
+            9=>'補休假'];
+        if ($model !== null) {
+            $this->render('update',['model' => $model,'data'=>$data]);
+            $this->clearMsg();
+        } else {
+            $this->redirect(Yii::app()->createUrl('list'));
+        }
+    }
+
+
 }

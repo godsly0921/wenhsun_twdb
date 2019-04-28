@@ -6,6 +6,9 @@ CREATE TABLE `attendance_record` (
   `last_time` datetime NOT NULL,
   `abnormal_type` int(1) NOT NULL,
   `abnormal` varchar (64),
+  `take` int(2) NOT NULL DEFAULT 0,
+  `reply_description` int(128) DEFAULT NULL,
+  `reply_update_at` datetime,
   `create_at` datetime NOT NULL,
   `update_at` datetime NOT NULL,
 PRIMARY KEY (`id`)
