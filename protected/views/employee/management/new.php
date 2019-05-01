@@ -15,7 +15,7 @@
                     </div>
                     <div class="x_content">
                         <br />
-                        <form id="form" method="post" action="/employee/management/create" data-parsley-validate class="form-horizontal form-label-left" novalidate>
+                        <form id="form" method="post" action="<?= Yii::app()->createUrl('/employee/management/create');?>" data-parsley-validate class="form-horizontal form-label-left" novalidate>
 
                             <?php CsrfProtector::genHiddenField(); ?>
 
