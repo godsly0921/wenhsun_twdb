@@ -1,6 +1,6 @@
 <?php
 Class Mongo{
-	private $mongo;
+	private $mongo_connect;
 	private $bulk;
 	public function __construct(){
         $this->mongo = new MongoDB\Driver\Manager(MONGO);
