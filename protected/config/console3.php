@@ -25,11 +25,11 @@ return array(
 		// uncomment the following to use a MySQL database
 		
 		'db'=>array(
-			'connectionString' => 'mysql:host=localhost;dbname=wenhsun',
-			'emulatePrepare' => true,
-			'username' => 'root',
-			'password' => 'oopspan',
-			'charset' => 'utf8',
+			'connectionString' => 'mysql:host=192.168.1.202;dbname=wenhsun',
+            'emulatePrepare' => true,
+            'username' => 'root',
+            'password' => 'Cute0921)(@!',
+            'charset' => 'utf8',
 		),
 		'db2'=>array(
 			'class'=>'CDbConnection',
