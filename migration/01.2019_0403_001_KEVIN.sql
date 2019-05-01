@@ -1069,3 +1069,10 @@ INSERT INTO `user_grp` (`id`, `name`, `isroot`, `parents`, `builder`, `sort`, `l
 (90, '智晶光電股份有限公司', 0, 3, 40, 0, 2, '2018-08-16 10:15:06', '2018-08-16 10:15:06'),
 (91, '明新科技大學光電系', 0, 5, 40, 0, 2, '2018-08-20 08:27:45', '2018-08-20 08:27:45'),
 (92, '光程研創股份有限公司', 0, 3, 55, 0, 2, '2018-09-12 16:03:39', '2018-09-12 16:09:37');
+
+ALTER TABLE `wenhsun`.`news`
+DROP COLUMN `new_origin`,
+
+ALTER TABLE `wenhsun`.`news`
+DROP COLUMN `new_language`,
+

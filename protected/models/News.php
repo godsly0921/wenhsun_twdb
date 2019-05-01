@@ -39,10 +39,10 @@ class News extends CActiveRecord
 			array('new_type, sort, builder', 'numerical', 'integerOnly'=>true),
 			//array('new_language', 'length', 'max'=>5),
 			array('new_title, new_author', 'length', 'max'=>30),
-			array('new_origin, image_name, new_image', 'length', 'max'=>256),
+			array('image_name, new_image', 'length', 'max'=>256),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, new_title, new_content, new_origin, new_author, image_name, new_image, new_createtime, new_type, sort, builder', 'safe', 'on'=>'search'),
+			array('id, new_title, new_content, new_author, image_name, new_image, new_createtime, new_type, sort, builder', 'safe', 'on'=>'search'),
 		);
 	}
 
