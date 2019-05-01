@@ -3,3 +3,6 @@
 node_modules/
 .phpunit.result.cache
 image_storage/
+
+data/document/*
+!data/document/.gitkeep
