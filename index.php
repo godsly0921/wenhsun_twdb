@@ -22,7 +22,7 @@ $photograph_storage=dirname(__FILE__).'/image_storage/';
 define ('PHOTOGRAPH_STORAGE_DIR',$photograph_storage);
 define ('DATA_PATH', dirname(__FILE__). "/data/");
 define('WATERMARK', dirname(__FILE__).'/assets/image/watermark.png');
-define('DOMAIN', 'http://localhost:8080/wenhsun_hr/');
+define('DOMAIN', 'http://web.taiwanblacktea.com.tw/');
 //載入系統設定檔
 $config=dirname(__FILE__).'/protected/config/main.php';
 //Yii Debug models開啟
