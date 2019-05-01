@@ -23,11 +23,33 @@
                     <table id="datatable" class="table table-striped table-bordered">
                         <thead>
                         <tr>
-                            <th>帳號</th>
+                            <th>公文主旨</th>
+                            <th>發文字號</th>
+                            <th>受文者</th>
+                            <th>公文類型</th>
+                            <th>承辦人</th>
+                            <th>公文附件</th>
+                            <th>更新日期</th>
+                            <th>建立日期</th>
                         </tr>
                         </thead>
                         <tbody>
-                            <td>test</td>
+                            <?php if($list):?>
+                                <?php foreach($list as $data):?>
+                                    <td>
+                                        <a href="/document/edit?id=<?=$data->id?>"><?=$data->title?></a>
+                                    </td>
+                                    <td><?=$data->send_text_number?></td>
+                                    <td><?=$data->receiver?></td>
+                                    <td><?=$data->d_type->name?></td>
+                                    <td><?=$data->case_officer?></td>
+                                    <td><?=$data->file_name?></td>
+                                    <td><?=$data->update_at?></td>
+                                    <td><?=$data->create_at?></td>
+                                <?php endforeach;?>
+                            <?php else:?>
+                            <td colspan="8">查無資料</td>
+                            <?php endif;?>
                         </tbody>
                     </table>
                 </div>
