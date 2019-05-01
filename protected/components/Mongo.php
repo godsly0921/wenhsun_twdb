@@ -3,7 +3,7 @@ Class Mongo{
 	private $mongo_connect;
 	private $bulk;
 	public function __construct(){
-        $this->mongo = new MongoDB\Driver\Manager(MONGO);
+        $this->mongo_connect = new MongoDB\Driver\Manager(MONGO);
     }
 
     public function insert_record( $datatable, $collection, $input ){
