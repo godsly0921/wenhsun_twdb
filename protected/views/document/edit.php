@@ -1,0 +1,126 @@
+<div role="main">
+    <div>
+        <div class="row">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+                <?php if (!empty(Yii::app()->session[Controller::ERR_MSG_KEY])): ?>
+                    <div id="error_alert" class="alert alert-danger alert-dismissible fade in" role="alert">
+                        <?php echo Yii::app()->session[Controller::ERR_MSG_KEY];?>
+                        <?php unset(Yii::app()->session[Controller::ERR_MSG_KEY]);?>
+                    </div>
+                <?php endif; ?>
+                <?php if (!empty(Yii::app()->session[Controller::SUCCESS_MSG_KEY])): ?>
+                    <div id="succ-alert" class="alert alert-success alert-dismissible fade in" role="alert">
+                        <?php echo Yii::app()->session[Controller::SUCCESS_MSG_KEY];?>
+                        <?php unset(Yii::app()->session[Controller::SUCCESS_MSG_KEY]);?>
+                    </div>
+                <?php endif; ?>
+                <div class="x_panel">
+                    <div class="x_title">
+                        <h2>修改公文</h2><button id="delete-btn" class="btn btn-danger pull-right">刪除</button>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="x_content">
+                        <br />
+                        <form id="form" method="post" action="/document/update" data-parsley-validate class="form-horizontal form-label-left" novalidate enctype="multipart/form-data">
+
+                            <?php CsrfProtector::genHiddenField(); ?>
+                            <input type="hidden" id="id" name="id" value="<?=$data->id?>">
+
+                            <div class="form-group">
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="receiver">受文者</label>
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    <input type="text" id="receiver" name="receiver" value="<?=$data->receiver?>" required="required" class="form-control col-md-7 col-xs-12">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12">公文類型</label>
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    <select class="form-control" id="document_type" name="document_type">
+                                        <?php if(!empty($documentTypes)):?>
+                                            <?php foreach ($documentTypes as $type):?>
+                                                <option value="<?=$type['id']?>" <?php if($type->id === $data->document_type):?>selected<?php endif;?>><?=$type['name']?></option>
+                                            <?php endforeach;?>
+                                        <?php else:?>
+                                            <option value="">無公文類型</option>
+                                        <?php endif;?>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="title">公文主旨</label>
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    <input type="text" id="title" name="title" value="<?=$data->title?>" required="required" class="form-control col-md-7 col-xs-12">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="send_text_number">發文字號</label>
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    <input type="text" id="send_text_number" name="send_text_number" value="<?=$data->send_text_number?>" required="required" class="form-control col-md-7 col-xs-12">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="send_text_date">發文日期</label>
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    <input type="date" id="send_text_date" name="send_text_date" value="<?=$data->send_text_date?>" required="required" class="form-control col-md-7 col-xs-12">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="case_officer">承辦人</label>
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    <input type="text" id="case_officer" name="case_officer" value="<?=$data->case_officer?>" class="form-control col-md-7 col-xs-12">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="document_file">公文附件</label>
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    <input type="file" id="document_file" name="document_file" required="required" class="form-control col-md-7 col-xs-12">
+                                </div>
+                            </div>
+
+                            <div class="ln_solid"></div>
+
+                            <div class="form-group">
+                                <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
+                                    <button type="submit" class="btn btn-primary">修改</button>
+                                </div>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(function(){
+
+        $("#delete-btn").click(function(){
+            let r = confirm("確認要刪除資料?");
+            if (r === true) {
+                var token = $("#_token").prop("value");
+                var id = $("#id").prop("value");
+                var request = $.ajax({
+                    url: "<?=Yii::app()->createUrl('document/delete'); ?>",
+                    method: "POST",
+                    data: {"id":id, "_token":token},
+                    dataType: "json"
+                });
+
+                request.done(function(data) {
+                    location.href = "<?=Yii::app()->createUrl('document'); ?>";
+                });
+
+                request.fail(function(jqXHR, textStatus) {
+                    alert(jqXHR.responseJSON.message);
+                });
+            }
+        });
+    });
+</script>

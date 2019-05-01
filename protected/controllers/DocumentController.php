@@ -16,7 +16,8 @@ class DocumentController extends Controller
 
     public function actionIndex()
     {
-        $this->render('list');
+        $list = Document::model()->byUpdateAt()->findAll();
+        $this->render('list', ['list' => $list]);
     }
 
     public function actionNew()
@@ -41,6 +42,7 @@ class DocumentController extends Controller
             $document->receiver = trim($_POST['receiver']);
             $document->title = trim($_POST['title']);
             $document->document_type = $_POST['document_type'];
+            $document->file_name = $_FILES['document_file']['name'];
             $document->send_text_number = trim($_POST['send_text_number']);
             $document->send_text_date = trim($_POST['send_text_date']);
             $document->case_officer = trim($_POST['case_officer']);
@@ -65,6 +67,40 @@ class DocumentController extends Controller
             $this->redirect('new');
         } finally {
             $tx->rollback();
+        }
+    }
+
+    public function actionEdit($id)
+    {
+        $document = Document::model()->findByPk($id);
+
+        if (!$document) {
+            Yii::log("id not found", CLogger::LEVEL_ERROR);
+            $this->redirect('index');
+        }
+
+        $documentTypes = DocumentType::model()->findAll();
+
+        $this->render('edit', ['data' => $document, 'documentTypes' => $documentTypes]);
+    }
+
+    public function actionDelete()
+    {
+        try {
+            $this->checkCsrfAjax();
+
+            $pk = filter_input(INPUT_POST, 'id');
+            $employee = Document::model()->findByPk($pk);
+            if (!$employee) {
+                $this->sendErrAjaxRsp(404, "資料不存在");
+            }
+
+            $employee->delete();
+            $this->sendSuccAjaxRsp();
+
+        } catch (Throwable $ex) {
+            Yii::log($ex->getMessage(), CLogger::LEVEL_ERROR);
+            $this->sendErrAjaxRsp(500, "系統錯誤");
         }
     }
 }

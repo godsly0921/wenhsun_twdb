@@ -19,10 +19,14 @@ CREATE TABLE `document` (
   `send_text_number` varchar(64) NOT NULL,
   `send_text_date` datetime NOT NULL,
   `document_type` int(11) unsigned NOT NULL,
+  `file_name` varchar(256) NOT NULL,
   `document_file` varchar(256) NOT NULL,
   `case_officer` varchar(64),
   `create_at` datetime NOT NULL,
   `update_at` datetime NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+ALTER TABLE `document`
+ADD FOREIGN KEY (document_type) REFERENCES document_type (id);
 
