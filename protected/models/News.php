@@ -37,12 +37,12 @@ class News extends CActiveRecord
 		return array(
 			array('new_title,new_content,new_createtime', 'required'),
 			array('new_type, sort, builder', 'numerical', 'integerOnly'=>true),
-			array('new_language', 'length', 'max'=>5),
+			//array('new_language', 'length', 'max'=>5),
 			array('new_title, new_author', 'length', 'max'=>30),
 			array('new_origin, image_name, new_image', 'length', 'max'=>256),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, new_language, new_title, new_content, new_origin, new_author, image_name, new_image, new_createtime, new_type, sort, builder', 'safe', 'on'=>'search'),
+			array('id, new_title, new_content, new_origin, new_author, image_name, new_image, new_createtime, new_type, sort, builder', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -64,7 +64,7 @@ class News extends CActiveRecord
 	{
 		return array(
 			'id' => '主鍵',
-			'new_language' => '語言',
+			//'new_language' => '語言',
 			'new_title' => '標題',
 			'new_content' => '內容',
 			'new_origin' => '來源或網址',
@@ -97,7 +97,7 @@ class News extends CActiveRecord
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('id',$this->id);
-		$criteria->compare('new_language',$this->new_language,true);
+		//$criteria->compare('new_language',$this->new_language,true);
 		$criteria->compare('new_title',$this->new_title,true);
 		$criteria->compare('new_content',$this->new_content,true);
 		$criteria->compare('new_origin',$this->new_origin,true);
