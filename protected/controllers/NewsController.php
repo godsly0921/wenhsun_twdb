@@ -114,7 +114,7 @@ class NewsController extends Controller
         $news = News::model()->findByPk($id);
 
         if ($news !== null) {
-            $this->render('update',['news' => $news,'languages'=>$this->defaultLanguageType]);
+            $this->render('update',['news' => $news]);
             $this->clearMsg();
         } else {
             $this->redirect(Yii::app()->createUrl('index'));

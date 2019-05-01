@@ -44,7 +44,6 @@ class NewsService
             $ext = end($tmp);
             move_uploaded_file($upload_image['tmp_name'],IMAGES_STORAGE_DIR.$uuid_name.'.'.$ext);
             $image_path = IMAGES_STORAGE_DIR.$uuid_name.'.'.$ext;
-            //ImageResize::resize($image_path,$image_path);
             $image_show_path = IMAGES_SHOW_DIR.$uuid_name.'.'.$ext;
             $news->new_image = $image_show_path;
         }

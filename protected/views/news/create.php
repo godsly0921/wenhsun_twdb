@@ -40,19 +40,6 @@
                     <input type="number"  min="0" max="100" class="form-control" id="sort" name="sort" placeholder="排序0置頂" value="">
                 </div>
             </div>
-            <!--<div class="form-group">
-                <label for="new_origin" class="col-sm-2 control-label">來源:</label>
-                <div class="col-sm-5">
-                    <input type="text" class="form-control" id="new_origin" name="new_origin" placeholder="請輸入來源如網址、出處" value="">
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label for="new_author" class="col-sm-2 control-label">作者:</label>
-                <div class="col-sm-5">
-                    <input type="text" class="form-control" id="new_author" name="new_author" placeholder="請輸入作者" value="">
-                </div>
-            </div>-->
 
             <div class="form-group">
                 <label for="new_image" class="col-sm-2 control-label">檔案(pdf):</label>

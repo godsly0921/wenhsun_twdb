@@ -28,25 +28,7 @@
     <div class="panel panel-default">
         <div class="panel-body">
             <input type="hidden" name="id" value="<?= $news->id ?>">
-            <!--<div class="form-group">
-                <label class="col-sm-2 control-label">語系:</label>
-                <div class="col-sm-5">
-                    <input type="hidden" name="id" value="<?= $news->id ?>">
-                    <select class="form-control" name="new_language">
-                        <?php foreach($languages as $language_key=>$language_value): ?>
-                            <?php if($news->new_language == $language_key):?>
-                                <option selected="selected" value="<?= $language_key ?>">
-                                    <?= $language_value ?>
-                                </option>
-                            <?php else: ?>
-                                <option value="<?= $language_key ?>">
-                                    <?= $language_value ?>
-                                </option>
-                            <?php endif; ?>
-                        <?php endforeach; ?>
-                    </select>
-                </div>
-            </div>-->
+
             <div class="form-group">
                 <label for="new_title" class="col-sm-2 control-label">標題:</label>
                 <div class="col-sm-5">
@@ -66,12 +48,6 @@
                     <input type="number"  min="0" max="100" class="form-control" id="sort" name="sort" placeholder="排序0置頂" value="<?= $news->sort ?>">
                 </div>
             </div>
-            <!--<div class="form-group">
-                <label for="new_author" class="col-sm-2 control-label">作者:</label>
-                <div class="col-sm-5">
-                    <input type="text" class="form-control" id="new_author" name="new_author" placeholder="請輸入作者" value="<?/*= $news->new_author */?>">
-                </div>
-            </div>-->
 
             <div class="form-group">
                 <label for="new_image" class="col-sm-2 control-label">相關檔案:</label>
