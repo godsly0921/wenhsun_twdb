@@ -78,7 +78,7 @@ class DoorrecController extends Controller
                         $temp['position_name'] = $value['position_name'];
                         $temp['username'] = $value['username'];
                         $temp['card_number'] = $value['card_number'];
-                        $temp['usergrp'] = $value['usergrp'];
+                        //$temp['usergrp'] = $value['usergrp'];
                         $temp['flashDate'] = $value['flashDate'];
 
                         array_push($finaldata, $temp);
