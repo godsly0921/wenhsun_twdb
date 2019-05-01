@@ -7,7 +7,7 @@
             <div class="title_right">
                 <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
                     <div class="input-group">
-                        <a href="/author/new">
+                        <a href="<?= Yii::app()->createUrl('/author/new');?>">
                             <button id="new-btn" class="btn btn-primary" type="button">新增作家</button>
                         </a>
                     </div>
@@ -33,14 +33,14 @@
                             <?php foreach($list as $data):?>
                                 <tr>
                                     <td>
-                                        <a href="/author/edit?id=<?=$data->id?>"><?=$data->author_name?></a>
+                                        <a href="<?= Yii::app()->createUrl('/author/edit?id='.$data->id);?>"><?=$data->author_name?></a>
                                     </td>
                                     <td><?=$data->create_at?></td>
                                     <td><?=$data->update_at?></td>
                                 </tr>
                             <?php endforeach;?>
                         <?php else:?>
-                            <tr><td colspan="3">查無資料, 快去<a href="/author/new">新增資料</a>吧</td></tr>
+                            <tr><td colspan="3">查無資料, 快去<a href="<?= Yii::app()->createUrl('/author/new');?>">新增資料</a>吧</td></tr>
                         <?php endif; ?>
                         </tbody>
                     </table>

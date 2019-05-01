@@ -21,7 +21,7 @@
                     </div>
                     <div class="x_content">
                         <br />
-                        <form id="form" method="post" action="/employee/management/update" data-parsley-validate class="form-horizontal form-label-left" novalidate>
+                        <form id="form" method="post" action="<?= Yii::app()->createUrl('/employee/management/update');?>" data-parsley-validate class="form-horizontal form-label-left" novalidate>
 
                             <?php CsrfProtector::genHiddenField(); ?>
                             <input type="hidden" id="id" name="id" value="<?=$data->id?>">
@@ -254,7 +254,7 @@
                         <div class="clearfix"></div>
                     </div>
                     <div class="x_content">
-                        <form id="password_form" method="post" action="/employee/management/updatepassword" data-parsley-validate class="form-horizontal form-label-left" novalidate>
+                        <form id="password_form" method="post" action="<?= Yii::app()->createUrl('/employee/management/updatepassword');?>" data-parsley-validate class="form-horizontal form-label-left" novalidate>
                             <?php CsrfProtector::genHiddenField(); ?>
                             <input type="hidden" name="id" value="<?=$data->id?>">
                             <div class="form-group">

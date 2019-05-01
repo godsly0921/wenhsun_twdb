@@ -7,7 +7,7 @@
             <div class="title_right">
                 <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
                     <div class="input-group">
-                        <a href="/employee/seats/new">
+                        <a href="<?= Yii::app()->createUrl('/employee/seats/new');?>">
                             <button class="btn btn-primary" type="button">新增座位</button>
                         </a>
                     </div>
@@ -34,7 +34,7 @@
                             <?php foreach($seats as $seat):?>
                             <tr>
                                 <td>
-                                    <a href="/employee/seats/edit?id=<?=$seat->id?>"><?=$seat->seat_number?></a>
+                                    <a href="<?= Yii::app()->createUrl('/employee/seats/edit?id='.$seat->id);?>"><?=$seat->seat_number?></a>
                                 </td>
                                 <td><?=$seat->seat_name?></td>
                                 <td><?=$seat->create_at?></td>
@@ -42,7 +42,7 @@
                             </tr>
                             <?php endforeach;?>
                         <?php else:?>
-                        <tr><td colspan="4">查無資料, 快去<a href="/employee/seats/new">新增資料</a>吧</td></tr>
+                        <tr><td colspan="4">查無資料, 快去<a href="<?= Yii::app()->createUrl('/employee/seats/new');?>">新增資料</a>吧</td></tr>
                         <?php endif; ?>
                         </tbody>
                     </table>

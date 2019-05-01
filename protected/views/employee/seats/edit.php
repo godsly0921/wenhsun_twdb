@@ -9,7 +9,7 @@
                     </div>
                     <div class="x_content">
                         <br />
-                        <form id="demo-form2" method="post" action="/employee/seats/update" data-parsley-validate class="form-horizontal form-label-left">
+                        <form id="demo-form2" method="post" action="<?= Yii::app()->createUrl('/employee/seats/update');?>" data-parsley-validate class="form-horizontal form-label-left">
                             <?php CsrfProtector::genHiddenField(); ?>
                             <input type="hidden" value="<?=$seat->id?>" id="id" name="id">
                             <div class="form-group">

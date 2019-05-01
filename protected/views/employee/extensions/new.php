@@ -9,7 +9,7 @@
                     </div>
                     <div class="x_content">
                         <br />
-                        <form id="demo-form2" method="post" action="/employee/extensions/create" data-parsley-validate class="form-horizontal form-label-left">
+                        <form id="demo-form2" method="post" action="<?= Yii::app()->createUrl('/employee/extensions/create');?>" data-parsley-validate class="form-horizontal form-label-left">
                             <?php CsrfProtector::genHiddenField(); ?>
                             <div class="form-group">
                                 <label class="control-label col-md-3 col-sm-3 col-xs-12" for="ext-number">分機號碼<span class="required">*</span>
@@ -21,7 +21,7 @@
                             <div class="ln_solid"></div>
                             <div class="form-group">
                                 <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
-                                    <a href="/employee/extensions"><button type="button" class="btn btn-default">返回</button></a>
+                                    <a href="<?= Yii::app()->createUrl('/employee/extensions');?>"><button type="button" class="btn btn-default">返回</button></a>
                                     <button type="submit" class="btn btn-primary">新增</button>
                                 </div>
                             </div>

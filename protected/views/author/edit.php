@@ -20,7 +20,7 @@
                         <div class="clearfix"></div>
                     </div>
                     <div class="x_content">
-                        <form id="demo-form2" method="post" action="/author/update" data-parsley-validate class="form-horizontal form-label-left">
+                        <form id="demo-form2" method="post" action="<?= Yii::app()->createUrl('/author/update');?>" data-parsley-validate class="form-horizontal form-label-left">
                             <p>基本資料</p>
                             <?php CsrfProtector::genHiddenField(); ?>
                             <input type="hidden" value="<?=$data->id?>" name="author_id" id="author_id">

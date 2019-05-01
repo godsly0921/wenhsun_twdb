@@ -7,7 +7,7 @@
             <div class="title_right">
                 <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
                     <div class="input-group">
-                        <a href="/employee/extensions/new">
+                        <a href="<?php echo Yii::app()->createUrl('/employee/extensions/new'); ?>">
                             <button class="btn btn-primary" type="button">新增分機號碼</button>
                         </a>
                     </div>
@@ -33,14 +33,15 @@
                             <?php foreach($exts as $ext):?>
                             <tr>
                                 <td>
-                                    <a href="/employee/extensions/edit?id=<?=$ext->id?>"><?=$ext->ext_number?></a>
+                                    <a href="<?php echo Yii::app()->createUrl('/employee/extensions/edit?id='.$ext->id);?>"><?=$ext->ext_number?></a>
+
                                 </td>
                                 <td><?=$ext->create_at?></td>
                                 <td><?=$ext->update_at?></td>
                             </tr>
                             <?php endforeach;?>
                         <?php else:?>
-                        <tr><td colspan="3">查無資料, 快去<a href="/employee/extensions/new">新增資料</a>吧</td></tr>
+                        <tr><td colspan="3">查無資料, 快去<a href="<?php echo Yii::app()->createUrl('/employee/extensions/new'); ?>">新增資料</a>吧</td></tr>
                         <?php endif; ?>
                         </tbody>
                     </table>

@@ -15,7 +15,7 @@
                     </div>
                     <div class="x_content">
                         <br />
-                        <form id="demo-form2" method="post" action="/author/create" data-parsley-validate class="form-horizontal form-label-left">
+                        <form id="demo-form2" method="post" action="<?= Yii::app()->createUrl('/author/create');?>" data-parsley-validate class="form-horizontal form-label-left">
                             <p>基本資料</p>
                             <?php CsrfProtector::genHiddenField(); ?>
 

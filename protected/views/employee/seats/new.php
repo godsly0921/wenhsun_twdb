@@ -9,7 +9,7 @@
                     </div>
                     <div class="x_content">
                         <br />
-                        <form id="demo-form2" method="post" action="/employee/seats/create" data-parsley-validate class="form-horizontal form-label-left">
+                        <form id="demo-form2" method="post" action="<?= Yii::app()->createUrl('/employee/seats/create');?>" data-parsley-validate class="form-horizontal form-label-left">
                             <?php CsrfProtector::genHiddenField(); ?>
                             <div class="form-group">
                                 <label class="control-label col-md-3 col-sm-3 col-xs-12" for="seat-name">座位名稱<span class="required">*</span>
