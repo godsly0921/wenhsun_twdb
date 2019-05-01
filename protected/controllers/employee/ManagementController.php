@@ -148,6 +148,7 @@ class ManagementController extends Controller
             $this->sendSuccAjaxRsp();
 
         } catch (Throwable $ex) {
+            Yii::log($ex->getMessage(), CLogger::LEVEL_ERROR);
             $this->sendErrAjaxRsp(500, "系統錯誤");
         }
     }

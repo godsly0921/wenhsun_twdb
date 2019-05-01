@@ -9,6 +9,11 @@ class Document extends CActiveRecord
         return 'document';
     }
 
+    public static function model($className = __CLASS__)
+    {
+        return parent::model($className);
+    }
+
     public function rules()
     {
         return [
@@ -22,7 +27,9 @@ class Document extends CActiveRecord
 
     public function relations()
     {
-        return [];
+        return [
+            'd_type' => [self::BELONGS_TO, 'DocumentType', 'document_type'],
+        ];
     }
 
     public function scopes() {
