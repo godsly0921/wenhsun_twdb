@@ -737,11 +737,8 @@ INSERT INTO `member` (`id`, `stop_card_remark`, `stop_card_people`, `account`, `
 
 CREATE TABLE IF NOT EXISTS `news` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主鍵',
-  `new_language` char(5) NOT NULL COMMENT '語言',
   `new_title` varchar(30) NOT NULL COMMENT '標題',
   `new_content` text NOT NULL COMMENT '內容',
-  `new_origin` varchar(256) NOT NULL COMMENT '來源或網址',
-  `new_author` varchar(30) NOT NULL COMMENT '作者',
   `image_name` varchar(256) CHARACTER SET utf8mb4 NOT NULL COMMENT '圖片檔名',
   `new_image` varchar(256) NOT NULL COMMENT '圖片網址',
   `new_createtime` datetime NOT NULL COMMENT '建立時間',
@@ -1069,10 +1066,4 @@ INSERT INTO `user_grp` (`id`, `name`, `isroot`, `parents`, `builder`, `sort`, `l
 (90, '智晶光電股份有限公司', 0, 3, 40, 0, 2, '2018-08-16 10:15:06', '2018-08-16 10:15:06'),
 (91, '明新科技大學光電系', 0, 5, 40, 0, 2, '2018-08-20 08:27:45', '2018-08-20 08:27:45'),
 (92, '光程研創股份有限公司', 0, 3, 55, 0, 2, '2018-09-12 16:03:39', '2018-09-12 16:09:37');
-
-ALTER TABLE `wenhsun`.`news`
-DROP COLUMN `new_origin`,
-
-ALTER TABLE `wenhsun`.`news`
-DROP COLUMN `new_language`,
 
