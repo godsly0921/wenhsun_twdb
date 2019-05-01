@@ -13,6 +13,7 @@ class EmployeeInfo
     public $user_name;
     public $email;
     private $password;
+    public $role;
 
     public $name;
     public $gender;
@@ -64,6 +65,7 @@ class EmployeeInfo
         $employeeModel->id = $this->employeeId->employeeId();
         $employeeModel->user_name = $this->user_name;
         $employeeModel->password = $this->getPassword();
+        $employeeModel->role = $this->role;
         $employeeModel->email = $this->email;
         $employeeModel->name = $this->name;
         $employeeModel->gender = $this->gender;

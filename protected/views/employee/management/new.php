@@ -49,6 +49,21 @@
                                 </div>
                             </div>
 
+                            <div class="form-group">
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12">角色</label>
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    <select class="form-control" id="role" name="role">
+                                        <?php if(!empty($roles)):?>
+                                            <?php foreach ($roles as $role):?>
+                                                <option value="<?=$role['id']?>"><?=$role['group_name']?></option>
+                                            <?php endforeach;?>
+                                        <?php else:?>
+                                            <option value="">無可用角色</option>
+                                        <?php endif;?>
+                                    </select>
+                                </div>
+                            </div>
+
                             <div class="ln_solid"></div>
                             <p>基本資料</p>
 
