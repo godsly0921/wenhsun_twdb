@@ -89,27 +89,11 @@ class DoorrecController extends Controller
         }
 
 
-        //}
-
-        $data = array();
-
-
-        // 抓出全部儀器
-        $d_ser = new DeviceService;
-        $device = $d_ser->findDevices();
-
-        // 抓出所有一級分類
-        $g_ser = new UsergrpService();
-        $grp = $g_ser->getLevelOneAll();
-
 
         // 每次找完資料都將資料存進session 方便匯出跟列印
         Yii::app()->session['doorrec'] = $finaldata;
 
-        $this->render('usereport', ['model' => $data,
-            'professor' => $professor_array,
-            'device' => $device,
-            'grp' => $grp,
+        $this->render('usereport', ['model' => $finaldata,
             'rcdata' => $finaldata
         ]);
     }

@@ -25,10 +25,12 @@ class ManagementController extends Controller
         $exts = $extRepo->getAvailableExts();
         $seatsRepo = new EmployeeSeatsRepo();
         $seats = $seatsRepo->getAvailableSeats();
+        $roles = Group::model()->findAll();
 
         $data = [
             'seats' => $seats,
             'exts' => $exts,
+            'roles' => $roles,
         ];
 
         $this->render('new', $data);
@@ -68,7 +70,17 @@ class ManagementController extends Controller
         $seatsRepo = new EmployeeSeatsRepo();
         $seats = $seatsRepo->getAvailableSeats();
         $seats = array_merge($seats, [['id' => $data->seat->id, 'seat_number' => $data->seat->seat_number]]);
-        $this->render('edit', ['data' => $data, 'exts' => $exts, 'seats' => $seats]);
+        $roles = Group::model()->findAll();
+
+        $this->render(
+            'edit',
+            [
+                'data' => $data,
+                'exts' => $exts,
+                'seats' => $seats,
+                'roles' => $roles,
+            ]
+        );
     }
 
     public function actionUpdatePassword()

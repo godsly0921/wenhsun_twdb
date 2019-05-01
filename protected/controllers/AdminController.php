@@ -212,7 +212,6 @@ class AdminController extends CController
         
 
 		switch ($input['login_type']) {
-
 			case "0":
                 Yii::log("account login::0 start login");
 				$sys_account = ExtAccount::findByUserAccount($input['user_account']);
@@ -236,52 +235,39 @@ class AdminController extends CController
 				break;
 
 			case "1":
+
                 Yii::log("user login::1 start login");
-				$model = MemberService::findByMemberAccount($input['user_account'],md5($input['password']));
-                
+
+                $userName = $input['user_account'];
+
+                $model = Employee::model()->find([
+                    'condition' => 'user_name = :user_name',
+                    'params' => [
+                        ':user_name' => $userName,
+                    ]
+                ]);
+
                 if ($model === null) {
                     Yii::log("user login::user account is null");
 					Yii::app()->session['message'] = '找不到該使用者帳號，請聯絡系統管理員。';
 					$this->redirect(Yii::app()->createUrl('admin/index'));
-
 				}
 
                 $account = [
-                    'login_type'=>$input['login_type'],
-                    'username'=>$model->account,
-                    'id'=>$model->id,
-                    'group' => $model->user_group,
-                    'type' => $model->status,
-                    'password' => $model->password
+                    'login_type' => $input['login_type'],
+                    'username' => $model->user_name,
+                    'password' => $model->password,
+                    'id' => $model->id,
+                    'group' => $model->role,
+                    'type' => ($model->enable === 'Y') ? "0" : "1",
                 ];
+
                 $this->actionSetLogin($model, $account, $input);
 
 				break;
 
-			case "2":
-
-                Yii::log("member login::2 start login");
-				$sys_account = MemberService::findByMemberAccount($input['user_account']);
-
-				if ($sys_account === null) {
-
-                    Yii::log("member login::member account is null");
-					Yii::app()->session['message'] = '找不到該客戶帳號，請聯絡系統管理員。';
-					$this->redirect(Yii::app()->createUrl('admin/index'));
-
-				}
-
-                $account = [
-                    'login_type'=>$input['login_type'],
-                    'username'=>$sys_account->mem_account,
-                    'group' => $sys_account->mem_group,
-                    'type' => $sys_account->mem_type,
-                    'password' => $sys_account->mem_password
-                ];
-                
-                $this->actionSetLogin($sys_account, $account, $input);
-
-				break;
+            default:
+                break;
 		}
 	}
 	
@@ -311,7 +297,7 @@ class AdminController extends CController
 	private function actionSetLogin($sysAccount, $account, $input)
     {
 
-        if ($account['type'] == '1') {
+        if ($account['type'] === '1') {
             Yii::log("Set login::account is disabled");
             Yii::app()->session['message'] = '帳號被停用，請聯絡系統管理員。';
             $this->redirect(Yii::app()->createUrl('admin/index'));
@@ -319,7 +305,7 @@ class AdminController extends CController
 
         if (md5($input['password']) !== $account['password']) {
             Yii::log("Set login::password is error");
-            Yii::app()->session['message'] = '帳號或密碼錯誤';
+            Yii::app()->session['message'] = '密碼錯誤';
             $this->redirect(Yii::app()->createUrl('admin/index'));
         }
 
@@ -357,10 +343,7 @@ class AdminController extends CController
 
     private function setLoginSession($sys_account, $loginType)
     {
-
-
         switch ($loginType) {
-
             case '0':
                 //系統管理員
                 Yii::app()->session['uid'] = $sys_account->id;//系統帳號ID
@@ -372,18 +355,11 @@ class AdminController extends CController
             case '1':
                 //使用者
                 Yii::app()->session['uid'] = $sys_account->id;//使用者帳號ID
-                Yii::app()->session['pid'] = $sys_account->account;//使用者帳號
+                Yii::app()->session['pid'] = $sys_account->user_name;//使用者帳號
                 Yii::app()->session['personal'] = true;
                 break;
-
-            /*case '2':
-
-                Yii::app()->session['uid'] = $sys_account->id;
-                Yii::app()->session['pid'] = $sys_account->mem_account;
-                Yii::app()->session['personal'] = true;
-
-
-                break;*/
+            default:
+                break;
         }
     }
 
