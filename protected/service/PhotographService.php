@@ -207,7 +207,7 @@ class PhotographService{
         $max_size_type = Imagemagick::getPhotographMaxSize( $width, $height );
         $status = true;
         if($ext != 'jpg'){
-            $image_queue = new imagequeue();      
+            $image_queue = new Imagequeue();      
             $image_queue->single_id = $single_id;
             $image_queue->size_type = 'source';
             $image_queue->create_time = date('Y-m-d h:i:s');
@@ -218,7 +218,7 @@ class PhotographService{
             $single_size_create = $this->createSingleSize($single_size);
         }
         foreach ($max_size_type as $key => $value) {    
-            $image_queue = new imagequeue();      
+            $image_queue = new Imagequeue();      
             $image_queue->single_id = $single_id;
             $image_queue->size_type = $value;
             $image_queue->create_time = date('Y-m-d h:i:s');
@@ -232,7 +232,7 @@ class PhotographService{
 
     //更新佇列狀態
     public function updateImageQueue($single_id, $size_type){
-        $result = imagequeue::model()->find(array(
+        $result = Imagequeue::model()->find(array(
             'condition'=>'single_id=:single_id and size_type=:size_type',
             'params'=>array(
                 ':single_id' => $single_id,
