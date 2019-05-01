@@ -39,7 +39,7 @@ class PhotographService{
                     'ext' => $value['ext'],
                     'color' => $value['color'],
                 );
-                $category_sql = 'SELECT a.name as child_name,b.name as parent_name FROM `category` a join category b on a.parents=b.category_id where a.category_id in('.$value["category_id"].')';
+                $category_sql = 'SELECT a.name as child_name,b.name as parent_name FROM category a join category b on a.parents=b.category_id where a.category_id in('.'"'.$value["category_id"].'"'.')';
                 $category_result = Yii::app()->db->createCommand($category_sql)->queryAll();
                 $category = array();
                 foreach ($category_result as $category_key => $category_value) {
