@@ -9,7 +9,7 @@ class TranscoderCommand extends CConsoleCommand{
         date_default_timezone_set("Asia/Taipei");
         while(1) {
             $storeFolder='/var/www/html/wenhsun_hr/image_storage/';
-            $photographService = new photographService();
+            $photographService = new PhotographService();
             $sql = "SELECT iq.*,s.ext as source_ext,s.dpi,s.color,s.direction FROM `image_queue` iq LEFT JOIN single s on iq.single_id = s.single_id where iq.queue_status = 0 limit 1";
             $result = Yii::app()->db->createCommand($sql)->queryAll();
             $single_id = '';
