@@ -43,7 +43,9 @@
                                     <td><?=$data->receiver?></td>
                                     <td><?=$data->d_type->name?></td>
                                     <td><?=$data->case_officer?></td>
-                                    <td><?=$data->file_name?></td>
+                                    <td>
+                                        <a href="/document/download?id=<?=$data->id?>" target="_blank"><?=$data->file_name?></a>
+                                    </td>
                                     <td><?=$data->update_at?></td>
                                     <td><?=$data->create_at?></td>
                                 <?php endforeach;?>

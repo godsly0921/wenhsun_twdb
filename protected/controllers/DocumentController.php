@@ -103,4 +103,44 @@ class DocumentController extends Controller
             $this->sendErrAjaxRsp(500, "系統錯誤");
         }
     }
+
+    public function actionDownload($id)
+    {
+        try {
+
+            $this->layout = false;
+
+            $document = Document::model()->findByPk($id);
+
+            if (!$document) {
+                Yii::log("id not found", CLogger::LEVEL_ERROR);
+                echo "無文件可下載";
+                return false;
+            }
+
+            if (!file_exists($document->document_file)) {
+                Yii::log("image not found", CLogger::LEVEL_ERROR);
+                echo "無文件可下載";
+                return false;
+            }
+
+            $output = "";
+            $fd = fopen($document->document_file, "r");
+            while (!(feof($fd))) {
+                $output .= fread($fd, 8192);
+            }
+            fclose($fd);
+
+            header('Content-Disposition: attachment; filename=' . $document->file_name);
+            header("Pragma: no-cache");
+            header("Expires: 0");
+            header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+
+            echo $output;
+
+        } catch (Throwable $ex) {
+            Yii::log($ex->getMessage(), CLogger::LEVEL_ERROR);
+            $this->redirect('index');
+        }
+    }
 }
