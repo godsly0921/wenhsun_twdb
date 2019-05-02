@@ -263,7 +263,8 @@ class PhotographService{
             unlink($filename);
             if($single->ext != 'jpg'){
                 $filename = $storeFolder . 'source_to_jpg' . $ds . $single_id . '.jpg';
-                unlink($filename);
+                if(file_exists($filename))
+                    unlink($filename);
             }
             foreach ($single_size as $key => $value) {
                 if($value['size_type'] == 'source'){
@@ -272,7 +273,8 @@ class PhotographService{
                     $ext = 'jpg';
                 }
                 $filename = $storeFolder . $value['size_type'] . $ds . $single_id . '.' . $ext;
-                unlink($filename);
+                if(file_exists($filename))
+                    unlink($filename);
             }
             Singlesize::model()->deleteAllByAttributes(array( 'single_id'=>$single_id ));
             $mongo = new Mongo();
