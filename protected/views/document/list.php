@@ -31,26 +31,27 @@
                             <th>公文附件</th>
                             <th>更新日期</th>
                             <th>建立日期</th>
+                            <th>操作</th>
                         </tr>
                         </thead>
                         <tbody>
                             <?php if($list):?>
                                 <?php foreach($list as $data):?>
-                                    <td>
-                                        <a href="/document/edit?id=<?=$data->id?>"><?=$data->title?></a>
-                                    </td>
+                                    <td><?=$data->title?></td>
                                     <td><?=$data->send_text_number?></td>
                                     <td><?=$data->receiver?></td>
                                     <td><?=$data->d_type->name?></td>
                                     <td><?=$data->case_officer?></td>
-                                    <td>
-                                        <a href="/document/download?id=<?=$data->id?>" target="_blank"><?=$data->file_name?></a>
-                                    </td>
+                                    <td><?=$data->file_name?></td>
                                     <td><?=$data->update_at?></td>
                                     <td><?=$data->create_at?></td>
+                                    <td>
+                                        <a href="/document/edit?id=<?=$data->id?>"><i class="fa fa-edit" style="font-size:18px"></i></a>
+                                        <a href="/document/download?id=<?=$data->id?>" target="_blank"><i class="fa fa-cloud-download" style="font-size:18px"></i></a>
+                                    </td>
                                 <?php endforeach;?>
                             <?php else:?>
-                            <td colspan="8">查無資料</td>
+                            <td colspan="9">查無資料</td>
                             <?php endif;?>
                         </tbody>
                     </table>

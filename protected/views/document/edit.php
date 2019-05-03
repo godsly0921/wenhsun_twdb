@@ -79,7 +79,9 @@
                             <div class="form-group">
                                 <label class="control-label col-md-3 col-sm-3 col-xs-12" for="document_file">公文附件</label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
-                                    <input type="file" id="document_file" name="document_file" required="required" class="form-control col-md-7 col-xs-12">
+                                    <input type="text" id="file_name" value="<?=$data->file_name?>" class="form-control col-md-7 col-xs-12" disabled>
+                                    <input type="file" id="document_file" name="document_file" style="display: none;">
+                                    <label for="document_file" class="btn btn-default" style="margin-top: 5px">更換文件</label>
                                 </div>
                             </div>
 
@@ -87,7 +89,8 @@
 
                             <div class="form-group">
                                 <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
-                                    <button type="submit" class="btn btn-primary">修改</button>
+                                    <button id="submit" type="submit" class="btn btn-primary">修改</button>
+                                    <a class="btn btn-default pull-right" href="/document">返回</a>
                                 </div>
                             </div>
 
@@ -121,6 +124,10 @@
                     alert(jqXHR.responseJSON.message);
                 });
             }
+        });
+
+        $("#document_file").on("change", function(){
+            $("#file_name").val($(this)[0].files[0].name);
         });
     });
 </script>

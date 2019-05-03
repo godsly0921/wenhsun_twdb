@@ -79,9 +79,69 @@ class DocumentController extends Controller
             $this->redirect('index');
         }
 
+        $sendTextDateTime = new DateTime($document->send_text_date);
+        $document->send_text_date = $sendTextDateTime->format("Y-m-d");
+
         $documentTypes = DocumentType::model()->findAll();
 
         $this->render('edit', ['data' => $document, 'documentTypes' => $documentTypes]);
+    }
+
+    public function actionUpdate()
+    {
+        $id = $_POST['id'];
+        $tx = Yii::app()->db->beginTransaction();
+        try {
+
+            $document = Document::model()->findByPk($id);
+
+            if (!$document) {
+                Yii::log("id not found", CLogger::LEVEL_ERROR);
+                $this->redirect('index');
+            }
+
+            $now = Common::now();
+            $document->receiver = trim($_POST['receiver']);
+            $document->title = trim($_POST['title']);
+            $document->document_type = $_POST['document_type'];
+            $document->send_text_number = trim($_POST['send_text_number']);
+            $document->send_text_date = trim($_POST['send_text_date']);
+            $document->case_officer = trim($_POST['case_officer']);
+            $document->update_at = $now;
+
+            if (!empty($_FILES['document_file']['name'])) {
+                $oriFile = $document->document_file;
+                $document->file_name = $_FILES['document_file']['name'];
+                $fileTool = new FIleTool();
+                $fileName = Uuid::gen();
+                $destFullFileName = $fileTool->upload($_FILES['document_file'], $this->filePath, $fileName);
+                $document->document_file = $destFullFileName;
+            }
+
+            $document->save();
+
+            if ($document->hasErrors()) {
+                Yii::log(serialize($document->getErrors()), CLogger::LEVEL_ERROR);
+                Yii::app()->session[Controller::ERR_MSG_KEY] = '更新失敗';
+                $this->redirect('edit?id=' . $id);
+            }
+
+            if (isset($oriFile) && file_exists($oriFile)) {
+                unlink($oriFile);
+            }
+
+            $tx->commit();
+
+            Yii::app()->session[Controller::SUCCESS_MSG_KEY] = '更新成功';
+            $this->redirect("edit?id={$_POST['id']}");
+
+        } catch (Throwable $ex) {
+            Yii::log($ex->getMessage(), CLogger::LEVEL_ERROR);
+            Yii::app()->session[Controller::ERR_MSG_KEY] = '更新錯誤';
+            $this->redirect('edit?id=' . $id);
+        } finally {
+            $tx->rollback();
+        }
     }
 
     public function actionDelete()

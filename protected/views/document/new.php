@@ -80,8 +80,8 @@
 
                             <div class="form-group">
                                 <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
-                                    <a href="/document"><button type="button" class="btn btn-default">返回</button></a>
                                     <button type="submit" class="btn btn-primary">新增</button>
+                                    <a class="btn btn-default pull-right" href="/document">返回</a>
                                 </div>
                             </div>
 
