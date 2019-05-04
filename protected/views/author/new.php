@@ -58,7 +58,7 @@
                                 <label class="control-label col-md-3 col-sm-3 col-xs-12" for="death">卒日
                                 </label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
-                                    <input type="text" id="death" name="death" class="form-control col-md-7 col-xs-12">
+                                    <input type="date" id="death" name="death" class="form-control col-md-7 col-xs-12">
                                 </div>
                             </div>
 
@@ -146,11 +146,13 @@
                                 <label class="control-label col-md-3 col-sm-3 col-xs-12">身份類型</label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
                                     <select id="identity_type" class="select2_multiple form-control" multiple="multiple" name="identity_type[]">
+                                        <option value="未設定" selected>未設定</option>
                                         <option value="作家">作家</option>
                                         <option value="出版社">出版社</option>
                                         <option value="公部門">公部門</option>
                                         <option value="廠商">廠商</option>
                                         <option value="會員">會員</option>
+                                        <option value="其他">其他</option>
                                     </select>
                                 </div>
                             </div>
