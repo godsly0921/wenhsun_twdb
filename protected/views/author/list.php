@@ -26,21 +26,23 @@
                             <th>姓名</th>
                             <th>更新時間</th>
                             <th>建立時間</th>
+                            <th>操作</th>
                         </tr>
                         </thead>
                         <tbody>
                         <?php if(!empty($list)):?>
                             <?php foreach($list as $data):?>
                                 <tr>
-                                    <td>
-                                        <a href="<?= Yii::app()->createUrl('/author/edit?id='.$data->id);?>"><?=$data->author_name?></a>
-                                    </td>
+                                    <td><?=$data->author_name?></td>
                                     <td><?=$data->create_at?></td>
                                     <td><?=$data->update_at?></td>
+                                    <td>
+                                        <a href="<?= Yii::app()->createUrl('/author/edit?id='.$data->id);?>"><i class="fa fa-edit" style="font-size:18px"></i></a>
+                                    </td>
                                 </tr>
                             <?php endforeach;?>
                         <?php else:?>
-                            <tr><td colspan="3">查無資料, 快去<a href="<?= Yii::app()->createUrl('/author/new');?>">新增資料</a>吧</td></tr>
+                            <tr><td colspan="4">查無資料, 快去<a href="<?= Yii::app()->createUrl('/author/new');?>">新增資料</a>吧</td></tr>
                         <?php endif; ?>
                         </tbody>
                     </table>
