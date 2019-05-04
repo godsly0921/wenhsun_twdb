@@ -46,6 +46,7 @@
                                 <label class="control-label col-md-3 col-sm-3 col-xs-12">性別</label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
                                     <select class="form-control" id="gender" name="gender">
+                                        <option <?php if($data->gender === \Wenhsun\Enum\Gender::NONE):?>selected<?php endif;?> value="N">未設定</option>
                                         <option <?php if($data->gender === \Wenhsun\Enum\Gender::MALE):?>selected<?php endif;?> value="M">男</option>
                                         <option <?php if($data->gender === \Wenhsun\Enum\Gender::FEMALE):?>selected<?php endif;?> value="F">女</option>
                                     </select>
@@ -53,10 +54,10 @@
                             </div>
 
                             <div class="form-group">
-                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="birth">生日<span class="required">*</span>
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="birth">生日
                                 </label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
-                                    <input type="text" value="<?=$data->birth?>" id="birth" name="birth" required="required" class="form-control col-md-7 col-xs-12">
+                                    <input type="text" value="<?=$data->birth?>" id="birth" name="birth" class="form-control col-md-7 col-xs-12">
                                 </div>
                             </div>
 

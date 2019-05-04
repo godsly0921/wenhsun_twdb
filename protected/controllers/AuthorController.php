@@ -166,7 +166,7 @@ class AuthorController extends Controller
 
             $author->author_name = $data['author_name'];
             $author->gender = $data['gender'];
-            $author->birth = $data['birth'];
+            $author->birth = (!empty($data['birth'])) ? $data['birth'] : null;
             $author->death = (!empty($data['death'])) ? $data['death'] : null;
             $author->job_title = $data['job_title'];
             $author->service = $data['service'];

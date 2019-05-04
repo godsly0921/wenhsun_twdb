@@ -6,6 +6,7 @@ namespace Wenhsun\Enum;
 
 abstract class Gender
 {
+    const NONE = 'N';
     const MALE = 'M';
     const FEMALE = 'F';
 }
