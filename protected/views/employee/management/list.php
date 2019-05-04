@@ -36,15 +36,14 @@
                         <?php if(!empty($list)):?>
                             <?php foreach($list as $data):?>
                                 <tr>
-                                    <td>
-                                        <a href="<?= Yii::app()->createUrl('/employee/management/edit?id='.$data->id);?>"><?=$data->user_name?></a>
-                                    </td>
+                                    <td><?=$data->user_name?></td>
                                     <td><?=$data->name?></td>
                                     <td><?=$data->ext->ext_number?></td>
                                     <td><?=$data->seat->seat_number?></td>
                                     <td><?=$data->update_at?></td>
                                     <td><?=$data->create_at?></td>
                                     <td>
+                                        <a href="<?= Yii::app()->createUrl('/employee/management/edit?id='.$data->id);?>"><i class="fa fa-edit" style="font-size:18px"></i></a>
                                         <a href="<?= Yii::app()->createUrl('/employee/management/contract?id='.$data->id);?>" target="_blank" class="print-btn" data-id="<?=$data->id?>"><i class="fa fa-print" style="font-size:18px"></i></a>
                                     </td>
                                 </tr>
