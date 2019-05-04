@@ -14,7 +14,6 @@ class Author extends CActiveRecord
         return [
             ['author_name', 'required'],
             ['gender', 'required'],
-            ['birth', 'required'],
         ];
     }
 

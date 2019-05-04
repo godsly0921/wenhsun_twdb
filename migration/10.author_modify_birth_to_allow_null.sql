@@ -1,0 +1,1 @@
+ALTER TABLE author MODIFY birth DATE;
