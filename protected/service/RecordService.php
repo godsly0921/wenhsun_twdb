@@ -174,26 +174,24 @@ class RecordService{
             $car_arr[1] = '';        
         }
 
-
         // 如果卡號可以分成前五後五才繼續
         if(!empty($car_arr[0]) && !empty($car_arr[1])){
-            
+
             if( $key_sw == 1){//有關鍵字
-                
                 // 找姓名
                 if($key_col == 0){
-
                     $data = Yii::app()->db->createCommand()
-                    ->select('l.name as position_name,
+                    ->select('l.name as position_name,r.memol as memol,r.id as id,
                               e.name as username,
                               e.door_card_num as card_number,
                               r.*')
                     ->from('record r')
                     ->leftjoin('door d', 'r.reader_num = d.station')
                     ->leftjoin('local l', 'd.position  = l.id')
-                    ->leftjoin('employee e', 'start_five=:start_five and end_five=:end_five')
+                        ->leftjoin('employee e', 'start_five=:start_five and end_five=:end_five')
                     ->where('r.start_five = :start_five', array(':start_five'=>$car_arr[0]))
                     ->andwhere('r.end_five = :end_five', array(':end_five'=>$car_arr[1]))
+                    ->andwhere('e.door_card_num = :door_card_num', array(':door_card_num'=>$car_arr[0].$car_arr[1]))
                     ->andwhere(array('like', 'e.name', "%$keyword%"))
                     ->andwhere('r.flashDate >= :start', array(':start'=>$start))
                     ->andwhere('r.flashDate <= :end', array(':end'=>$end))
@@ -202,9 +200,8 @@ class RecordService{
 
 
                 }else{ //卡號
-
-                    $data = Yii::app()->db->createCommand()
-                        ->select('l.name as position_name,
+                        $data = Yii::app()->db->createCommand()
+                        ->select('l.name as position_name,r.memol as memol,r.id as id,
                               e.name as username,
                               e.door_card_num as card_number,
                               r.*')
@@ -214,6 +211,7 @@ class RecordService{
                         ->leftjoin('employee e', 'start_five=:start_five and end_five=:end_five')
                         ->where('r.start_five = :start_five', array(':start_five'=>$car_arr[0]))
                         ->andwhere('r.end_five = :end_five', array(':end_five'=>$car_arr[1]))
+                        ->andwhere('e.door_card_num = :door_card_num', array(':door_card_num'=>$car_arr[0].$car_arr[1]))
                         ->andwhere(array('like', 'e.door_card_num', "%$keyword%"))
                         ->andwhere('r.flashDate >= :start', array(':start'=>$start))
                         ->andwhere('r.flashDate <= :end', array(':end'=>$end))
@@ -222,16 +220,18 @@ class RecordService{
 
                 }
 
-            }else{//沒關鍵字則單純搜尋日期
-
+            }else{
                 $data = Yii::app()->db->createCommand()
-                ->select('l.name as position_name,
-                              e.user_name as username,
+                ->select('l.name as position_name,r.memol as memol,r.id as id,
+                              e.name as username,
                               e.door_card_num as card_number,flashDate')
                 ->from('record r')
+                ->leftjoin('employee e', 'start_five=:start_five and end_five=:end_five')
                 ->leftjoin('door d', 'r.reader_num = d.station')
                 ->leftjoin('local l', 'd.position = l.id')
-                ->leftjoin('employee e', 'r.mem_num = e.id')
+                ->where('r.start_five = :start_five', array(':start_five'=>$car_arr[0]))
+                ->andwhere('r.end_five = :end_five', array(':end_five'=>$car_arr[1]))
+                ->andwhere('e.door_card_num = :door_card_num', array(':door_card_num'=>$car_arr[0].$car_arr[1]))
                 ->andwhere('flashDate >:start', array(':start'=>$start))
                 ->andwhere('flashDate <:end', array(':end'=>$end))
                 ->queryAll();

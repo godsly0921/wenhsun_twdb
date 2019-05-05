@@ -11,7 +11,7 @@
             <tr role="row">
                 <th>帳號</th>
                 <th>姓名</th>
-                <th>群組</th>
+                <th>角色</th>
                 <th>建立時間</th>
                 <th>狀態</th>
                 <th>操作</th>

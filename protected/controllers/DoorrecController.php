@@ -72,15 +72,17 @@ class DoorrecController extends Controller
         foreach ($cardarrs as $cardarrk => $cardarr) {
             if (!empty($cardarr)) {
                 $data = $recordservice->get_by_card_and_key($key_sw, $_POST['keycol'], $cardarr, $choosestart, $chooseend, $_POST['keyword']);
-                if (!empty($data)) {
-                    foreach ($data as $key => $value) {
+                $total = count($data);
 
+                if (!empty($data) && $total != 0 ) {
+                    foreach ($data as $key => $value) {
                         $temp['position_name'] = $value['position_name'];
                         $temp['username'] = $value['username'];
                         $temp['card_number'] = $value['card_number'];
                         //$temp['usergrp'] = $value['usergrp'];
                         $temp['flashDate'] = $value['flashDate'];
-
+                        $temp['memol'] = $value['memol'];
+                        $temp['id'] = $value['id'];
                         array_push($finaldata, $temp);
                     }
 
@@ -128,7 +130,9 @@ class DoorrecController extends Controller
             ->setCellValue('A1', '地點名稱')
             ->setCellValue('B1', '員工姓名')
             ->setCellValue('C1', '卡號')
-            ->setCellValue('D1', '刷卡時間');
+            ->setCellValue('D1', '刷卡時間')
+            ->setCellValue('E1', '刷卡狀態')
+            ->setCellValue('F1', '原廠編號');
 
         // Miscellaneous glyphs, UTF-8 設定內容資料
         $i = 2;
@@ -137,7 +141,9 @@ class DoorrecController extends Controller
                 ->setCellValue('A' . $i, $value['position_name'])
                 ->setCellValue('B' . $i, $value['username'])
                 ->setCellValue('C' . $i, $value['card_number'])
-                ->setCellValue('D' . $i, $value['flashDate']);
+                ->setCellValue('D' . $i, $value['flashDate'])
+                ->setCellValue('D' . $i, $value['memol'])
+                ->setCellValue('D' . $i, $value['id']);
             $i++;
         }
         // Rename worksheet 表單名稱

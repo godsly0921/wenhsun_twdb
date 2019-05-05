@@ -32,7 +32,7 @@ class News extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('new_title,new_image,new_content,new_createtime', 'required'),
+			array('new_title,new_content,new_createtime', 'required'),
 			array('new_type, sort, builder', 'numerical', 'integerOnly'=>true),
 			//array('new_language', 'length', 'max'=>5),
 			array('new_title','length', 'max'=>30),
