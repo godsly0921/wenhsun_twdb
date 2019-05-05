@@ -5,7 +5,6 @@ class AttendancerecordService{
     public function create($employee_id , $day , $first_time , $last_time ,$abnormal_type,$abnormal){
       $transaction = Yii::app()->db->beginTransaction();
       try {
-
         $post = new Attendancerecord();
         $post->employee_id   = $employee_id;
         $post->day       = $day;
@@ -13,16 +12,18 @@ class AttendancerecordService{
         $post->last_time     = $last_time;
         $post->abnormal_type     = $abnormal_type;
         $post->abnormal = $abnormal;
+        $post->take = 0;
+        $post->reply_description = '';
+        $post->reply_update_at = date("Y-m-d H:i:s");
         $post->create_at =  date("Y-m-d H:i:s");
         $post->update_at =  date("Y-m-d H:i:s");
         $post->save();
-
 
         $transaction->commit();
       }
       catch (Exception $e) {
         $transaction->rollback();
-        echo  $e->getTraceAsString();
+        Yii::log("Attendance write exception {$e->getTraceAsString()}", CLogger::LEVEL_INFO);
       }
     }
 

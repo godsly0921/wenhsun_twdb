@@ -9,6 +9,7 @@ VALUES
 ('74', '員工更新', 'employee/management/update', '2', '0', '0'),
 ('75', '員工刪除', 'employee/management/delete', '2', '0', '0'),
 ('76', '員工更新密碼', 'employee/management/updatepassword', '2', '0', '0'),
+('77', '員工合約列印', 'employee/management/contract', '2', '0', '0'),
 ('77', '分機列表', 'employee/extensions/index', '2', '0', '1'),
 ('77', '分機新增頁面', 'employee/extensions/new', '2', '0', '0'),
 ('77', '分機新增', 'employee/extensions/create', '2', '0', '0'),

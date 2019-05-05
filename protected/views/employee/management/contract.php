@@ -58,6 +58,12 @@
                 font-size: 14px;
             }
             @media print {
+                @page {
+                    margin: 0;
+                }
+                body {
+                    margin: 1.6cm;
+                }
                 .page-break  { display:block; page-break-before:always; }
                 section.contract-wrapper {
                     padding: 0px;
