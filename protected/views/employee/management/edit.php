@@ -37,7 +37,7 @@
                             <div class="form-group">
                                 <label class="control-label col-md-3 col-sm-3 col-xs-12" for="email">電子郵件</label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
-                                    <input type="email" id="email" name="email" value="<?=$data->email?>" required="required" class="form-control col-md-7 col-xs-12">
+                                    <input type="email" id="email" name="email" value="<?=$data->email?>" class="form-control col-md-7 col-xs-12">
                                 </div>
                             </div>
 
@@ -83,14 +83,14 @@
                             <div class="form-group">
                                 <label class="control-label col-md-3 col-sm-3 col-xs-12" for="birth">生日</label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
-                                    <input type="text" id="birth" name="birth" value="<?=$data->birth?>" required="required" class="form-control col-md-7 col-xs-12">
+                                    <input type="date" id="birth" name="birth" value="<?=$data->birth?>" class="form-control col-md-7 col-xs-12">
                                 </div>
                             </div>
 
                             <div class="form-group">
                                 <label class="control-label col-md-3 col-sm-3 col-xs-12" for="person_id">身分證字號</label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
-                                    <input type="text" id="person_id" name="person_id" value="<?=$data->person_id?>" required="required" class="form-control col-md-7 col-xs-12">
+                                    <input type="text" id="person_id" name="person_id" value="<?=$data->person_id?>" class="form-control col-md-7 col-xs-12">
                                 </div>
                             </div>
 
@@ -151,8 +151,8 @@
                                 <label class="control-label col-md-3 col-sm-3 col-xs-12">是否啟用</label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
                                     <select class="form-control" id="available" name="enable">
-                                        <option value="Y" <?php if($data->gender === "Y"): ?>selected<?php endif;?>>是</option>
-                                        <option value="N" <?php if($data->gender === "N"): ?>selected<?php endif;?>>否</option>
+                                        <option value="Y" <?php if($data->enable === "Y"): ?>selected<?php endif;?>>是</option>
+                                        <option value="N" <?php if($data->enable === "N"): ?>selected<?php endif;?>>否</option>
                                     </select>
                                 </div>
                             </div>
@@ -161,13 +161,10 @@
                                 <label class="control-label col-md-3 col-sm-3 col-xs-12">分機號碼</label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
                                     <select class="form-control" id="ext_num" name="ext_num">
-                                        <?php if(!empty($exts)):?>
-                                            <?php foreach ($exts as $ext):?>
-                                                <option value="<?=$ext['id']?>" <?php if($ext['id'] === $data->ext->id):?>selected<?php endif;?>><?=$ext['ext_number']?></option>
-                                            <?php endforeach;?>
-                                        <?php else:?>
-                                            <option value="">無可用分機號碼</option>
-                                        <?php endif;?>
+                                        <option value="">請選擇</option>
+                                        <?php foreach ($exts as $ext):?>
+                                            <option value="<?=$ext['id']?>" <?php if($ext['id'] === $data->ext->id):?>selected<?php endif;?>><?=$ext['ext_number']?></option>
+                                        <?php endforeach;?>
                                     </select>
                                 </div>
                             </div>
@@ -176,13 +173,10 @@
                                 <label class="control-label col-md-3 col-sm-3 col-xs-12">座位號碼</label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
                                     <select class="form-control" id="seat_num" name="seat_num">
-                                        <?php if(!empty($seats)):?>
-                                            <?php foreach ($seats as $seat):?>
-                                                <option value="<?=$seat['id']?>" <?php if($seat['id'] === $data->seat->id):?>selected<?php endif;?>><?=$seat['seat_number']?></option>
-                                            <?php endforeach;?>
-                                        <?php else:?>
-                                            <option value="">無可用座位</option>
-                                        <?php endif;?>
+                                        <option value="">請選擇</option>
+                                        <?php foreach ($seats as $seat):?>
+                                            <option value="<?=$seat['id']?>" <?php if($seat['id'] === $data->seat->id):?>selected<?php endif;?>><?=$seat['seat_number']?></option>
+                                        <?php endforeach;?>
                                     </select>
                                 </div>
                             </div>
@@ -242,6 +236,7 @@
                             <div class="form-group">
                                 <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
                                     <button type="submit" class="btn btn-primary">修改</button>
+                                    <a class="btn btn-default pull-right" href="/employee/management">返回</a>
                                 </div>
                             </div>
 
@@ -275,6 +270,7 @@
                             <div class="form-group">
                                 <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
                                     <button type="submit" class="btn btn-primary">修改</button>
+                                    <a class="btn btn-default pull-right" href="/employee/management">返回</a>
                                 </div>
                             </div>
                         </form>

@@ -13,27 +13,10 @@ class Employee extends CActiveRecord
     {
         return [
             ['user_name', 'required'],
-            ['email', 'required'],
             ['name', 'required'],
             ['gender', 'required'],
-            ['birth', 'required'],
-            ['person_id', 'required'],
-            ['nationality', 'required'],
-            ['country', 'required'],
-            ['dist', 'required'],
-            ['address', 'required'],
-            ['mobile', 'required'],
-            ['phone', 'required'],
+            ['role', 'required'],
             ['enable', 'required'],
-            ['door_card_num', 'required'],
-            ['ext_num', 'required'],
-            ['seat_num', 'required'],
-            ['bank_name', 'required'],
-            ['bank_code', 'required'],
-            ['bank_branch_name', 'required'],
-            ['bank_branch_code', 'required'],
-            ['bank_account', 'required'],
-            ['bank_account_name', 'required'],
         ];
     }
 

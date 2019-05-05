@@ -31,7 +31,7 @@
                             <div class="form-group">
                                 <label class="control-label col-md-3 col-sm-3 col-xs-12" for="email">電子郵件</label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
-                                    <input type="email" id="email" name="email" required="required" class="form-control col-md-7 col-xs-12">
+                                    <input type="email" id="email" name="email" class="form-control col-md-7 col-xs-12">
                                 </div>
                             </div>
 
@@ -87,14 +87,14 @@
                             <div class="form-group">
                                 <label class="control-label col-md-3 col-sm-3 col-xs-12" for="birth">生日</label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
-                                    <input type="date" id="birth" name="birth" required="required" class="form-control col-md-7 col-xs-12">
+                                    <input type="date" id="birth" name="birth" class="form-control col-md-7 col-xs-12">
                                 </div>
                             </div>
 
                             <div class="form-group">
                                 <label class="control-label col-md-3 col-sm-3 col-xs-12" for="person_id">身分證字號</label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
-                                    <input type="text" id="person_id" name="person_id" required="required" class="form-control col-md-7 col-xs-12">
+                                    <input type="text" id="person_id" name="person_id" class="form-control col-md-7 col-xs-12">
                                 </div>
                             </div>
 
@@ -165,13 +165,10 @@
                                 <label class="control-label col-md-3 col-sm-3 col-xs-12">分機號碼</label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
                                     <select class="form-control" id="ext_num" name="ext_num">
-                                        <?php if(!empty($exts)):?>
-                                            <?php foreach ($exts as $ext):?>
-                                                <option value="<?=$ext['id']?>"><?=$ext['ext_number']?></option>
-                                            <?php endforeach;?>
-                                        <?php else:?>
-                                            <option value="">無可用分機號碼</option>
-                                        <?php endif;?>
+                                        <option value="">請選擇</option>
+                                        <?php foreach ($exts as $ext):?>
+                                            <option value="<?=$ext['id']?>"><?=$ext['ext_number']?></option>
+                                        <?php endforeach;?>
                                     </select>
                                 </div>
                             </div>
@@ -180,13 +177,10 @@
                                 <label class="control-label col-md-3 col-sm-3 col-xs-12">座位號碼</label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
                                     <select class="form-control" id="seat_num" name="seat_num">
-                                        <?php if(!empty($seats)):?>
-                                            <?php foreach ($seats as $seat):?>
-                                                <option value="<?=$seat['id']?>"><?=$seat['seat_number']?></option>
-                                            <?php endforeach;?>
-                                        <?php else:?>
-                                            <option value="">無可用座位</option>
-                                        <?php endif;?>
+                                        <option value="">請選擇</option>
+                                        <?php foreach ($seats as $seat):?>
+                                            <option value="<?=$seat['id']?>"><?=$seat['seat_number']?></option>
+                                        <?php endforeach;?>
                                     </select>
                                 </div>
                             </div>
@@ -245,8 +239,8 @@
                             <div class="ln_solid"></div>
                             <div class="form-group">
                                 <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
-                                    <a href="/employee/management"><button type="button" class="btn btn-default">返回</button></a>
                                     <button type="submit" class="btn btn-primary">新增</button>
+                                    <a class="btn btn-default pull-right" href="/employee/management">返回</a>
                                 </div>
                             </div>
 

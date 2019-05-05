@@ -40,8 +40,8 @@ class ManagementController extends Controller
     {
         try {
 
+            Yii::log("starting to create employee {$_POST['user_name']}", CLogger::LEVEL_INFO);
             $this->checkCSRF('index');
-
             $this->validateBeforeCreate($_POST);
             $employeeInfo = $this->createEmployeeInfo($_POST);
             $employeeInfo->persist();
@@ -61,15 +61,22 @@ class ManagementController extends Controller
             $this->redirect('index');
         }
 
-        $data->birth = str_replace("-", "/", $data->birth);
-        $data->birth = explode(" ", $data->birth)[0];
+        if (!empty($data->birth)) {
+            $data->birth = explode(" ", $data->birth)[0];
+        }
 
         $extRepo = new EmployeeExtensionsRepo();
         $exts = $extRepo->getAvailableExts();
-        $exts = array_merge($exts, [['id' => $data->ext->id,'ext_number' => $data->ext->ext_number]]);
+        if (!empty($data->ext)) {
+            $exts = array_merge($exts, [['id' => $data->ext->id,'ext_number' => $data->ext->ext_number]]);
+        }
+
         $seatsRepo = new EmployeeSeatsRepo();
         $seats = $seatsRepo->getAvailableSeats();
-        $seats = array_merge($seats, [['id' => $data->seat->id, 'seat_number' => $data->seat->seat_number]]);
+        if (!empty($data->seat)) {
+            $seats = array_merge($seats, [['id' => $data->seat->id, 'seat_number' => $data->seat->seat_number]]);
+        }
+
         $roles = Group::model()->findAll();
 
         $this->render(
@@ -85,6 +92,8 @@ class ManagementController extends Controller
 
     public function actionUpdatePassword()
     {
+        Yii::log("starting to update employee {$_POST['id']}", CLogger::LEVEL_INFO);
+
         $this->checkCSRF('index');
 
         try {
@@ -117,7 +126,13 @@ class ManagementController extends Controller
                 if ($key === "_token" || $key === "id" || $key === "zipcode") {
                     continue;
                 }
-                $employeeInfoModel->{$key} = $val;
+
+                if (!empty($val)) {
+                    $employeeInfoModel->{$key} = $val;
+                } else {
+                    $employeeInfoModel->{$key} = null;
+                }
+
             }
 
             $employeeInfoModel->update_at = Common::now();
@@ -168,18 +183,6 @@ class ManagementController extends Controller
 
     private function validateBeforeCreate(array $post)
     {
-        if (empty($post['ext_num'])) {
-            Yii::log("無可用分機號碼", CLogger::LEVEL_ERROR);
-            Yii::app()->session[Controller::ERR_MSG_KEY] = '無可用分機號碼';
-            $this->redirect('new');
-        }
-
-        if (empty($post['ext_num'])) {
-            Yii::log("無可用座位", CLogger::LEVEL_ERROR);
-            Yii::app()->session[Controller::ERR_MSG_KEY] = '無可用座位';
-            $this->redirect('new');
-        }
-
         if (
             EmployeeModel::model()->find("user_name=:user_name", [':user_name' => $post['user_name']])
         ) {
@@ -198,7 +201,7 @@ class ManagementController extends Controller
                 continue;
             }
 
-            if (empty($employeeInfo->{$key})) {
+            if (empty($employeeInfo->{$key}) && !empty($val)) {
                 $employeeInfo->{$key} = $val;
             }
         }

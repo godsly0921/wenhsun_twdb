@@ -1,0 +1,18 @@
+ALTER TABLE employee MODIFY `email` varchar(128);
+ALTER TABLE employee MODIFY `birth` date;
+ALTER TABLE employee MODIFY `person_id` varchar(10);
+ALTER TABLE employee MODIFY `nationality` varchar(8);
+ALTER TABLE employee MODIFY `country` varchar(32);
+ALTER TABLE employee MODIFY `dist` varchar(32);
+ALTER TABLE employee MODIFY `address` varchar(256);
+ALTER TABLE employee MODIFY `mobile` varchar(10);
+ALTER TABLE employee MODIFY `phone` varchar(16);
+ALTER TABLE employee MODIFY `door_card_num` varchar(16);
+ALTER TABLE employee MODIFY `ext_num` int(11) unsigned;
+ALTER TABLE employee MODIFY `seat_num` int(11) unsigned;
+ALTER TABLE employee MODIFY `bank_name` varchar(128);
+ALTER TABLE employee MODIFY `bank_code` varchar(3);
+ALTER TABLE employee MODIFY `bank_branch_name` varchar(64);
+ALTER TABLE employee MODIFY `bank_branch_code` varchar(8);
+ALTER TABLE employee MODIFY `bank_account` varchar(18);
+ALTER TABLE employee MODIFY `bank_account_name` varchar(32);

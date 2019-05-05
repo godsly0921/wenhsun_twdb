@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Wenhsun\Entity\Employee;
 
 use Employee as EmployeeModel;
+use RuntimeException;
 
 class EmployeeInfo
 {
@@ -93,5 +94,9 @@ class EmployeeInfo
         $employeeModel->update_at = $now;
 
         $employeeModel->save();
+
+        if ($employeeModel->hasErrors()) {
+            throw new RuntimeException(serialize($employeeModel->getErrors()));
+        }
     }
 }
