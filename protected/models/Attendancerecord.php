@@ -33,8 +33,8 @@ class Attendancerecord extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('employee_id, day, first_time, last_time, abnormal_type, create_at, update_at', 'required'),
-			array('employee_id, abnormal_type', 'numerical', 'integerOnly'=>true),
-			array('abnormal', 'length', 'max'=>64),
+			array('abnormal_type', 'numerical', 'integerOnly'=>true),
+			array('abnormal', 'length', 'max'=>128),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
 			array('id, employee_id, day, first_time, last_time, abnormal_type, abnormal, create_at, update_at', 'safe', 'on'=>'search'),

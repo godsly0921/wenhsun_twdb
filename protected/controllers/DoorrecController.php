@@ -47,7 +47,7 @@ class DoorrecController extends Controller
 
         } else {
 
-            $choosestart = '0000-00-00 00:00:00';
+            $choosestart = date("Y-m-d").' 00:00:00';
         }
 
         if (isset($_POST['date_end']) && !empty($_POST['date_end'])) {
@@ -56,7 +56,7 @@ class DoorrecController extends Controller
 
         } else {
 
-            $chooseend = date("Y-m-d H:i:s");
+            $chooseend = date("Y-m-d").' 23:59:59';
         }
 
         if (empty($_POST['keycol'])) {

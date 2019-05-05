@@ -24,7 +24,7 @@ class RecordService{
         
         $criteria = new CDbCriteria; 
 
-        $criteria->condition = "start_five = :start_five AND end_five= :end_five AND flashDate >=:start_date AND flashDate >=:end_date";
+        $criteria->condition = "start_five = :start_five AND end_five = :end_five AND flashDate >= :start_date AND flashDate <= :end_date";
 
         $criteria->params=(array(':start_five' => $car_arr[0],':end_five' =>$car_arr[1],':start_date'=>$start_date,':end_date'=>$end_date));
 
