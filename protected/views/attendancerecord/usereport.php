@@ -92,6 +92,7 @@
                                 <th>是否異常</th>
                                 <th>說明</th>
                                 <th>建立時間</th>
+                                <?php echo Yii::app()->controller->id.'/update';?>
                                 <?php foreach ($session_jsons as $jsons):?>
 
                                     <?php if ($jsons["power_controller"] == Yii::app()->controller->id.'/update'):?>
@@ -115,7 +116,7 @@
                                         <?php foreach ($session_jsons as $jsons):?>
                                             <?php if ($jsons["power_controller"] == Yii::app()->controller->id.'/update'):?>
                                             <td>
-                                                <a class="oprate-right" href="<?php echo Yii::app()->createUrl(Yii::app()->controller->id.'/update') ?>/<?= $value['id']?>"><i class="fa fa-pencil-square-o fa-lg"></i></a>
+                                                <a class="oprate-right" href="<?php echo Yii::app()->createUrl(Yii::app()->controller->id.'/update') ?>/<?= $value['attendance_record_id']?>"><i class="fa fa-pencil-square-o fa-lg"></i></a>
                                             </td>
                                             <?php endif; ?>
                                         <?php endforeach; ?>

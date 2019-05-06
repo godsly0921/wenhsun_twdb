@@ -78,7 +78,7 @@ class AttendancerecordController extends Controller
         $record_data = $attendance_service->get_by_condition($idarr, $choose_start, $choose_end );
         $finaldata = [];
         foreach ($record_data as $key => $value) {
-                $temp['id'] = $value['id'];
+                $temp['attendance_record_id'] = $value['attendance_record_id'];
                 $temp['name'] = $value['name'];
                 $temp['day'] = $value['day'];
                 $temp['first_time'] = $value['first_time'];
@@ -266,6 +266,8 @@ class AttendancerecordController extends Controller
             7=>'婚假',
             8=>'喪假',
             9=>'補休假'];
+
+
         if ($model !== null) {
             $this->render('update',['model' => $model,'data'=>$data]);
             $this->clearMsg();

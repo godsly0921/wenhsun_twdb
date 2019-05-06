@@ -7,7 +7,7 @@
             <div class="title_right">
                 <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
                     <div class="input-group">
-                        <a href="/document/new">
+                        <a href="<?php echo Yii::app()->createUrl('/document/new'); ?>">
                             <button class="btn btn-primary" type="button">新增公文</button>
                         </a>
                     </div>
@@ -46,8 +46,8 @@
                                     <td><?=$data->update_at?></td>
                                     <td><?=$data->create_at?></td>
                                     <td>
-                                        <a href="/document/edit?id=<?=$data->id?>"><i class="fa fa-edit" style="font-size:18px"></i></a>
-                                        <a href="/document/download?id=<?=$data->id?>" target="_blank"><i class="fa fa-cloud-download" style="font-size:18px"></i></a>
+                                        <a href="<?php echo Yii::app()->createUrl('/document/edit?id='.$data->id); ?>"><i class="fa fa-edit" style="font-size:18px"></i></a>
+                                        <a href="<?php echo Yii::app()->createUrl('/document/download?id='.$data->id); ?>" target="_blank"><i class="fa fa-cloud-download" style="font-size:18px"></i></a>
                                     </td>
                                 <?php endforeach;?>
                             <?php else:?>
