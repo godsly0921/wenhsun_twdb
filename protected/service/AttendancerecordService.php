@@ -37,6 +37,7 @@ class AttendancerecordService{
 
         $model->id = $model->id;
         $model->take = $inputs['take'];
+        $model->abnormal_type = 2;//員工回覆後 自動改為正常
         $model->reply_description    = $inputs['reply_description'];
         $model->reply_update_at = date("Y-m-d H:i:s");
 
