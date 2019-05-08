@@ -164,13 +164,13 @@ class CronService
                         $post->ClientNo = $tmparr[24];
                         $post->Preserve = $tmparr[25];
                         $post->save();
-                        Yii::log(date('YYYY-MM-DD HH:mm:ss').'====已寫入卡機刷卡紀錄====', CLogger::LEVEL_ERROR);
+                        Yii::log(date("Y-m-d H:i:s").'====已寫入卡機刷卡紀錄====', CLogger::LEVEL_INFO);
                     }
 
                 }
 
             } else {
-                Yii::log(date('YYYY-MM-DD HH:mm:ss').'====目前無資料====', CLogger::LEVEL_ERROR);
+                Yii::log(date("Y-m-d H:i:s").'====目前無資料====', CLogger::LEVEL_INFO);
             }
 
         } catch (Exception $e) {

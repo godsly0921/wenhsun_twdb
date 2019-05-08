@@ -622,11 +622,13 @@ class AttendanceService
                         $model = $attendance_record_service->create($employee_id, $day, $first_time, $last_time, $abnormal_type, $abnormal);
                         $mail = new MailService();
                         $mail->sendMail($abnormal_type,$employee_id,$abnormal,$model->id);
+                        Yii::log(date("Y-m-d H:i:s").$model, CLogger::LEVEL_INFO);
                     } else {
                         $attendance_record_service = new AttendancerecordService();
                         $model = $attendance_record_service->create($employee_id, $day, '', '', $abnormal_type = 1, $abnormal = '當天沒有出勤資料');
                         $mail = new MailService();
                         $mail->sendMail($abnormal_type,$employee_id,$abnormal,$model->id);
+                        Yii::log(date("Y-m-d H:i:s").$model, CLogger::LEVEL_INFO);
                     }
 
                 }
