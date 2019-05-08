@@ -38,8 +38,8 @@
                                 <tr>
                                     <td><?=$data->user_name?></td>
                                     <td><?=$data->name?></td>
-                                    <td><?=$data->ext->ext_number?></td>
-                                    <td><?=$data->seat->seat_number?></td>
+                                    <td><?= isset($data->ext->ext_number) ? $data->ext->ext_number : '未設定分機' ?></td>
+                                    <td><?= isset($data->seat->seat_number) ? $data->seat->seat_number : '未設定座位' ?></td>
                                     <td><?=$data->update_at?></td>
                                     <td><?=$data->create_at?></td>
                                     <td>

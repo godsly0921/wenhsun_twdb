@@ -76,6 +76,7 @@ class AttendancerecordController extends Controller
         // 抓出所有相同卡號的紀錄
         $attendance_service = new AttendancerecordService();
         $record_data = $attendance_service->get_by_condition($idarr, $choose_start, $choose_end );
+
         $finaldata = [];
         foreach ($record_data as $key => $value) {
                 $temp['attendance_record_id'] = $value['attendance_record_id'];
