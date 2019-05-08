@@ -15,6 +15,19 @@ class EmployeeService
         return $datas;
     }
 
+    public static function findEmployeeId($employee_id)
+    {
+        $result = Employee::model()->find([
+            'condition' => 'id=:id',
+            'params' => [
+                ':id' => $employee_id,
+            ]
+        ]);
+
+        return $result;
+
+    }
+
 
     public static function getEmployee($employee)
     {

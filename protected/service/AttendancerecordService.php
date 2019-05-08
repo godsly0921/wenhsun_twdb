@@ -19,7 +19,9 @@ class AttendancerecordService{
         $post->update_at =  date("Y-m-d H:i:s");
         $post->save();
 
+
         $transaction->commit();
+          return $post;
       }
       catch (Exception $e) {
         $transaction->rollback();

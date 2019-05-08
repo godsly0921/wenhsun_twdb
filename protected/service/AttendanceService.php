@@ -99,7 +99,6 @@ class AttendanceService
                     $last_time = 0;
                     $abnormal_type = 0;//0正常 1異常
                     $abnormal = '';
-
                     count($record);
 
                     if (!empty($record)) {
@@ -620,10 +619,14 @@ class AttendanceService
                         */
 
                         $attendance_record_service = new AttendancerecordService();
-                        $attendance_record_service->create($employee_id, $day, $first_time, $last_time, $abnormal_type, $abnormal);
+                        $model = $attendance_record_service->create($employee_id, $day, $first_time, $last_time, $abnormal_type, $abnormal);
+                        $mail = new MailService();
+                        $mail->sendMail($abnormal_type,$employee_id,$abnormal,$model->id);
                     } else {
                         $attendance_record_service = new AttendancerecordService();
-                        $attendance_record_service->create($employee_id, $day, '', '', $abnormal_type = 1, $abnormal = '當天沒有出勤資料');
+                        $model = $attendance_record_service->create($employee_id, $day, '', '', $abnormal_type = 1, $abnormal = '當天沒有出勤資料');
+                        $mail = new MailService();
+                        $mail->sendMail($abnormal_type,$employee_id,$abnormal,$model->id);
                     }
 
                 }
