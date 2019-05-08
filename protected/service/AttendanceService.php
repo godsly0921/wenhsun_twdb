@@ -23,7 +23,7 @@ class AttendanceService
     {
         $model = new Attendance();
         $model->day = $inputs['day'];
-        $model->type = (int)$inputs['type'];
+        $model->type = $inputs['type'];
         $model->description = $inputs['description'];
         $model->create_at = date("Y-m-d H:i:s");
         $model->update_at = date("Y-m-d H:i:s");
@@ -63,9 +63,8 @@ class AttendanceService
     {
         $model = Attendance::model()->findByPk($inputs["id"]);
 
-        $model->id = $model->id;
         $model->day = $inputs['day'];
-        $model->type = (int)$inputs['type'];
+        $model->type = $inputs['type'];
         $model->description = $inputs['description'];
         $model->create_at = date("Y-m-d H:i:s");
         $model->update_at = date("Y-m-d H:i:s");

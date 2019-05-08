@@ -32,22 +32,19 @@
                 <input type="hidden" name="id" value="<?= $model->id ?>">
                 <label for="phone" class="col-sm-2 control-label">新增出勤日:</label>
                 <div class="col-sm-5">
-                    <input type="text" id="day" class="form-control" name="day"
-                           value="">
+                    <input type="text" id="day" class="form-control" name="day" value="<?= $model->day ?>">
                 </div>
-
-
             </div>
 
             <div class="form-group">
                 <label class="col-sm-2 control-label">是否為出勤日</label>
                 <div class="col-sm-5">
                     <label class="radio-inline">
-                        <input type="radio" name="status"
+                        <input type="radio" name="type"
                                value="1" <?php echo ($model->type == 1) ? 'checked="checked"' : '' ?>>出勤日
                     </label>
                     <label class="radio-inline">
-                        <input type="radio" name="status"
+                        <input type="radio" name="type"
                                value="0" <?php echo ($model->type == 0) ? 'checked="checked"' : '' ?>>非出勤日
                     </label>
                 </div>

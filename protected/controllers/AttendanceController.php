@@ -93,7 +93,6 @@ class AttendanceController extends Controller
             Yii::app()->session['success_msg'] = '修改成功';
         }
         $this->redirect(Yii::app()->createUrl('attendance/list'));
-        /*$this->redirect('update/'.$inputs['id']);*/
     }
 
     private function doGetUpdate($id)

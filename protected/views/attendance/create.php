@@ -41,11 +41,11 @@
                 <label class="col-sm-2 control-label">是否為出勤日</label>
                 <div class="col-sm-5">
                     <label class="radio-inline">
-                        <input type="radio" name="status" checked="checked"
+                        <input type="radio" name="type" checked="checked"
                                value="1">出勤日
                     </label>
                     <label class="radio-inline">
-                        <input type="radio" name="status"
+                        <input type="radio" name="type"
                                value="0">非出勤日
                     </label>
                 </div>

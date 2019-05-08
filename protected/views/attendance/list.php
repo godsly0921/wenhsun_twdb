@@ -30,7 +30,7 @@
             <?php foreach ($model as $key => $value): ?>
                 <tr class="gradeC" role="row">
                     <td><?= $value->day ?></td>
-                    <td><?php echo ($value->type == 1) ? "出勤日" : "非出勤日" ?></td>
+                    <td><?= ($value->type == 1) ? "出勤日" : "非出勤日" ?></td>
                     <td><?= $value->description ?></td>
                     <td><?= $value->create_at ?></td>
                     <td><?= $value->update_at ?></td>
