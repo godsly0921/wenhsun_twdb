@@ -193,7 +193,7 @@
                                         <?php foreach($seats as $seat): ?>
                                             <?php if($seat['id'] == $data->seat->id):?>
                                                 <option selected="selected" value="<?= $seat['id']?>">
-                                                    <?= $seat['ext_number'] ?>
+                                                    <?= $seat['seat_number'] ?>
                                                 </option>
                                             <?php else: ?>
                                                 <option value="<?= $seat['id']?>">
