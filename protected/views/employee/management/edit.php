@@ -161,10 +161,26 @@
                                 <label class="control-label col-md-3 col-sm-3 col-xs-12">分機號碼</label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
                                     <select class="form-control" id="ext_num" name="ext_num">
-                                        <option value="">請選擇</option>
-                                        <?php foreach ($exts as $ext):?>
-                                            <option value="<?=$ext['id']?>" <?php if($ext['id'] === $data->ext->id):?>selected<?php endif;?>><?=$ext['ext_number']?></option>
-                                        <?php endforeach;?>
+                                     <?php if(isset($data->ext->id)):?>
+                                        <?php foreach($exts as $ext): ?>
+                                            <?php if($ext['id'] == $data->ext->id):?>
+                                                <option selected="selected" value="<?= $ext['id']?>">
+                                                    <?= $ext['ext_number'] ?>
+                                                </option>
+                                            <?php else: ?>
+                                                <option value="<?= $ext['id']?>">
+                                                    <?= $ext['ext_number'] ?>
+                                                </option>
+                                            <?php endif; ?>
+                                        <?php endforeach; ?>
+                                     <?php else: ?>
+                                        <option selected="selected" value="">請選擇</option>
+                                         <?php foreach ($exts as $ext):?>
+                                             <option value="<?= $ext['id']?>">
+                                                 <?= $ext['ext_number'] ?>
+                                             </option>
+                                         <?php endforeach;?>
+                                     <?php endif; ?>
                                     </select>
                                 </div>
                             </div>
@@ -173,10 +189,26 @@
                                 <label class="control-label col-md-3 col-sm-3 col-xs-12">座位號碼</label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
                                     <select class="form-control" id="seat_num" name="seat_num">
-                                        <option value="">請選擇</option>
+                                    <?php if(isset($data->ext->id)):?>
+                                        <?php foreach($seats as $seat): ?>
+                                            <?php if($seat['id'] == $data->seat->id):?>
+                                                <option selected="selected" value="<?= $seat['id']?>">
+                                                    <?= $seat['ext_number'] ?>
+                                                </option>
+                                            <?php else: ?>
+                                                <option value="<?= $seat['id']?>">
+                                                    <?= $seat['seat_number'] ?>
+                                                </option>
+                                            <?php endif; ?>
+                                        <?php endforeach; ?>
+                                    <?php else: ?>
+                                        <option selected="selected" value="">請選擇</option>
                                         <?php foreach ($seats as $seat):?>
-                                            <option value="<?=$seat['id']?>" <?php if($seat['id'] === $data->seat->id):?>selected<?php endif;?>><?=$seat['seat_number']?></option>
+                                            <option value="<?= $seat['id']?>">
+                                                <?= $seat['seat_number'] ?>
+                                            </option>
                                         <?php endforeach;?>
+                                    <?php endif; ?>
                                     </select>
                                 </div>
                             </div>
