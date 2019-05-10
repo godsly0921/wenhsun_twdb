@@ -35,24 +35,33 @@
                         </tr>
                         </thead>
                         <tbody>
-                            <?php if($list):?>
-                                <?php foreach($list as $data):?>
-                                    <td><?=$data->title?></td>
-                                    <td><?=$data->send_text_number?></td>
-                                    <td><?=$data->receiver?></td>
-                                    <td><?=$data->d_type->name?></td>
-                                    <td><?=$data->case_officer?></td>
-                                    <td><?=$data->file_name?></td>
-                                    <td><?=$data->update_at?></td>
-                                    <td><?=$data->create_at?></td>
+
+                        <?php if ($list): ?>
+                            <?php foreach ($list as $data): ?>
+                                <tr role="row">
+                                    <td><?= $data->title ?></td>
+                                    <td><?= $data->send_text_number ?></td>
+                                    <td><?= $data->receiver ?></td>
+                                    <td><?= $data->d_type->name ?></td>
+                                    <td><?= $data->case_officer ?></td>
+                                    <td><?= $data->file_name ?></td>
+                                    <td><?= $data->update_at ?></td>
+                                    <td><?= $data->create_at ?></td>
                                     <td>
-                                        <a href="<?php echo Yii::app()->createUrl('/document/edit?id='.$data->id); ?>"><i class="fa fa-edit" style="font-size:18px"></i></a>
-                                        <a href="<?php echo Yii::app()->createUrl('/document/download?id='.$data->id); ?>" target="_blank"><i class="fa fa-cloud-download" style="font-size:18px"></i></a>
+                                        <a href="<?php echo Yii::app()->createUrl('/document/edit?id=' . $data->id); ?>"><i
+                                                class="fa fa-edit" style="font-size:18px"></i></a>
+                                        <a href="<?php echo Yii::app()->createUrl('/document/download?id=' . $data->id); ?>"
+                                           target="_blank"><i class="fa fa-cloud-download"
+                                                              style="font-size:18px"></i></a>
                                     </td>
-                                <?php endforeach;?>
-                            <?php else:?>
-                            <td colspan="9">查無資料</td>
-                            <?php endif;?>
+                                </tr>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <tr role="row">
+                                <td colspan="9">查無資料</td>
+                            </tr>
+                        <?php endif; ?>
+
                         </tbody>
                     </table>
                 </div>
