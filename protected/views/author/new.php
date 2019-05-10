@@ -39,7 +39,7 @@
                                 <label class="control-label col-md-3 col-sm-3 col-xs-12">性別</label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
                                     <select class="form-control" id="gender" name="gender">
-                                        <option value="N">未設定</option>
+                                        <option selected="selected" value="N">未設定</option>
                                         <option value="M">男</option>
                                         <option value="F">女</option>
                                     </select>

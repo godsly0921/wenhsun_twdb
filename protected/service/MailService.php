@@ -117,5 +117,42 @@ class MailService
         $mail->Send();
     }
 
+
+    public function sendAdminMail($emailType,$message)
+    {
+        // 管理者信箱
+        $adminEmail = $this->findAllEmail();
+
+        $mail = new PHPMailer();
+        $mail->IsSMTP();
+        $mail->SMTPAuth = true;
+        $mail->SMTPSecure = 'ssl';
+        $mail->Host = 'smtp.gmail.com';
+        $mail->Port = 465;
+        $mail->CharSet = 'utf-8';
+        $mail->Username = 'wenhsun0509@gmail.com';
+        $mail->Password = 'cute0921';
+        $mail->From = 'wenhsun0509@gmail.com';
+        $mail->FromName = '文訊雜誌社人資系統';
+        $mail->addAddress('godsly0921@gmail.com');
+
+        $mail->addCC(isset($adminEmail->addressee_1)?$adminEmail->addressee_1:'godsly0921@gmail.com');
+        $mail->addCC(isset($adminEmail->addressee_2)?$adminEmail->addressee_2:'godsly0921@gmail.com');
+        $mail->addCC(isset($adminEmail->addressee_3)?$adminEmail->addressee_3:'godsly0921@gmail.com');
+
+        $mail->IsHTML(true);
+        if ($emailType == 0) {
+            $mail->Subject = '用戶未設定，員工編號';
+            $mail->Body =
+                '<h2>親愛的' . '管理員您好' . '您好:<h2>
+                 <p>提醒您，有異常狀況。<br>詳細資訊如以下'
+                .$message.'<br><br>' .
+                '請善待妥善處理，謝謝。<br><br>' .
+                '文訊雜誌社人資系統敬啟<br><br>' .
+                '備註：此信箱為公告用信箱，請勿回信，若有疑問，請洽HR。謝謝。</p>';
+        }
+        $mail->Send();
+    }
+
 }
 ?>
