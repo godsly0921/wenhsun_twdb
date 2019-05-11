@@ -84,6 +84,12 @@ class AuthorController extends Controller
             $authBank->update_at = $now;
             $authBank->save();
 
+            if ($authBank->hasErrors()) {
+                $errorBuilder = new ModelErrorBuilder();
+                Yii::app()->session[Controller::ERR_MSG_KEY] = $errorBuilder->modelErrors2Html($authBank->getErrors());
+                $this->redirect('new');
+            }
+
             $authBank = new AuthorBank();
             $authBank->author_id = $pk;
             $authBank->bank_name = $data['bank_name2'];
@@ -96,15 +102,22 @@ class AuthorController extends Controller
             $authBank->update_at = $now;
             $authBank->save();
 
+            if ($authBank->hasErrors()) {
+                $errorBuilder = new ModelErrorBuilder();
+                Yii::app()->session[Controller::ERR_MSG_KEY] = $errorBuilder->modelErrors2Html($authBank->getErrors());
+                $this->redirect('new');
+            }
+
             $transaction->commit();
 
             $this->redirect('index');
 
         } catch (Throwable $ex) {
-            $transaction->rollback();
             Yii::log($ex->getMessage(), CLogger::LEVEL_ERROR);
             Yii::app()->session[Controller::ERR_MSG_KEY] = '新增使用者失敗';
             $this->redirect('new');
+        } finally {
+            $transaction->rollback();
         }
     }
 
@@ -191,58 +204,56 @@ class AuthorController extends Controller
             $author->update();
 
             if ($author->hasErrors()) {
-                Yii::app()->session[Controller::ERR_MSG_KEY] = '更新失敗';
+                $errorBuilder = new ModelErrorBuilder();
+                Yii::app()->session[Controller::ERR_MSG_KEY] = $errorBuilder->modelErrors2Html($author->getErrors());
                 $this->redirect("edit?id={$authorId}");
             }
 
             if (empty($data['author_bank_id'])) {
                 $authBank = new AuthorBank();
-                $authBank->author_id = $authorId;
-                $authBank->bank_name = $data['bank_name'];
-                $authBank->bank_code = $data['bank_code'];
-                $authBank->branch_name = $data['branch_name'];
-                $authBank->branch_code = $data['branch_code'];
-                $authBank->bank_account = $data['bank_account'];
-                $authBank->account_name = $data['account_name'];
                 $authBank->create_at = $now;
-                $authBank->update_at = $now;
-                $authBank->save();
             } else {
                 $authBank = AuthorBank::model()->findByPk($data['author_bank_id']);
-                $authBank->author_id = $authorId;
-                $authBank->bank_name = $data['bank_name'];
-                $authBank->bank_code = $data['bank_code'];
-                $authBank->branch_name = $data['branch_name'];
-                $authBank->branch_code = $data['branch_code'];
-                $authBank->bank_account = $data['bank_account'];
-                $authBank->account_name = $data['account_name'];
-                $authBank->update_at = $now;
-                $authBank->update();
+            }
+
+            $authBank->author_id = $authorId;
+            $authBank->bank_name = $data['bank_name'];
+            $authBank->bank_code = $data['bank_code'];
+            $authBank->branch_name = $data['branch_name'];
+            $authBank->branch_code = $data['branch_code'];
+            $authBank->bank_account = $data['bank_account'];
+            $authBank->account_name = $data['account_name'];
+            $authBank->update_at = $now;
+            $authBank->save();
+
+            if ($authBank->hasErrors()) {
+                $errorBuilder = new ModelErrorBuilder();
+                Yii::app()->session[Controller::ERR_MSG_KEY] = $errorBuilder->modelErrors2Html($authBank->getErrors());
+                $this->redirect("edit?id={$authorId}");
             }
 
             if (empty($data['author_bank_id_2'])) {
                 $authBank = new AuthorBank();
-                $authBank->author_id = $authorId;
-                $authBank->bank_name = $data['bank_name2'];
-                $authBank->bank_code = $data['bank_code2'];
-                $authBank->branch_name = $data['branch_name2'];
-                $authBank->branch_code = $data['branch_code2'];
-                $authBank->bank_account = $data['bank_account2'];
-                $authBank->account_name = $data['account_name2'];
                 $authBank->create_at = $now;
-                $authBank->update_at = $now;
-                $authBank->save();
             } else {
                 $authBank = AuthorBank::model()->findByPk($data['author_bank_id_2']);
-                $authBank->author_id = $authorId;
-                $authBank->bank_name = $data['bank_name2'];
-                $authBank->bank_code = $data['bank_code2'];
-                $authBank->branch_name = $data['branch_name2'];
-                $authBank->branch_code = $data['branch_code2'];
-                $authBank->bank_account = $data['bank_account2'];
-                $authBank->account_name = $data['account_name2'];
-                $authBank->update_at = $now;
-                $authBank->update();
+            }
+
+            $authBank->author_id = $authorId;
+            $authBank->bank_name = $data['bank_name2'];
+            $authBank->bank_code = $data['bank_code2'];
+            $authBank->branch_name = $data['branch_name2'];
+            $authBank->branch_code = $data['branch_code2'];
+            $authBank->bank_account = $data['bank_account2'];
+            $authBank->account_name = $data['account_name2'];
+
+            $authBank->update_at = $now;
+            $authBank->save();
+
+            if ($authBank->hasErrors()) {
+                $errorBuilder = new ModelErrorBuilder();
+                Yii::app()->session[Controller::ERR_MSG_KEY] = $errorBuilder->modelErrors2Html($authBank->getErrors());
+                $this->redirect("edit?id={$authorId}");
             }
 
             $transaction->commit();
@@ -251,10 +262,11 @@ class AuthorController extends Controller
             $this->redirect("edit?id={$authorId}");
 
         } catch (Throwable $ex) {
-            $transaction->rollback();
             Yii::log($ex->getMessage(), CLogger::LEVEL_ERROR);
             Yii::app()->session[Controller::ERR_MSG_KEY] = '更新失敗';
             $this->redirect("edit?id={$authorId}");
+        } finally {
+            $transaction->rollback();
         }
     }
 
