@@ -1,5 +1,6 @@
 <?php
 
+use Wenhsun\Tool\ModelErrorBuilder;
 use Wenhsun\Transform\MultiColumnTransformer;
 
 class AuthorController extends Controller
@@ -66,7 +67,8 @@ class AuthorController extends Controller
             $pk = Yii::app()->db->getLastInsertID();
 
             if ($author->hasErrors()) {
-                Yii::app()->session[Controller::ERR_MSG_KEY] = '新增使用者失敗';
+                $errorBuilder = new ModelErrorBuilder();
+                Yii::app()->session[Controller::ERR_MSG_KEY] = $errorBuilder->modelErrors2Html($author->getErrors());
                 $this->redirect('new');
             }
 
