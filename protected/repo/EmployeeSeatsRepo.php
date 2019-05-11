@@ -29,4 +29,17 @@ class EmployeeSeatsRepo
             '
         )->queryAll();
     }
+
+    public function getSeatEmployeeInfo()
+    {
+        return Yii::app()->db->createCommand(
+            '
+              SELECT * FROM employee_seats s
+              LEFT JOIN employee e on s.id = e.seat_num
+              LEFT JOIN employee_extensions p on e.ext_num = p.id
+              LEFT JOIN `group` g on e.`role` = g.id
+              ORDER BY seat_name ASC, seat_number ASC
+            '
+        )->queryAll();
+    }
 }

@@ -29,7 +29,8 @@ class EmployeeSeats extends CActiveRecord
 
     public function scopes() {
         return array(
-            'byUpdateAt' => array('order' => 'update_at DESC'),
+            'byUpdateAt' => ['order' => 'update_at DESC'],
+            'bySeatNumber' => ['order' => 'seat_number ASC'],
         );
     }
 }

@@ -121,4 +121,18 @@ class SeatsController extends Controller
             $this->sendErrAjaxRsp(500, "系統錯誤");
         }
     }
+
+    public function actionGraph()
+    {
+        $seatRepository = new EmployeeSeatsRepo();
+        $seats = $seatRepository->getSeatEmployeeInfo();
+
+        $data = [];
+
+        foreach ($seats as $value) {
+            $data[$value['seat_name']][] = $value;
+        }
+
+        $this->render('graph', ['data' => $data]);
+    }
 }

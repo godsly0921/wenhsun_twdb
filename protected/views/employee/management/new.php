@@ -179,9 +179,16 @@
                                     <select class="form-control" id="seat_num" name="seat_num">
                                         <option value="">請選擇</option>
                                         <?php foreach ($seats as $seat):?>
-                                            <option value="<?=$seat['id']?>"><?=$seat['seat_number']?></option>
+                                            <option value="<?=$seat['id']?>"><?=$seat['seat_number']?>(<?=$seat['seat_name']?>)</option>
                                         <?php endforeach;?>
                                     </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="memo">備註</label>
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    <input type="text" id="memo" name="memo" class="form-control col-md-7 col-xs-12">
                                 </div>
                             </div>
 

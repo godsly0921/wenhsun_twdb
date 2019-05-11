@@ -74,7 +74,11 @@ class ManagementController extends Controller
         $seatsRepo = new EmployeeSeatsRepo();
         $seats = $seatsRepo->getAvailableSeats();
         if (!empty($data->seat)) {
-            $seats = array_merge($seats, [['id' => $data->seat->id, 'seat_number' => $data->seat->seat_number]]);
+            $seats = array_merge($seats, [[
+                'id' => $data->seat->id,
+                'seat_number' => $data->seat->seat_number,
+                'seat_name' => $data->seat->seat_name,
+            ]]);
         }
 
         $roles = Group::model()->findAll();

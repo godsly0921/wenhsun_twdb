@@ -32,6 +32,7 @@ class EmployeeInfo
     public $door_card_num;
     public $ext_num;
     public $seat_num;
+    public $memo;
 
     public $bank_name;
     public $bank_code;
@@ -82,6 +83,7 @@ class EmployeeInfo
         $employeeModel->door_card_num = $this->door_card_num;
         $employeeModel->ext_num = $this->ext_num;
         $employeeModel->seat_num = $this->seat_num;
+        $employeeModel->memo = $this->memo;
         $employeeModel->bank_name = $this->bank_name;
         $employeeModel->bank_code = $this->bank_code;
         $employeeModel->bank_branch_name = $this->bank_branch_name;

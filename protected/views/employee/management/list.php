@@ -39,7 +39,13 @@
                                     <td><?=$data->user_name?></td>
                                     <td><?=$data->name?></td>
                                     <td><?= isset($data->ext->ext_number) ? $data->ext->ext_number : '未設定分機' ?></td>
-                                    <td><?= isset($data->seat->seat_number) ? $data->seat->seat_number : '未設定座位' ?></td>
+                                    <td>
+                                        <?php if(isset($data->seat->seat_number)):?>
+                                            <?=$data->seat->seat_number?>(<?=$data->seat->seat_name?>)
+                                        <?php else:?>
+                                            未設定座位
+                                        <?php endif;?>
+                                    </td>
                                     <td><?=$data->update_at?></td>
                                     <td><?=$data->create_at?></td>
                                     <td>
