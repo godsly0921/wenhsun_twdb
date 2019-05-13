@@ -42,7 +42,10 @@ unset( Yii::app()->session['success_msg'] );
                 <label class="col-sm-2 control-label">選擇優惠折扣:</label>
                 <div class="col-sm-5">
                     <select class="form-control" name="coupon_id" required>
-                        <option value="0">無</option>
+                        <option value="0" <?=$product_data->coupon_id == 0 ? 'selected':''?>>無</option>
+                        <?php foreach ($coupon as $key => $value) { ?>
+                            <option value="<?=$value['coupon_id']?>" <?=$product_data->coupon_id == $value['coupon_id'] ? 'selected':''?>><?=$value['coupon_name']?></option>
+                        <?php }?>
                     </select>
                 </div>
             </div> 

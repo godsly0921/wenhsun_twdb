@@ -11,6 +11,7 @@ class ProductController extends Controller{
 
     public function Actionnew(){
         $product = array();
+        $couponService = new CouponService();
         $productService = new ProductService();
         if( Yii::app()->request->isPostRequest ){
             if (!CsrfProtector::comparePost()) {
@@ -33,7 +34,7 @@ class ProductController extends Controller{
             $coupon = array();
             $this->redirect(array('product/list'));
         }else{
-            $coupon = array();
+            $coupon = $couponService->findAllCouponWithStatus(1);
             $this->render('new',['coupon'=>$coupon]);
         }
     }
@@ -46,8 +47,9 @@ class ProductController extends Controller{
     }
 
     public function ActionUpdate($id){
-        $coupon = array();
+        $couponService = new CouponService();
         $productService = new ProductService();
+        $coupon = $couponService->findAllCouponWithStatus(1);
         if( Yii::app()->request->isPostRequest ){
             if (!CsrfProtector::comparePost()) {
                 $this->redirect('index');

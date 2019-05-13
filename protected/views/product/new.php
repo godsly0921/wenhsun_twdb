@@ -43,6 +43,9 @@ unset( Yii::app()->session['success_msg'] );
                 <div class="col-sm-5">
                     <select class="form-control" name="coupon_id" required>
                         <option value="0">無</option>
+                        <?php foreach ($coupon as $key => $value) { ?>
+                            <option value="<?=$value['coupon_id']?>"><?=$value['coupon_name']?></option>
+                        <?php }?>
                     </select>
                 </div>
             </div> 

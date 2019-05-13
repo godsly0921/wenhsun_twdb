@@ -21,6 +21,30 @@ class CouponService
         return $coupon_data;
     }
 
+    public function findAllCouponWithStatus( $status ){
+        $accountService = new AccountService();
+        $coupon_data = array();
+        $all_coupon = Coupon::model()->findAll(array(
+            'condition'=>'status=:status',
+            'params'=>array(
+                ':status' => $status,
+            )
+        ));
+        if($all_coupon){
+            foreach ($all_coupon as $key => $value) {
+                $coupon_data[] = array(
+                    'coupon_id' => $value['coupon_id'],
+                    'coupon_name' => $value['coupon_name'],
+                    'coupon_code' => $value['coupon_code'],
+                    'coupon_pic' => $value['coupon_pic'],
+                    'start_time' => $value['start_time'],
+                    'end_time' => $value['end_time'],
+                    'status' => $value['status'] == 1 ? '是' : '否'
+                );
+            }
+        }
+        return $coupon_data;
+    }
     /**
      * @param array $input
      * @return Power
