@@ -28,13 +28,13 @@ PRIMARY KEY (`id`)
 
 CREATE TABLE `author_bank` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `author_id` varchar(11) NOT NULL,
+  `author_id` varchar(128) NOT NULL,
   `bank_name` varchar(128) DEFAULT NULL,
-  `bank_code` varchar(3) DEFAULT NULL,
-  `branch_name` varchar(64) DEFAULT NULL,
-  `branch_code` varchar(8) DEFAULT NULL,
-  `bank_account` varchar(20) DEFAULT NULL,
-  `account_name` varchar(64) DEFAULT NULL,
+  `bank_code` varchar(128) DEFAULT NULL,
+  `branch_name` varchar(128) DEFAULT NULL,
+  `branch_code` varchar(128) DEFAULT NULL,
+  `bank_account` varchar(128) DEFAULT NULL,
+  `account_name` varchar(128) DEFAULT NULL,
   `create_at` datetime NOT NULL,
   `update_at` datetime NOT NULL,
 PRIMARY KEY (`id`)
