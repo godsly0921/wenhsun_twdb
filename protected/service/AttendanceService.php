@@ -645,14 +645,16 @@ class AttendanceService
                     $msg = date("Y-m-d H:i:s").$value->id."該員工卡號設定異常";
                     Yii::log($msg, CLogger::LEVEL_INFO);
                     $mail = new MailService();
-                    $mail->sendMail(0,$msg);
-                    return;
+                    $mail->sendAdminMail(0,$msg);
+                    continue;
 
                 }
 
             }
         } catch (Exception $e) {
-            Yii::log("AttxendanceData write exception {$e->getTraceAsString()}", CLogger::LEVEL_INFO);
+            $msg = Yii::log("AttxendanceData write exception {$e->getTraceAsString()}", CLogger::LEVEL_INFO);
+            $mail = new MailService();
+            $mail->sendAdminMail(0,$msg);
         }
 
     }
