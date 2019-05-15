@@ -99,10 +99,11 @@ class AttendanceService
                     $abnormal_type = 0;//0正常 1異常
                     $abnormal = '';
                     count($record);
+                    $employee_id = $value->id;
 
                     if (!empty($record)) {
                         //---------------整理預計要寫入的參數資料
-                        $employee_id = $value->id;
+
                         $i = 1;
                         $total = count($record);
                         foreach ($record as $k => $v) {
