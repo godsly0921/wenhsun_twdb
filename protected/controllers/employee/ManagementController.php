@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Employee as EmployeeModel;
+use Wenhsun\Employee\Service\DepartmentQueryService;
 use Wenhsun\Entity\Employee\EmployeeId;
 use Wenhsun\Entity\Employee\EmployeeInfo;
 
@@ -27,10 +28,14 @@ class ManagementController extends Controller
         $seats = $seatsRepo->getAvailableSeats();
         $roles = Group::model()->findAll();
 
+        $departmentQueryServ = new DepartmentQueryService();
+        $departments = $departmentQueryServ->getDepartments();
+
         $data = [
             'seats' => $seats,
             'exts' => $exts,
             'roles' => $roles,
+            'departments' => $departments,
         ];
 
         $this->render('new', $data);
@@ -83,6 +88,9 @@ class ManagementController extends Controller
 
         $roles = Group::model()->findAll();
 
+        $departmentQueryServ = new DepartmentQueryService();
+        $departments = $departmentQueryServ->getDepartments();
+
         $this->render(
             'edit',
             [
@@ -90,6 +98,7 @@ class ManagementController extends Controller
                 'exts' => $exts,
                 'seats' => $seats,
                 'roles' => $roles,
+                'departments' => $departments,
             ]
         );
     }

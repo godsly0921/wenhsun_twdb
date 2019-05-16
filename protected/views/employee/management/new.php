@@ -186,6 +186,25 @@
                             </div>
 
                             <div class="form-group">
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12">部門</label>
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    <select class="form-control" id="department" name="department">
+                                        <option value="">請選擇</option>
+                                        <?php foreach ($departments as $department):?>
+                                            <option value="<?=$department?>"><?=$department?></option>
+                                        <?php endforeach;?>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="position">職務</label>
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    <input type="text" id="position" name="position" class="form-control col-md-7 col-xs-12">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
                                 <label class="control-label col-md-3 col-sm-3 col-xs-12" for="memo">備註</label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
                                     <input type="text" id="memo" name="memo" class="form-control col-md-7 col-xs-12">
