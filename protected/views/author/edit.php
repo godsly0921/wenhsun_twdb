@@ -153,7 +153,7 @@
                                 <label class="control-label col-md-3 col-sm-3 col-xs-12">身份類型</label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
                                     <select id="identity_type" class="select2_multiple form-control" multiple="multiple" name="identity_type[]">
-                                        <option <?php if(in_array("未設定", $data->identity_type)):?>selected<?php endif;?> value="未設定">末設定</option>
+                                        <option <?php if(in_array("未設定", $data->identity_type)):?>selected<?php endif;?> value="未設定">未設定</option>
                                         <option <?php if(in_array("作家", $data->identity_type)):?>selected<?php endif;?> value="作家">作家</option>
                                         <option <?php if(in_array("出版社", $data->identity_type)):?>selected<?php endif;?> value="出版社">出版社</option>
                                         <option <?php if(in_array("公部門", $data->identity_type)):?>selected<?php endif;?> value="公部門">公部門</option>
