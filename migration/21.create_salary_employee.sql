@@ -1,5 +1,3 @@
-DROP TABLE `salary_employee`;
-
 CREATE TABLE `salary_employee` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `employee_id` varchar(12) NOT NULL,
