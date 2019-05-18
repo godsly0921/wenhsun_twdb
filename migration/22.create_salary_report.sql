@@ -20,7 +20,7 @@ CREATE TABLE `salary_report` (
   `salary_total` float NOT NULL,
   `health_insurance` float NOT NULL,
   `labor_insurance` float NOT NULL,
-  `pansion` float NOT NULL,
+  `pension` float NOT NULL,
   `deduction_total` float NOT NULL,
   `real_salary` float NOT NULL,
   `status` varchar(3) NOT NULL,
