@@ -1,7 +1,7 @@
 <div class="row">
     <div class="title-wrap col-lg-12">
         <h3 class="title-left">角色權限列表</h3>
-        <a href="<?php echo Yii::app()->createUrl('group/create'); ?>" class="btn btn-default btn-right">新增群組</a>
+        <a href="<?php echo Yii::app()->createUrl('group/create'); ?>" class="btn btn-default btn-right">新增角色</a>
     </div>
 </div>
 

@@ -1,6 +1,6 @@
 <div class="row">
     <div class="title-wrap col-lg-12">
-        <h3 class="title-left">群組資料新增</h3>
+        <h3 class="title-left">角色新增</h3>
     </div>
 </div>
 
@@ -21,14 +21,14 @@
         <div class="panel-body">
 
             <div class="form-group">
-                <label for="group_number"  class="col-sm-2 control-label">群組權重:</label>
+                <label for="group_number"  class="col-sm-2 control-label">角色權重:</label>
                 <div class="col-sm-3">
                     <input type="text" class="form-control" id="group_number" name="group_number" placeholder="請輸入權重(數字)" value="<?php echo Yii::app()->session['group_number']?>">
                 </div>
             </div>
 
             <div class="form-group">
-                <label for="group_name" class="col-sm-2 control-label">群組名稱:</label>
+                <label for="group_name" class="col-sm-2 control-label">角色名稱:</label>
                 <div class="col-sm-3">
                     <input type="text" class="form-control" id="group_name" name="group_name" placeholder="請輸入群組名稱" value="<?php echo Yii::app()->session['group_name']?>">
                 </div>
