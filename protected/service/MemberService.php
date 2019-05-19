@@ -253,52 +253,41 @@ class MemberService
 
     public function create(array $inputs)
     {
-        $model = new Membertw();
+        $model = new Member();
 
         $model->account = $inputs['account'];
 
-
         $member = $this->findByAccount($inputs['account']);
-        if($member!=NULL){
+        if ($member != NULL) {
             $model->addError('account', '該帳號已有人使用');
             return $model;
         }
 
-        $model->name = $inputs['name'];
-        $model->sex = $inputs['sex'];
-        $model->phone1 = $inputs['phone1'];
-        $model->phone2 = $inputs['phone2'];
-        $model->tel_no1 = $inputs['tel_no1'];
-        $model->tel_no2 = $inputs['tel_no2'];
-        $model->email1 = $inputs['email1'];
-        $model->email2 = $inputs['email2'];
-        $model->user_group = $inputs['user_group'];
-        $model->year = $inputs['year'];
-        $model->month = $inputs['month'];
-        $model->day = $inputs['day'];
-        $model->status = $inputs['status'];
-        $model->address = $inputs["address"];
-        $model->card_number = $inputs["card_number"];
-        $model->grp_lv1 = $inputs['grp_lv1'];
-        $model->grp_lv2 = $inputs['grp_lv2'];
-        $model->user_group = $inputs['level'];
-        $model->professor = $inputs['professor'];
-        $model->stop_card_datetime = $inputs['stop_card_datetime'];
-        $model->stop_card_remark = $inputs['stop_card_remark'];
-        $model->stop_card_people = $inputs['stop_card_people'];
-
-
         if ($inputs["password_confirm"] === "" || $inputs["password"] !== $inputs["password_confirm"]) {
-            $model->addError('password_confirm', '確認密碼錯誤, 請重新輸入');
+            $model->addError('password_confirm', '密碼不一致, 請重新輸入');
             return $model;
         }
 
-        $model->password = md5($inputs['password']);
-        $model->stop_card_datetime = date('0000-00-00 00:00:00');
-        $model->create_date = date('Y-m-d H:i:s');
-        $model->edit_date = date('Y-m-d H:i:s');
-        //$model->status = 0;
+        $model->password = $inputs['password'];
+        $model->name = $inputs['name'];
+        $model->email = $inputs['email'];
+        $model->gender = $inputs['gender'];
+        $model->birthday = $inputs['birthday'];
+        $model->phone = $inputs['phone'];
+        $model->mobile = $inputs['mobile'];
+        $model->member_type = $inputs['member_type'];
+        $model->account_type = $inputs['account_type'];
+        $model->nationality = $inputs['nationality'];
+        $model->county = $inputs['county'];
+        $model->town = $inputs['town'];
+        $model->address = $inputs['address'];
+        $model->create_by = Yii::app()->session['uid'];
+        $model->update_by = Yii::app()->session['uid'];
+        $model->active = 'Y';
 
+        $model->password = md5($inputs['password']);
+        $model->create_date = date('Y-m-d H:i:s');
+        $model->update_date = date('Y-m-d H:i:s');
         $model = $this->validate($model);
 
         if (!$model->save()) {
@@ -307,7 +296,6 @@ class MemberService
         } else {
             return $model;
         }
-
     }
 
     public function createregister(array $inputs)
@@ -375,31 +363,23 @@ class MemberService
 
     }
 
-    private function validate(Membertw $model)
+    private function validate(Member $model)
     {
-//        if (!$this->memberValidate->validateChineseName($member->mem_cname)) {
-//            $member->addError('mem_cname_invalid', '請正確輸入中文姓名');
-//        }
-//
+
         if (!$this->memberValidate->validateEnglishName($model->account)) {
-            $member->addError('mem_ename_invalid', '請正確輸入帳號名稱');
+            $model->addError('mem_ename_invalid', '請正確輸入帳號名稱');
         }
-//
-//        if (!$this->memberValidate->validateBirth($member->mem_birthdate)) {
-//            $member->addError('mem_birth_invalid', '出生年月日不正確');
-//        }
-//
-//        if (!$this->memberValidate->validatePhone($member->mem_phone)) {
-//            $member->addError('mem_phone_invalid', '電話號碼格式不正確');
-//        }
-//
-//        if (!$this->memberValidate->validatePhone($member->mem_mobile)) {
-//            $member->addError('mem_mobile_invalid', '手機號碼格式不正確');
-//        }
-//
-//        if (!$this->memberValidate->validateEmail($member->mem_email)) {
-//            $member->addError('mem_email_invalid', 'E-Mail格式不正確');
-//        }
+        if (!$this->memberValidate->validatePhone($model->phone)) {
+            $model->addError('mem_phone_invalid', '電話號碼格式不正確');
+        }
+
+        if (!$this->memberValidate->validatePhone($model->mobile)) {
+            $model->addError('mem_mobile_invalid', '手機號碼格式不正確');
+        }
+
+        if (!$this->memberValidate->validateEmail($model->email)) {
+            $model->addError('mem_email_invalid', 'E-Mail格式不正確');
+        }
 
         if (!$this->memberValidate->validatePasswd($model->password)) {
             $model->addError('password_invalid', '密碼(6碼)最少包含一個英文字');
@@ -492,39 +472,28 @@ class MemberService
             return $model;
         }
 
-        $model->id = $inputs['id'];
         $model->name = $inputs['name'];
-        $model->sex = $inputs['sex'];
-        $model->phone1 = $inputs['phone1'];
-        $model->phone2 = $inputs['phone2'];
-        $model->tel_no1 = $inputs['tel_no1'];
-        $model->tel_no2 = $inputs['tel_no2'];
-        $model->email1 = $inputs['email1'];
-        $model->email2 = $inputs['email2'];
-        $model->user_group = $inputs['user_group'];
-        $model->year = $inputs['year'];
-        $model->month = $inputs['month'];
-        $model->day = $inputs['day'];
-        $model->status = $inputs['status'];
-        $model->address = $inputs["address"];
-        //$model->card_number = $inputs["card_number"];
-        $model->grp_lv1 = $inputs['grp_lv1'];
-        $model->grp_lv2 = $inputs['grp_lv2'];
-        $model->professor = $inputs['professor'];
-        $model->stop_card_datetime = $inputs['stop_card_datetime'];
-        $model->stop_card_remark = $inputs['stop_card_remark'];
-        $model->stop_card_people = $inputs['stop_card_people'];
+        $model->email = $inputs['email'];
+        $model->gender = $inputs['gender'];
+        $model->birthday = $inputs['birthday'];
+        $model->phone = $inputs['phone'];
+        $model->mobile = $inputs['mobile'];
+        $model->member_type = $inputs['member_type'];
+        $model->nationality = $inputs['nationality'];
+        $model->county = $inputs['county'];
+        $model->town = $inputs['town'];
+        $model->address = $inputs['address'];
+        $model->active = $inputs['active'];;
+        $model->update_by = Yii::app()->session['uid'];
+        $model->update_date = date('Y-m-d H:i:s');
+        $model = $this->validate($model);
 
         if (!$model->validate()) {
             return $model;
         }
 
         if (!$model->hasErrors()) {
-
-            $date = new DateTime();
-            $model->edit_date = $date->format('Y-m-d H:i:s');
             $success = $model->update();
-
         } else {
             return $model;
         }

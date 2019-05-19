@@ -126,9 +126,8 @@ class MemberController extends Controller
 
         $memberService = new MemberService();
         $datas = $memberService->findMemberlist();
-        $groups = ExtGroup::model()->group_list();
 
-        $this->render('list', array('datas' => $datas, 'groups' => $groups));
+        $this->render('list', array('datas' => $datas));
     }
 
     // 列印
@@ -562,58 +561,34 @@ class MemberController extends Controller
     private function doPostCreate()
     {
 
-        if (!CsrfProtector::comparePost())
-            $this->redirect('index');
+        if (!CsrfProtector::comparePost()) {
+            $this->redirect('list');
+        }
 
         $inputs['account'] = filter_input(INPUT_POST, 'account');
         $inputs['password'] = filter_input(INPUT_POST, 'password');
         $inputs['password_confirm'] = filter_input(INPUT_POST, 'password_confirm');
         $inputs['name'] = filter_input(INPUT_POST, 'name');
-        $inputs['sex'] = filter_input(INPUT_POST, 'sex');
-        $inputs['phone1'] = filter_input(INPUT_POST, 'phone1');
-        $inputs['phone2'] = filter_input(INPUT_POST, 'phone2');
-        $inputs['tel_no1'] = filter_input(INPUT_POST, 'tel_no1');
-        $inputs['tel_no2'] = filter_input(INPUT_POST, 'tel_no2');
-        $inputs['email1'] = filter_input(INPUT_POST, 'email1');
-        $inputs['email2'] = filter_input(INPUT_POST, 'email2');
-        $inputs['status'] = filter_input(INPUT_POST, 'status');
-        $inputs['stop_card_datetime'] = filter_input(INPUT_POST, 'stop_card_datetime');
-        $inputs['stop_card_remark'] = filter_input(INPUT_POST, 'stop_card_remark');
-        $inputs['stop_card_people'] = filter_input(INPUT_POST, 'stop_card_people');
-        $inputs['year'] = filter_input(INPUT_POST, 'year');
-        $inputs['month'] = filter_input(INPUT_POST, 'month');
-        $inputs['user_group'] = filter_input(INPUT_POST, 'user_group');
-        $inputs['day'] = filter_input(INPUT_POST, 'day');
-        $inputs['card_number'] = filter_input(INPUT_POST, 'card_number');
+        $inputs['email'] = filter_input(INPUT_POST, 'email');
+        $inputs['gender'] = filter_input(INPUT_POST, 'gender');
+        $inputs['birthday'] = filter_input(INPUT_POST, 'year') . '-' .
+            filter_input(INPUT_POST, 'month') . '-' . filter_input(INPUT_POST, 'day');
+        $inputs['phone'] = filter_input(INPUT_POST, 'phone');
+        $inputs['mobile'] = filter_input(INPUT_POST, 'mobile');
+        $inputs['member_type'] = filter_input(INPUT_POST, 'member_type');
+        $inputs['account_type'] = filter_input(INPUT_POST, 'account_type');
+        $inputs['nationality'] = filter_input(INPUT_POST, 'nationality');
+        $inputs['county'] = filter_input(INPUT_POST, 'county');
+        $inputs['town'] = filter_input(INPUT_POST, 'town');
         $inputs['address'] = filter_input(INPUT_POST, 'address');
-        $inputs['grp_lv1'] = filter_input(INPUT_POST, 'grp1');
-        $inputs['grp_lv2'] = filter_input(INPUT_POST, 'grp2');
-        $inputs['level'] = filter_input(INPUT_POST, 'level');
-        $inputs['professor'] = filter_input(INPUT_POST, 'professor');
-
 
         $big5Name = iconv("UTF-8", "big5", $inputs['name']);
         $big5Lenght = strlen($big5Name);
 
-
         if ($big5Lenght > 20) {
-
-            Yii::app()->session['error_msg'] = array(array('姓名中文限制為10個字,英文為20個字'));
+            Yii::app()->session['error_msg'] = array(array('中文姓名限制為10個字,英文為20個字'));
             $this->redirect('create');
             exit;
-
-        }
-
-        // 測試
-        $stcard_sv = new StcardService();
-        $cardexist = $stcard_sv->if_cardnum_exist($inputs['card_number']);
-
-        $sycard_sv = new SycardService();
-        $sycard_sv->modifyCard('', $inputs['card_number'], $inputs['name'], "1xxxx\r");
-
-        if (!$cardexist && strlen($inputs['card_number']) == 10) {
-
-            $createcard_res = $stcard_sv->create_cardnum($inputs['card_number'], $inputs['name']);
 
         }
 
@@ -625,7 +600,7 @@ class MemberController extends Controller
             $this->redirect('create');
             return;
         } else {
-            Yii::app()->session['success'] = '新增使用者帳號成功';
+            Yii::app()->session['success'] = '新增會員帳號成功';
             $this->redirect('list');
             return;
         }
@@ -639,27 +614,13 @@ class MemberController extends Controller
         $months = Common::months();
         $days = Common::days();
 
-        $grp_service = new UsergrpService();
-        $grp_data = $grp_service->getLevelOneAll();
-        $grp_data2 = $grp_service->getLevelTwoAll();
-
-        $service = new MemberService();
-        $professor = $service->get_all_professor(2);
-
-        $groups = ExtGroup::model()->group_list();
-
-        $service = new AccountService();
-        $accounts = $service->findAccounts();
-
-        $this->render('create', ['years' => $years,
-            'months' => $months,
-            'days' => $days,
-            'grp_data' => $grp_data,
-            'professor' => $professor,
-            'grp_data2' => $grp_data2,
-            'accounts' => $accounts,
-            'groups' => $groups
-        ]);
+        $this->render('create',
+            [
+                'years' => $years,
+                'months' => $months,
+                'days' => $days
+            ]
+        );
         $this->clearMsg();
     }
 
@@ -764,82 +725,45 @@ class MemberController extends Controller
         $months = Common::months();
         $days = Common::days();
         $data = $service->findByMemId($_GET['id']);
-        $professor = $service->get_all_professor(2);
-        $groups = ExtGroup::model()->group_list();
-        $device_all = DeviceService::findDeviceList();
-
-
-        $service = new AccountService();
-        $accounts = $service->findAccounts();
-
-        // 抓取所有分類
-        $grp_service = new UsergrpService();
-
-        if (!empty($data->grp_lv2)) {
-
-            $grp_array = $grp_service->get_grp_lv($data->grp_lv2);
-
-        } else {
-
-            $grp_array = array();
-        }
-
-        $grp_data = $grp_service->getLevelOneAll();
-
-        // 抓取所有門組
-        $service = new DoorgrouppermissionService();
-        $door_group = $service->findDoorgrouppermissions();
-
-
-        // 抓取所有門組時段
-        $service = new DoorpermissionService();
-        $door_time = $service->findTimePermissionAll();
-
-
-        // 抓取所有門組時段
-        $grp_service = new UsergrpService();
-
 
         if ($data !== null) {
-            $this->render('update', ['device_all' => $device_all, 'data' => $data, 'years' => $years, 'months' => $months, 'days' => $days, 'grp_data' => $grp_data, 'groups' => $groups, 'grp_array' => $grp_array, 'professor' => $professor, 'accounts' => $accounts, 'door_group' => $door_group, 'door_time' => $door_time]);
+            if ($data->birthday != '0000-00-00') {
+                $year = substr($data->birthday, 0, 4);
+                $month = substr($data->birthday, 5, 2);
+                $day = substr($data->birthday, 8, 2);
+            } else {
+                $year = '';
+                $month = '';
+                $day = '';
+            }
+            $this->render('update', ['data' => $data, 'years' => $years, 'months' => $months, 'days' => $days, 'year' => $year, 'month' => $month, 'day' => $day]);
         } else {
-            $this->redirect(['index']);
+            $this->redirect(['list']);
         }
     }
 
     private function doPostUpdate()
     {
         header('Content-Type: text/html; charset=big5');
-        if (!CsrfProtector::comparePost())
+        if (!CsrfProtector::comparePost()) {
             $this->redirect('list');
+        }
+
         $inputs['id'] = filter_input(INPUT_POST, 'id');
+        $inputs['account'] = filter_input(INPUT_POST, 'account');
         $inputs['name'] = filter_input(INPUT_POST, 'name');
-        $inputs['sex'] = filter_input(INPUT_POST, 'sex');
-        $inputs['phone1'] = filter_input(INPUT_POST, 'phone1');
-        $inputs['phone2'] = filter_input(INPUT_POST, 'phone2');
-        $inputs['tel_no1'] = filter_input(INPUT_POST, 'tel_no1');
-        $inputs['tel_no2'] = filter_input(INPUT_POST, 'tel_no2');
-        $inputs['email1'] = filter_input(INPUT_POST, 'email1');
-        $inputs['email2'] = filter_input(INPUT_POST, 'email2');
-        $inputs['status'] = filter_input(INPUT_POST, 'status');
-        $inputs['year'] = filter_input(INPUT_POST, 'year');
-        $inputs['month'] = filter_input(INPUT_POST, 'month');
-        $inputs['stop_card_datetime'] = filter_input(INPUT_POST, 'stop_card_datetime');
-        $inputs['stop_card_remark'] = filter_input(INPUT_POST, 'stop_card_remark');
-        $inputs['stop_card_people'] = filter_input(INPUT_POST, 'stop_card_people');
-        $inputs['user_group'] = filter_input(INPUT_POST, 'user_group');
-        $inputs['day'] = filter_input(INPUT_POST, 'day');
-        $inputs['card_number'] = filter_input(INPUT_POST, 'card_number');
+        $inputs['email'] = filter_input(INPUT_POST, 'email');
+        $inputs['gender'] = filter_input(INPUT_POST, 'gender');
+        $inputs['birthday'] = filter_input(INPUT_POST, 'year') . '-' .
+            filter_input(INPUT_POST, 'month') . '-' . filter_input(INPUT_POST, 'day');
+        $inputs['phone'] = filter_input(INPUT_POST, 'phone');
+        $inputs['mobile'] = filter_input(INPUT_POST, 'mobile');
+        $inputs['member_type'] = filter_input(INPUT_POST, 'member_type');
+        $inputs['nationality'] = filter_input(INPUT_POST, 'nationality');
+        $inputs['county'] = filter_input(INPUT_POST, 'county');
+        $inputs['town'] = filter_input(INPUT_POST, 'town');
         $inputs['address'] = filter_input(INPUT_POST, 'address');
-        $inputs['grp_lv1'] = filter_input(INPUT_POST, 'grp1');
-        $inputs['grp_lv2'] = filter_input(INPUT_POST, 'grp2');
-        $inputs['professor'] = filter_input(INPUT_POST, 'professor');
-
-        // 更新卡片狀態
-        $stcard_sv = new StcardService();
-        $card_change_err = $stcard_sv->card_switch($inputs['card_number'], $inputs['status']);
-        $card_download_res = $stcard_sv->st_card_download();
-
+        $inputs['active'] = filter_input(INPUT_POST, 'active');
 
         $service = new MemberService();
         $model = $service->update($inputs);
@@ -851,16 +775,6 @@ class MemberController extends Controller
             Yii::app()->session['success_msg'] = '使用者資料設定更新成功';
         }
 
-        if ($card_change_err) {
-
-            Yii::app()->session['error_msg'] = array(array('改變卡機資料失敗,請稍後再嘗試'));
-        }
-
-        if ($card_download_res == false) {
-
-            Yii::app()->session['error_msg'] = array(array('資料下載至卡機失敗,請稍後再嘗試'));
-
-        }
         $this->redirect('update/' . $inputs['id']);
     }
 

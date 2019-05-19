@@ -45,20 +45,7 @@ class Member extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('account, password, name, sex, phone1, email1, address, status, create_date, edit_date, year, month, day, tel_no1, grp_lv1, grp_lv2', 'required'),
-			/*array('account, password, name, sex, phone1, email1, , address, status, create_date, edit_date, year, month, day, tel_no1, card_number', 'required'),*/
-			array('sex, status', 'numerical', 'integerOnly'=>true),
-			array('account', 'length', 'max'=>50),
-			array('password', 'length', 'max'=>64),
-			array('name, tel_no1, tel_no2, card_number, grp_lv1, grp_lv2', 'length', 'max'=>20),
-			array('phone1, phone2', 'length', 'max'=>18),
-			array('email1, email2', 'length', 'max'=>255),
-			array('user_group', 'length', 'max'=>10),
-			array('year', 'length', 'max'=>4),
-			array('month, day', 'length', 'max'=>2),
-			// The following rule is used by search().
-			// @todo Please remove those attributes that should not be searched.
-			array('id, account, password, name, sex, phone1, phone2, email1, email2, address, status, create_date, edit_date, user_group, year, month, day, tel_no1, tel_no2, card_number, grp_lv1, grp_lv2', 'safe', 'on'=>'search'),
+			array('account, password, name, email', 'required')
 		);
 	}
 
@@ -69,40 +56,39 @@ class Member extends CActiveRecord
 	{
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
-		return array(
-		);
+		return array();
 	}
 
-	/**
-	 * @return array customized attribute labels (name=>label)
-	 */
-	public function attributeLabels()
-	{
-		return array(
-			'id' => 'ID',
-			'account' => 'Account',
-			'password' => 'Password',
-			'name' => 'Name',
-			'sex' => 'Sex',
-			'phone1' => 'Phone1',
-			'phone2' => 'Phone2',
-			'email1' => 'Email1',
-			'email2' => 'Email2',
-			'address' => 'Address',
-			'status' => 'Status',
-			'create_date' => 'Create Date',
-			'edit_date' => 'Edit Date',
-			'user_group' => 'Level',
-			'year' => 'Year',
-			'month' => 'Month',
-			'day' => 'Day',
-			'tel_no1' => 'Tel No1',
-			'tel_no2' => 'Tel No2',
-			'card_number' => 'Card Number',
-			'grp_lv1' => 'Grp Lv1',
-			'grp_lv2' => 'Grp Lv2',
-		);
-	}
+	// /**
+	//  * @return array customized attribute labels (name=>label)
+	//  */
+	// public function attributeLabels()
+	// {
+	// 	return array(
+	// 		'id' => 'ID',
+	// 		'account' => 'Account',
+	// 		'password' => 'Password',
+	// 		'name' => 'Name',
+	// 		'sex' => 'Sex',
+	// 		'phone1' => 'Phone1',
+	// 		'phone2' => 'Phone2',
+	// 		'email1' => 'Email1',
+	// 		'email2' => 'Email2',
+	// 		'address' => 'Address',
+	// 		'status' => 'Status',
+	// 		'create_date' => 'Create Date',
+	// 		'edit_date' => 'Edit Date',
+	// 		'user_group' => 'Level',
+	// 		'year' => 'Year',
+	// 		'month' => 'Month',
+	// 		'day' => 'Day',
+	// 		'tel_no1' => 'Tel No1',
+	// 		'tel_no2' => 'Tel No2',
+	// 		'card_number' => 'Card Number',
+	// 		'grp_lv1' => 'Grp Lv1',
+	// 		'grp_lv2' => 'Grp Lv2',
+	// 	);
+	// }
 
 	/**
 	 * Retrieves a list of models based on the current search/filter conditions.
@@ -120,33 +106,34 @@ class Member extends CActiveRecord
 	{
 		// @todo Please modify the following code to remove attributes that should not be searched.
 
-		$criteria=new CDbCriteria;
+		$criteria = new CDbCriteria;
 
-		$criteria->compare('id',$this->id);
-		$criteria->compare('account',$this->account,true);
-		$criteria->compare('password',$this->password,true);
-		$criteria->compare('name',$this->name,true);
-		$criteria->compare('sex',$this->sex);
-		$criteria->compare('phone1',$this->phone1,true);
-		$criteria->compare('phone2',$this->phone2,true);
-		$criteria->compare('email1',$this->email1,true);
-		$criteria->compare('email2',$this->email2,true);
-		$criteria->compare('address',$this->address,true);
-		$criteria->compare('status',$this->status);
-		$criteria->compare('create_date',$this->create_date,true);
-		$criteria->compare('edit_date',$this->edit_date,true);
-		$criteria->compare('user_group',$this->user_group,true);
-		$criteria->compare('year',$this->year,true);
-		$criteria->compare('month',$this->month,true);
-		$criteria->compare('day',$this->day,true);
-		$criteria->compare('tel_no1',$this->tel_no1,true);
-		$criteria->compare('tel_no2',$this->tel_no2,true);
-		$criteria->compare('card_number',$this->card_number,true);
-		$criteria->compare('grp_lv1',$this->grp_lv1,true);
-		$criteria->compare('grp_lv2',$this->grp_lv2,true);
+		$criteria->compare('id', $this->id);
+		$criteria->compare('account', $this->account, true);
+		$criteria->compare('password', $this->password, true);
+		$criteria->compare('name', $this->name, true);
+		$criteria->compare('email', $this->email);
+		$criteria->compare('gender', $this->gender);
+		$criteria->compare('birthday', $this->birthday);
+		$criteria->compare('birthday', $this->phone);
+		$criteria->compare('birthday', $this->mobile);
+		$criteria->compare('member_type', $this->member_type);
+		$criteria->compare('account_type', $this->account_type);
+		$criteria->compare('active', $this->active);
+		$criteria->compare('nationality', $this->nationality);
+		$criteria->compare('county', $this->county);
+		$criteria->compare('town', $this->town);
+		$criteria->compare('address', $this->address);
+		$criteria->compare('active_point', $this->active_point);
+		$criteria->compare('inactive_point', $this->intactive_point);
+		$criteria->compare('create_date', $this->create_date);
+		$criteria->compare('create_date', $this->update_date);
+		$criteria->compare('create_by', $this->create_by);
+		$criteria->compare('update_by', $this->update_by);
+
 
 		return new CActiveDataProvider($this, array(
-			'criteria'=>$criteria,
+			'criteria' => $criteria,
 		));
 	}
 
@@ -156,7 +143,7 @@ class Member extends CActiveRecord
 	 * @param string $className active record class name.
 	 * @return Member the static model class
 	 */
-	public static function model($className=__CLASS__)
+	public static function model($className = __CLASS__)
 	{
 		return parent::model($className);
 	}

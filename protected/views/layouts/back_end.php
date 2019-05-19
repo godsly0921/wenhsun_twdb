@@ -13,6 +13,8 @@
     <script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/gentelella/vendors/jquery/dist/jquery.min.js"></script>
     <script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/gentelella/vendors/parsley/parsley.min.js"></script>
     <script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/gentelella/build/js/i18n/zh_tw.js"></script>
+    <script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/bootstrap-select/dist/js/bootstrap-select.js"></script>
+    <link href="<?php echo Yii::app()->request->baseUrl; ?>/assets/bootstrap-select/dist/css/bootstrap-select.css" rel="stylesheet">
 
 </head>
 <body class="nav-md">
