@@ -1,6 +1,4 @@
-
 <?php
-use Wenhsun\Tool\ModelErrorBuilder;
 use Wenhsun\Transform\MultiColumnTransformer;
 ?>
 <script src="<?php echo Yii::app()->request->baseUrl;?>/assets/admin/ext/js/jquery.dataTables.min.js"></script>
@@ -10,15 +8,20 @@ use Wenhsun\Transform\MultiColumnTransformer;
             <div class="title_left">
                 <h3>作家資訊</h3>
             </div>
-            <div class="title_right">
-                <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
-                    <div class="input-group">
-                        <a href="<?= Yii::app()->createUrl('/author/new');?>">
-                            <button id="new-btn" class="btn btn-primary" type="button">新增作家</button>
-                        </a>
+
+            <?php foreach ($session_jsons as $jsons):?>
+                <?php if ($jsons["power_controller"] == 'author/new'):?>
+                    <div class="title_right">
+                        <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
+                            <div class="input-group">
+                                <a href="<?= Yii::app()->createUrl('/author/new');?>">
+                                    <button id="new-btn" class="btn btn-primary" type="button">新增作家</button>
+                                </a>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
+                <?php endif; ?>
+            <?php endforeach; ?>
         </div>
 
         <div class="clearfix"></div>

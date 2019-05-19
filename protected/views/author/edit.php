@@ -17,7 +17,12 @@
                 <div class="x_panel">
                     <div class="x_title">
                         <a class="btn btn-default pull-right" href="<?= Yii::app()->createUrl('/author/index');?>">返回</a>
-                        <h2>作家編輯</h2><button id="delete-btn" class="btn btn-danger pull-right">刪除</button>
+                        <?php foreach ($session_jsons as $jsons):?>
+                            <?php if ($jsons["power_controller"] == 'author/delete'):?>
+                                <h2>作家編輯</h2><button id="delete-btn" class="btn btn-danger pull-right">刪除</button>
+                            <?php endif; ?>
+                        <?php endforeach; ?>
+
                         <div class="clearfix"></div>
                     </div>
                     <div class="x_content">
@@ -205,114 +210,232 @@
                                 </div>
                             </div>
 
+                            <?php foreach ($session_jsons as $jsons):?>
+                                <?php if ($jsons["power_controller"] == 'author/view_bank'):?>
+                                    <div class="ln_solid"></div>
+                                    <p>銀行資料-1</p>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="bank_name">銀行名稱
+                                        </label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <input type="text" value="<?=$bank_list[0]->bank_name?>" id="bank_name" name="bank_name" class="form-control col-md-7 col-xs-12">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="bank_code">銀行代碼
+                                        </label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <input type="text" value="<?=$bank_list[0]->bank_code?>" id="bank_code" name="bank_code" class="form-control col-md-7 col-xs-12">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="branch_name">分行名稱
+                                        </label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <input type="text" value="<?=$bank_list[0]->branch_name?>" id="branch_name" name="branch_name" class="form-control col-md-7 col-xs-12">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="branch_code">分行代碼
+                                        </label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <input type="text" value="<?=$bank_list[0]->branch_code?>" id="branch_code" name="branch_code" class="form-control col-md-7 col-xs-12">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="bank_account">帳號
+                                        </label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <input type="text" value="<?=$bank_list[0]->bank_account?>" id="bank_account" name="bank_account" class="form-control col-md-7 col-xs-12">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="account_name">戶名
+                                        </label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <input type="text" value="<?=$bank_list[0]->account_name?>" id="account_name" name="account_name" class="form-control col-md-7 col-xs-12">
+                                        </div>
+                                    </div>
+
+                                    <div class="ln_solid"></div>
+                                    <p>銀行資料-2</p>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="bank_name2">銀行名稱
+                                        </label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <input type="text" value="<?=$bank_list[1]->bank_name?>" id="bank_name2" name="bank_name2" class="form-control col-md-7 col-xs-12">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="bank_code2">銀行代碼
+                                        </label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <input type="text" value="<?=$bank_list[1]->bank_code?>" id="bank_code2" name="bank_code2" class="form-control col-md-7 col-xs-12">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="branch_name2">分行名稱
+                                        </label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <input type="text" value="<?=$bank_list[1]->branch_name?>" id="branch_name2" name="branch_name2" class="form-control col-md-7 col-xs-12">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="branch_code2">分行代碼
+                                        </label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <input type="text" value="<?=$bank_list[1]->branch_code?>" id="branch_code2" name="branch_code2" class="form-control col-md-7 col-xs-12">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="bank_account2">帳號
+                                        </label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <input type="text" value="<?=$bank_list[1]->bank_account?>" id="bank_account2" name="bank_account2" class="form-control col-md-7 col-xs-12">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="account_name2">戶名
+                                        </label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <input type="text" value="<?=$bank_list[1]->account_name?>" id="account_name2" name="account_name2" class="form-control col-md-7 col-xs-12">
+                                        </div>
+                                    </div>
+
+                                <?php endif; ?>
+
+                            <?php endforeach; ?>
+
+
+
                             <div class="ln_solid"></div>
-                            <p>銀行資料-1</p>
-                            <div class="form-group">
-                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="bank_name">銀行名稱
-                                </label>
-                                <div class="col-md-6 col-sm-6 col-xs-12">
-                                    <input type="text" value="<?=$bank_list[0]->bank_name?>" id="bank_name" name="bank_name" class="form-control col-md-7 col-xs-12">
-                                </div>
-                            </div>
 
-                            <div class="form-group">
-                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="bank_code">銀行代碼
-                                </label>
-                                <div class="col-md-6 col-sm-6 col-xs-12">
-                                    <input type="text" value="<?=$bank_list[0]->bank_code?>" id="bank_code" name="bank_code" class="form-control col-md-7 col-xs-12">
-                                </div>
-                            </div>
+                            <?php foreach ($session_jsons as $jsons):?>
+                                <?php if ($jsons["power_controller"] == 'author/view_bank'):?>
+                                    <div class="ln_solid"></div>
+                                    <p>銀行資料-1</p>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="bank_name">銀行名稱
+                                        </label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <input type="text" value="<?=$bank_list[0]->bank_name?>" id="bank_name" name="bank_name" class="form-control col-md-7 col-xs-12">
+                                        </div>
+                                    </div>
 
-                            <div class="form-group">
-                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="branch_name">分行名稱
-                                </label>
-                                <div class="col-md-6 col-sm-6 col-xs-12">
-                                    <input type="text" value="<?=$bank_list[0]->branch_name?>" id="branch_name" name="branch_name" class="form-control col-md-7 col-xs-12">
-                                </div>
-                            </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="bank_code">銀行代碼
+                                        </label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <input type="text" value="<?=$bank_list[0]->bank_code?>" id="bank_code" name="bank_code" class="form-control col-md-7 col-xs-12">
+                                        </div>
+                                    </div>
 
-                            <div class="form-group">
-                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="branch_code">分行代碼
-                                </label>
-                                <div class="col-md-6 col-sm-6 col-xs-12">
-                                    <input type="text" value="<?=$bank_list[0]->branch_code?>" id="branch_code" name="branch_code" class="form-control col-md-7 col-xs-12">
-                                </div>
-                            </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="branch_name">分行名稱
+                                        </label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <input type="text" value="<?=$bank_list[0]->branch_name?>" id="branch_name" name="branch_name" class="form-control col-md-7 col-xs-12">
+                                        </div>
+                                    </div>
 
-                            <div class="form-group">
-                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="bank_account">帳號
-                                </label>
-                                <div class="col-md-6 col-sm-6 col-xs-12">
-                                    <input type="text" value="<?=$bank_list[0]->bank_account?>" id="bank_account" name="bank_account" class="form-control col-md-7 col-xs-12">
-                                </div>
-                            </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="branch_code">分行代碼
+                                        </label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <input type="text" value="<?=$bank_list[0]->branch_code?>" id="branch_code" name="branch_code" class="form-control col-md-7 col-xs-12">
+                                        </div>
+                                    </div>
 
-                            <div class="form-group">
-                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="account_name">戶名
-                                </label>
-                                <div class="col-md-6 col-sm-6 col-xs-12">
-                                    <input type="text" value="<?=$bank_list[0]->account_name?>" id="account_name" name="account_name" class="form-control col-md-7 col-xs-12">
-                                </div>
-                            </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="bank_account">帳號
+                                        </label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <input type="text" value="<?=$bank_list[0]->bank_account?>" id="bank_account" name="bank_account" class="form-control col-md-7 col-xs-12">
+                                        </div>
+                                    </div>
 
-                            <div class="ln_solid"></div>
-                            <p>銀行資料-2</p>
-                            <div class="form-group">
-                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="bank_name2">銀行名稱
-                                </label>
-                                <div class="col-md-6 col-sm-6 col-xs-12">
-                                    <input type="text" value="<?=$bank_list[1]->bank_name?>" id="bank_name2" name="bank_name2" class="form-control col-md-7 col-xs-12">
-                                </div>
-                            </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="account_name">戶名
+                                        </label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <input type="text" value="<?=$bank_list[0]->account_name?>" id="account_name" name="account_name" class="form-control col-md-7 col-xs-12">
+                                        </div>
+                                    </div>
 
-                            <div class="form-group">
-                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="bank_code2">銀行代碼
-                                </label>
-                                <div class="col-md-6 col-sm-6 col-xs-12">
-                                    <input type="text" value="<?=$bank_list[1]->bank_code?>" id="bank_code2" name="bank_code2" class="form-control col-md-7 col-xs-12">
-                                </div>
-                            </div>
+                                    <div class="ln_solid"></div>
+                                    <p>銀行資料-2</p>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="bank_name2">銀行名稱
+                                        </label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <input type="text" value="<?=$bank_list[1]->bank_name?>" id="bank_name2" name="bank_name2" class="form-control col-md-7 col-xs-12">
+                                        </div>
+                                    </div>
 
-                            <div class="form-group">
-                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="branch_name2">分行名稱
-                                </label>
-                                <div class="col-md-6 col-sm-6 col-xs-12">
-                                    <input type="text" value="<?=$bank_list[1]->branch_name?>" id="branch_name2" name="branch_name2" class="form-control col-md-7 col-xs-12">
-                                </div>
-                            </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="bank_code2">銀行代碼
+                                        </label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <input type="text" value="<?=$bank_list[1]->bank_code?>" id="bank_code2" name="bank_code2" class="form-control col-md-7 col-xs-12">
+                                        </div>
+                                    </div>
 
-                            <div class="form-group">
-                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="branch_code2">分行代碼
-                                </label>
-                                <div class="col-md-6 col-sm-6 col-xs-12">
-                                    <input type="text" value="<?=$bank_list[1]->branch_code?>" id="branch_code2" name="branch_code2" class="form-control col-md-7 col-xs-12">
-                                </div>
-                            </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="branch_name2">分行名稱
+                                        </label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <input type="text" value="<?=$bank_list[1]->branch_name?>" id="branch_name2" name="branch_name2" class="form-control col-md-7 col-xs-12">
+                                        </div>
+                                    </div>
 
-                            <div class="form-group">
-                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="bank_account2">帳號
-                                </label>
-                                <div class="col-md-6 col-sm-6 col-xs-12">
-                                    <input type="text" value="<?=$bank_list[1]->bank_account?>" id="bank_account2" name="bank_account2" class="form-control col-md-7 col-xs-12">
-                                </div>
-                            </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="branch_code2">分行代碼
+                                        </label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <input type="text" value="<?=$bank_list[1]->branch_code?>" id="branch_code2" name="branch_code2" class="form-control col-md-7 col-xs-12">
+                                        </div>
+                                    </div>
 
-                            <div class="form-group">
-                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="account_name2">戶名
-                                </label>
-                                <div class="col-md-6 col-sm-6 col-xs-12">
-                                    <input type="text" value="<?=$bank_list[1]->account_name?>" id="account_name2" name="account_name2" class="form-control col-md-7 col-xs-12">
-                                </div>
-                            </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="bank_account2">帳號
+                                        </label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <input type="text" value="<?=$bank_list[1]->bank_account?>" id="bank_account2" name="bank_account2" class="form-control col-md-7 col-xs-12">
+                                        </div>
+                                    </div>
 
-                            <div class="ln_solid"></div>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="account_name2">戶名
+                                        </label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <input type="text" value="<?=$bank_list[1]->account_name?>" id="account_name2" name="account_name2" class="form-control col-md-7 col-xs-12">
+                                        </div>
+                                    </div>
 
-                            <div class="form-group">
-                                <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
-                                    <button type="submit" id="modify-btn" class="btn btn-primary">修改</button>
-                                    <a class="btn btn-default pull-right" href="<?= Yii::app()->createUrl('/author/index');?>">返回</a>
-                                </div>
-                            </div>
+                                <?php endif; ?>
+
+                            <?php endforeach; ?>
+
+                            <?php foreach ($session_jsons as $jsons):?>
+                            <?php if ($jsons["power_controller"] == 'author/update_form'):?>
+                                    <div class="form-group">
+                                        <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
+                                            <button type="submit" id="modify-btn" class="btn btn-primary">修改</button>
+                                            <a class="btn btn-default pull-right" href="<?= Yii::app()->createUrl('/author/index');?>">返回</a>
+                                        </div>
+                                    </div>
+                                <?php endif; ?>
+                            <?php endforeach; ?>
 
                         </form>
                     </div>
