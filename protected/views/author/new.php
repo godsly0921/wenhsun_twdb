@@ -1,3 +1,4 @@
+<?php $session_jsons = CJSON::decode(Yii::app()->session['power_session_jsons']);?>
 <div role="main">
     <div class="">
         <div class="row">
