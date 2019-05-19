@@ -67,10 +67,10 @@ return array(
 
 
 		'db'=>array(
-			'connectionString' => 'mysql:host=db;dbname=wenhsun',
+			'connectionString' => 'mysql:host=192.168.1.202;dbname=wenhsun',
 			'emulatePrepare' => true,
-			'username' => 'admin',
-			'password' => 'admin',
+			'username' => 'root',
+			'password' => 'Cute0921)(@!',
 			'charset' => 'utf8',
 		),
 		'errorHandler'=>array(
