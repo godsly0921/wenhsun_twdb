@@ -29,6 +29,7 @@
                 </tr>
             </thead>
             <tbody>
+                <?php if ($datas != null) : ?>
                 <?php foreach ($datas as $value) : ?>
                     <tr class="gradeC" role="row">
                         <td><?= $value->account ?></td>
@@ -75,6 +76,7 @@
                         </td>
                     </tr>
                 <?php endforeach; ?>
+                <?php endif; ?>
             </tbody>
         </table>
     </div>
