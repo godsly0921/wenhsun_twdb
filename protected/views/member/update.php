@@ -90,13 +90,6 @@
             </div>
 
             <div class="form-group">
-                <label for="email" class="col-sm-2 control-label">Email:</label>
-                <div class="col-sm-5">
-                    <input type="text" class="form-control" id="email" name="email" placeholder="請輸入Email" value="<?= $data->email ?>">
-                </div>
-            </div>
-
-            <div class="form-group">
                 <label class="col-sm-2 control-label">生日:</label>
                 <div class="col-sm-6">
                     <select name="year" class="selectpicker" data-width="fit">

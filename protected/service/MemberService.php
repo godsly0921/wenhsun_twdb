@@ -270,7 +270,7 @@ class MemberService
 
         $model->password = $inputs['password'];
         $model->name = $inputs['name'];
-        $model->email = $inputs['email'];
+        $model->email = $inputs['account'];
         $model->gender = $inputs['gender'];
         $model->birthday = $inputs['birthday'];
         $model->phone = $inputs['phone'];
@@ -281,6 +281,8 @@ class MemberService
         $model->county = $inputs['county'];
         $model->town = $inputs['town'];
         $model->address = $inputs['address'];
+        $model->active_point = 0;
+        $model->inactive_point = 0;
         $model->create_by = Yii::app()->session['uid'];
         $model->update_by = Yii::app()->session['uid'];
         $model->active = 'Y';

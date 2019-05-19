@@ -45,7 +45,7 @@ class Member extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('account, password, name, email', 'required')
+			array('account, password, name', 'required')
 		);
 	}
 

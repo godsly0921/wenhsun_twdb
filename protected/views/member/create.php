@@ -30,16 +30,16 @@
         <div class="panel-body">
 
             <div class="form-group">
-                <label for="account" class="col-sm-2 control-label">*會員帳號:</label>
+                <label for="account" class="col-sm-2 control-label">*會員帳號(Email):</label>
                 <div class="col-sm-6">
-                    <input type="text" class="form-control" id="account" name="account" placeholder="會員帳號" value="">
+                    <input type="text" class="form-control" id="account" name="account" placeholder="e.g. member@email.com" value="<?= $data['account'] ?>">
                 </div>
             </div>
 
             <div class="form-group">
                 <label for="name" class="col-sm-2 control-label">*姓名:</label>
                 <div class="col-sm-6">
-                    <input type="text" class="form-control" id="name" name="name" placeholder="姓名" value="">
+                    <input type="text" class="form-control" id="name" name="name" placeholder="姓名" value="<?= $data['name'] ?>">
                 </div>
             </div>
 
@@ -68,13 +68,13 @@
                 <label for="sex" class="col-sm-2 control-label">性別:</label>
                 <div class="col-sm-6">
                     <label class="radio-inline">
-                        <input type="radio" name="gender" value="F">女
+                        <input type="radio" name="gender" value="F" <?php echo ($data['gender'] == 'F') ? 'checked="checked"' : '' ?>>女
                     </label>
                     <label class="radio-inline">
-                        <input type="radio" name="gender" value="M">男
+                        <input type="radio" name="gender" value="M" <?php echo ($data['gender'] == 'M') ? 'checked="checked"' : '' ?>>男
                     </label>
                     <label class="radio-inline">
-                        <input type="radio" name="gender" value="">尚未設定
+                        <input type="radio" name="gender" value="" <?php echo (!in_array($data['gender'], array('F', 'M'))) ? 'checked="checked"' : '' ?>>尚未設定
                     </label>
                 </div>
             </div>
@@ -82,21 +82,14 @@
             <div class="form-group">
                 <label for="phone" class="col-sm-2 control-label">電話:</label>
                 <div class="col-sm-6">
-                    <input type="text" class="form-control" id="phone" name="phone" placeholder="請輸入電話" value="">
+                    <input type="text" class="form-control" id="phone" name="phone" placeholder="請輸入電話" value="<?= $data['phone'] ?>">
                 </div>
             </div>
 
             <div class="form-group">
                 <label for="phone" class="col-sm-2 control-label">行動電話:</label>
                 <div class="col-sm-6">
-                    <input type="text" class="form-control" name="mobile" placeholder="請輸入行動電話" value="">
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label for="email" class="col-sm-2 control-label">*Email:</label>
-                <div class="col-sm-6">
-                    <input type="text" class="form-control" id="email" name="email" placeholder="請輸入電子郵件" value="">
+                    <input type="text" class="form-control" name="mobile" placeholder="請輸入行動電話" value="<?= $data['mobile'] ?>">
                 </div>
             </div>
 
@@ -107,29 +100,47 @@
                         <option>西元年</option>
                         <?php
                         foreach ($years as $value) : ?>
-                            <option value="<?= $value ?>">
-                                <?= $value ?>
-                            </option>
+                            <?php if ($year == $value) : ?>
+                                <option selected="selected" value="<?= $value ?>">
+                                    <?= $value ?>
+                                </option>
+                            <?php else : ?>
+                                <option value="<?= $value ?>">
+                                    <?= $value ?>
+                                </option>
+                            <?php endif; ?>
                         <?php endforeach; ?>
                     </select>
 
-                    <select name="month" class="selectpicker" data-width="fit">
+                    <select name="month" class="selectpicker" data-width="fit">>
                         <option>月</option>
                         <?php
                         foreach ($months as $value) : ?>
-                            <option value="<?= $value ?>">
-                                <?= $value ?>
-                            </option>
+                            <?php if ($month == $value) : ?>
+                                <option selected="selected" value="<?= $value ?>">
+                                    <?= $value ?>
+                                </option>
+                            <?php else : ?>
+                                <option value="<?= $value ?>">
+                                    <?= $value ?>
+                                </option>
+                            <?php endif; ?>
                         <?php endforeach; ?>
                     </select>
 
-                    <select name="day" class="selectpicker" data-width="fit">
+                    <select name="day" class="selectpicker" data-width="fit">>
                         <option>日</option>
                         <?php
                         foreach ($days as $value) : ?>
-                            <option value="<?= $value ?>">
-                                <?= $value ?>
-                            </option>
+                            <?php if ($day == $value) : ?>
+                                <option selected="selected" value="<?= $value ?>">
+                                    <?= $value ?>
+                                </option>
+                            <?php else : ?>
+                                <option value="<?= $value ?>">
+                                    <?= $value ?>
+                                </option>
+                            <?php endif; ?>
                         <?php endforeach; ?>
                     </select>
                 </div>
@@ -138,7 +149,7 @@
             <div class="form-group">
                 <label for="nationality" class="col-sm-2 control-label">國別:</label>
                 <div class="col-sm-6">
-                    <select class="selectpicker countrypicker" id="nationality" name="nationality" data-default="TW" ></select>
+                    <select class="selectpicker countrypicker" id="nationality" name="nationality" data-default="TW" value="<?= $data['nationality'] ?>"></select>
                 </div>
             </div>
 
@@ -152,7 +163,7 @@
             <div class="form-group">
                 <label for="address" class="col-sm-2 control-label">地址:</label>
                 <div class="col-sm-6">
-                    <input type="text" class="form-control" id="address" name="address" placeholder="請輸入詳細地址" value="">
+                    <input type="text" class="form-control" id="address" name="address" placeholder="請輸入詳細地址" value="<?= $data['address'] ?>">
                 </div>
             </div>
 
@@ -160,8 +171,8 @@
                 <label class="col-sm-2 control-label">權限:</label>
                 <div class="col-sm-6">
                     <select name="member_type" class="selectpicker">
-                        <option value="1">一般會員</option>
-                        <option value="2">VIP</option>
+                        <option value="1" <?php echo ($data['member_type'] == "1") ? 'selected="selected"' : '' ?>>一般會員</option>
+                        <option value="2" <?php echo ($data['member_type'] == "2") ? 'selected="selected"' : '' ?>>VIP</option>
                     </select>
                 </div>
             </div>
@@ -209,6 +220,10 @@
         css: ["county form-control", "town form-control"],
         countyName: "county",
         districtName: "town"
+    });
+    $("#twzipcode").twzipcode("set", {
+        "county": "<?php echo $data['county']; ?>",
+        "district": "<?php echo $data['town']; ?>"
     });
 </script>
 
