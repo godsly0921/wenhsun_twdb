@@ -16,6 +16,7 @@
                 <?php endif; ?>
                 <div class="x_panel">
                     <div class="x_title">
+                        <a class="btn btn-default pull-right" href="<?= Yii::app()->createUrl('/author/index');?>">返回</a>
                         <h2>作家編輯</h2><button id="delete-btn" class="btn btn-danger pull-right">刪除</button>
                         <div class="clearfix"></div>
                     </div>
@@ -57,7 +58,7 @@
                                 <label class="control-label col-md-3 col-sm-3 col-xs-12" for="birth">生日
                                 </label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
-                                    <input type="date" value="<?=$data->birth?>" id="birth" name="birth" class="form-control col-md-7 col-xs-12">
+                                    <input type="date" value="<?= $data->birth = str_replace("/", "-", $data->birth) ?>" id="birth" name="birth" class="form-control col-md-7 col-xs-12">
                                 </div>
                             </div>
 
@@ -65,7 +66,7 @@
                                 <label class="control-label col-md-3 col-sm-3 col-xs-12" for="death">卒日
                                 </label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
-                                    <input type="date" value="<?=$data->death?>" id="death" name="death" class="form-control col-md-7 col-xs-12">
+                                    <input type="date" value="<?=$data->death = str_replace("/", "-", $data->death);?>" id="death" name="death" class="form-control col-md-7 col-xs-12">
                                 </div>
                             </div>
 

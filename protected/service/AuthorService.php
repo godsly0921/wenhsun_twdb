@@ -1,5 +1,5 @@
 <?php
-
+//date_default_timezone_set("Asia/Taipei");
 class AuthorService
 {
     public static function Import($file = "")
@@ -44,18 +44,33 @@ class AuthorService
                 $data['gender'] = isset($excel_datas[$i - 1][2]) ? $excel_datas[$i - 1][2] : 'N';
 
                 if (isset($excel_datas[$i - 1][3])) {
-                    if(strtotime($excel_datas[$i - 1][3])){
-                        $excel_datas[$i - 1][3] = date('Y/m/d',strtotime($excel_datas[$i - 1][3]));
+                    if($excel_datas[$i - 1][3]!=''){
+                        $str = $excel_datas[$i - 1][3];
+                        $str_sec = explode("/",$str);
+                        $excel_datas[$i - 1][3] = $str_sec[2].'-'.$str_sec[1].'-'.$str_sec[0];
+
+                        //echo '******';
+                        $excel_datas[$i - 1][3] = date('Y-m-d',strtotime($excel_datas[$i - 1][3].' -1 day'));
+                        //echo '******';
+                       // echo '-----';
+                       // echo date('Y/m/d',));
+                        //$excel_datas[$i - 1][3] = date('Y/m/d',strtotime($excel_datas[$i - 1][3]));
                     } else {
+                        //echo 'A2';
                         $excel_datas[$i - 1][3] = NULL;
                     }
                 } else {
+                    //echo 'A3';
                     $excel_datas[$i - 1][3] = NULL;
                 }
 
+
                 if (isset($excel_datas[$i - 1][4])) {
-                    if(strtotime($excel_datas[$i - 1][4])){
-                        $excel_datas[$i - 1][4] = date('Y/m/d',strtotime($excel_datas[$i - 1][4]));
+                    if($excel_datas[$i - 1][4]!=''){
+                        $str = $excel_datas[$i - 1][4];
+                        $str_sec = explode("/",$str);
+                        $excel_datas[$i - 1][4] = $str_sec[2].'-'.$str_sec[1].'-'.$str_sec[0];
+                        $excel_datas[$i - 1][4] = date('Y-m-d',strtotime($excel_datas[$i - 1][4].' -1 day'));
                     } else {
                         $excel_datas[$i - 1][4] = NULL;
                     }
@@ -87,7 +102,7 @@ class AuthorService
                 $data['home_address'] = isset($excel_datas[$i - 1][11]) ? $excel_datas[$i - 1][11] : '';
                 $data['office_fax'] = isset($excel_datas[$i - 1][12]) ? $excel_datas[$i - 1][12] : '';
                 $data['home_phone'] = isset($excel_datas[$i - 1][13]) ? $excel_datas[$i - 1][13] : '';
-                $data['social_account'] = isset($excel_datas[$i - 1][14]) ? $excel_datas[$i - 1][14] : '';
+                $data['mobile'] = isset($excel_datas[$i - 1][14]) ? $excel_datas[$i - 1][14] : '';
 
 
                 if (isset($excel_datas[$i - 1][15])) {
@@ -112,7 +127,7 @@ class AuthorService
 
                 $data['identity_type'] = isset($excel_datas[$i - 1][15]) ? $excel_datas[$i - 1][15] : '未設定';//**
 
-                $data['mobile'] = isset($excel_datas[$i - 1][16]) ? $excel_datas[$i - 1][16] : '';
+                $data['social_account'] = isset($excel_datas[$i - 1][16]) ? $excel_datas[$i - 1][16] : '';
                 $data['memo'] = isset($excel_datas[$i - 1][17]) ? $excel_datas[$i - 1][17] : '';
                 $data['nationality'] = isset($excel_datas[$i - 1][18]) ? $excel_datas[$i - 1][18] : '';
                 $data['identity_number'] = isset($excel_datas[$i - 1][19]) ? $excel_datas[$i - 1][19] : '';
