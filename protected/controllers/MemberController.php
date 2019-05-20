@@ -565,14 +565,19 @@ class MemberController extends Controller
             $this->redirect('list');
         }
 
+        $years = Common::years();
+        $months = Common::months();
+        $days = Common::days();
         $inputs['account'] = filter_input(INPUT_POST, 'account');
         $inputs['password'] = filter_input(INPUT_POST, 'password');
         $inputs['password_confirm'] = filter_input(INPUT_POST, 'password_confirm');
         $inputs['name'] = filter_input(INPUT_POST, 'name');
-        $inputs['email'] = filter_input(INPUT_POST, 'email');
         $inputs['gender'] = filter_input(INPUT_POST, 'gender');
         $inputs['birthday'] = filter_input(INPUT_POST, 'year') . '-' .
             filter_input(INPUT_POST, 'month') . '-' . filter_input(INPUT_POST, 'day');
+        $inputs['year'] = filter_input(INPUT_POST, 'year');
+        $inputs['month'] = filter_input(INPUT_POST, 'month');
+        $inputs['day'] = filter_input(INPUT_POST, 'day');
         $inputs['phone'] = filter_input(INPUT_POST, 'phone');
         $inputs['mobile'] = filter_input(INPUT_POST, 'mobile');
         $inputs['member_type'] = filter_input(INPUT_POST, 'member_type');
@@ -582,14 +587,26 @@ class MemberController extends Controller
         $inputs['town'] = filter_input(INPUT_POST, 'town');
         $inputs['address'] = filter_input(INPUT_POST, 'address');
 
+        $validator = new MemberValidator();
+        if (!$validator->validateEmail($inputs['account'])) {
+            Yii::app()->session['error_msg'] = array(array('請輸入正確的Email'));
+            $this->render('create', ['data' => $inputs, 'years' => $years, 'months' => $months, 'days' => $days, 'year' => $inputs['year'], 'month' => $inputs['month'], 'day' => $inputs['day'] ]);
+            return;
+        }
+
         $big5Name = iconv("UTF-8", "big5", $inputs['name']);
         $big5Lenght = strlen($big5Name);
 
         if ($big5Lenght > 20) {
             Yii::app()->session['error_msg'] = array(array('中文姓名限制為10個字,英文為20個字'));
-            $this->redirect('create');
-            exit;
+            $this->render('create', ['data' => $inputs, 'years' => $years, 'months' => $months, 'days' => $days, 'year' => $inputs['year'], 'month' => $inputs['month'], 'day' => $inputs['day'] ]);
+            return;
+        }
 
+        if (($inputs['year'] != '' || $inputs['month'] != '' || $inputs['day'] != '') && strlen($inputs['birthday']) != 10){
+            Yii::app()->session['error_msg'] = array(array('生日日期錯誤,請輸入正確日期'));
+            $this->render('create', ['data' => $inputs, 'years' => $years, 'months' => $months, 'days' => $days, 'year' => $inputs['year'], 'month' => $inputs['month'], 'day' => $inputs['day'] ]);
+            return;
         }
 
         $service = new MemberService();
@@ -597,12 +614,11 @@ class MemberController extends Controller
 
         if ($model->hasErrors()) {
             Yii::app()->session['error_msg'] = $model->getErrors();
-            $this->redirect('create');
+            $this->render('create', ['data' => $inputs, 'years' => $years, 'months' => $months, 'days' => $days, 'year' => $inputs['year'], 'month' => $inputs['month'], 'day' => $inputs['day'] ]);
             return;
         } else {
             Yii::app()->session['success'] = '新增會員帳號成功';
             $this->redirect('list');
-            return;
         }
 
     }
@@ -614,11 +630,31 @@ class MemberController extends Controller
         $months = Common::months();
         $days = Common::days();
 
+        $inputs = array();
+        $inputs['account'] = '';
+        $inputs['name'] = '';
+        $inputs['gender'] = '';
+        $inputs['year'] = '';
+        $inputs['month'] = '';
+        $inputs['day'] = '';
+        $inputs['phone'] = '';
+        $inputs['mobile'] = '';
+        $inputs['member_type'] = '1';
+        $inputs['account_type'] = '後台註冊';
+        $inputs['nationality'] = 'TW';
+        $inputs['county'] = '';
+        $inputs['town'] = '';
+        $inputs['address'] = '';
+
         $this->render('create',
             [
                 'years' => $years,
                 'months' => $months,
-                'days' => $days
+                'days' => $days,
+                'data' => $inputs,
+                'year' => '',
+                'month' => '',
+                'day' => ''
             ]
         );
         $this->clearMsg();
@@ -756,6 +792,9 @@ class MemberController extends Controller
         $inputs['gender'] = filter_input(INPUT_POST, 'gender');
         $inputs['birthday'] = filter_input(INPUT_POST, 'year') . '-' .
             filter_input(INPUT_POST, 'month') . '-' . filter_input(INPUT_POST, 'day');
+        $inputs['year'] = filter_input(INPUT_POST, 'year');
+        $inputs['month'] = filter_input(INPUT_POST, 'month');
+        $inputs['day'] = filter_input(INPUT_POST, 'day');
         $inputs['phone'] = filter_input(INPUT_POST, 'phone');
         $inputs['mobile'] = filter_input(INPUT_POST, 'mobile');
         $inputs['member_type'] = filter_input(INPUT_POST, 'member_type');
@@ -768,11 +807,14 @@ class MemberController extends Controller
         $service = new MemberService();
         $model = $service->update($inputs);
 
-        if ($model->hasErrors()) {
-            Yii::app()->session['error_msg'] = $model->getErrors();
-
+        if (($inputs['year'] != '' || $inputs['month'] != '' || $inputs['day'] != '') && strlen($inputs['birthday']) != 10) {
+            Yii::app()->session['error_msg'] = array(array('生日日期錯誤,請輸入正確日期'));
         } else {
-            Yii::app()->session['success_msg'] = '使用者資料設定更新成功';
+            if ($model->hasErrors()) {
+                Yii::app()->session['error_msg'] = $model->getErrors();
+            } else {
+                Yii::app()->session['success_msg'] = '使用者資料設定更新成功';
+            }
         }
 
         $this->redirect('update/' . $inputs['id']);
