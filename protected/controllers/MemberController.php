@@ -788,7 +788,7 @@ class MemberController extends Controller
         $inputs['id'] = filter_input(INPUT_POST, 'id');
         $inputs['account'] = filter_input(INPUT_POST, 'account');
         $inputs['name'] = filter_input(INPUT_POST, 'name');
-        $inputs['email'] = filter_input(INPUT_POST, 'email');
+        $inputs['email'] = filter_input(INPUT_POST, 'account');
         $inputs['gender'] = filter_input(INPUT_POST, 'gender');
         $inputs['birthday'] = filter_input(INPUT_POST, 'year') . '-' .
             filter_input(INPUT_POST, 'month') . '-' . filter_input(INPUT_POST, 'day');
