@@ -640,7 +640,7 @@ class MemberController extends Controller
         $inputs['phone'] = '';
         $inputs['mobile'] = '';
         $inputs['member_type'] = '1';
-        $inputs['account_type'] = '後台註冊';
+        $inputs['account_type'] = '後台建立';
         $inputs['nationality'] = 'TW';
         $inputs['county'] = '';
         $inputs['town'] = '';
