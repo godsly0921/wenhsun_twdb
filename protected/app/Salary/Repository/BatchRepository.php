@@ -10,7 +10,6 @@ class BatchRepository
 {
     public function fetchBatch()
     {
-        $list = SalaryReportBatch::model()->byUpdateAt()->findAll();
-        return $list;
+        return SalaryReportBatch::model()->byUpdateAt()->findAll();
     }
 }
