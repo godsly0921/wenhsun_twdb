@@ -12,10 +12,17 @@ use Throwable;
 use Wenhsun\Salary\Entity\SalaryReportBatch;
 use Wenhsun\Salary\Entity\SalaryReportEmployee;
 use Wenhsun\Salary\Exception\SalaryReportServiceException;
+use Wenhsun\Salary\Repository\BatchRepository;
 use Yii;
 
 class SalaryReportService
 {
+    public function getBatchList()
+    {
+        $repo = new BatchRepository();
+        return $repo->fetchBatch();
+    }
+
     public function addBatch(SalaryReportBatch $ent)
     {
         $now = Common::now();
