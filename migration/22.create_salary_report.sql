@@ -1,14 +1,12 @@
 CREATE TABLE `salary_report_batch` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `year` varchar(12) NOT NULL,
-  `month` float NOT NULL,
+  `batch_id` int(11) unsigned NOT NULL,
   `create_at` datetime NOT NULL,
   `update_at` datetime NOT NULL,
-PRIMARY KEY (`id`)
+PRIMARY KEY (`batch_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE `salary_report` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `id` varchar(32) NOT NULL,
   `employee_id` varchar(12) NOT NULL,
   `salary` float NOT NULL,
   `draft_allowance` float NOT NULL,
