@@ -101,34 +101,40 @@ class AttendanceService
                     count($record);
                     $employee_id = $value->id;
 
-                    if (!empty($record)) {
-                        //---------------整理預計要寫入的參數資料
 
-                        $i = 1;
-                        $total = count($record);
-                        foreach ($record as $k => $v) {
-                            if ($i == 1 && $total != 1) {//第一筆
-                                $first_time = $v->flashDate;
+                        if (!empty($record)) {
+                            //---------------整理預計要寫入的參數資料
+
+                            $i = 1;
+                            $total = count($record);
+                            foreach ($record as $k => $v) {
+                                if ($i == 1 && $total != 1) {//第一筆
+                                    $first_time = $v->flashDate;
+                                }
+                                if ($i == $total) {//最後一筆
+                                    $last_time = $v->flashDate;
+                                }
+                                if ($i == 1 && $i == $total) {//最後一筆
+                                    $first_time = $v->flashDate;
+                                    $last_time = $v->flashDate;
+                                }
+                                $i++;
                             }
-                            if ($i == $total) {//最後一筆
-                                $last_time = $v->flashDate;
+
+                            //避免奇怪的錯誤發生 在轉換一次
+                            if (strtotime($first_time) > strtotime($last_time)) {
+                                $first_tmp = $first_time;
+                                $last_tmp = $last_time;
+                                $first_time = $last_tmp;
+                                $last_time = $first_tmp;
+
                             }
-                            if ($i == 1 && $i == $total) {//最後一筆
-                                $first_time = $v->flashDate;
-                                $last_time = $v->flashDate;
-                            }
-                            $i++;
+                        }else{
+                            $first_time = '0000-00-00 00:00:00';
+                            $last_time = '0000-00-00 00:00:01';
                         }
 
 
-                        //避免奇怪的錯誤發生 在轉換一次
-                        if (strtotime($first_time) > strtotime($last_time)) {
-                            $first_tmp = $first_time;
-                            $last_tmp = $last_time;
-                            $first_time = $last_tmp;
-                            $last_time = $first_tmp;
-
-                        }
 
 
                         $special_attendance = false; // false 表示為一般出勤日
@@ -157,7 +163,7 @@ class AttendanceService
                                         $abnormal_type = 1;//正常
                                         $abnormal .= '特殊出勤日 加班，上班時數超過十小時';
                                         $abnormal .= ' ' . $special_attendance_description;
-                                    } elseif ($diff_time < 32400 && $diff_time != 0) {
+                                    } elseif ($diff_time < 32400 && $diff_time > 2) {
                                         $abnormal_type = 1;//異常需填寫異常單
                                         $abnormal .= '特殊出勤日 異常，上班時數小於上班八小時';
                                         $abnormal .= ' ' . $special_attendance_description;
@@ -180,7 +186,7 @@ class AttendanceService
                                         $abnormal_type = 1;//正常
                                         $abnormal .= '特殊出勤日 加班，上班時數超過十小時';
                                         $abnormal .= ' ' . $special_attendance_description;
-                                    } elseif ($diff_time < 32400 && $diff_time != 0) {
+                                    } elseif ($diff_time < 32400 && $diff_time > 2) {
                                         $abnormal_type = 1;//異常需填寫異常單
                                         $abnormal .= '特殊出勤日 異常，上班時數小於上班八小時';
                                         $abnormal .= ' ' . $special_attendance_description;
@@ -203,7 +209,7 @@ class AttendanceService
                                         $abnormal_type = 1;//正常
                                         $abnormal .= '特殊出勤日 加班，上班時數超過十小時';
                                         $abnormal .= ' ' . $special_attendance_description;
-                                    } elseif ($diff_time < 32400 && $diff_time != 0) {
+                                    } elseif ($diff_time < 32400 && $diff_time > 2) {
                                         $abnormal_type = 1;//異常需填寫異常單
                                         $abnormal .= '特殊出勤日 異常，上班時數小於上班八小時';
                                         $abnormal .= ' ' . $special_attendance_description;
@@ -226,7 +232,7 @@ class AttendanceService
                                         $abnormal_type = 1;//正常
                                         $abnormal .= '特殊出勤日 加班，上班時數超過十小時';
                                         $abnormal .= ' ' . $special_attendance_description;
-                                    } elseif ($diff_time < 32400 && $diff_time != 0) {
+                                    } elseif ($diff_time < 32400 && $diff_time > 2) {
                                         $abnormal_type = 1;//異常需填寫異常單
                                         $abnormal .= '特殊出勤日 異常，上班時數小於上班八小時';
                                         $abnormal .= ' ' . $special_attendance_description;
@@ -249,7 +255,7 @@ class AttendanceService
                                         $abnormal_type = 1;//正常
                                         $abnormal .= '特殊出勤日 加班，上班時數超過十小時';
                                         $abnormal .= ' ' . $special_attendance_description;
-                                    } elseif ($diff_time < 32400 && $diff_time != 0) {
+                                    } elseif ($diff_time < 32400 && $diff_time > 2) {
                                         $abnormal_type = 1;//異常需填寫異常單
                                         $abnormal .= '特殊出勤日 異常，上班時數小於上班八小時';
                                         $abnormal .= ' ' . $special_attendance_description;
@@ -272,7 +278,7 @@ class AttendanceService
                                         $abnormal_type = 1;//正常
                                         $abnormal .= '特殊出勤日 加班，上班時數超過十小時';
                                         $abnormal .= ' ' . $special_attendance_description;
-                                    } elseif ($diff_time < 32400 && $diff_time != 0) {
+                                    } elseif ($diff_time < 32400 && $diff_time > 2) {
                                         $abnormal_type = 1;//異常需填寫異常單
                                         $abnormal .= '特殊出勤日 異常，上班時數小於上班八小時';
                                         $abnormal .= ' ' . $special_attendance_description;
@@ -295,7 +301,7 @@ class AttendanceService
                                         $abnormal_type = 1;//正常
                                         $abnormal .= '特殊出勤日 加班，上班時數超過十小時';
                                         $abnormal .= ' ' . $special_attendance_description;
-                                    } elseif ($diff_time < 32400 && $diff_time != 0) {
+                                    } elseif ($diff_time < 32400 && $diff_time > 2) {
                                         $abnormal_type = 1;//異常需填寫異常單
                                         $abnormal .= '特殊出勤日 異常，上班時數小於上班八小時';
                                         $abnormal .= ' ' . $special_attendance_description;
@@ -320,7 +326,7 @@ class AttendanceService
                                         $abnormal_type = 1;
                                         $abnormal .= '特殊休假日 加班，上班時數超過十小時';
                                         $abnormal .= ' ' . $special_attendance_description;
-                                    } elseif ($diff_time < 32400 && $diff_time != 0) {
+                                    } elseif ($diff_time < 32400 && $diff_time > 2) {
                                         $abnormal_type = 1;
                                         $abnormal .= '特殊休假日 異常，上班時數小於上班八小時';
                                         $abnormal .= ' ' . $special_attendance_description;
@@ -343,7 +349,7 @@ class AttendanceService
                                         $abnormal_type = 1;
                                         $abnormal .= '特殊休假日 加班，上班時數超過十小時';
                                         $abnormal .= ' ' . $special_attendance_description;
-                                    } elseif ($diff_time < 32400 && $diff_time != 0) {
+                                    } elseif ($diff_time < 32400 && $diff_time > 2) {
                                         $abnormal_type = 1;//異常需填寫異常單
                                         $abnormal .= '特殊休假日 異常，上班時數小於上班八小時';
                                         $abnormal .= ' ' . $special_attendance_description;
@@ -366,7 +372,7 @@ class AttendanceService
                                         $abnormal_type = 1;
                                         $abnormal .= '特殊休假日 加班，上班時數超過十小時';
                                         $abnormal .= ' ' . $special_attendance_description;
-                                    } elseif ($diff_time < 32400 && $diff_time != 0) {
+                                    } elseif ($diff_time < 32400 && $diff_time > 2) {
                                         $abnormal_type = 1;//異常需填寫異常單
                                         $abnormal .= '特殊休假日 異常，上班時數小於上班八小時';
                                         $abnormal .= ' ' . $special_attendance_description;
@@ -389,7 +395,7 @@ class AttendanceService
                                         $abnormal_type = 1;
                                         $abnormal .= '特殊休假日 加班，上班時數超過十小時';
                                         $abnormal .= ' ' . $special_attendance_description;
-                                    } elseif ($diff_time < 32400 && $diff_time != 0) {
+                                    } elseif ($diff_time < 32400 && $diff_time > 2) {
                                         $abnormal_type = 1;
                                         $abnormal .= '特殊休假日 異常，上班時數小於上班八小時';
                                         $abnormal .= ' ' . $special_attendance_description;
@@ -412,7 +418,7 @@ class AttendanceService
                                         $abnormal_type = 1;
                                         $abnormal .= '特殊休假日 加班，上班時數超過十小時';
                                         $abnormal .= ' ' . $special_attendance_description;
-                                    } elseif ($diff_time < 32400 && $diff_time != 0) {
+                                    } elseif ($diff_time < 32400 && $diff_time > 2) {
                                         $abnormal_type = 1;
                                         $abnormal .= '特殊休假日 異常，上班時數小於上班八小時';
                                         $abnormal .= ' ' . $special_attendance_description;
@@ -435,7 +441,7 @@ class AttendanceService
                                         $abnormal_type = 1;
                                         $abnormal .= '特殊休假日 加班，上班時數超過十小時';
                                         $abnormal .= ' ' . $special_attendance_description;
-                                    } elseif ($diff_time < 32400 && $diff_time != 0) {
+                                    } elseif ($diff_time < 32400 && $diff_time > 2) {
                                         $abnormal_type = 1;
                                         $abnormal .= '特殊休假日 異常，上班時數小於上班八小時';
                                         $abnormal .= ' ' . $special_attendance_description;
@@ -458,7 +464,7 @@ class AttendanceService
                                         $abnormal_type = 1;
                                         $abnormal .= '特殊休假日 加班，上班時數超過十小時';
                                         $abnormal .= ' ' . $special_attendance_description;
-                                    } elseif ($diff_time < 32400 && $diff_time != 0) {
+                                    } elseif ($diff_time < 32400 && $diff_time > 2) {
                                         $abnormal_type = 1;//異常需填寫異常單
                                         $abnormal .= '特殊休假日 異常，上班時數小於上班八小時';
                                         $abnormal .= ' ' . $special_attendance_description;
@@ -482,7 +488,7 @@ class AttendanceService
                                 } elseif ($diff_time > 32400 && $diff_time > 39601) {
                                     $abnormal_type = 1;
                                     $abnormal .= '非出勤日 異常上班，上班時數超過十小時';
-                                } elseif ($diff_time < 32400 && $diff_time != 0) {
+                                } elseif ($diff_time < 32400 && $diff_time > 2) {
                                     $abnormal_type = 1;
                                     $abnormal .= '非出勤日 異常上班，上班時數小於上班八小時';
                                 } elseif ($diff_time == 0) {
@@ -590,7 +596,7 @@ class AttendanceService
                                 } elseif ($diff_time > 32400 && $diff_time > 39601) {
                                     $abnormal_type = 1;
                                     $abnormal .= '非出勤日 異常上班，上班時數超過十小時';
-                                } elseif ($diff_time < 32400 && $diff_time != 0) {
+                                } elseif ($diff_time < 32400 && $diff_time > 2) {
                                     $abnormal_type = 1;
                                     $abnormal .= '非出勤日 異常上班，上班時數小於上班八小時';
                                 } elseif ($diff_time == 0) {
@@ -603,16 +609,18 @@ class AttendanceService
                             };
                         }
 
-                        //假如第一筆時間大於9:30 //加註 遲到
-                        if(strtotime($first_time) >= strtotime(date($day . ' 09:31:00'))){
-                            $abnormal .= ' 遲到';
-                        }
+                        if($diff_time != 1){//0 2~以上
+                            //假如第一筆時間大於9:30 //加註 遲到
+                            if(strtotime($first_time) >= strtotime(date($day . ' 09:31:00'))){
+                                $abnormal .= ' 遲到';
+                            }
 
-                        //假如第一筆時間小於18:00 //加註 早退
-                        if(strtotime($last_time) < strtotime(date($day . ' 18:00:00'))){
-                            $abnormal .= ' 早退';
-                        }
+                            //假如第一筆時間小於18:00 //加註 早退
+                            if(strtotime($last_time) < strtotime(date($day . ' 18:00:00'))){
+                                $abnormal .= ' 早退';
+                            }
 
+                        }
 
                         /*
                         var_dump('----start----');
@@ -633,13 +641,7 @@ class AttendanceService
                         $mail = new MailService();
                         $mail->sendMail($abnormal_type,$employee_id,$abnormal,$model->id);
                         Yii::log(date("Y-m-d H:i:s").'RECORD ID'.$model->id, CLogger::LEVEL_INFO);
-                    } else {
-                        $attendance_record_service = new AttendancerecordService();
-                        $model = $attendance_record_service->create($employee_id, $day, '', '', $abnormal_type = 1, $abnormal = '當天沒有出勤資料');
-                        $mail = new MailService();
-                        $mail->sendMail($abnormal_type,$employee_id,$abnormal,$model->id);
-                        Yii::log(date("Y-m-d H:i:s").'RECORD ID'.$model->id, CLogger::LEVEL_INFO);
-                    }
+
 
                 }else{
 
