@@ -55,7 +55,7 @@
                                     <select class="form-control" id="role" name="role">
                                         <?php if(!empty($roles)):?>
                                             <?php foreach ($roles as $role):?>
-                                                <option value="<?=$role['id']?>"><?=$role['group_name']?></option>
+                                                <option value="<?=$role['group_number']?>"><?=$role['group_name']?></option>
                                             <?php endforeach;?>
                                         <?php else:?>
                                             <option value="">無可用角色</option>
