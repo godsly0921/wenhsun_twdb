@@ -29,13 +29,19 @@ class OrderService
 
     public function findAllOrders(){
         $order_data = array();
-        $sql = "SELECT o.order_id,p.product_name,oi.cost_total,o.order_status,o.order_datetime FROM `orders` o JOIN orders_item oi on o.order_id=oi.order_id LEFT JOIN product p on oi.product_id=p.product_id";
+        $sql = "SELECT o.order_id,p.product_name,oi.cost_total,o.order_status,o.order_datetime,oi.single_id,oi.size_type FROM `orders` o JOIN orders_item oi on o.order_id=oi.order_id LEFT JOIN product p on oi.product_id=p.product_id";
         $all_order = Yii::app()->db->createCommand($sql)->queryAll();
         if($all_order){
             foreach ($all_order as $key => $value) {
+                $product_name = '';
+                if($value['product_name']!=''){
+                    $product_name = $value['product_name'];
+                }else{
+                    $product_name = "單圖：" . $value['single_id'] . "；尺寸：" . $value['size_type'];
+                }
                 $order_data[] = array(
                     'order_id' => $value['order_id'],
-                    'product_name' => $value['product_name'],
+                    'product_name' => $product_name,
                     'cost_total' => $value['cost_total'],
                     'order_status' => OrderService::$order_status[$value['order_status']],
                     'creatorder_datetimee_time' => $value['order_datetime']
