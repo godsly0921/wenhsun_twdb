@@ -7,69 +7,44 @@
  */
 class ReportService
 {
-    public function countEachdayUpload(){
-        $sql = "select count(*) as each_day_count,DATE_FORMAT(create_time,'%Y-%m-%d') as create_day from single group by DATE_FORMAT(create_time,'%Y-%m-%d')";
+    public function countEachdayUpload(){// 統計近 20 天的上圖張數
+        $sql = "select count(*) as each_day_count,create_time as create_day from single group by DATE_FORMAT(create_time,'%Y-%m-%d') limit 20";
         $result = Yii::app()->db->createCommand($sql)->queryAll();
         $date = array();
+        date_default_timezone_set("Asia/Taipei");
         foreach ($result as $key => $value) {
-            $date[] = array(strtotime($value['create_day']." 00:00:00"),(int)$value['each_day_count']);
+            $create_day = date_create($value['create_day']);
+            $date[] = array(date_format($create_day,"D M j Y 00:00:00 TO"),(int)$value['each_day_count']);
         }
         return json_encode($date);
     }
 
-    public function update( $input ){
-        $model = Product::model()->findByPk($input['product_id']);
-        $model->product_name = $input['product_name'];
-        $model->coupon_id = $input['coupon_id'];
-        $model->pic_point = $input['pic_point'];
-        $model->product_type = $input['product_type'];
-        $model->pic_number = $input['pic_number'];
-        $model->price = $input['price'];
-        $model->status = $input['status'];
-        $model->update_time = date('Y-m-d H:i:s');
-        $model->update_account_id = Yii::app()->session['uid'];
-        // var_dump($model->getErrors());exit();
-        if (!$model->validate()) {
-            return $model;
-        }
-
-        if (!$model->hasErrors()) {
-            if( $model->save() ){
-                return array(true,'修改成功',$model);         
-            }else{       
-                return array(false,$model->getErrors());
-            }
-        }
-        
-        return $model;
+    public function countSingleSize(){
+        $sql = "select count(*) as total from single_size";
+        $result = Yii::app()->db->createCommand($sql)->queryAll();
+        return $result[0];
     }
-
-    public function create( $input ){
-        $model = new Product();
-        $model->product_name = $input['product_name'];
-        $model->coupon_id = $input['coupon_id'];
-        $model->pic_point = $input['pic_point'];
-        $model->product_type = $input['product_type'];
-        $model->pic_number = $input['pic_number'];
-        $model->price = $input['price'];
-        $model->status = $input['status'];
-        $model->create_time = date('Y-m-d H:i:s');
-        $model->create_account_id = Yii::app()->session['uid'];
-        // var_dump($model->getErrors());exit();
-        if (!$model->validate()) {
-            return $model;
-        }
-
-        if (!$model->hasErrors()) {
-            if( $model->save() ){
-                return array(true,'新增成功');         
-            }else{       
-                return array(false,$model->getErrors());
-            }
-        }
-        
-        return $model;
+    public function countSingle(){
+        $sql = "select count(*) as total from single";
+        $result = Yii::app()->db->createCommand($sql)->queryAll();
+        return $result[0];
     }
+    public function countSinglePublish(){
+        $sql = "select count(*) as total from single where publish=1";
+        $result = Yii::app()->db->createCommand($sql)->queryAll();
+        return $result[0];
+    }
+    public function topProfile(){
+        $sql = "select count(*) as each_day_count,DATE_FORMAT(create_time,'%Y-%m-%d') as create_day from single group by DATE_FORMAT(create_time,'%Y-%m-%d') order by each_day_count desc limit 5";
+        $result = Yii::app()->db->createCommand($sql)->queryAll();
+        return $result;
+    }
+    public function getSumOrder(){
+        $sql= "SELECT SUM(cost_total) as order_total,(select sum(cost_total) from orders_item where order_category=1) as point_total,(select sum(cost_total) from orders_item where order_category=2) as sub_total,(select sum(cost_total) from orders_item where order_category=3) as single_total FROM `orders_item`"
+        $result = Yii::app()->db->createCommand($sql)->queryAll();
+        return $result;
+    }
+    
 
     public function findById($id)
     {
