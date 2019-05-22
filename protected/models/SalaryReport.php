@@ -12,8 +12,21 @@ class SalaryReport extends CActiveRecord
     public function rules()
     {
         return [
-            ['year', 'required'],
-            ['month', 'required'],
+            ['employee_id', 'required'],
+            ['salary', 'required'],
+            ['draft_allowance', 'required'],
+            ['traffic_allowance', 'required'],
+            ['overtime_wage', 'required'],
+            ['project_allowance', 'required'],
+            ['taxable_salary_total', 'required'],
+            ['tax_free_overtime_wage', 'required'],
+            ['salary_total', 'required'],
+            ['health_insurance', 'required'],
+            ['labor_insurance', 'required'],
+            ['pension', 'required'],
+            ['deduction_total', 'required'],
+            ['real_salary', 'required'],
+            ['status', 'required'],
         ];
     }
 
