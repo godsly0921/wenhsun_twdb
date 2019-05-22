@@ -40,7 +40,7 @@ class ReportService
         return $result;
     }
     public function getSumOrder(){
-        $sql= "SELECT SUM(cost_total) as order_total,(select sum(cost_total) from orders_item where order_category=1) as point_total,(select sum(cost_total) from orders_item where order_category=2) as sub_total,(select sum(cost_total) from orders_item where order_category=3) as single_total FROM `orders_item`"
+        $sql= "SELECT SUM(cost_total) as order_total,(select sum(cost_total) from orders_item where order_category=1) as point_total,(select sum(cost_total) from orders_item where order_category=2) as sub_total,(select sum(cost_total) from orders_item where order_category=3) as single_total FROM `orders_item`";
         $result = Yii::app()->db->createCommand($sql)->queryAll();
         return $result;
     }
