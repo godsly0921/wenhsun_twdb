@@ -121,8 +121,8 @@ unset( Yii::app()->session['success_msg'] );
                                     <tr>
                                         <td><?=$value['single_id']?></td>
                                         <td><?=$value['size_type']?></td>
-                                        <td><button class="btn btn-primary"><i class="fa fa-download"></i></button></td>
-                                        <td><?=$value['description']?></td>
+                                        <td><a href="../../image_storage/authoriztion.pdf"><button class="btn btn-primary"><i class="fa fa-download"></i></button></td>
+                                        <td><?=$value['description']?></a></td>
                                         <td><?=$value['cost']?></td>
                                     </tr>
                                     <?php }?>
