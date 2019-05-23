@@ -35,7 +35,10 @@ class SalaryReportCommand extends CConsoleCommand
 
             $salaryReportEmployee = new SalaryReportEmployee(
                 Uuid::gen(),
+                $batchId,
                 $employee['employee_id'],
+                $employee['user_name'],
+                $employee['name'],
                 (float)$employee['salary'],
                 0,
                 0,

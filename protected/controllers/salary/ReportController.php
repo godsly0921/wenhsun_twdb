@@ -20,12 +20,18 @@ class ReportController extends Controller
 
     public function actionBatch($batchId)
     {
+        $serv = new SalaryReportService();
+        $list = $serv->getListByBatch($batchId);
 
+        $this->render('batch', ['list' => $list, 'batch_id' => $batchId]);
     }
 
     public function actionEmployee($batchId, $employeeId)
     {
+        $serv = new SalaryReportService();
+        $data = $serv->findByBatchAndEmployeeId($batchId, $employeeId);
 
+        $this->render('employee', ['data' => $data, 'batch_id' => $batchId]);
     }
 
     public function actionUpdate()

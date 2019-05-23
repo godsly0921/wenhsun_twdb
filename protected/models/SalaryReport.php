@@ -12,7 +12,10 @@ class SalaryReport extends CActiveRecord
     public function rules()
     {
         return [
+            ['batch_id', 'required'],
             ['employee_id', 'required'],
+            ['employee_login_id', 'required'],
+            ['employee_name', 'required'],
             ['salary', 'required'],
             ['draft_allowance', 'required'],
             ['traffic_allowance', 'required'],

@@ -10,7 +10,27 @@ class SalaryReportEmployee
     const SET_SALARY = "OKZ";
 
     private $id;
+    private $batchId;
     private $employeeId;
+    private $employeeLoginId;
+
+    /**
+     * @return mixed
+     */
+    public function getEmployeeLoginId()
+    {
+        return $this->employeeLoginId;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEmployeeName()
+    {
+        return $this->employeeName;
+    }
+
+    private $employeeName;
     private $salary;
     private $draftAllowance;
     private $trafficAllowance;
@@ -25,7 +45,10 @@ class SalaryReportEmployee
 
     public function __construct(
         $id,
+        $batchId,
         $employeeId,
+        $employeeLoginId,
+        $employeeName,
         $salary,
         $draftAllowance,
         $trafficAllowance,
@@ -37,7 +60,10 @@ class SalaryReportEmployee
         $pension
     ) {
         $this->id = $id;
+        $this->batchId = $batchId;
         $this->employeeId = $employeeId;
+        $this->employeeLoginId = $employeeLoginId;
+        $this->employeeName = $employeeName;
         $this->salary = $salary;
         $this->draftAllowance = $draftAllowance;
         $this->trafficAllowance = $trafficAllowance;
@@ -55,6 +81,11 @@ class SalaryReportEmployee
     public function getId()
     {
         return $this->id;
+    }
+
+    public function getBatchId()
+    {
+        return $this->batchId;
     }
 
     /**
