@@ -640,7 +640,7 @@ class AttendanceService
                         $model = $attendance_record_service->create($employee_id, $day, $first_time, $last_time, $abnormal_type, $abnormal);
                         $mail = new MailService();
                         $mail->sendMail($abnormal_type,$employee_id,$abnormal,$model->id);
-                        Yii::log(date("Y-m-d H:i:s").'RECORD ID'.$model->id, CLogger::LEVEL_INFO);
+                        Yii::log(date("Y-m-d H:i:s").'Attendance Record RECORD ID'.$model->id, CLogger::LEVEL_INFO);
 
 
                 }else{
