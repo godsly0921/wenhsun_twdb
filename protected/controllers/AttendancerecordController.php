@@ -47,11 +47,6 @@ class AttendancerecordController extends Controller
 
         }
 
-       // var_dump($idarr);
-       // var_dump($cardarrs);
-
-
-        // 日期
         if (isset($_POST[ 'date_start' ]) && !empty($_POST[ 'date_start' ])) {
 
             $choose_start = $_POST[ 'date_start' ] . ' 00:00:00';
@@ -170,7 +165,7 @@ class AttendancerecordController extends Controller
                 ->setCellValue( 'D' . $i, $value[ 'last_time' ] )
                 ->setCellValue( 'E' . $i, $value[ 'abnormal_type' ] )
                 ->setCellValue( 'F' . $i, $value[ 'abnormal' ] )
-                ->setCellValue( 'G' . $i, $value[ 'create_at' ] )
+                ->setCellValue( 'G' . $i, $value[ 'att_create_at' ] )
                 ->setCellValue( 'H' . $i, $value[ 'update_at' ] );
             $i++;
 
