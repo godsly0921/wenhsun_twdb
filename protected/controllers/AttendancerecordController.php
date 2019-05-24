@@ -97,7 +97,7 @@ class AttendancerecordController extends Controller
                 }
                 $temp['abnormal_type'] = $value['abnormal_type'];
                 $temp['abnormal'] = $value['abnormal'];
-                $temp['create_at'] = $value['create_at'];
+                $temp['att_create_at'] = $value['att_create_at'];
                 $temp['update_at'] = $value['update_at'];
 
                 array_push($finaldata, $temp);

@@ -13,7 +13,7 @@ class MailService
         $model = Mail::model()->findAll();
         return $model;
     }
-    
+
     /**
      * @param array $inputs
      * @return CActiveRecord
