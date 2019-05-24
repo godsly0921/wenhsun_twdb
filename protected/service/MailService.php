@@ -13,40 +13,7 @@ class MailService
         $model = Mail::model()->findAll();
         return $model;
     }
-
-    /**
-     * @param array $input
-     * @return contact
-     */
-    public function create(array $inputs)
-    {
-        $model = new Specialcase();
-        $model->title = $inputs['title'];
-        $model->member_id = (int)$inputs['member_id'];
-        $model->application_time = $inputs['application_time'];
-        $model->category = $inputs['category'];
-        $model->approval_status = $inputs['approval_status'];
-        $model->approval_time = $inputs['approval_time'];
-        $model->approval_account_id = $inputs['approval_account_id'];
-        $model->member_ip = $inputs['member_ip'];
-        $model->msg = $inputs['msg'];
-
-        if (!$model->validate()) {
-            return $model;
-        }
-
-        if (!$model->hasErrors()) {
-            $success = $model->save();
-        }
-
-        if ($success === false) {
-            $model->addError('save_fail', '新增失敗');
-            return $model;
-        }
-
-        return $model;
-    }
-
+    
     /**
      * @param array $inputs
      * @return CActiveRecord
@@ -69,12 +36,11 @@ class MailService
         return $model;
     }
 
-    public function sendMail($emailType, $employeeId, $message, $id)
+    public function sendMail($email_type, $employee_email, $message, $id,$employee_name)
     {
         try {
             // 管理者信箱
-            $adminEmail = $this->findAllEmail();
-            $user = EmployeeService::findEmployeeId($employeeId);
+            $admin_email = $this->findAllEmail();
 
             $mail = new PHPMailer();
             $mail->IsSMTP();
@@ -87,33 +53,38 @@ class MailService
             $mail->Password = 'cute0921';
             $mail->From = 'wenhsun0509@gmail.com';
             $mail->FromName = '文訊雜誌社人資系統';
-            $mail->addAddress($user->email);
+            $mail->addAddress($employee_email);
 
-            $mail->addCC(isset($adminEmail->addressee_1) ? $adminEmail->addressee_1 : 'godsly0921@gmail.com');
-            $mail->addCC(isset($adminEmail->addressee_2) ? $adminEmail->addressee_2 : 'godsly0921@gmail.com');
-            $mail->addCC(isset($adminEmail->addressee_3) ? $adminEmail->addressee_3 : 'godsly0921@gmail.com');
+            $mail->addCC(isset($admin_email->addressee_1) ? $admin_email->addressee_1 : 'godsly0921@gmail.com');
+            $mail->addCC(isset($admin_email->addressee_2) ? $admin_email->addressee_2 : 'godsly0921@gmail.com');
+            $mail->addCC(isset($admin_email->addressee_3) ? $admin_email->addressee_3 : 'godsly0921@gmail.com');
 
             $mail->IsHTML(true);
-            if ($emailType == 0) {
+            if ($email_type == 0) {
                 $mail->Subject = '出勤通知:出勤正常';
                 $mail->Body =
-                    '<h2>親愛的' . $user->name . '您好:<h2>
+                    '<h2>親愛的' . $employee_name . '您好:<h2>
                  <p>提醒您，您昨天的出勤是正常。<br>詳細資訊如以下'
                     . $message . '<br><br>' .
                     '文訊雜誌社人資系統敬啟<br><br>' .
                     '備註：此信箱為公告用信箱，請勿回信，若有疑問，請洽HR。謝謝。</p>';
-            } else if ($emailType == 1) {
+            } else if ($email_type == 1) {
                 $mail->Subject = '出勤通知:出勤異常';
                 $mail->Body =
-                    '<h2>親愛的' . $user->name . '您好:<h2>' .
+                    '<h2>親愛的' . $employee_name . '您好:<h2>' .
                     '<p>提醒您，您昨天的出勤是異常。<br>詳細資訊如以下'
                     . $message . '<br><br>' .
                     '<a href="http://192.168.0.160/wenhsun_hr/attendancerecord/update/' . $id . '">請點擊回覆異常</a>' .
                     '文訊雜誌社人資系統敬啟<br>' .
                     '備註：此信箱為公告用信箱，請勿回信，若有疑問，請洽HR。謝謝。</p>';
             }
-            $mail->Send();
-            return;
+
+            if($mail->Send()){
+                return true;
+            }else{
+                return false;
+            }
+
 
         } catch (Exception $e) {
             Yii::log(date('Y-m-d H:i:s') . " Email 01 error write exception {$e->getTraceAsString()}", CLogger::LEVEL_INFO);
@@ -126,7 +97,7 @@ class MailService
     {
         try {
             // 管理者信箱
-            $adminEmail = $this->findAllEmail();
+            $admin_email = $this->findAllEmail();
 
             $mail = new PHPMailer();
             $mail->IsSMTP();
@@ -141,9 +112,9 @@ class MailService
             $mail->FromName = '文訊雜誌社人資系統';
             $mail->addAddress('godsly0921@gmail.com');
 
-            $mail->addCC(isset($adminEmail->addressee_1) ? $adminEmail->addressee_1 : 'godsly0921@gmail.com');
-            $mail->addCC(isset($adminEmail->addressee_2) ? $adminEmail->addressee_2 : 'godsly0921@gmail.com');
-            $mail->addCC(isset($adminEmail->addressee_3) ? $adminEmail->addressee_3 : 'godsly0921@gmail.com');
+            $mail->addCC(isset($admin_email->addressee_1) ? $admin_email->addressee_1 : 'godsly0921@gmail.com');
+            $mail->addCC(isset($admin_email->addressee_2) ? $admin_email->addressee_2 : 'godsly0921@gmail.com');
+            $mail->addCC(isset($admin_email->addressee_3) ? $admin_email->addressee_3 : 'godsly0921@gmail.com');
 
             $mail->IsHTML(true);
             if ($emailType == 0) {
@@ -167,8 +138,12 @@ class MailService
                     '文訊雜誌社人資系統敬啟<br><br>' .
                     '備註：此信箱為公告用信箱，請勿回信，若有疑問，請洽HR。謝謝。</p>';
             }
-            $mail->Send();
-            return;
+
+            if($mail->Send()){
+                return true;
+            }else{
+                return false;
+            }
         } catch (Exception $e) {
             Yii::log(date('Y-m-d H:i:s') . " Email 02 error write exception {$e->getTraceAsString()}", CLogger::LEVEL_INFO);
         }

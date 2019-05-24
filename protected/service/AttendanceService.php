@@ -100,6 +100,8 @@ class AttendanceService
                     $abnormal = '';
                     count($record);
                     $employee_id = $value->id;
+                    $employee_email = $value->email;
+                    $employee_name = $value->name;
 
 
                         if (!empty($record)) {
@@ -639,8 +641,13 @@ class AttendanceService
                         $attendance_record_service = new AttendancerecordService();
                         $model = $attendance_record_service->create($employee_id, $day, $first_time, $last_time, $abnormal_type, $abnormal);
                         $mail = new MailService();
-                        $mail->sendMail($abnormal_type,$employee_id,$abnormal,$model->id);
-                        Yii::log(date("Y-m-d H:i:s").'Attendance Record RECORD ID'.$model->id, CLogger::LEVEL_INFO);
+                        $mail_type = $mail->sendMail($abnormal_type,$employee_email,$abnormal,$model->id,$employee_name);
+                        if($mail_type){
+                            Yii::log(date("Y-m-d H:i:s").'Attendance Record RECORD ID'.$model->id, CLogger::LEVEL_INFO);
+                        }else{
+                            Yii::log(date("Y-m-d H:i:s").'Attendance Error Record RECORD ID'.$model->id, CLogger::LEVEL_INFO);
+                        }
+
 
 
                 }else{
