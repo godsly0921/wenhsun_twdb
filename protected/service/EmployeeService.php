@@ -17,7 +17,7 @@ class EmployeeService
 
     public static function findEmployeeId($employee_id)
     {
-        $result = Employee::model()->find([
+        $result = Employee::model()->findByPk([
             'condition' => 'id=:id',
             'params' => [
                 ':id' => $employee_id,

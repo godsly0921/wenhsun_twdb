@@ -1,4 +1,5 @@
 <?php
+
 class MailService
 {
     public function findMailById($id)
@@ -10,39 +11,6 @@ class MailService
     public function findAllEmail()
     {
         $model = Mail::model()->findAll();
-        return $model;
-    }
-
-    /**
-     * @param array $input
-     * @return contact
-     */
-    public function create(array $inputs)
-    {
-        $model = new Specialcase();
-        $model->title = $inputs['title'];
-        $model->member_id = (int)$inputs['member_id'];
-        $model->application_time = $inputs['application_time'];
-        $model->category = $inputs['category'];
-        $model->approval_status = $inputs['approval_status'];
-        $model->approval_time = $inputs['approval_time'];
-        $model->approval_account_id = $inputs['approval_account_id'];
-        $model->member_ip = $inputs['member_ip'];
-        $model->msg = $inputs['msg'];
-
-        if (!$model->validate()) {
-            return $model;
-        }
-
-        if (!$model->hasErrors()) {
-            $success = $model->save();
-        }
-
-        if ($success === false) {
-            $model->addError('save_fail', '新增失敗');
-            return $model;
-        }
-
         return $model;
     }
 
@@ -68,102 +36,117 @@ class MailService
         return $model;
     }
 
-    public function sendMail($emailType, $employeeId,$message,$id)
+    public function sendMail($email_type, $employee_email, $message, $id,$employee_name)
     {
+        try {
+            // 管理者信箱
+            $admin_email = $this->findAllEmail();
 
-        // 管理者信箱
-        $adminEmail = $this->findAllEmail();
+            $mail = new PHPMailer();
+            $mail->IsSMTP();
+            $mail->SMTPAuth = true;
+            $mail->SMTPSecure = 'ssl';
+            $mail->Host = 'smtp.gmail.com';
+            $mail->Port = 465;
+            $mail->CharSet = 'utf-8';
+            $mail->Username = 'wenhsun0509@gmail.com';
+            $mail->Password = 'cute0921';
+            $mail->From = 'wenhsun0509@gmail.com';
+            $mail->FromName = '文訊雜誌社人資系統';
+            $mail->addAddress($employee_email);
 
-        $employeeService = new EmployeeService();
-        $user = $employeeService->findEmployeeId($employeeId);
+            $mail->addCC(isset($admin_email->addressee_1) ? $admin_email->addressee_1 : 'godsly0921@gmail.com');
+            $mail->addCC(isset($admin_email->addressee_2) ? $admin_email->addressee_2 : 'godsly0921@gmail.com');
+            $mail->addCC(isset($admin_email->addressee_3) ? $admin_email->addressee_3 : 'godsly0921@gmail.com');
 
-        $mail = new PHPMailer();
-        $mail->IsSMTP();
-        $mail->SMTPAuth = true;
-        $mail->SMTPSecure = 'ssl';
-        $mail->Host = 'smtp.gmail.com';
-        $mail->Port = 465;
-        $mail->CharSet = 'utf-8';
-        $mail->Username = 'wenhsun0509@gmail.com';
-        $mail->Password = 'cute0921';
-        $mail->From = 'wenhsun0509@gmail.com';
-        $mail->FromName = '文訊雜誌社人資系統';
-        $mail->addAddress($user->email);
-
-        $mail->addCC(isset($adminEmail->addressee_1)?$adminEmail->addressee_1:'godsly0921@gmail.com');
-        $mail->addCC(isset($adminEmail->addressee_2)?$adminEmail->addressee_2:'godsly0921@gmail.com');
-        $mail->addCC(isset($adminEmail->addressee_3)?$adminEmail->addressee_3:'godsly0921@gmail.com');
-
-        $mail->IsHTML(true);
-        if ($emailType == 0) {
-            $mail->Subject = '出勤通知:出勤正常';
-            $mail->Body =
-                '<h2>親愛的' . $user->name . '您好:<h2>
+            $mail->IsHTML(true);
+            if ($email_type == 0) {
+                $mail->Subject = '出勤通知:出勤正常';
+                $mail->Body =
+                    '<h2>親愛的' . $employee_name . '您好:<h2>
                  <p>提醒您，您昨天的出勤是正常。<br>詳細資訊如以下'
-                .$message.'<br><br>' .
-                '請善待您與他人的寶貴時間，謝謝。<br><br>' .
-                '文訊雜誌社人資系統敬啟<br><br>' .
-                '備註：此信箱為公告用信箱，請勿回信，若有疑問，請洽HR。謝謝。</p>';
-        } else if ($emailType == 1) {
-            $mail->Subject = '出勤通知:出勤異常';
-            $mail->Body =
-                '<h2>親愛的' . $user->name . '您好:<h2>'.
-                 '<p>提醒您，您昨天的出勤是異常。<br>詳細資訊如以下'
-                .$message.'<br><br>' .
-                '<a href="http://192.168.0.160/wenhsun_hr/attendancerecord/update/'.$id.'">請點擊回覆異常</a>'.
-                '文訊雜誌社人資系統敬啟<br>' .
-                '備註：此信箱為公告用信箱，請勿回信，若有疑問，請洽HR。謝謝。</p>';
+                    . $message . '<br><br>' .
+                    '文訊雜誌社人資系統敬啟<br><br>' .
+                    '備註：此信箱為公告用信箱，請勿回信，若有疑問，請洽HR。謝謝。</p>';
+            } else if ($email_type == 1) {
+                $mail->Subject = '出勤通知:出勤異常';
+                $mail->Body =
+                    '<h2>親愛的' . $employee_name . '您好:<h2>' .
+                    '<p>提醒您，您昨天的出勤是異常。<br>詳細資訊如以下'
+                    . $message . '<br><br>' .
+                    '<a href="http://192.168.0.160/wenhsun_hr/attendancerecord/update/' . $id . '">請點擊回覆異常</a>' .
+                    '文訊雜誌社人資系統敬啟<br>' .
+                    '備註：此信箱為公告用信箱，請勿回信，若有疑問，請洽HR。謝謝。</p>';
+            }
+
+            if($mail->Send()){
+                return true;
+            }else{
+                return false;
+            }
+
+
+        } catch (Exception $e) {
+            Yii::log(date('Y-m-d H:i:s') . " Email 01 error write exception {$e->getTraceAsString()}", CLogger::LEVEL_INFO);
         }
-        $mail->Send();
+
     }
 
 
-    public function sendAdminMail($emailType,$message)
+    public function sendAdminMail($emailType, $message)
     {
-        // 管理者信箱
-        $adminEmail = $this->findAllEmail();
+        try {
+            // 管理者信箱
+            $admin_email = $this->findAllEmail();
 
-        $mail = new PHPMailer();
-        $mail->IsSMTP();
-        $mail->SMTPAuth = true;
-        $mail->SMTPSecure = 'ssl';
-        $mail->Host = 'smtp.gmail.com';
-        $mail->Port = 465;
-        $mail->CharSet = 'utf-8';
-        $mail->Username = 'wenhsun0509@gmail.com';
-        $mail->Password = 'cute0921';
-        $mail->From = 'wenhsun0509@gmail.com';
-        $mail->FromName = '文訊雜誌社人資系統';
-        $mail->addAddress('godsly0921@gmail.com');
+            $mail = new PHPMailer();
+            $mail->IsSMTP();
+            $mail->SMTPAuth = true;
+            $mail->SMTPSecure = 'ssl';
+            $mail->Host = 'smtp.gmail.com';
+            $mail->Port = 465;
+            $mail->CharSet = 'utf-8';
+            $mail->Username = 'wenhsun0509@gmail.com';
+            $mail->Password = 'cute0921';
+            $mail->From = 'wenhsun0509@gmail.com';
+            $mail->FromName = '文訊雜誌社人資系統';
+            $mail->addAddress('godsly0921@gmail.com');
 
-        $mail->addCC(isset($adminEmail->addressee_1)?$adminEmail->addressee_1:'godsly0921@gmail.com');
-        $mail->addCC(isset($adminEmail->addressee_2)?$adminEmail->addressee_2:'godsly0921@gmail.com');
-        $mail->addCC(isset($adminEmail->addressee_3)?$adminEmail->addressee_3:'godsly0921@gmail.com');
+            $mail->addCC(isset($admin_email->addressee_1) ? $admin_email->addressee_1 : 'godsly0921@gmail.com');
+            $mail->addCC(isset($admin_email->addressee_2) ? $admin_email->addressee_2 : 'godsly0921@gmail.com');
+            $mail->addCC(isset($admin_email->addressee_3) ? $admin_email->addressee_3 : 'godsly0921@gmail.com');
 
-        $mail->IsHTML(true);
-        if ($emailType == 0) {
-            $mail->Subject = '用戶未設定，員工編號';
-            $mail->Body =
-                '<h2>親愛的' . '管理員您好' . '您好:<h2>
-                 <p>提醒您，有異常狀況。<br>詳細資訊如以下'
-                .$message.'<br><br>' .
-                '請善待妥善處理，謝謝。<br><br>' .
-                '文訊雜誌社人資系統敬啟<br><br>' .
-                '備註：此信箱為公告用信箱，請勿回信，若有疑問，請洽HR。謝謝。</p>';
+            $mail->IsHTML(true);
+            if ($emailType == 0) {
+                $mail->Subject = '用戶未設定，員工編號';
+                $mail->Body =
+                    '<h2>親愛的' . '管理員您好' . '您好:<h2>
+                     <p>提醒您，有異常狀況。<br>詳細資訊如以下'
+                    . $message . '<br><br>' .
+                    '請善待妥善處理，謝謝。<br><br>' .
+                    '文訊雜誌社人資系統敬啟<br><br>' .
+                    '備註：此信箱為公告用信箱，請勿回信，若有疑問，請洽HR。謝謝。</p>';
+            }
+
+            if ($emailType == 1) {
+                $mail->Subject = '意外異常';
+                $mail->Body =
+                    '<h2>親愛的' . '管理員您好' . '您好:<h2>
+                     <p>提醒您，有異常狀況。<br>詳細資訊如以下'
+                    . $message . '<br><br>' .
+                    '請善待妥善處理，謝謝。<br><br>' .
+                    '文訊雜誌社人資系統敬啟<br><br>' .
+                    '備註：此信箱為公告用信箱，請勿回信，若有疑問，請洽HR。謝謝。</p>';
+            }
+
+            if($mail->Send()){
+                return true;
+            }else{
+                return false;
+            }
+        } catch (Exception $e) {
+            Yii::log(date('Y-m-d H:i:s') . " Email 02 error write exception {$e->getTraceAsString()}", CLogger::LEVEL_INFO);
         }
-
-        if ($emailType == 1) {
-            $mail->Subject = '意外異常';
-            $mail->Body =
-                '<h2>親愛的' . '管理員您好' . '您好:<h2>
-                 <p>提醒您，有異常狀況。<br>詳細資訊如以下'
-                .$message.'<br><br>' .
-                '請善待妥善處理，謝謝。<br><br>' .
-                '文訊雜誌社人資系統敬啟<br><br>' .
-                '備註：此信箱為公告用信箱，請勿回信，若有疑問，請洽HR。謝謝。</p>';
-        }
-        $mail->Send();
     }
 
 }
-?>
