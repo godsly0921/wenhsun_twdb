@@ -13,6 +13,17 @@ class SalaryReportEmployee
     private $batchId;
     private $employeeId;
     private $employeeLoginId;
+    private $employeeName;
+    private $salary;
+    private $draftAllowance;
+    private $trafficAllowance;
+    private $overtimeWage;
+    private $projectAllowance;
+    private $taxFreeOvertimeWage;
+    private $healthInsurance;
+    private $laborInsurance;
+    private $pension;
+    private $status;
 
     /**
      * @return mixed
@@ -30,18 +41,45 @@ class SalaryReportEmployee
         return $this->employeeName;
     }
 
-    private $employeeName;
-    private $salary;
-    private $draftAllowance;
-    private $trafficAllowance;
-    private $overtimeWage;
-    private $projectAllowance;
+    /**
+     * @param mixed $draftAllowance
+     */
+    public function setDraftAllowance($draftAllowance): void
+    {
+        $this->draftAllowance = $draftAllowance;
+    }
 
-    private $taxFreeOvertimeWage;
-    private $healthInsurance;
-    private $laborInsurance;
-    private $pension;
-    private $status;
+    /**
+     * @param mixed $trafficAllowance
+     */
+    public function setTrafficAllowance($trafficAllowance): void
+    {
+        $this->trafficAllowance = $trafficAllowance;
+    }
+
+    /**
+     * @param mixed $overtimeWage
+     */
+    public function setOvertimeWage($overtimeWage): void
+    {
+        $this->overtimeWage = $overtimeWage;
+    }
+
+    /**
+     * @param mixed $projectAllowance
+     */
+    public function setProjectAllowance($projectAllowance): void
+    {
+        $this->projectAllowance = $projectAllowance;
+    }
+
+    /**
+     * @param mixed $taxFreeOvertimeWage
+     */
+    public function setTaxFreeOvertimeWage($taxFreeOvertimeWage): void
+    {
+        $this->taxFreeOvertimeWage = $taxFreeOvertimeWage;
+    }
 
     public function __construct(
         $id,
@@ -207,7 +245,4 @@ class SalaryReportEmployee
     {
         return $this->status;
     }
-
-
-
 }

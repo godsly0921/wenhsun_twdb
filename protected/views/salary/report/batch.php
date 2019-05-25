@@ -3,6 +3,11 @@
         <div class="page-title">
             <div class="title_left">
                 <h3>薪資報表 (<?=$batch_id?>)</h3>
+                <button id="send_email" class="btn btn-primary" type="button">寄送薪資郵件</button>
+                <button id="export" class="btn btn-primary" type="button">匯出報表</button>
+                <a href="<?= Yii::app()->createUrl('/salary/report/export');?>">
+                    <button id="export" class="btn btn-default" type="button">返回</button>
+                </a>
             </div>
         </div>
 
@@ -38,9 +43,18 @@
                                     <td><?php if (!empty($data['salary_total'])):?><?=number_format($data['salary_total'])?><?php endif;?></td>
                                     <td><?php if (!empty($data['deduction_total'])):?><?=number_format($data['deduction_total'])?><?php endif;?></td>
                                     <td><?php if (!empty($data['real_salary'])):?><?=number_format($data['real_salary'])?><?php endif;?></td>
-                                    <td><?php if (!empty($data['status'])):?><?=$data['status']?><?php endif;?></td>
                                     <td>
-                                        <a href="<?= Yii::app()->createUrl('/salary/report/employee?batchId=' . $batch_id . '&employeeId=' . $data['employee_id']);?>"><i class="fa fa-edit" style="font-size:18px"></i></a>
+                                        <?php if (!empty($data['status'])):?>
+                                            <?php if ($data['status'] === "OKZ"):?>
+                                                已設定
+                                            <?php else:?>
+                                                尚末設定
+                                            <?php endif;?>
+
+                                        <?php endif;?>
+                                    </td>
+                                    <td>
+                                        <a href="<?= Yii::app()->createUrl("/salary/report/employee?id={$data['id']}");?>"><i class="fa fa-edit" style="font-size:18px"></i></a>
                                     </td>
                                 </tr>
                             <?php endforeach;?>
@@ -51,3 +65,19 @@
             </div>
         </div>
     </div>
+    <form id="export_form" action="<?= Yii::app()->createUrl('/salary/report/export');?>" method="POST">
+        <?php CsrfProtector::genHiddenField(); ?>
+        <input type="hidden" name="batch_id" value="<?=$batch_id?>">
+        <input type="submit" style="display:none;">
+    </form>
+    <form id="send_email_form" action="">
+        <?php CsrfProtector::genHiddenField(); ?>
+    </form>
+    <script>
+        $("#export").on("click", function(){
+            let r = confirm("確認要匯出薪資?");
+            if (r === true) {
+                $("#export_form").submit();
+            }
+        });
+    </script>

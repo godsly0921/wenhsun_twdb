@@ -8,6 +8,7 @@ class SalaryReportBatch
 {
     private $batchId;
 
+    /** @var SalaryReportEmployee[] $employees */
     private $employees;
 
     public function __construct(string $batchId)

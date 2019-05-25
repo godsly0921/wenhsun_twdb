@@ -12,60 +12,43 @@ use Throwable;
 use Wenhsun\Salary\Entity\SalaryReportBatch;
 use Wenhsun\Salary\Entity\SalaryReportEmployee;
 use Wenhsun\Salary\Exception\SalaryReportServiceException;
-use Wenhsun\Salary\Repository\BatchRepository;
+use Wenhsun\Salary\Repository\ReportRepository;
 use Yii;
 
 class SalaryReportService
 {
     public function getBatchList()
     {
-        $repo = new BatchRepository();
+        $repo = new ReportRepository();
         return $repo->fetchBatch();
     }
 
     public function getListByBatch($batchId)
     {
-        $repo = new BatchRepository();
+        $repo = new ReportRepository();
 
         return $repo->fetchEmployeeByBatch($batchId);
+    }
+
+    public function getAllEmployeesByBatch($batchId): ?SalaryReportBatch
+    {
+        $repo = new ReportRepository();
+
+        return $repo->forAllEmployeeByBatch($batchId);
     }
 
     public function setEmployeeSalary(SalaryReportEmployee $ent)
     {
         try {
 
-            $now = Common::now();
-            $repo = new BatchRepository();
-            $salaryReportModel = $repo->fetchByBatchAndEmployeeId($ent->getBatchId(), $ent->getEmployeeId());
-
-            $salaryReportModel->salary = $ent->getSalary();
-            $salaryReportModel->draft_allowance = $ent->getDraftAllowance();
-            $salaryReportModel->traffic_allowance = $ent->getTrafficAllowance();
-            $salaryReportModel->overtime_wage = $ent->getOvertimeWage();
-            $salaryReportModel->project_allowance = $ent->getProjectAllowance();
-            $salaryReportModel->taxable_salary_total = $ent->calcTaxableSalaryTotal();
-            $salaryReportModel->tax_free_overtime_wage = $ent->getTaxFreeOvertimeWage();
-            $salaryReportModel->salary_total = $ent->calcSalaryTotal();
-            $salaryReportModel->health_insurance = $ent->getHealthInsurance();
-            $salaryReportModel->labor_insurance = $ent->getLaborInsurance();
-            $salaryReportModel->pension = $ent->getPension();
-            $salaryReportModel->deduction_total = $ent->calcDeductionTotal();
-            $salaryReportModel->real_salary = $ent->calcRealSalary();
-            $salaryReportModel->status = SalaryReportEmployee::SET_SALARY;
-            $salaryReportModel->update_at = $now;
-
-            $salaryReportModel->update();
-
-            if ($salaryReportModel->hasErrors()) {
-                throw new SalaryReportServiceException(serialize($salaryReportModel->getErrors()));
-            }
+            $repo = new ReportRepository();
+            $repo->updateEmployeeSalary($ent);
 
         } catch (Throwable $ex) {
             Yii::log($ex->getMessage(), CLogger::LEVEL_ERROR);
             Yii::log($ex->getTraceAsString(), CLogger::LEVEL_ERROR);
             throw new SalaryReportServiceException($ex->getMessage());
         }
-
     }
 
     public function addBatch(SalaryReportBatch $ent)
@@ -137,9 +120,16 @@ class SalaryReportService
         }
     }
 
+    public function findBySalaryId($id): ?SalaryReportEmployee
+    {
+        $repo = new ReportRepository();
+
+        return $repo->findById($id);
+    }
+
     public function findByBatchAndEmployeeId($batchId, $employeeId)
     {
-        $repo = new BatchRepository();
+        $repo = new ReportRepository();
 
         return $repo->fetchByBatchAndEmployeeId($batchId, $employeeId);
     }
