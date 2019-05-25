@@ -10,5 +10,6 @@ VALUES
 ('82', '薪資員工查看', 'salary/report/employee', '5', '0', '0'),
 ('83', '薪資設定更新', 'salary/report/update', '5', '0', '0'),
 ('84', '薪資寄信', 'salary/report/email', '5', '0', '0'),
-('85', '薪資匯出', 'salary/report/export', '5', '0', '0')
+('85', '單一員工薪資寄信', 'salary/report/emailsingle', '5', '0', '0'),
+('86', '薪資匯出', 'salary/report/export', '5', '0', '0')
 ;

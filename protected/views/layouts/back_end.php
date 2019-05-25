@@ -17,7 +17,25 @@
     <link href="<?php echo Yii::app()->request->baseUrl; ?>/assets/bootstrap-select/dist/css/bootstrap-select.css" rel="stylesheet">
 
 </head>
+<style>
+    .lmask {
+        text-align: center;
+        color: #FFF;
+        padding: 150px;
+        position: absolute;
+        height: 100%;
+        width: 100%;
+        background-color: #000;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        top: 0;
+        z-index: 9999;;
+        opacity: 0.4;
+    }
+</style>
 <body class="nav-md">
+    <div class='lmask' style="display: none;">資料處理中...</div>
     <div class="container body">
         <div class="main_container">
             <div class="col-md-3 left_col">

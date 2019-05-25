@@ -55,6 +55,7 @@
                                     </td>
                                     <td>
                                         <a href="<?= Yii::app()->createUrl("/salary/report/employee?id={$data['id']}");?>"><i class="fa fa-edit" style="font-size:18px"></i></a>
+                                        <a style="margin-left:5px;" data-id="<?=$data['id']?>" class="send_single_email" href="">寄送郵件</a>
                                     </td>
                                 </tr>
                             <?php endforeach;?>
@@ -70,14 +71,68 @@
         <input type="hidden" name="batch_id" value="<?=$batch_id?>">
         <input type="submit" style="display:none;">
     </form>
-    <form id="send_email_form" action="">
-        <?php CsrfProtector::genHiddenField(); ?>
-    </form>
     <script>
+
         $("#export").on("click", function(){
             let r = confirm("確認要匯出薪資?");
             if (r === true) {
                 $("#export_form").submit();
+            }
+        });
+
+        $("#send_email").on("click", function(){
+            let r = confirm("確認要寄出薪資郵件?");
+            if (r === true) {
+
+                $(".lmask").show();
+
+                var token = $("#_token").prop("value");
+                var batchId = "<?=$batch_id?>";
+                var request = $.ajax({
+                    url: "<?=Yii::app()->createUrl('/salary/report/email'); ?>",
+                    method: "POST",
+                    data: {"batch_id":batchId, "_token":token},
+                    dataType: "json"
+                });
+
+                request.done(function(data) {
+                    alert("寄送成功");
+                    $(".lmask").hide();
+                });
+
+                request.fail(function(jqXHR, textStatus) {
+                    $(".lmask").hide();
+                    alert(jqXHR.responseJSON.message);
+                });
+            }
+        });
+
+        $(".send_single_email").on("click", function(){
+
+            let r = confirm("確認要寄出薪資郵件?");
+
+            if (r === true) {
+
+                $(".lmask").show();
+
+                var token = $("#_token").prop("value");
+                var id = $(this).data("id");
+                var request = $.ajax({
+                    url: "<?=Yii::app()->createUrl('/salary/report/emailsingle'); ?>",
+                    method: "POST",
+                    data: {"id":id, "_token":token},
+                    dataType: "json"
+                });
+
+                request.done(function(data) {
+                    alert("寄送成功");
+                    $(".lmask").hide();
+                });
+
+                request.fail(function(jqXHR, textStatus) {
+                    $(".lmask").hide();
+                    alert(jqXHR.responseJSON.message);
+                });
             }
         });
     </script>

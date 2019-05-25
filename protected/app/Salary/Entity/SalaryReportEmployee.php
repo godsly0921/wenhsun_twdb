@@ -25,6 +25,13 @@ class SalaryReportEmployee
     private $pension;
     private $status;
 
+    public function getBatchMonth()
+    {
+        $batchId = $this->getBatchId();
+
+        return ltrim(substr($batchId, 4), '0');
+    }
+
     /**
      * @return mixed
      */

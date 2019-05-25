@@ -51,4 +51,15 @@ class EmployeeService
 
         return $result;
     }
+
+    public function getEmailByEmployeeId($employeeId): ?string
+    {
+        $employeeModel = Employee::model()->findByPk($employeeId);
+
+        if (!$employeeModel || empty($employeeModel['email'])) {
+            return null;
+        }
+
+        return $employeeModel['email'];
+    }
 }

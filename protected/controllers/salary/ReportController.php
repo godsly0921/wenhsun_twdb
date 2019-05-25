@@ -68,7 +68,28 @@ class ReportController extends Controller
 
     public function actionEmail()
     {
+        $this->checkCSRF('index');
+        $batchId = $_POST['batch_id'];
 
+        $serv = new SalaryReportService();
+        $batchEnt = $serv->getAllEmployeesByBatch($batchId);
+
+        $serv->sendBatchEmail($batchEnt);
+
+        $this->sendSuccAjaxRsp();
+    }
+
+    public function actionEmailsingle()
+    {
+        $this->checkCSRF('index');
+        $id = $_POST['id'];
+
+        $serv = new SalaryReportService();
+        $salaryReportEmployee = $serv->findBySalaryId($id);
+
+        $serv->sendEmployeeSalaryEmail($salaryReportEmployee);
+
+        $this->sendSuccAjaxRsp();
     }
 
     public function actionExport()
