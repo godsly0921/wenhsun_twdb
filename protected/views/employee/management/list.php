@@ -1,3 +1,4 @@
+<?php $session_jsons = CJSON::decode(Yii::app()->session['power_session_jsons']);?>
 <div role="main">
     <div class="">
         <div class="page-title">
@@ -5,13 +6,18 @@
                 <h3>員工列表</h3>
             </div>
             <div class="title_right">
-                <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
-                    <div class="input-group">
-                        <a href="<?= Yii::app()->createUrl('/employee/management/new');?>">
-                            <button class="btn btn-primary" type="button">新增員工</button>
-                        </a>
-                    </div>
-                </div>
+                <?php foreach ($session_jsons as $jsons):?>
+                    <?php if ($jsons["power_controller"] == 'employee/management/new'):?>
+                        <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
+                            <div class="input-group">
+                                <a href="<?= Yii::app()->createUrl('/employee/management/new');?>">
+                                    <button class="btn btn-primary" type="button">新增員工</button>
+                                </a>
+                            </div>
+                        </div>
+                    <?php endif; ?>
+                <?php endforeach; ?>
+
             </div>
         </div>
 
@@ -49,8 +55,15 @@
                                     <td><?=$data->update_at?></td>
                                     <td><?=$data->create_at?></td>
                                     <td>
-                                        <a href="<?= Yii::app()->createUrl('/employee/management/edit?id='.$data->id);?>"><i class="fa fa-edit" style="font-size:18px"></i></a>
-                                        <a href="<?= Yii::app()->createUrl('/employee/management/contract?id='.$data->id);?>" target="_blank" class="print-btn" data-id="<?=$data->id?>"><i class="fa fa-print" style="font-size:18px"></i></a>
+                                        <?php foreach ($session_jsons as $jsons):?>
+                                            <?php if ($jsons["power_controller"] == 'employee/management/edit'):?>
+                                                <a href="<?= Yii::app()->createUrl('/employee/management/edit?id='.$data->id);?>"><i class="fa fa-edit" style="font-size:18px"></i></a>
+                                            <?php endif; ?>
+
+                                            <?php if ($jsons["power_controller"] == 'employee/management/contract'):?>
+                                                <a href="<?= Yii::app()->createUrl('/employee/management/contract?id='.$data->id);?>" target="_blank" class="print-btn" data-id="<?=$data->id?>"><i class="fa fa-print" style="font-size:18px"></i></a>
+                                            <?php endif; ?>
+                                        <?php endforeach; ?>
                                     </td>
                                 </tr>
                             <?php endforeach;?>
