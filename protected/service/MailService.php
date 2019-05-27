@@ -61,6 +61,7 @@ class MailService
 
             $mail->IsHTML(true);
             if ($email_type == 0) {
+                return true;//正常不寄信
                 $mail->Subject = '出勤通知:出勤正常';
                 $mail->Body =
                     '<h2>親愛的' . $employee_name . '您好:<h2>
