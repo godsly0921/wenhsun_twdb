@@ -1,11 +1,12 @@
+<?php $session_jsons = CJSON::decode(Yii::app()->session['power_session_jsons']); ?>
 <div id="error_msg">
-<?php if (isset(Yii::app()->session['error_msg']) && Yii::app()->session['error_msg'] !== ''): ?>
-    <div class="alert alert-danger">
-        <ul>
+    <?php if (isset(Yii::app()->session['error_msg']) && Yii::app()->session['error_msg'] !== ''): ?>
+        <div class="alert alert-danger">
+            <ul>
                 <li><?= Yii::app()->session['error_msg'] ?></li>
-        </ul>
-    </div>
-<?php endif; ?>
+            </ul>
+        </div>
+    <?php endif; ?>
 </div>
 
 <div id="success_msg">
@@ -16,7 +17,7 @@
     <?php endif; ?>
 </div>
 
-<?php $session_jsons = CJSON::decode(Yii::app()->session['power_session_jsons']); ?>
+
 <link href="<?php echo Yii::app()->request->baseUrl; ?>/assets/admin/ext/css/fullcalendar.min.css" rel='stylesheet'/>
 <link href="<?php echo Yii::app()->request->baseUrl; ?>/assets/admin/ext/css/fullcalendar.print.min.css"
       rel='stylesheet' media='print'/>
@@ -39,7 +40,8 @@
             header: {
                 left: 'prev,next today',
                 center: 'title',
-                right: 'month,agendaWeek,agendaDay,listWeek'
+               // right: 'month,agendaWeek,agendaDay,listWeek'
+                right: 'month,agendaDay,listWeek'
             },
             handleWindowResize:true,
             defaultDate: '<?php echo date('Y-m-d');?>',
@@ -54,7 +56,7 @@
             axisFormat: 'HH:mm',
             displayEventEnd: true,
             events: {
-                url: '<?php echo Yii::app()->createUrl('reservation/getevents',['device_id'=>$device_id]);?>',
+                url: '<?php echo Yii::app()->createUrl('parttime/getevents',['device_id'=>$device_id]);?>',
                 error: function() {
                     $('#script-warning').show();
                 }
@@ -62,8 +64,8 @@
             eventClick: function(event) {
                 if (event.title.substr(0,4) === '儀器關閉') {
                     alert(event.title);
-                } else if (event.title !== '開放預約' && event.title.substr(0,4) !== '儀器關閉') {
-                    var answer = confirm("確定刪除預約?");
+                } else if (event.title !== '開放排班' && event.title.substr(0,4) !== '儀器關閉') {
+                    var answer = confirm("確定刪除排班?");
                     if (!answer) {
                         return false;
                     }
@@ -105,47 +107,9 @@
 
 <div class="row">
     <div class="title-wrap col-lg-12">
-        <h3 class="title-left">儀器預約與查詢</h3>
+        <h3 class="title-left">工讀生排班表</h3>
     </div>
 </div>
-
-<form class="form-horizontal" action="<?php echo Yii::app()->createUrl('reservation/index');?>" method="get">
-
-    <?php CsrfProtector::genHiddenField(); ?>
-
-    <div class="panel panel-default">
-        <div class="panel-body">
-
-            <div class="form-group">
-                <label class="col-sm-2 control-label">選單顯示:</label>
-                <div class="col-sm-5">
-                    <select class="form-control" name="device_id">
-                        <?php foreach($devices as $key=>$value): ?>
-                        <?php if($value->id == $device_id):?>
-                            <option selected="selected" value="<?= $value->id ?>">
-                                <?= $value->name.' 站號（'.$value->station.')'?>
-                            </option>
-                        <?php else: ?>
-                            <option value="<?= $value->id ?>">
-                                <?= $value->name.' 站號（'.$value->station.')'?>
-                            </option>
-                        <?php endif; ?>
-                        <?php endforeach; ?>
-                    </select>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <div class="col-sm-offset-2 col-sm-10">
-                    <button type="submit" class="btn btn-default">查詢</button>
-                </div>
-            </div>
-
-
-        </div>
-    </div>
-</form>
-
 
 <div class="panel panel-default">
     <div class="panel-body">
@@ -172,7 +136,7 @@
     src="https://blackrockdigital.github.io/startbootstrap-sb-admin-2/vendor/datatables-responsive/dataTables.responsive.js"></script>
 <script>
     $(document).ready(function () {
-        $('#reservationTable').DataTable({
+        $('#parttimeTable').DataTable({
             "scrollX": true,
             "lengthChange": false,
             "oLanguage": {
@@ -182,13 +146,13 @@
         });
     });
     $(".oprate-del").on('click', function () {
-        var reservationId = $(this).data("reservation-id");
-        var reservationName = $(this).data("reservation-name");
-        var answer = confirm("確定要刪除 (" + reservationName + ") ?");
+        var parttimeId = $(this).data("parttime-id");
+        var parttimeName = $(this).data("parttime-name");
+        var answer = confirm("確定要刪除 (" + parttimeName + ") ?");
         if (answer == true) {
             var form = document.createElement("form");
             form.setAttribute('method', "post");
-            form.setAttribute('action', "<?php echo Yii::app()->createUrl('reservation/delete') ?>");
+            form.setAttribute('action', "<?php echo Yii::app()->createUrl('parttime/delete') ?>");
             var input = document.createElement("input");
             input.setAttribute('type', 'hidden');
             input.setAttribute('name', '_token');
@@ -196,7 +160,7 @@
             var idInput = document.createElement("input");
             idInput.setAttribute('type', 'hidden');
             idInput.setAttribute('name', 'id');
-            idInput.setAttribute('value', reservationId);
+            idInput.setAttribute('value', parttimeId);
             form.appendChild(input);
             form.appendChild(idInput);
             document.body.appendChild(form);
@@ -221,4 +185,3 @@
 unset(Yii::app()->session['error_msg']);
 unset(Yii::app()->session['success_msg']);
 ?>
-

@@ -6,57 +6,18 @@
  * Date: 2015/7/15
  * Time: 下午 11:42
  */
-class ReservationController extends Controller
+class PartTimeController extends Controller
 {
     //public $layout = "//layouts/back_end";
-    private $categorys = ["0" => "尚未使用", "1" => "正常使用", "2" => "異常", "3" => "取消預約"];
+    private $categorys = ["0" => "尚未使用", "1" => "正常使用", "2" => "異常", "3" => "取消排班"];
 
     protected function needLogin(): bool
     {
         return true;
     }
 
+
     public function actionIndex()
-    {
-
-
-        /*if (!isset($_GET['device_id'])) {
-            $device_id = '7';
-        }
-
-        if (isset($_GET['device_id'])) {
-            $device_id = $_GET['device_id'];
-        }*/
-
-
-        //介面用戶化 找出目前使用者的機台權限
-        $memberServer = new MemberService();
-        $result = $memberServer->findByMemId(Yii::app()->session['uid']);
-        if($result==NULL){
-            $accountServer = new AccountService();
-            $account = $accountServer->findAccountData(Yii::app()->session['uid']);
-            if($account == NULL){
-                echo '沒有找到使用者，請重新登入系統';
-                sleep(1);
-                $this->redirect('admin/login');
-            }
-        }
-        $service = new DeviceService();
-        if( Yii::app()->session['personal'] ){
-            $user_permission_devices = $result->device_permission;
-            $devices = $service->findDevicesPermission($user_permission_devices);
-        }else{
-            $devices = $service->findDevices();
-        }
-
-        $service = new ReservationService();
-        $device_id = isset($_GET['device_id'])?$_GET['device_id']:$devices[0]['id'];
-        $model = $service->findReservationAll($device_id);
-
-        $this->render('index', ['model' => $model, 'device_id' => $device_id, 'devices' => $devices]);
-    }
-
-    public function actionPart_time()
     {
         $memberServer = new MemberService();
         $result = $memberServer->findByMemId(Yii::app()->session['uid']);
@@ -72,11 +33,11 @@ class ReservationController extends Controller
 
         $part_time_employees = EmployeeService::getPTEmployee(7);
 
-        $service = new ReservationService();
+        $service = new ParttimeService();
         $part_time_empolyee_id = isset($_GET['part_time_empolyee_id'])?$_GET['part_time_empolyee_id']:$part_time_employees['part_time_empolyee_id'];
-        $model = $service->findReservationAll($part_time_empolyee_id);
+        $model = $service->findPartTimeAll($part_time_empolyee_id);
 
-        $this->render('part_time', ['model' => $model, 'part_time_empolyee_id' => $part_time_empolyee_id, 'part_time_employees' => $part_time_employees]);
+        $this->render('index', ['model' => $model, 'part_time_empolyee_id' => $part_time_empolyee_id, 'part_time_employees' => $part_time_employees]);
     }
 
 
@@ -90,8 +51,8 @@ class ReservationController extends Controller
          $end_time = '2018-05-12 00:00:00';*/
         //  $end_time = date('Y-m-d').' 23:59:59';
 
-        $service = new ReservationService();
-        $model = $service->findReservationDayAll($start_time, $end_time);
+        $service = new ParttimeService();
+        $model = $service->findPartTimeDayAll($start_time, $end_time);
 
         $service = new DeviceService();
         $devices = $service->findDevices();
@@ -108,8 +69,8 @@ class ReservationController extends Controller
         $start_time = date('Y-m-d') . ' 00:00:00';
         $end_time = date('Y-m-d') . ' 23:59:59';
 
-        $service = new ReservationService();
-        $model = $service->findReservationCancelDayAll($start_time, $end_time);
+        $service = new ParttimeService();
+        $model = $service->findPartTimeCancelDayAll($start_time, $end_time);
 
         $service = new DeviceService();
         $devices = $service->findDevices();
@@ -126,12 +87,12 @@ class ReservationController extends Controller
     public function actionGet_cancel_list()
     {
 
-        $inputs["device_id"] = filter_input(INPUT_POST, "device_id");
+        $inputs["part_time_empolyee_id"] = filter_input(INPUT_POST, "part_time_empolyee_id");
         $inputs["start_time"] = filter_input(INPUT_POST, "start_date");
         $inputs["end_time"] = filter_input(INPUT_POST, "end_date");
 
-        $service = new ReservationService();
-        $model = $service->findReservationDayAllAndDevice($inputs);//查詢日期與取消條件
+        $service = new ParttimeService();
+        $model = $service->findPartTimeDayAllAndDevice($inputs);//查詢日期與取消條件
 
         $service = new DeviceService();
         $devices = $service->findDevices();
@@ -142,7 +103,7 @@ class ReservationController extends Controller
         $service = new AccountService();
         $accounts = $service->findAccounts();
 
-        Yii::app()->session['device_id']  = $inputs["device_id"];
+        Yii::app()->session['part_time_empolyee_id']  = $inputs["part_time_empolyee_id"];
         Yii::app()->session['start_date'] = $inputs["start_time"];
         Yii::app()->session['end_date']   = $inputs["end_time"];
 
@@ -154,7 +115,7 @@ class ReservationController extends Controller
     {
 
         // 查詢符合資料
-        $inputs['device_id']  = Yii::app()->session['device_id'];
+        $inputs['part_time_empolyee_id']  = Yii::app()->session['part_time_empolyee_id'];
         $inputs['start_date'] = Yii::app()->session['start_date'];
         $inputs['end_date']   = Yii::app()->session['end_date'];
 
@@ -167,8 +128,8 @@ class ReservationController extends Controller
         $service = new AccountService();
         $accounts = $service->findAccounts();
 
-        $service = new ReservationService();
-        $model = $service->findReservationCancelAndConditionDayAll($inputs);//查詢日期與取消條件
+        $service = new ParttimeService();
+        $model = $service->findPartTimeCancelAndConditionDayAll($inputs);//查詢日期與取消條件
 
         error_reporting(E_ALL);
         ini_set('display_errors', TRUE);
@@ -191,9 +152,9 @@ class ReservationController extends Controller
         // Add some data 設定匯出欄位資料
         $objPHPExcel->setActiveSheetIndex(0)
             ->setCellValue('A1', '儀器名稱')
-            ->setCellValue('B1', '預約人')
-            ->setCellValue('C1', '預約開始時間')
-            ->setCellValue('D1', '預約結束時間')
+            ->setCellValue('B1', '排班人')
+            ->setCellValue('C1', '排班開始時間')
+            ->setCellValue('D1', '排班結束時間')
             ->setCellValue('E1', '是否正常使用')
             ->setCellValue('F1', '取消人員')
             ->setCellValue('G1', '取消原因')
@@ -202,11 +163,11 @@ class ReservationController extends Controller
 
         // Miscellaneous glyphs, UTF-8 設定內容資料
         $i = 2;
-        
+
         foreach ($model as $value) {
 
             foreach ($devices as $k => $v):
-                if ($v->id == $value->device_id):
+                if ($v->id == $value->part_time_empolyee_id):
                     $devices_name = $v->name;
                 endif;
             endforeach;
@@ -217,7 +178,7 @@ class ReservationController extends Controller
                 }else{
                     $member_name = '無資料';
                 }
-   
+
             endforeach;
 
 
@@ -249,14 +210,14 @@ class ReservationController extends Controller
             $i++;
 
         }
-        
+
         // Rename worksheet 表單名稱
-        $objPHPExcel->getActiveSheet()->setTitle('清大門禁系統-預約取消明細表');
+        $objPHPExcel->getActiveSheet()->setTitle('清大門禁系統-排班取消明細表');
         // Set active sheet index to the first sheet, so Excel opens this as the first sheet
         $objPHPExcel->setActiveSheetIndex(0);
 
         //目前支援xls匯出
-        $filename = urlencode("清大門禁系統-預約取消明細表" . ".xls");
+        $filename = urlencode("清大門禁系統-排班取消明細表" . ".xls");
         ob_end_clean();
         header("Content-type: text/html; charset=utf-8");
         header("Content-Type: application/vnd.ms-excel");
@@ -272,7 +233,7 @@ class ReservationController extends Controller
 
         $this->layout = "back_end_cls";
 
-        $inputs['device_id'] = Yii::app()->session['device_id'];
+        $inputs['part_time_empolyee_id'] = Yii::app()->session['part_time_empolyee_id'];
         $inputs['start_date'] = Yii::app()->session['start_date'];
         $inputs['end_date'] = Yii::app()->session['end_date'];
 
@@ -287,8 +248,8 @@ class ReservationController extends Controller
         $service = new AccountService();
         $accounts = $service->findAccounts();
 
-        $service = new ReservationService();
-        $model = $service->findReservationCancelAndConditionDayAll($inputs);//查詢日期與取消條件
+        $service = new ParttimeService();
+        $model = $service->findPartTimeCancelAndConditionDayAll($inputs);//查詢日期與取消條件
 
 
         $this->render('cancel_print', ['model' => $model, 'devices' => $devices, 'categorys' => $this->categorys, 'members' => $members, 'accounts' => $accounts]);
@@ -298,7 +259,7 @@ class ReservationController extends Controller
 
     public function actionGet_special_list()
     {
-        $inputs["device_id"] = filter_input(INPUT_POST, "device_id");
+        $inputs["part_time_empolyee_id"] = filter_input(INPUT_POST, "part_time_empolyee_id");
         $inputs["start_time"] = filter_input(INPUT_POST, "start_time");
         $inputs["end_time"] = filter_input(INPUT_POST, "end_time");
 
@@ -306,8 +267,8 @@ class ReservationController extends Controller
          $end_time = '2018-05-12 00:00:00';*/
         //  $end_time = date('Y-m-d').' 23:59:59';
 
-        $service = new ReservationService();
-        $model = $service->findReservationDayAllAndDevice($inputs);
+        $service = new ParttimeService();
+        $model = $service->findPartTimeDayAllAndDevice($inputs);
 
         $service = new DeviceService();
         $devices = $service->findDevices();
@@ -327,8 +288,8 @@ class ReservationController extends Controller
          $end_time = '2018-05-12 00:00:00';*/
         //  $end_time = date('Y-m-d').' 23:59:59';
 
-        $service = new ReservationService();
-        $model = $service->findReservationDayAll($start_time, $end_time);
+        $service = new ParttimeService();
+        $model = $service->findPartTimeDayAll($start_time, $end_time);
 
         $service = new DeviceService();
         $devices = $service->findDevices();
@@ -356,15 +317,15 @@ class ReservationController extends Controller
          $end_time = '2018-05-12 00:00:00';*/
         //  $end_time = date('Y-m-d').' 23:59:59';
 
-        $service = new ReservationService();
-        $model = $service->findReservationDayAll($start_time, $end_time);
+        $service = new ParttimeService();
+        $model = $service->findPartTimeDayAll($start_time, $end_time);
 
         $service = new DeviceService();
         $devices = $service->findDevices();
 
         $service = new MemberService();
         $members = $service->findMemberlist();
- 
+
         $this->render('list', ['model' => $model, 'devices' => $devices, 'members' => $members]);
     }
 
@@ -398,7 +359,7 @@ class ReservationController extends Controller
 
         //$_GET['start'] = '2018-05-01';
         //$_GET['end']  = '2018-05-31';
-        // $device_id = 6;
+        // $part_time_empolyee_id = 6;
         $part_time_empolyee_id = isset($_GET['part_time_empolyee_id'])?$_GET['part_time_empolyee_id']:'';
 
         // Parse the start/end parameters.
@@ -419,14 +380,14 @@ class ReservationController extends Controller
         /* $json = file_get_contents(dirname(__FILE__) . '/../components/events.json');
          $input_arrays = json_decode($json, true);*/
 
-        $service = new ReservationService();
+        $service = new ParttimeService();
         //if($part_time_empolyee_id != ''){
-        //    $model = $service->findReservationAll($part_time_empolyee_id);
+        //    $model = $service->findPartTimeAll($part_time_empolyee_id);
         //}else{
-        $model = $service->findReservationStatus();
+        $model = $service->findPartTimeStatus();
         //}
 
-        //儀器預約資料表
+        //儀器排班資料表
         $input_arrays = array();
 
         foreach ($model as $key => $value) {
@@ -442,14 +403,14 @@ class ReservationController extends Controller
                 $members = $service->findAccountData($value->builder);
                 $name =$members['account_name'];
             }
-            $input_arrays[] = array('start' => $value->start_time, 'end' => $value->end_time, 'title' => $part_time['name'].'已排班 排班者：'.$name, 'url' => Yii::app()->createUrl('reservation/cancelReservationByCalendar', ['id' => $value->id]));
+            $input_arrays[] = array('start' => $value->start_time, 'end' => $value->end_time, 'title' => $part_time['name'].'已排班 排班者：'.$name, 'url' => Yii::app()->createUrl('parttime/cancelPartTimeByCalendar', ['id' => $value->id]));
 
         }
 
 
         //儀器關閉資料表
         $service = new DevcloseService();
-        $model = $service->findDevicCloseAll($device_id);
+        $model = $service->findDevicCloseAll($part_time_empolyee_id);
 
         foreach ($model as $value) {//查系統管理員
             $clsreason_msg = '';
@@ -464,7 +425,7 @@ class ReservationController extends Controller
         }
 
 
-        //開放預約的時段
+        //開放排班的時段
         $today = strtotime($today);
         $endday = strtotime($end_date);
         $diff = ($endday - $today) / 86400;
@@ -474,7 +435,7 @@ class ReservationController extends Controller
             $start = date("Y-m-d", strtotime('+' . $i . ' days', strtotime(date('Y-m-d')))); //取得今天日期
             $end = date("Y-m-d", strtotime('+' . $i . ' days', strtotime(date('Y-m-d')))); //取得今天日期
 
-            array_push($input_arrays, array('start' => $start, 'end' => $end, 'title' => '開放排班', 'url' => Yii::app()->createUrl('reservation/create', ['part_time_empolyee_id' => $part_time_empolyee_id, 'start' => $start, 'end' => $end]), 'color' => '#66DD00'));
+            array_push($input_arrays, array('start' => $start, 'end' => $end, 'title' => '開放排班', 'url' => Yii::app()->createUrl('parttime/create', ['part_time_empolyee_id' => $part_time_empolyee_id, 'start' => $start, 'end' => $end]), 'color' => '#66DD00'));
 
         }
 
@@ -515,7 +476,7 @@ class ReservationController extends Controller
         }
 
         if(empty($_POST['part_time_empolyee_id']) || empty($_POST['start_date']) || empty($_POST['start_hour']) | empty($_POST['start_minute']) || empty($_POST['end_date']) || empty($_POST['end_hour']) || empty($_POST['end_minute'])){
-                Yii::app()->session['error_msg'] = '工讀時間請填寫完整';//二個使用者可以預約同一時段 FIX
+                Yii::app()->session['error_msg'] = '工讀時間請填寫完整';//二個使用者可以排班同一時段 FIX
                 $this->redirect('index');
         }
 
@@ -546,7 +507,7 @@ class ReservationController extends Controller
 
 
 
-        $service = new ReservationService();
+        $service = new ParttimeService();
         $model = $service->create($inputs);
 
         if ($model->hasErrors()) {
@@ -557,18 +518,18 @@ class ReservationController extends Controller
             foreach ($inputs as $key => $val) {
                 Yii::app()->session[$key] = "";
             }
-            $this->redirect(Yii::app()->createUrl('reservation/part_time', ['part_time_empolyee_id' => $inputs["part_time_empolyee_id"]]));
+            $this->redirect(Yii::app()->createUrl('parttime/index', ['part_time_empolyee_id' => $inputs["part_time_empolyee_id"]]));
         }
     }
 
     private function doGetCreate()
     {
 
-        $device_id = $_GET['device_id'];
+        $part_time_empolyee_id = $_GET['part_time_empolyee_id'];
         $start = $_GET['start'];
         $end = $_GET['end'];
         $part_time_employees = EmployeeService::getPTEmployee(7);
-        $this->render('create', ['part_time_employees' => $part_time_employees, 'device_id' => $device_id, 'start' => $start, 'end' => $end]);
+        $this->render('create', ['part_time_employees' => $part_time_employees, 'part_time_empolyee_id' => $part_time_empolyee_id, 'start' => $start, 'end' => $end]);
         $this->clearMsg();
 
     }
@@ -589,7 +550,7 @@ class ReservationController extends Controller
 
         $inputs = [];
         $inputs["id"] = filter_input(INPUT_POST, "id");
-        $inputs["device_id"] = filter_input(INPUT_POST, "device_id");
+        $inputs["part_time_empolyee_id"] = filter_input(INPUT_POST, "part_time_empolyee_id");
         $inputs["start_time"] = filter_input(INPUT_POST, "start_time");
         $inputs["end_time"] = filter_input(INPUT_POST, "end_time");
         $inputs["status"] = filter_input(INPUT_POST, "status");
@@ -597,8 +558,8 @@ class ReservationController extends Controller
         $inputs["builder"] = filter_input(INPUT_POST, "builder");
         $inputs["canceler"] = filter_input(INPUT_POST, "canceler");
 
-        $service = new ReservationService();
-        $model = $service->updateReservation($inputs);
+        $service = new ParttimeService();
+        $model = $service->updatePartTime($inputs);
 
         if ($model->hasErrors()) {
             Yii::app()->session['error_msg'] = $model->getErrors();
@@ -611,7 +572,7 @@ class ReservationController extends Controller
 
     private function doGetUpdate($id)
     {
-        $model = Reservation::model()->findByPk($id);
+        $model = PartTime::model()->findByPk($id);
 
         $service = new DeviceService();
         $devices = $service->findDevices();
@@ -646,7 +607,7 @@ class ReservationController extends Controller
 
         $id = filter_input(INPUT_POST, 'id');
 
-        $model = Reservation::model()->findByPk($id);
+        $model = PartTime::model()->findByPk($id);
 
         if ($model !== null) {
             $model->delete();
@@ -654,7 +615,7 @@ class ReservationController extends Controller
         }
     }
 
-    public function AjaxCancelReservation($csrf,$id){
+    public function AjaxCancelPartTime($csrf,$id){
         try{
             if (!$csrf){
                 return json_encode('你非法操作系統，已記錄您的IP身分驗證有誤,請確認執行者身分');
@@ -663,44 +624,44 @@ class ReservationController extends Controller
             //$_POST['id']=118;
             if( empty( $id ) ){
 
-                return json_encode("沒有指定之預約");
+                return json_encode("沒有指定之排班");
                 //exit;
 
             }else{
-                $service = new ReservationService();
+                $service = new ParttimeService();
                 if(Yii::app()->session['personal']){//一般使用者
-                    if (isset(Yii::app()->session['uid'])) {//確定該預約是不是使用者自己的
+                    if (isset(Yii::app()->session['uid'])) {//確定該排班是不是使用者自己的
                         $memberServer = new MemberService();
                         $result = $memberServer->findByMemId(Yii::app()->session['uid']);
                         $use_id = $result->id;
 
                         $now_time = date("Y-m-d H:i:s");
 
-                        $model = $service->findReservationIDByUserID($use_id, $id);
+                        $model = $service->findPartTimeIDByUserID($use_id, $id);
 
-                        if (!empty($model)) {//如果不是空的找出目前預約這筆資料
-                            $before_start_time = date($model['start_time'], strtotime("-1 day"));//預約開始時間前24H
-                            if ($now_time < $before_start_time) {//現在時間是否小於等於 預約開始的時間-24H  判斷目前時間是否在預約開始時間24小時以內
-                                $reservationSv = new ReservationService();
-                                $res = $reservationSv->editReservationStatus($id, 3);
+                        if (!empty($model)) {//如果不是空的找出目前排班這筆資料
+                            $before_start_time = date($model['start_time'], strtotime("-1 day"));//排班開始時間前24H
+                            if ($now_time < $before_start_time) {//現在時間是否小於等於 排班開始的時間-24H  判斷目前時間是否在排班開始時間24小時以內
+                                $parttimeSv = new ParttimeService();
+                                $res = $parttimeSv->editPartTimeStatus($id, 3);
                                 if ($res == true) {
-                                    return json_encode("已成功取消預約");
+                                    return json_encode("已成功取消排班");
                                 } else {
-                                    return json_encode("取消預約失敗");
+                                    return json_encode("取消排班失敗");
                                 }
                             } else {
-                                return json_encode("很抱歉！預約不可以在預約開始前24小時取消，所以您無法取消該筆預約請洽系統管理員");
+                                return json_encode("很抱歉！排班不可以在排班開始前24小時取消，所以您無法取消該筆排班請洽系統管理員");
                             }
                         } else {
-                            return json_encode("很抱歉！這筆預約紀錄不是您，所以您無法取消該筆預約請洽系統管理員");
+                            return json_encode("很抱歉！這筆排班紀錄不是您，所以您無法取消該筆排班請洽系統管理員");
                         }
                     }
                 }else{//系統管理員
-                    $res = $service->editReservationStatus($id,3);
+                    $res = $service->editPartTimeStatus($id,3);
                     if ($res == true) {
-                        return json_encode("已成功取消預約");
+                        return json_encode("已成功取消排班");
                     } else {
-                        return json_encode("取消預約失敗");
+                        return json_encode("取消排班失敗");
                     }
                 }
             }
@@ -709,26 +670,26 @@ class ReservationController extends Controller
             //exit();
         }
     }
-    // 取消預約
-    public function actioncancelReservationByCalendar(){
+    // 取消排班
+    public function actioncancelPartTimeByCalendar(){
         $csrf = CsrfProtector::comparePost();
         $id = $_GET['id'];
-        $result = $this->AjaxCancelReservation(true,$id);
+        $result = $this->AjaxCancelPartTime(true,$id);
         $message = json_decode($result);
-        if ($message === '已成功取消預約') {
+        if ($message === '已成功取消排班') {
             $_SESSION['success_msg'] = $message;
         } else {
             $_SESSION['error_msg'] = $message;
         }
-        $service = new ReservationService();
-        $reservation = $service->findReservationById($id);
-        $this->redirect(Yii::app()->createUrl('reservation/index?device_id=' . $reservation[0]['device_id']));
+        $service = new ParttimeService();
+        $parttime = $service->findPartTimeById($id);
+        $this->redirect(Yii::app()->createUrl('parttime/index?part_time_empolyee_id=' . $parttime[0]['part_time_empolyee_id']));
     }
-    // 取消預約
-    public function actioncancelReservation(){
+    // 取消排班
+    public function actioncancelPartTime(){
         $csrf = CsrfProtector::comparePost();
         $id = $_POST['id'];
-        $result = $this->AjaxCancelReservation($csrf,$id);
+        $result = $this->AjaxCancelPartTime($csrf,$id);
         echo $result;
         exit();
     }

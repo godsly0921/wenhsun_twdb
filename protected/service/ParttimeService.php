@@ -1,16 +1,9 @@
 <?php
-
-/**
- * Created by PhpStorm.
- * User: neil
- * Date: 2015/7/11
- * Time: 下午 05:07
- */
-class ReservationService
+class ParttimeService
 {
-    public function findReservationDayAll($start_time, $end_time)
+    public function findPartTimeDayAll($start_time, $end_time)
     {
-        $result = Reservation::model()->findAll([
+        $result = PartTime::model()->findAll([
             'condition' => 'start_time>=:start_time and end_time<=:end_time',
             'params' => [
                 ':start_time' => $start_time,
@@ -20,9 +13,9 @@ class ReservationService
         return $result;
     }
 
-    public function findReservationDayAllWithoutCancel($start_time, $end_time)
+    public function findPartTimeDayAllWithoutCancel($start_time, $end_time)
     {
-        $result = Reservation::model()->findAll([
+        $result = PartTime::model()->findAll([
             'condition' => 'start_time>=:start_time and end_time<=:end_time and status!=:status',
             'params' => [
                 ':start_time' => $start_time,
@@ -33,9 +26,9 @@ class ReservationService
         return $result;
     }
 
-    public function findReservationDayAllByUserID($start_time, $end_time,$user_id,$id)
+    public function findPartTimeDayAllByUserID($start_time, $end_time,$user_id,$id)
     {
-        $result = Reservation::model()->findAll([
+        $result = PartTime::model()->findAll([
             'condition' => 'start_time>=:start_time and end_time<=:end_time and builder =:builder and id =:id',
             'params' => [
                 ':start_time' => $start_time,
@@ -47,9 +40,9 @@ class ReservationService
         return $result;
     }
 
-    public function findReservationByUserIDWithTime($user_id,$startime,$endtime)
+    public function findPartTimeByUserIDWithTime($user_id,$startime,$endtime)
     {
-        $result = Reservation::model()->findAll([
+        $result = PartTime::model()->findAll([
             'condition' => '(builder =:builder and start_time >=:startime and start_time <:endtime) or end_time>= DATE_SUB(NOW(), interval 30 minute);',
             'params' => [
                 ':builder' => $user_id,
@@ -61,7 +54,7 @@ class ReservationService
     }
 
     //找出使用者目前『操作關閉時間』的儀器，是已超過別人預約開始的時間
-    public function findReservationByUserTimeAndDeviceId($device_id,$user_time,$use_id)
+    public function findPartTimeByUserTimeAndDeviceId($device_id,$user_time,$use_id)
     {
 		$res = Yii::app()->db->createCommand()
         ->select('*')
@@ -71,9 +64,9 @@ class ReservationService
 		return ($res);
     }
 
-    public function findReservationIDByUserID($user_id,$id)
+    public function findPartTimeIDByUserID($user_id,$id)
     {
-        $result = Reservation::model()->find([
+        $result = PartTime::model()->find([
             'condition' => 'builder =:builder and id =:id',
             'params' => [
                 ':builder' => $user_id,
@@ -83,7 +76,7 @@ class ReservationService
         return $result;
     }
 
-    public function findReservationDayAllForStation($station_id,$datetime)
+    public function findPartTimeDayAllForStation($station_id,$datetime)
     {
         $res = Yii::app()->db->createCommand()
             ->select('d.*, r.*')
@@ -95,9 +88,9 @@ class ReservationService
         return ($res);
     }
 
-    public function findReservationCancelDayAll($start_time, $end_time)
+    public function findPartTimeCancelDayAll($start_time, $end_time)
     {
-        $result = Reservation::model()->findAll([
+        $result = PartTime::model()->findAll([
             'condition' => 'start_time>=:start_time and end_time<=:end_time and status=:status',
             'params' => [
                 ':start_time' => $start_time,
@@ -108,9 +101,9 @@ class ReservationService
         return $result;
     }
 
-    public function findReservationDeviceIDAll($device_id,$start_time, $end_time)
+    public function findPartTimeDeviceIDAll($device_id,$start_time, $end_time)
     {
-        $result = Reservation::model()->findAll([
+        $result = PartTime::model()->findAll([
             'condition' => '((:start_time >= start_time AND :start_time < end_time)
                               OR (:end_time > start_time AND :end_time <= end_time))
                               and status=:status and device_id=:device_id',
@@ -124,7 +117,7 @@ class ReservationService
         return $result;
     }
 
-    public function findReservationCancelAndConditionDayAll($inputs)
+    public function findPartTimeCancelAndConditionDayAll($inputs)
     {
         $criteria = new CDbCriteria();
         $criteria->select = '*';
@@ -149,7 +142,7 @@ class ReservationService
 
         // }
 
-        $datas = Reservation::model()->findAll($criteria);
+        $datas = PartTime::model()->findAll($criteria);
 
         if (count($datas) == 0) {
             $datas = false;
@@ -159,7 +152,7 @@ class ReservationService
     }
 
 
-    public function findReservationDayAllAndDevice($inputs)
+    public function findPartTimeDayAllAndDevice($inputs)
     {
         $criteria = new CDbCriteria();
         $criteria->select = '*';
@@ -184,7 +177,7 @@ class ReservationService
         }
 
 
-        $datas = Reservation::model()->findAll($criteria);
+        $datas = PartTime::model()->findAll($criteria);
 
         if (count($datas) == 0) {
             $datas = false;
@@ -194,9 +187,9 @@ class ReservationService
 
     }
 
-    public function findReservationAll($part_time_empolyee_id)
+    public function findPartTimeAll($part_time_empolyee_id)
     {
-        $result = Reservation::model()->findAll([
+        $result = PartTime::model()->findAll([
             'condition' => 'part_time_empolyee_id=:part_time_empolyee_id and status=:status',
             'params' => [
                 ':part_time_empolyee_id' => $part_time_empolyee_id, ':status' => 0,
@@ -205,15 +198,15 @@ class ReservationService
         return $result;
     }
 
-    public function findReservation()
+    public function findPartTime()
     {
-        $result = Reservation::model()->findAll();
+        $result = PartTime::model()->findAll();
         return $result;
     }
 
-    public function findReservationStatus()
+    public function findPartTimeStatus()
     {
-        $result = Reservation::model()->findAll([
+        $result = PartTime::model()->findAll([
             'condition' => 'status=:status',
             'params' => [
                 ':status' => 0,
@@ -222,9 +215,9 @@ class ReservationService
         return $result;
     }
 
-    public function findReservationByStatusAndDate($status,$date)
+    public function findPartTimeByStatusAndDate($status,$date)
     {
-        $result = Reservation::model()->findAll([
+        $result = PartTime::model()->findAll([
             'condition' => 'status=:status and builder_type=:builder_type and start_time like :start_time',
             'params' => [
                 ':status' => $status,
@@ -240,7 +233,7 @@ class ReservationService
      */
     public function create(array $inputs)
     {
-        $model = new Reservation();
+        $model = new PartTime();
 
       //  var_dump(Yii::app()->session['personal']);
       //  exit();
@@ -275,9 +268,9 @@ class ReservationService
      * @param array $inputs
      * @return CActiveRecord
      */
-    public function updateReservation(array $inputs)
+    public function updatePartTime(array $inputs)
     {
-        $model = Reservation::model()->findByPk($inputs["id"]);
+        $model = PartTime::model()->findByPk($inputs["id"]);
 
         $inputs["id"] = filter_input(INPUT_POST, "id");
         $inputs["device_id"] = filter_input(INPUT_POST, "device_id");
@@ -321,13 +314,13 @@ class ReservationService
     }
 
     // 轉換預約狀態
-    public function editReservationStatus( $id , $status ){
+    public function editPartTimeStatus( $id , $status ){
 
-        $Reservation           = Reservation::model()->findByPk( $id );
-        $Reservation->status   = $status;
-        $Reservation->canceler = $_SESSION['uid'];
-        $Reservation->canceler_type= Yii::app()->session['personal'];
-        if( $Reservation->save() ){
+        $PartTime           = PartTime::model()->findByPk( $id );
+        $PartTime->status   = $status;
+        $PartTime->canceler = $_SESSION['uid'];
+        $PartTime->canceler_type= Yii::app()->session['personal'];
+        if( $PartTime->save() ){
             
             return true;
 
@@ -338,9 +331,9 @@ class ReservationService
 
     }
 
-    public function findReservationById($id)
+    public function findPartTimeById($id)
     {
-        $result = Reservation::model()->findAll([
+        $result = PartTime::model()->findAll([
             'condition' => 'id=:id',
             'params' => [
                 ':id' => $id

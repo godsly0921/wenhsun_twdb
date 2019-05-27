@@ -1,6 +1,6 @@
 <div class="row">
     <div class="title-wrap col-lg-12">
-        <h3 class="title-left">儀器預約新增</h3>
+        <h3 class="title-left">工讀生排班新增</h3>
     </div>
 </div>
 
@@ -21,7 +21,7 @@
     <?php endif; ?>
 </div>
 
-<form class="form-horizontal" action="<?php echo Yii::app()->createUrl('reservation/create'); ?>" method="post"
+<form class="form-horizontal" action="<?php echo Yii::app()->createUrl('parttime/create'); ?>" method="post"
       enctype="multipart/form-data">
 
     <?php CsrfProtector::genHiddenField(); ?>
@@ -30,23 +30,31 @@
             <div class="panel-body">
 
                 <div class="form-group">
-                    <label class="col-sm-2 control-label">預約儀器:</label>
+                    <label class="col-sm-2 control-label">選擇工讀生:</label>
                     <div class="col-sm-5">
-                        <select class="form-control" name="device_id">
-                            <?php foreach ($devices as $key => $value): ?>
-                                <?php if ($value->id == $device_id): ?>
+                        <?php if($part_time_employees != false): ?>
+                        <select class="form-control" name="part_time_empolyee_id">
+
+                            <?php foreach ($part_time_employees as $key => $value): ?>
+                                <?php if ($value->id == $part_time_empolyee_id): ?>
                                     <option selected="selected" value="<?= $value->id ?>"><?= $value->name ?></option>
                                 <?php else: ?>
                                     <option value="<?= $value->id ?>"><?= $value->name ?></option>
 <!--                                    <option disabled="disabled" value="--><?//= $value->id ?><!--">--><?//= $value->name ?><!--</option>-->
                                 <?php endif; ?>
                             <?php endforeach; ?>
+
                         </select>
+                        <?php else: ?>
+                        <select class="form-control" name="part_time_empolyee_id">
+                           <option selected="selected" value="--">工讀生尚未設定</option>
+                        </select>
+                        <?php endif; ?>
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label for="adv_id" class="col-sm-2 control-label">預約開始日期:</label>
+                    <label for="adv_id" class="col-sm-2 control-label">開始日期:</label>
                     <div class="col-sm-3">
                         <input type="date" class="form-control" disabled="disabled" name="start_date_show" placeholder="" value="<?= $start?>">
                         <input type="hidden" name="start_date" value="<?= $start?>">
@@ -70,7 +78,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="adv_id" class="col-sm-2 control-label">預約結束日期:</label>
+                    <label for="adv_id" class="col-sm-2 control-label">結束日期:</label>
                     <div class="col-sm-3">
                         <input type="date" class="form-control" disabled="disabled" name="end_date_show" placeholder="" value="<?= $end ?>">
                         <input type="hidden" name="end_date" value="<?= $end?>">

@@ -41,7 +41,7 @@
             <div class="col-md-3 left_col">
                 <div class="left_col scroll-view">
                     <div class="navbar nav_title" style="border: 0;">
-                        <a href="index.html" class="site_title"><span>文訊雜誌社人資系統</span></a>
+                        <a href="<?php echo Yii::app()->createUrl('news/list'); ?>" class="site_title"><span>文訊雜誌社人資系統</span></a>
                     </div>
 
                     <div class="clearfix"></div>

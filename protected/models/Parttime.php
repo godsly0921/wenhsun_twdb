@@ -15,14 +15,14 @@
  * @property string $create_time
  * @property string $modify_time
  */
-class Reservation extends CActiveRecord
+class Parttime extends CActiveRecord
 {
 	/**
 	 * @return string the associated database table name
 	 */
 	public function tableName()
 	{
-		return 'reservation';
+		return 'part_time';
 	}
 
 	/**
@@ -109,7 +109,7 @@ class Reservation extends CActiveRecord
 	 * Returns the static model of the specified AR class.
 	 * Please note that you should have this exact method in all your CActiveRecord descendants!
 	 * @param string $className active record class name.
-	 * @return Reservation the static model class
+	 * @return Parttime the static model class
 	 */
 	public static function model($className=__CLASS__)
 	{
