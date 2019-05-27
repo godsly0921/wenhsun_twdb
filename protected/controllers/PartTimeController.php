@@ -34,7 +34,7 @@ class PartTimeController extends Controller
         $part_time_employees = EmployeeService::getPTEmployee(7);
 
         $service = new ParttimeService();
-        $part_time_empolyee_id = isset($_GET['part_time_empolyee_id'])?$_GET['part_time_empolyee_id']:$part_time_employees['part_time_empolyee_id'];
+        $part_time_empolyee_id = isset($_GET['part_time_empolyee_id'])?$_GET['part_time_empolyee_id']:$part_time_employees[0]->id;
         $model = $service->findPartTimeAll($part_time_empolyee_id);
 
         $this->render('index', ['model' => $model, 'part_time_empolyee_id' => $part_time_empolyee_id, 'part_time_employees' => $part_time_employees]);
