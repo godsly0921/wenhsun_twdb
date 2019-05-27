@@ -50,10 +50,10 @@ use Wenhsun\Transform\MultiColumnTransformer;
                                     <td>
                                         <a href="<?= Yii::app()->createUrl('/author/edit?id='.$data->id);?>"><?=$data->author_name?></a>
                                     </td>
-                                    <td><?=$multiTransfer->toText(';', $data->pen_name);?></td>
-                                    <td><?=$multiTransfer->toText(';', $data->email);?></td>
-                                    <td><?=$multiTransfer->toText(';', $data->home_phone);?></td>
-                                    <td><?=$multiTransfer->toText(';', $data->mobile);?></td>
+                                    <td><?=$multiTransfer->toText('；', $data->pen_name);?></td>
+                                    <td><?=$multiTransfer->toText('；', $data->email);?></td>
+                                    <td><?=$multiTransfer->toText('；', $data->home_phone);?></td>
+                                    <td><?=$multiTransfer->toText('；', $data->mobile);?></td>
                                     <td><?=$data->memo?></td>
                                 </tr>
                             <?php endforeach;?>
