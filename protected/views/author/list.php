@@ -79,5 +79,9 @@ use Wenhsun\Transform\MultiColumnTransformer;
                     "oPaginate": {"sFirst": "第一頁", "sPrevious": "上一頁","sNext": "下一頁","sLast": "最後一頁"}
                 }
             });
+
+            $('body').bind('cut copy paste', function (e) {
+                e.preventDefault();
+            });
         });
     </script>
