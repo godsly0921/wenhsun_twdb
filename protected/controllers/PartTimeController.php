@@ -40,331 +40,15 @@ class PartTimeController extends Controller
         $this->render('index', ['model' => $model, 'part_time_empolyee_id' => $part_time_empolyee_id, 'part_time_employees' => $part_time_employees]);
     }
 
-
-    public function actionSpecial_list()
-    {
-
-        $start_time = date('Y-m-d') . ' 00:00:00';
-        $end_time = date('Y-m-d') . ' 23:59:59';
-
-        /* $start_time = '2018-05-12 00:00:00';
-         $end_time = '2018-05-12 00:00:00';*/
-        //  $end_time = date('Y-m-d').' 23:59:59';
-
-        $service = new ParttimeService();
-        $model = $service->findPartTimeDayAll($start_time, $end_time);
-
-        $service = new DeviceService();
-        $devices = $service->findDevices();
-
-        $service = new MemberService();
-        $members = $service->findMemberlist();
-
-        $this->render('special_list', ['model' => $model, 'devices' => $devices, 'categorys' => $this->categorys, 'members' => $members]);
-    }
-
-    public function actionCancel_list()
-    {
-
-        $start_time = date('Y-m-d') . ' 00:00:00';
-        $end_time = date('Y-m-d') . ' 23:59:59';
-
-        $service = new ParttimeService();
-        $model = $service->findPartTimeCancelDayAll($start_time, $end_time);
-
-        $service = new DeviceService();
-        $devices = $service->findDevices();
-
-        $service = new MemberService();
-        $members = $service->findMemberlist();
-
-        $service = new AccountService();
-        $accounts = $service->findAccounts();
-
-        $this->render('cancel_list', ['model' => $model, 'devices' => $devices, 'categorys' => $this->categorys, 'members' => $members, 'accounts' => $accounts]);
-    }
-
-    public function actionGet_cancel_list()
-    {
-
-        $inputs["part_time_empolyee_id"] = filter_input(INPUT_POST, "part_time_empolyee_id");
-        $inputs["start_time"] = filter_input(INPUT_POST, "start_date");
-        $inputs["end_time"] = filter_input(INPUT_POST, "end_date");
-
-        $service = new ParttimeService();
-        $model = $service->findPartTimeDayAllAndDevice($inputs);//查詢日期與取消條件
-
-        $service = new DeviceService();
-        $devices = $service->findDevices();
-
-        $service = new MemberService();
-        $members = $service->findMemberlist();
-
-        $service = new AccountService();
-        $accounts = $service->findAccounts();
-
-        Yii::app()->session['part_time_empolyee_id']  = $inputs["part_time_empolyee_id"];
-        Yii::app()->session['start_date'] = $inputs["start_time"];
-        Yii::app()->session['end_date']   = $inputs["end_time"];
-
-        $this->render('cancel_list', ['model' => $model, 'devices' => $devices, 'categorys' => $this->categorys, 'members' => $members, 'accounts' => $accounts]);
-    }
-
-    // 匯出excel
-    function actionGet_cancel_excel()
-    {
-
-        // 查詢符合資料
-        $inputs['part_time_empolyee_id']  = Yii::app()->session['part_time_empolyee_id'];
-        $inputs['start_date'] = Yii::app()->session['start_date'];
-        $inputs['end_date']   = Yii::app()->session['end_date'];
-
-        $service = new DeviceService();
-        $devices = $service->findDevices();
-
-        $service = new MemberService();
-        $members = $service->findMemberlist();
-
-        $service = new AccountService();
-        $accounts = $service->findAccounts();
-
-        $service = new ParttimeService();
-        $model = $service->findPartTimeCancelAndConditionDayAll($inputs);//查詢日期與取消條件
-
-        error_reporting(E_ALL);
-        ini_set('display_errors', TRUE);
-        ini_set('display_startup_errors', TRUE);
-        date_default_timezone_set('Europe/London');
-        if (PHP_SAPI == 'cli')
-            die('This example should only be run from a Web Browser');
-        /** Include PHPExcel */
-        require_once dirname(__FILE__) . '/../components/PHPExcel.php';
-        // Create new PHPExcel object
-        $objPHPExcel = new PHPExcel();
-        // Set document properties
-        $objPHPExcel->getProperties()->setCreator("清大門禁系統")
-            ->setLastModifiedBy("清大門禁系統")
-            ->setTitle("清大門禁系統")
-            ->setSubject("清大門禁系統")
-            ->setDescription("清大門禁系統")
-            ->setKeywords("清大門禁系統")
-            ->setCategory("清大門禁系統");
-        // Add some data 設定匯出欄位資料
-        $objPHPExcel->setActiveSheetIndex(0)
-            ->setCellValue('A1', '儀器名稱')
-            ->setCellValue('B1', '排班人')
-            ->setCellValue('C1', '排班開始時間')
-            ->setCellValue('D1', '排班結束時間')
-            ->setCellValue('E1', '是否正常使用')
-            ->setCellValue('F1', '取消人員')
-            ->setCellValue('G1', '取消原因')
-            ->setCellValue('H1', '申請日')
-            ->setCellValue('I1', '異動日');
-
-        // Miscellaneous glyphs, UTF-8 設定內容資料
-        $i = 2;
-
-        foreach ($model as $value) {
-
-            foreach ($devices as $k => $v):
-                if ($v->id == $value->part_time_empolyee_id):
-                    $devices_name = $v->name;
-                endif;
-            endforeach;
-
-            foreach ($members as $k => $v):
-                if ($v->id == $value->builder){
-                    $member_name = $v->name;
-                }else{
-                    $member_name = '無資料';
-                }
-
-            endforeach;
-
-
-            foreach ($this->categorys as $k => $v):
-                if ($k == $value->status):
-                    $categorys_name = $v;
-                endif;
-            endforeach;
-
-            foreach ($accounts as $k => $v):
-                if ($v->id == $value->canceler):
-                    $account_name = $v->account_name;
-                else:;
-                    $account_name = '無資料';
-                endif;
-            endforeach;
-
-           $objPHPExcel->setActiveSheetIndex(0)
-                ->setCellValue('A' . $i, $devices_name)
-                ->setCellValue('B' . $i, $member_name)
-                ->setCellValue('C' . $i, $value->start_time)
-                ->setCellValue('D' . $i, $value->end_time)
-                ->setCellValue('E' . $i, $categorys_name)
-                ->setCellValue('F' . $i, $account_name)
-                ->setCellValue('G' . $i, $value->remark)
-                ->setCellValue('H' . $i, $value->create_time)
-                ->setCellValue('I' . $i, $value->modify_time);
-
-            $i++;
-
-        }
-
-        // Rename worksheet 表單名稱
-        $objPHPExcel->getActiveSheet()->setTitle('清大門禁系統-排班取消明細表');
-        // Set active sheet index to the first sheet, so Excel opens this as the first sheet
-        $objPHPExcel->setActiveSheetIndex(0);
-
-        //目前支援xls匯出
-        $filename = urlencode("清大門禁系統-排班取消明細表" . ".xls");
-        ob_end_clean();
-        header("Content-type: text/html; charset=utf-8");
-        header("Content-Type: application/vnd.ms-excel");
-        header("Content-Disposition: attachment;filename=" . $filename);
-        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
-        $objWriter->save('php://output');
-        exit;
-    }
-
-    // 列印
-    function actionGet_cancel_printer()
-    {
-
-        $this->layout = "back_end_cls";
-
-        $inputs['part_time_empolyee_id'] = Yii::app()->session['part_time_empolyee_id'];
-        $inputs['start_date'] = Yii::app()->session['start_date'];
-        $inputs['end_date'] = Yii::app()->session['end_date'];
-
-
-
-        $service = new DeviceService();
-        $devices = $service->findDevices();
-
-        $service = new MemberService();
-        $members = $service->findMemberlist();
-
-        $service = new AccountService();
-        $accounts = $service->findAccounts();
-
-        $service = new ParttimeService();
-        $model = $service->findPartTimeCancelAndConditionDayAll($inputs);//查詢日期與取消條件
-
-
-        $this->render('cancel_print', ['model' => $model, 'devices' => $devices, 'categorys' => $this->categorys, 'members' => $members, 'accounts' => $accounts]);
-
-    }
-
-
-    public function actionGet_special_list()
-    {
-        $inputs["part_time_empolyee_id"] = filter_input(INPUT_POST, "part_time_empolyee_id");
-        $inputs["start_time"] = filter_input(INPUT_POST, "start_time");
-        $inputs["end_time"] = filter_input(INPUT_POST, "end_time");
-
-        /* $start_time = '2018-05-12 00:00:00';
-         $end_time = '2018-05-12 00:00:00';*/
-        //  $end_time = date('Y-m-d').' 23:59:59';
-
-        $service = new ParttimeService();
-        $model = $service->findPartTimeDayAllAndDevice($inputs);
-
-        $service = new DeviceService();
-        $devices = $service->findDevices();
-
-        $service = new MemberService();
-        $members = $service->findMemberlist();
-
-        $this->render('special_list', ['model' => $model, 'devices' => $devices, 'members' => $members, 'categorys' => $this->categorys]);
-    }
-
-    public function actionList()
-    {
-        $start_time = date('Y-m-01') . ' 00:00:00';
-        $end_time = date('Y-m-t', strtotime('now'));
-
-        /* $start_time = '2018-05-12 00:00:00';
-         $end_time = '2018-05-12 00:00:00';*/
-        //  $end_time = date('Y-m-d').' 23:59:59';
-
-        $service = new ParttimeService();
-        $model = $service->findPartTimeDayAll($start_time, $end_time);
-
-        $service = new DeviceService();
-        $devices = $service->findDevices();
-
-        $memberSer = new MemberService();
-        $memberAll = $memberSer->findMemberlist();
-
-        $accountServer = new AccountService();
-        $accountAll = $accountServer->findAccounts();
-
-        $this->render('list', ['model' => $model, 'devices' => $devices ,'members'=>$memberAll, 'accounts' => $accountAll ]);
-    }
-
-    public function actionGet_day_list()
-    {
-        $date = filter_input(INPUT_POST, "date");
-        $start_time = $date . ' 00:00:00';
-        $end_time = $date . ' 23:59:59';
-
-        /*var_dump($start_time);
-        var_dump($end_time);
-        exit();*/
-
-        /* $start_time = '2018-05-12 00:00:00';
-         $end_time = '2018-05-12 00:00:00';*/
-        //  $end_time = date('Y-m-d').' 23:59:59';
-
-        $service = new ParttimeService();
-        $model = $service->findPartTimeDayAll($start_time, $end_time);
-
-        $service = new DeviceService();
-        $devices = $service->findDevices();
-
-        $service = new MemberService();
-        $members = $service->findMemberlist();
-
-        $this->render('list', ['model' => $model, 'devices' => $devices, 'members' => $members]);
-    }
-
-
     public function actionGetevents()
     {
-
-        //--------------------------------------------------------------------------------------------------
-        // This script reads event data from a JSON file and outputs those events which are within the range
-        // supplied by the "start" and "end" GET parameters.
-        //
-        // An optional "timezone" GET parameter will force all ISO8601 date stings to a given timezone.
-        //
-        // Requires PHP 5.2.0 or higher.
-        //--------------------------------------------------------------------------------------------------
-
-        // Require our Event class and datetime utilities
-        //require dirname(__FILE__) . '/utils.php';
         require_once dirname(__FILE__) . '/../components/utils.php';
-
-        // Short-circuit if the client did not give us a date range.
-        /*  if (!isset($_GET['start']) || !isset($_GET['end'])) {//設定預設開始時間
-              die("Please provide a date range.");
-          }*/
-
         $start_date = date('Y-01-01', strtotime(date("Y-m-d"))); //取得當年份的第一天
 
         $end_date = date("Y-m-d", strtotime('+365 days', strtotime(date('Y-m-d')))); //取得一年後的日期
 
         $today = date("Y-m-d");
-
-        //$_GET['start'] = '2018-05-01';
-        //$_GET['end']  = '2018-05-31';
-        // $part_time_empolyee_id = 6;
         $part_time_empolyee_id = isset($_GET['part_time_empolyee_id'])?$_GET['part_time_empolyee_id']:'';
-
-        // Parse the start/end parameters.
-        // These are assumed to be ISO8601 strings with no time nor timezone, like "2013-12-29".
-        // Since no timezone will be present, they will parsed as UTC.
         $range_start = parseDateTime($start_date);
         $range_end = parseDateTime($end_date);
 
@@ -374,20 +58,10 @@ class PartTimeController extends Controller
         if (isset($_GET['timezone'])) {
             $timezone = new DateTimeZone($_GET['timezone']);
         }
-
-        // Read and parse our events JSON file into an array of event data arrays.
-
-        /* $json = file_get_contents(dirname(__FILE__) . '/../components/events.json');
-         $input_arrays = json_decode($json, true);*/
-
         $service = new ParttimeService();
-        //if($part_time_empolyee_id != ''){
-        //    $model = $service->findPartTimeAll($part_time_empolyee_id);
-        //}else{
-        $model = $service->findPartTimeStatus();
-        //}
 
-        //儀器排班資料表
+        $model = $service->findPartTimeStatus();
+
         $input_arrays = array();
 
         foreach ($model as $key => $value) {
@@ -408,23 +82,6 @@ class PartTimeController extends Controller
         }
 
 
-        //儀器關閉資料表
-        $service = new DevcloseService();
-        $model = $service->findDevicCloseAll($part_time_empolyee_id);
-
-        foreach ($model as $value) {//查系統管理員
-            $clsreason_msg = '';
-            $service = new AccountService();
-            $model = $service->findAccountData($value['builder']);
-
-            if($model!=NULL){
-                $input_arrays[] = array('start' => $value['startc'], 'end' => $value['endc'], 'title' => '儀器關閉 管理者：' . $model->account_name.' 關閉原因：'.$value['rname'], 'color' => '#FF0000');
-            }else{
-                $input_arrays[] = array('start' => $value['startc'], 'end' => $value['endc'], 'title' => '儀器關閉 管理者帳號已移除', 'color' => '#FF0000');
-            }
-        }
-
-
         //開放排班的時段
         $today = strtotime($today);
         $endday = strtotime($end_date);
@@ -440,7 +97,6 @@ class PartTimeController extends Controller
         }
 
 
-        // Accumulate an output array of event data arrays.
         $output_arrays = array();
         foreach ($input_arrays as $array) {
 

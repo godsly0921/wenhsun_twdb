@@ -40,7 +40,6 @@
                                     <option selected="selected" value="<?= $value->id ?>"><?= $value->name ?></option>
                                 <?php else: ?>
                                     <option value="<?= $value->id ?>"><?= $value->name ?></option>
-<!--                                    <option disabled="disabled" value="--><?//= $value->id ?><!--">--><?//= $value->name ?><!--</option>-->
                                 <?php endif; ?>
                             <?php endforeach; ?>
 
