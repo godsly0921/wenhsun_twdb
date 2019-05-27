@@ -56,7 +56,7 @@
             axisFormat: 'HH:mm',
             displayEventEnd: true,
             events: {
-                url: '<?php echo Yii::app()->createUrl('parttime/getevents',['device_id'=>$device_id]);?>',
+                url: '<?php echo Yii::app()->createUrl('parttime/getevents',['part_time_empolyee_id'=>$art_time_empolyee_id]);?>',
                 error: function() {
                     $('#script-warning').show();
                 }
