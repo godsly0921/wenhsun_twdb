@@ -4,22 +4,29 @@
     <div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">
         <div class="tile-stats">
             <div class="icon"><i class="fa fa-caret-square-o-right"></i></div>
-            <div class="count"><?=$count_single_size['total']?></div>
-            <h3>目前圖數</h3>
+            <div class="count"><?=$count_order_sum['order_total']?></div>
+            <h3>總金額</h3>
         </div>
     </div>
     <div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">
         <div class="tile-stats">
             <div class="icon"><i class="fa fa-comments-o"></i></div>
-            <div class="count"><?=$count_single['total']?></div>
-            <h3>上圖張數</h3>
+            <div class="count"><?=$count_order_sum['single_total']?></div>
+            <h3>單圖授權</h3>
         </div>
     </div>
     <div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">
         <div class="tile-stats">
             <div class="icon"><i class="fa fa-sort-amount-desc"></i></div>
-            <div class="count"><?=$count_single_publish['total']?></div>
-            <h3>上架張數</h3>
+            <div class="count"><?=$count_order_sum['point_total']?></div>
+            <h3>點數</h3>
+        </div>
+    </div>
+    <div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">
+        <div class="tile-stats">
+            <div class="icon"><i class="fa fa-sort-amount-desc"></i></div>
+            <div class="count"><?=$count_order_sum['sub_total']?></div>
+            <h3>自由載</h3>
         </div>
     </div>
 </div>
@@ -44,12 +51,16 @@
               <div class="clearfix"></div>
             </div>
             <ul class="list-unstyled top_profiles scroll-view">
-              <?php foreach ($top_profile as $key => $value) {?>
+              <?php foreach ($top3_order as $key => $value) {?>
                 <li class="media event">
-                  <div class="media-body">
-                    <a class="title" href="#"><?=$value['create_day']?></a>
-                    <p><strong>上傳圖數：<?=$value['each_day_count']?>張</strong></p>
-                  </div>
+                    <a class="pull-left border-green profile_thumb">
+                        <i class="fa fa-user green"></i>
+                    </a>
+                    <div class="media-body">
+                        <a class="title" href="#"><?=$value['member_name']?></a>
+                        <p><strong><?=$value['order_datetime']?></strong></p>
+                        <p><strong><?=$value['order_category']?></strong></p>
+                    </div>
                 </li>
               <?php }?>
             </ul>
@@ -76,7 +87,7 @@
 <script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/gentelella/vendors/bootstrap-daterangepicker/daterangepicker.js"></script>
 <script>
     $(document).ready(function() {
-        var s = '<?=$count_eachday_upload?>';
+        var s = '<?=$count_eachday_order?>';
         var chart_plot_data = JSON.parse(s);
         console.log(chart_plot_data);
         var system_data = [];

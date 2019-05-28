@@ -21,9 +21,10 @@ class ReportController extends Controller{
 
     public function ActionOrder(){
         $reportService = new ReportService();
-        $count_eachday_upload = $reportService->countEachdayOrder(); // 統計近 20 天的總銷售額
+        $count_eachday_order = $reportService->countEachdayOrder(); // 統計近 20 天的總銷售額
         $count_order_sum = $reportService->getSumOrder(); // 統計總銷售額、點數銷售額、自由載銷售額、單圖銷售額
-        $this->render('order');
+        $top3_order = $reportService->top3_Order(); // 最近 3 筆訂單資訊
+        $this->render('order',array('count_order_sum'=>$count_order_sum,'count_eachday_order'=>$count_eachday_order,'top3_order'=>$top3_order));
     }
 }
 ?>
