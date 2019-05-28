@@ -33,12 +33,13 @@ use Wenhsun\Transform\MultiColumnTransformer;
                     <table id="datatable" class="table table-striped table-bordered">
                         <thead>
                         <tr>
-                            <th>姓名</th>
                             <th>筆名</th>
+                            <th>姓名</th>
                             <th>電子郵件</th>
                             <th>住家電話</th>
                             <th>手機</th>
                             <th>備註</th>
+                            <th>操作</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -47,14 +48,15 @@ use Wenhsun\Transform\MultiColumnTransformer;
                             $multiTransfer = new MultiColumnTransformer();
                             foreach($list as $data):?>
                                 <tr>
-                                    <td>
-                                        <a href="<?= Yii::app()->createUrl('/author/edit?id='.$data->id);?>"><?=$data->author_name?></a>
-                                    </td>
                                     <td><?=$multiTransfer->toText('；', $data->pen_name);?></td>
+                                    <td><?=$data->author_name?></td>
                                     <td><?=$multiTransfer->toText('；', $data->email);?></td>
                                     <td><?=$multiTransfer->toText('；', $data->home_phone);?></td>
                                     <td><?=$multiTransfer->toText('；', $data->mobile);?></td>
                                     <td><?=$data->memo?></td>
+                                    <td>
+                                        <a href="<?= Yii::app()->createUrl('/author/edit?id='.$data->id);?>"><i class="fa fa-edit" style="font-size:18px"></i></a>
+                                    </td>
                                 </tr>
                             <?php endforeach;?>
                         <?php else:?>
