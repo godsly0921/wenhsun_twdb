@@ -30,7 +30,7 @@
                     <td class="sort"><?= $value->new_createtime ?></td>
                     <?php $account_name = '';
                     foreach ($account as $v):?>
-                        <?php if ($value->	builder == $v->id): ?>
+                        <?php if ($value->builder == $v->id): ?>
                             <?php $account_name = $v->account_name ?>
                         <?php endif; ?>
                     <?php endforeach; ?>

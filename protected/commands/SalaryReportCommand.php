@@ -33,21 +33,26 @@ class SalaryReportCommand extends CConsoleCommand
 
         foreach ($employees as $employee) {
 
-            $salaryReportEmployee = new SalaryReportEmployee(
-                Uuid::gen(),
-                $employee['employee_id'],
-                (float)$employee['salary'],
-                0,
-                0,
-                0,
-                0,
-                0,
-                (float)$employee['health_insurance'],
-                (float)$employee['labor_insurance'],
-                (float)$employee['pension']
-            );
+            if (!empty($employee['salary'])) {
+                $salaryReportEmployee = new SalaryReportEmployee(
+                    Uuid::gen(),
+                    $batchId,
+                    $employee['employee_id'],
+                    $employee['user_name'],
+                    $employee['name'],
+                    (float)$employee['salary'],
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    (float)$employee['health_insurance'],
+                    (float)$employee['labor_insurance'],
+                    (float)$employee['pension']
+                );
 
-            $batchReportBatch->addEmployee($salaryReportEmployee);
+                $batchReportBatch->addEmployee($salaryReportEmployee);
+            }
         }
 
         $salaryReportServ = new SalaryReportService();

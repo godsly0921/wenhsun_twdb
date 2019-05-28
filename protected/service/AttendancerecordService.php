@@ -134,7 +134,7 @@ class AttendancerecordService{
     public function get_by_condition($employee_id,$star,$end){
 
             $data = Yii::app()->db->createCommand()
-            ->select('a.*,e.*,a.id as attendance_record_id')
+            ->select('a.*,a.create_at as att_create_at,e.*,a.id as attendance_record_id')
             ->from('attendance_record a')
             ->leftjoin('employee e','a.employee_id = e.id')
             ->andWhere(array('in', 'a.employee_id', $employee_id))

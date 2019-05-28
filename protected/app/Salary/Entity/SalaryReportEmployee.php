@@ -10,22 +10,90 @@ class SalaryReportEmployee
     const SET_SALARY = "OKZ";
 
     private $id;
+    private $batchId;
     private $employeeId;
+    private $employeeLoginId;
+    private $employeeName;
     private $salary;
     private $draftAllowance;
     private $trafficAllowance;
     private $overtimeWage;
     private $projectAllowance;
-
     private $taxFreeOvertimeWage;
     private $healthInsurance;
     private $laborInsurance;
     private $pension;
     private $status;
 
+    public function getBatchMonth()
+    {
+        $batchId = $this->getBatchId();
+
+        return ltrim(substr($batchId, 4), '0');
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEmployeeLoginId()
+    {
+        return $this->employeeLoginId;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEmployeeName()
+    {
+        return $this->employeeName;
+    }
+
+    /**
+     * @param mixed $draftAllowance
+     */
+    public function setDraftAllowance($draftAllowance): void
+    {
+        $this->draftAllowance = $draftAllowance;
+    }
+
+    /**
+     * @param mixed $trafficAllowance
+     */
+    public function setTrafficAllowance($trafficAllowance): void
+    {
+        $this->trafficAllowance = $trafficAllowance;
+    }
+
+    /**
+     * @param mixed $overtimeWage
+     */
+    public function setOvertimeWage($overtimeWage): void
+    {
+        $this->overtimeWage = $overtimeWage;
+    }
+
+    /**
+     * @param mixed $projectAllowance
+     */
+    public function setProjectAllowance($projectAllowance): void
+    {
+        $this->projectAllowance = $projectAllowance;
+    }
+
+    /**
+     * @param mixed $taxFreeOvertimeWage
+     */
+    public function setTaxFreeOvertimeWage($taxFreeOvertimeWage): void
+    {
+        $this->taxFreeOvertimeWage = $taxFreeOvertimeWage;
+    }
+
     public function __construct(
         $id,
+        $batchId,
         $employeeId,
+        $employeeLoginId,
+        $employeeName,
         $salary,
         $draftAllowance,
         $trafficAllowance,
@@ -37,7 +105,10 @@ class SalaryReportEmployee
         $pension
     ) {
         $this->id = $id;
+        $this->batchId = $batchId;
         $this->employeeId = $employeeId;
+        $this->employeeLoginId = $employeeLoginId;
+        $this->employeeName = $employeeName;
         $this->salary = $salary;
         $this->draftAllowance = $draftAllowance;
         $this->trafficAllowance = $trafficAllowance;
@@ -55,6 +126,11 @@ class SalaryReportEmployee
     public function getId()
     {
         return $this->id;
+    }
+
+    public function getBatchId()
+    {
+        return $this->batchId;
     }
 
     /**
@@ -176,7 +252,4 @@ class SalaryReportEmployee
     {
         return $this->status;
     }
-
-
-
 }

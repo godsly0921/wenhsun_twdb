@@ -126,11 +126,17 @@ class GroupController extends Controller
         $tempLists = [];
         if ($groupList !== null) {
             foreach ($groupList as $lists) {
-                foreach ($lists as $list) {
-                    $tempLists[] = $list;
-                }
+               if(is_array($lists)) {
+                   foreach ($lists as $list) {
+                       if (isset($list)) {
+                           $tempLists[] = $list;
+                       }
+                   }
+
+               }
             }
         }
+
 
         sort($tempLists);
         $inputs['group_list'] = implode(',', $tempLists);

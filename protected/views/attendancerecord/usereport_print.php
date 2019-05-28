@@ -60,7 +60,7 @@
                                     <td><?=$value['last_time']?></td>
                                     <td><?=$value['abnormal_type']?></td>
                                     <td><?=$value['abnormal']?></td>
-                                    <td><?=$value['create_at']?></td>
+                                    <td><?=$value['att_create_at']?></td>
                                 </tr>
                             <?php endforeach; ?>
                             </tbody>
