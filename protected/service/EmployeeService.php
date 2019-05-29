@@ -73,7 +73,7 @@ class EmployeeService
         if($employee == 'all'){
             $result = Employee::model()->findAll(array(
                 'select' => '*',
-                'condition' => 'id=:id',
+                //'condition' => 'id=:id',
                 'order' => 'id DESC ',
             ));
 
