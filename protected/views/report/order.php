@@ -67,6 +67,32 @@
           </div>
         </div>
       </div>
+      <div class="col-xl-12">
+        <table id="specialcaseTable" width="100%" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid">
+            <thead>
+            <tr role="row">
+                <th>用戶</th>
+                <th>帳號</th>
+                <th>方案</th>
+                <th>金額</th>
+                <th>折扣</th>               
+                <th>訂單日期</th>
+            </tr>
+            </thead>
+            <tbody>
+            <?php foreach($all_order as $key => $value){ ?>
+                <tr class="gradeC" role="row">
+                    <td><?=$value['member_name']?></td>
+                    <td><?=$value['member_account']?></td>
+                    <td><?=$value['order_category']?></td>
+                    <td><?=$value['cost_total']?></td>
+                    <td><?=$value['discount']?></td>  
+                    <td><?=$value['order_datetime']?></td>
+               </tr>
+            <?php } ?>
+            </tbody>
+        </table>
+      </div>
     </div>
   </div>
 </div>
@@ -170,5 +196,13 @@
             }], system_settings);
             
         }
+        $('#specialcaseTable').DataTable( {
+            "scrollX": true,
+            "lengthChange": false,
+            "oLanguage": {
+                "oPaginate": {"sFirst": "第一頁", "sPrevious": "上一頁", "sNext": "下一頁", "sLast": "最後一頁"},
+                "sEmptyTable": "無任何聯繫資料"
+            }
+        });
     })
 </script>

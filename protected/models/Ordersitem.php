@@ -36,7 +36,7 @@ class Ordersitem extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('order_id, cost_total, order_category, product_id, order_detail_status', 'required'),
+			array('order_id, cost_total, order_category, order_detail_status', 'required'),
 			array('coupon_id, order_category, product_id, single_id, order_detail_status, memo_create_account_id', 'numerical', 'integerOnly'=>true),
 			array('order_id', 'length', 'max'=>14),
 			array('discount', 'length', 'max'=>2),
