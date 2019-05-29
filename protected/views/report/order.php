@@ -34,7 +34,7 @@
   <div class="col-md-12">
     <div class="x_panel">
       <div class="x_title">
-        <h2>每日上圖張數統計</h2>
+        <h2>每日銷售金額統計</h2>
         <div class="clearfix"></div>
       </div>
       <div class="x_content">
@@ -111,6 +111,7 @@
 <!-- bootstrap-daterangepicker -->
 <script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/gentelella/vendors/moment/min/moment.min.js"></script>
 <script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/gentelella/vendors/bootstrap-daterangepicker/daterangepicker.js"></script>
+<script src="<?php echo Yii::app()->request->baseUrl;?>/assets/admin/ext/js/jquery.dataTables.min.js"></script>
 <script>
     $(document).ready(function() {
         var s = '<?=$count_eachday_order?>';
@@ -186,7 +187,7 @@
         if ($("#system_report").length){           
             $.plot( $("#system_report"), 
             [{ 
-                label: "上圖張數", 
+                label: "銷售金額", 
                 data: system_data, 
                 lines: { 
                     fillColor: "rgba(150, 202, 89, 0.12)" 
@@ -197,7 +198,7 @@
             
         }
         $('#specialcaseTable').DataTable( {
-            "scrollX": true,
+            //"scrollX": true,
             "lengthChange": false,
             "oLanguage": {
                 "oPaginate": {"sFirst": "第一頁", "sPrevious": "上一頁", "sNext": "下一頁", "sLast": "最後一頁"},
