@@ -55,12 +55,17 @@ use Wenhsun\Transform\MultiColumnTransformer;
                                     <td><?=$multiTransfer->toText('；', $data->mobile);?></td>
                                     <td><?=$data->memo?></td>
                                     <td>
+                                        <a href="<?= Yii::app()->createUrl('/author/view?id='.$data->id);?>"><i class="fa fa-newspaper-o" style="font-size:18px"></i></a>
+                                    <?php foreach ($session_jsons as $jsons):?>
+                                        <?php if ($jsons["power_controller"] == 'author/edit'):?>
                                         <a href="<?= Yii::app()->createUrl('/author/edit?id='.$data->id);?>"><i class="fa fa-edit" style="font-size:18px"></i></a>
+                                        <?php endif;?>
+                                    <?php endforeach;?>
                                     </td>
                                 </tr>
                             <?php endforeach;?>
                         <?php else:?>
-                            <tr><td colspan="6">查無資料, 快去<a href="<?= Yii::app()->createUrl('/author/new');?>">新增資料</a>吧</td></tr>
+                            <tr><td colspan="7">查無資料, 快去<a href="<?= Yii::app()->createUrl('/author/new');?>">新增資料</a>吧</td></tr>
                         <?php endif; ?>
                         </tbody>
                     </table>
@@ -81,9 +86,20 @@ use Wenhsun\Transform\MultiColumnTransformer;
                     "oPaginate": {"sFirst": "第一頁", "sPrevious": "上一頁","sNext": "下一頁","sLast": "最後一頁"}
                 }
             });
-
-            $('body').bind('cut copy paste', function (e) {
-                e.preventDefault();
-            });
         });
     </script>
+    <?php foreach ($session_jsons as $jsons):?>
+    <?php if ($jsons["power_controller"] === 'author/copy_prohibited'):?>
+        <script type="text/javascript">
+            document.oncontextmenu = function(){
+                return false;
+            }
+            document.onselectstart = function(){
+                return false;
+            }
+            document.onmousedown = function(){
+                return false;
+            }
+        </script>
+    <?php endif; ?>
+    <?php endforeach; ?>
