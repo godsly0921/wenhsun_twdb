@@ -4,22 +4,29 @@
     <div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">
         <div class="tile-stats">
             <div class="icon"><i class="fa fa-caret-square-o-right"></i></div>
-            <div class="count"><?=$count_single_size['total']?></div>
-            <h3>目前圖數</h3>
+            <div class="count"><?=$count_order_sum['order_total']?></div>
+            <h3>總金額</h3>
         </div>
     </div>
     <div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">
         <div class="tile-stats">
             <div class="icon"><i class="fa fa-comments-o"></i></div>
-            <div class="count"><?=$count_single['total']?></div>
-            <h3>上圖張數</h3>
+            <div class="count"><?=$count_order_sum['single_total']?></div>
+            <h3>單圖授權</h3>
         </div>
     </div>
     <div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">
         <div class="tile-stats">
             <div class="icon"><i class="fa fa-sort-amount-desc"></i></div>
-            <div class="count"><?=$count_single_publish['total']?></div>
-            <h3>上架張數</h3>
+            <div class="count"><?=$count_order_sum['point_total']?></div>
+            <h3>點數</h3>
+        </div>
+    </div>
+    <div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">
+        <div class="tile-stats">
+            <div class="icon"><i class="fa fa-sort-amount-desc"></i></div>
+            <div class="count"><?=$count_order_sum['sub_total']?></div>
+            <h3>自由載</h3>
         </div>
     </div>
 </div>
@@ -44,17 +51,47 @@
               <div class="clearfix"></div>
             </div>
             <ul class="list-unstyled top_profiles scroll-view">
-              <?php foreach ($top_profile as $key => $value) {?>
+              <?php foreach ($top3_order as $key => $value) {?>
                 <li class="media event">
-                  <div class="media-body">
-                    <a class="title" href="#"><?=$value['create_day']?></a>
-                    <p><strong>上傳圖數：<?=$value['each_day_count']?>張</strong></p>
-                  </div>
+                    <a class="pull-left border-green profile_thumb">
+                        <i class="fa fa-user green"></i>
+                    </a>
+                    <div class="media-body">
+                        <a class="title" href="#"><?=$value['member_name']?></a>
+                        <p><strong><?=$value['order_datetime']?></strong></p>
+                        <p><strong><?=$value['order_category']?></strong></p>
+                    </div>
                 </li>
               <?php }?>
             </ul>
           </div>
         </div>
+      </div>
+      <div class="col-xl-12">
+        <table id="specialcaseTable" width="100%" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid">
+            <thead>
+            <tr role="row">
+                <th>用戶</th>
+                <th>帳號</th>
+                <th>方案</th>
+                <th>金額</th>
+                <th>折扣</th>               
+                <th>訂單日期</th>
+            </tr>
+            </thead>
+            <tbody>
+            <?php foreach($all_order as $key => $value){ ?>
+                <tr class="gradeC" role="row">
+                    <td><?=$value['member_name']?></td>
+                    <td><?=$value['member_account']?></td>
+                    <td><?=$value['order_category']?></td>
+                    <td><?=$value['cost_total']?></td>
+                    <td><?=$value['discount']?></td>  
+                    <td><?=$value['order_datetime']?></td>
+               </tr>
+            <?php } ?>
+            </tbody>
+        </table>
       </div>
     </div>
   </div>
@@ -76,7 +113,7 @@
 <script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/gentelella/vendors/bootstrap-daterangepicker/daterangepicker.js"></script>
 <script>
     $(document).ready(function() {
-        var s = '<?=$count_eachday_upload?>';
+        var s = '<?=$count_eachday_order?>';
         var chart_plot_data = JSON.parse(s);
         console.log(chart_plot_data);
         var system_data = [];
@@ -159,5 +196,13 @@
             }], system_settings);
             
         }
+        $('#specialcaseTable').DataTable( {
+            "scrollX": true,
+            "lengthChange": false,
+            "oLanguage": {
+                "oPaginate": {"sFirst": "第一頁", "sPrevious": "上一頁", "sNext": "下一頁", "sLast": "最後一頁"},
+                "sEmptyTable": "無任何聯繫資料"
+            }
+        });
     })
 </script>

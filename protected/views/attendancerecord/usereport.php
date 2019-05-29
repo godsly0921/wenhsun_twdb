@@ -111,7 +111,7 @@
                                     <td><?=$value['last_time']?></td>
                                     <td><?=$value['abnormal_type']?></td>
                                     <td><?=$value['abnormal']?></td>
-                                    <td><?=$value['create_at']?></td>
+                                    <td><?=$value['att_create_at']?></td>
                                         <?php foreach ($session_jsons as $jsons):?>
                                             <?php if ($jsons["power_controller"] == Yii::app()->controller->id.'/update'):?>
                                             <td>

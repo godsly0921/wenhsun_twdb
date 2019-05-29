@@ -1,5 +1,5 @@
 CREATE TABLE `salary_report_batch` (
-  `batch_id` int(11) unsigned NOT NULL,
+  `batch_id` varchar(20) NOT NULL,
   `create_at` datetime NOT NULL,
   `update_at` datetime NOT NULL,
 PRIMARY KEY (`batch_id`)
@@ -7,7 +7,10 @@ PRIMARY KEY (`batch_id`)
 
 CREATE TABLE `salary_report` (
   `id` varchar(32) NOT NULL,
+  `batch_id` varchar(20) NOT NULL,
   `employee_id` varchar(12) NOT NULL,
+  `employee_login_id` varchar(64) NOT NULL,
+  `employee_name` varchar(32) NOT NULL,
   `salary` float NOT NULL,
   `draft_allowance` float NOT NULL,
   `traffic_allowance` float NOT NULL,

@@ -194,12 +194,12 @@ class ReservationService
 
     }
 
-    public function findReservationAll($device_id)
+    public function findReservationAll($part_time_empolyee_id)
     {
         $result = Reservation::model()->findAll([
-            'condition' => 'device_id=:device_id and status=:status',
+            'condition' => 'part_time_empolyee_id=:part_time_empolyee_id and status=:status',
             'params' => [
-                ':device_id' => $device_id, ':status' => 0,
+                ':part_time_empolyee_id' => $part_time_empolyee_id, ':status' => 0,
             ]
         ]);
         return $result;
@@ -245,14 +245,15 @@ class ReservationService
       //  var_dump(Yii::app()->session['personal']);
       //  exit();
 
-        $model->device_id = $inputs['device_id'];
+        $model->part_time_empolyee_id = $inputs['part_time_empolyee_id'];
         $model->start_time = $inputs['start_date_time'];
         $model->end_time = $inputs['end_date_time'];
         $model->builder = (int)Yii::app()->session['uid'];//這邊只能讓使用者建立預約{管理者無法}
         $model->builder_type = (int)(Yii::app()->session['personal'])?1:0;//這邊只能讓使用者建立預約{管理者無法}
         $model->status = 0;
         $model->create_time = date("Y-m-d H:i:s");
-        $model->modify_time = date("0000-00-00 00:00:00");
+        $model->modify_time = date("Y-m-d H:i:s");
+        $model->remark = '';
 
         if (!$model->validate()) {
             return $model;

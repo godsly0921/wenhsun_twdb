@@ -33,11 +33,11 @@ class Reservation extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('device_id, start_time, end_time, status, builder, builder_type, create_time', 'required'),
-			array('device_id, status, builder, builder_type', 'numerical', 'integerOnly'=>true),
+			array('part_time_empolyee_id, start_time, end_time, status, builder, builder_type, create_time', 'required'),
+			array('status, builder, builder_type', 'numerical', 'integerOnly'=>true),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, device_id, start_time, end_time, status, remark, builder, builder_type, create_time, modify_time', 'safe', 'on'=>'search'),
+			array('id, part_time_empolyee_id, start_time, end_time, status, remark, builder, builder_type, create_time, modify_time', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -59,7 +59,7 @@ class Reservation extends CActiveRecord
 	{
 		return array(
 			'id' => 'ID',
-			'device_id' => 'Device',
+			'part_time_empolyee_id' => 'part_time_empolyee_id',
 			'start_time' => 'Start Time',
 			'end_time' => 'End Time',
 			'status' => 'Status',
@@ -90,7 +90,7 @@ class Reservation extends CActiveRecord
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('id',$this->id);
-		$criteria->compare('device_id',$this->device_id);
+		$criteria->compare('part_time_empolyee_id',$this->device_id);
 		$criteria->compare('start_time',$this->start_time,true);
 		$criteria->compare('end_time',$this->end_time,true);
 		$criteria->compare('status',$this->status);

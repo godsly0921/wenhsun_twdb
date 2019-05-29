@@ -8,13 +8,13 @@
  */
 class ReservationController extends Controller
 {
-    public $layout = "//layouts/back_end";
+    //public $layout = "//layouts/back_end";
     private $categorys = ["0" => "尚未使用", "1" => "正常使用", "2" => "異常", "3" => "取消預約"];
 
-//    protected function beforeAction($action)
-//    {
-//        return RequestLogin::checkLogin($action) ? true : $this->redirect(Yii::app()->createUrl('admin/index'));
-//    }
+    protected function needLogin(): bool
+    {
+        return true;
+    }
 
     public function actionIndex()
     {
@@ -55,6 +55,30 @@ class ReservationController extends Controller
 
         $this->render('index', ['model' => $model, 'device_id' => $device_id, 'devices' => $devices]);
     }
+
+    public function actionPart_time()
+    {
+        $memberServer = new MemberService();
+        $result = $memberServer->findByMemId(Yii::app()->session['uid']);
+        if($result==NULL){
+            $accountServer = new AccountService();
+            $account = $accountServer->findAccountData(Yii::app()->session['uid']);
+            if($account == NULL){
+                echo '沒有找到使用者，請重新登入系統';
+                sleep(1);
+                $this->redirect('admin/login');
+            }
+        }
+
+        $part_time_employees = EmployeeService::getPTEmployee(7);
+
+        $service = new ReservationService();
+        $part_time_empolyee_id = isset($_GET['part_time_empolyee_id'])?$_GET['part_time_empolyee_id']:$part_time_employees['part_time_empolyee_id'];
+        $model = $service->findReservationAll($part_time_empolyee_id);
+
+        $this->render('part_time', ['model' => $model, 'part_time_empolyee_id' => $part_time_empolyee_id, 'part_time_employees' => $part_time_employees]);
+    }
+
 
     public function actionSpecial_list()
     {
@@ -375,7 +399,7 @@ class ReservationController extends Controller
         //$_GET['start'] = '2018-05-01';
         //$_GET['end']  = '2018-05-31';
         // $device_id = 6;
-        $device_id = isset($_GET['device_id'])?$_GET['device_id']:'';
+        $part_time_empolyee_id = isset($_GET['part_time_empolyee_id'])?$_GET['part_time_empolyee_id']:'';
 
         // Parse the start/end parameters.
         // These are assumed to be ISO8601 strings with no time nor timezone, like "2013-12-29".
@@ -396,28 +420,29 @@ class ReservationController extends Controller
          $input_arrays = json_decode($json, true);*/
 
         $service = new ReservationService();
-        if($device_id != ''){
-            $model = $service->findReservationAll($device_id);
-        }else{
-            $model = $service->findReservationStatus();
-        }
-        //var_dump($model);exit();
+        //if($part_time_empolyee_id != ''){
+        //    $model = $service->findReservationAll($part_time_empolyee_id);
+        //}else{
+        $model = $service->findReservationStatus();
+        //}
 
         //儀器預約資料表
         $input_arrays = array();
 
         foreach ($model as $key => $value) {
-            $name = '';
+            $part_time = EmployeeService::findEmployeeById($value->part_time_empolyee_id);
             if($value->builder_type){
                 $service = new MemberService();
                 $members = $service->findByMemId($value->builder);
                 $name = $members['name'];
+
+
             }else{
                 $service = new AccountService();
                 $members = $service->findAccountData($value->builder);
                 $name =$members['account_name'];
             }
-            $input_arrays[] = array('start' => $value->start_time, 'end' => $value->end_time, 'title' => $name . '已預約', 'url' => Yii::app()->createUrl('reservation/cancelReservationByCalendar', ['id' => $value->id]));
+            $input_arrays[] = array('start' => $value->start_time, 'end' => $value->end_time, 'title' => $part_time['name'].'已排班 排班者：'.$name, 'url' => Yii::app()->createUrl('reservation/cancelReservationByCalendar', ['id' => $value->id]));
 
         }
 
@@ -449,7 +474,7 @@ class ReservationController extends Controller
             $start = date("Y-m-d", strtotime('+' . $i . ' days', strtotime(date('Y-m-d')))); //取得今天日期
             $end = date("Y-m-d", strtotime('+' . $i . ' days', strtotime(date('Y-m-d')))); //取得今天日期
 
-            array_push($input_arrays, array('start' => $start, 'end' => $end, 'title' => '開放預約', 'url' => Yii::app()->createUrl('reservation/create', ['device_id' => $device_id, 'start' => $start, 'end' => $end]), 'color' => '#66DD00'));
+            array_push($input_arrays, array('start' => $start, 'end' => $end, 'title' => '開放排班', 'url' => Yii::app()->createUrl('reservation/create', ['part_time_empolyee_id' => $part_time_empolyee_id, 'start' => $start, 'end' => $end]), 'color' => '#66DD00'));
 
         }
 
@@ -484,18 +509,18 @@ class ReservationController extends Controller
         }
 
 
-        if(!isset($_POST['device_id']) || !isset($_POST['start_date']) || !isset($_POST['start_hour']) || !isset($_POST['start_minute']) || !isset($_POST['end_date']) || !isset($_POST['end_hour']) || !isset($_POST['end_minute']) ){
-            Yii::app()->session['error_msg'] = '預約時間請填寫完整';//
-            $this->redirect('index');
+        if(!isset($_POST['part_time_empolyee_id']) || !isset($_POST['start_date']) || !isset($_POST['start_hour']) || !isset($_POST['start_minute']) || !isset($_POST['end_date']) || !isset($_POST['end_hour']) || !isset($_POST['end_minute']) ){
+            Yii::app()->session['error_msg'] = '工讀時間請填寫完整';//
+            $this->redirect('part_time');
         }
 
-        if(empty($_POST['device_id']) || empty($_POST['start_date']) || empty($_POST['start_hour']) | empty($_POST['start_minute']) || empty($_POST['end_date']) || empty($_POST['end_hour']) || empty($_POST['end_minute'])){
-                Yii::app()->session['error_msg'] = '預約時間請填寫完整';//二個使用者可以預約同一時段 FIX
+        if(empty($_POST['part_time_empolyee_id']) || empty($_POST['start_date']) || empty($_POST['start_hour']) | empty($_POST['start_minute']) || empty($_POST['end_date']) || empty($_POST['end_hour']) || empty($_POST['end_minute'])){
+                Yii::app()->session['error_msg'] = '工讀時間請填寫完整';//二個使用者可以預約同一時段 FIX
                 $this->redirect('index');
         }
 
         $inputs = [];
-        $inputs["device_id"] = filter_input(INPUT_POST, "device_id");
+        $inputs["part_time_empolyee_id"] = filter_input(INPUT_POST, "part_time_empolyee_id");
         $inputs["start_date"] = filter_input(INPUT_POST, "start_date");
         $inputs["start_hour"] = filter_input(INPUT_POST, "start_hour");
         $inputs["start_minute"] = filter_input(INPUT_POST, "start_minute");
@@ -506,105 +531,20 @@ class ReservationController extends Controller
         $inputs["end_hour"] = filter_input(INPUT_POST, "end_hour");
         $inputs["end_minute"] = filter_input(INPUT_POST, "end_minute");
 
-        $deviceService = new DeviceService();
-        $device = $deviceService->findByPk($inputs["device_id"]);
-
-
         $start_time = $inputs['start_date'] . " " . $inputs['start_hour'].":".$inputs['start_minute'].":00";
         $end_time = $inputs['end_date'] . " " . $inputs['end_hour'].":".$inputs['end_minute'].":00";
         $inputs['start_date_time'] = $start_time;
         $inputs['end_date_time'] = $end_time;
 
-        $memberServer = new MemberService();
-        $accountServer = new AccountService();
 
-        // 實際預約時段
-        $resStartWeekday = date('w', strtotime($inputs['start_date']));
-        $resEndWeekday = date('w', strtotime($inputs['end_date']));
-        $resStartTime = $inputs['start_hour'] . ':' . $inputs['start_minute'];
-        $resEndTime = $inputs['end_hour'] . ':' . $inputs['end_minute'];
-
-        // 每日17:31 - 18:29 不可預約
-        if (!($resStartTime < '17:31' && $resEndTime < '17:31') && !($resStartTime > '18:29' && $resEndTime > '18:29')) {
-            Yii::app()->session['error_msg'] = '很抱歉，17:31-18:29 無法預約，請重新選擇時間';
-            $this->redirect('index?device_id=' . $inputs["device_id"]);
-        }
-
-        if(Yii::app()->session['personal']) {
-            $result = $memberServer->findByMemId(Yii::app()->session['uid']);
-
-            // 一般使用者預約時需檢查時間權限
-            $deviceStation = $device->station;
-            $memberDevicePermissions = $memberServer->findUserDevicePermissionType(Yii::app()->session['uid']);
-
-            // 避免 unset property exception
-            if (!isset($memberDevicePermissions->{"$deviceStation"})) {
-                Yii::app()->session['error_msg'] = '使用者機台權限設定錯誤，請聯絡系統管理員';
-                $this->redirect('index?device_id=' . $inputs["device_id"]);
-            }
-
-            // 找出使用者可以預約的時段
-            $permissionType = $memberDevicePermissions->{"$deviceStation"};
-            $devicePermissionService = new DevicePermissionService();
-            $devicePermission = $devicePermissionService->findTimePermission($permissionType);
-            $weekdayArr = json_decode($devicePermission->weeks);
-            $deviceStartTime = $devicePermission->start_hors . ':' . $devicePermission->start_minute;
-            $deviceEndTime = $devicePermission->end_hors . ':' . $devicePermission->end_minute;
-
-
-            // 預約時段檢查
-            if (!(in_array($resStartWeekday, $weekdayArr) &&
-                in_array($resEndWeekday, $weekdayArr) &&
-                $resStartTime >= $deviceStartTime &&
-                $resEndTime <= $deviceEndTime)) {
-                Yii::app()->session['error_msg'] = '很抱歉，您無此時段的權限，請重新選擇時間';
-                $this->redirect('index?device_id=' . $inputs["device_id"]);
-            }
-        } else {
-            $result = $accountServer->findAccountData(Yii::app()->session['uid']);
-        }
-        $use_id = $result->id;
-        //必須檢查3.查看目前時段是否有人預約--開始
-        $reservationService = new ReservationService();
-        $reservation_devices = $reservationService->findReservationDeviceIDAll($inputs["device_id"], $start_time,$end_time);
-       // var_dump($reservation_devices);
-       // exit();
-
-        if(!empty($reservation_devices)){
-            $confirm_user_id = false;
-            foreach($reservation_devices as $key =>$value){
-                if($value['builder_type'] == Yii::app()->session['personal']){
-                    $confirm_user_id = false;
-                    Yii::app()->session['error_msg'] = '此時段已被預約，請重新選擇時間';
-                    $this->redirect('index?device_id=' . $inputs["device_id"]);
-                }
-                $appointment_time = strtotime(date($value['start_time'],strtotime('+30 minutes')));
-                if($value['builder']!= $use_id && $value['builder_type'] != Yii::app()->session['personal'] and $appointment_time < strtotime($start_time) and $value['status'] == 0){
-                    $confirm_user_id = true;//預約超過30Ｍ時間 < 使用者預約時間開始時間 0表示預約時間還沒用
-                }
-
-                if($value['builder']!= $use_id && $value['builder_type'] != Yii::app()->session['personal'] and $appointment_time < strtotime($start_time) and $value['status'] == 3){
-                    $confirm_user_id = true;//預約未使用超時30分 < 使用者預約時間開始時間 3表示預約取消
-                }
-
-
-            }
-        }
-        //必須檢查3.查看目前時段是否有人預約--結束
-
-        $devcloseService = new DevcloseService();
-        $close_devices = $devcloseService->findDevicCloseAllForStationV2($device->station,$start_time);
-
-        if (count($close_devices) > 0) {
-            Yii::app()->session['error_msg'] = '您預約的儀器目前儀器關閉，請確認關閉時間後再預約';
-            $this->redirect('index?device_id='. $_POST['device_id']);
-        }
 
 
         //remember fields
         foreach ($inputs as $key => $val) {
             Yii::app()->session[$key] = $val;
         }
+
+
 
         $service = new ReservationService();
         $model = $service->create($inputs);
@@ -617,7 +557,7 @@ class ReservationController extends Controller
             foreach ($inputs as $key => $val) {
                 Yii::app()->session[$key] = "";
             }
-            $this->redirect(Yii::app()->createUrl('reservation/index', ['device_id' => $inputs["device_id"]]));
+            $this->redirect(Yii::app()->createUrl('reservation/part_time', ['part_time_empolyee_id' => $inputs["part_time_empolyee_id"]]));
         }
     }
 
@@ -627,9 +567,8 @@ class ReservationController extends Controller
         $device_id = $_GET['device_id'];
         $start = $_GET['start'];
         $end = $_GET['end'];
-        $service = new DeviceService();
-        $devices = $service->findDevices();
-        $this->render('create', ["devices" => $devices, 'device_id' => $device_id, 'start' => $start, 'end' => $end]);
+        $part_time_employees = EmployeeService::getPTEmployee(7);
+        $this->render('create', ['part_time_employees' => $part_time_employees, 'device_id' => $device_id, 'start' => $start, 'end' => $end]);
         $this->clearMsg();
 
     }

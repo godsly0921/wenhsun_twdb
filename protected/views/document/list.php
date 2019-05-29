@@ -1,18 +1,25 @@
+<?php $session_jsons = CJSON::decode(Yii::app()->session['power_session_jsons']);?>
 <div role="main">
     <div class="">
         <div class="page-title">
             <div class="title_left">
                 <h3>公文列表</h3>
             </div>
-            <div class="title_right">
-                <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
-                    <div class="input-group">
-                        <a href="<?php echo Yii::app()->createUrl('/document/new'); ?>">
-                            <button class="btn btn-primary" type="button">新增公文</button>
-                        </a>
+
+            <?php foreach ($session_jsons as $jsons):?>
+                <?php if ($jsons["power_controller"] == 'document/new'):?>
+                    <div class="title_right">
+                        <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
+                            <div class="input-group">
+                                <a href="<?php echo Yii::app()->createUrl('/document/new'); ?>">
+                                    <button class="btn btn-primary" type="button">新增公文</button>
+                                </a>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
+                <?php endif; ?>
+            <?php endforeach; ?>
+
         </div>
 
         <div class="clearfix"></div>
@@ -48,11 +55,18 @@
                                     <td><?= $data->update_at ?></td>
                                     <td><?= $data->create_at ?></td>
                                     <td>
-                                        <a href="<?php echo Yii::app()->createUrl('/document/edit?id=' . $data->id); ?>"><i
-                                                class="fa fa-edit" style="font-size:18px"></i></a>
-                                        <a href="<?php echo Yii::app()->createUrl('/document/download?id=' . $data->id); ?>"
-                                           target="_blank"><i class="fa fa-cloud-download"
-                                                              style="font-size:18px"></i></a>
+                                        <?php foreach ($session_jsons as $jsons):?>
+                                            <?php if ($jsons["power_controller"] == 'document/edit'):?>
+                                                <a href="<?php echo Yii::app()->createUrl('/document/edit?id=' . $data->id); ?>"><i
+                                                        class="fa fa-edit" style="font-size:18px"></i></a>
+                                            <?php endif; ?>
+
+                                            <?php if ($jsons["power_controller"] == 'document/download'):?>
+                                                <a href="<?php echo Yii::app()->createUrl('/document/download?id=' . $data->id); ?>"
+                                                   target="_blank"><i class="fa fa-cloud-download"
+                                                                      style="font-size:18px"></i></a>
+                                            <?php endif; ?>
+                                        <?php endforeach; ?>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>

@@ -17,12 +17,50 @@ class EmployeeService
 
     public static function findEmployeeId($employee_id)
     {
-        $result = Employee::model()->find([
-            'condition' => 'id=:id',
+
+        $result = Employee::model()->findByPk([
+            'select' => '*',
+            'condition' => 'id = :id',
             'params' => [
                 ':id' => $employee_id,
             ]
         ]);
+        return $result;
+
+    }
+
+    public static function findEmployeeById($part_time_empolyee_id)
+    {
+        try{
+            $result = Employee::model()->find([
+                'select' => '*',
+                'condition' => 'id = :id',
+                'params' => [
+                    ':id' => $part_time_empolyee_id,
+                ]
+            ]);
+            return $result;
+
+        }catch(Exception $e ){
+            echo $e;
+        }
+    }
+
+
+    public static function getPTEmployee($id)
+    {
+        $result = Employee::model()->findAll(array(
+                'select' => '*',
+                'condition' => 'role=:role',
+                'order' => 'id DESC',
+                'params' => [
+                    ':role' => $id,
+                ],
+        ));
+
+        if ($result == null) {
+            $result = false;
+        }
 
         return $result;
 
@@ -35,6 +73,7 @@ class EmployeeService
         if($employee == 'all'){
             $result = Employee::model()->findAll(array(
                 'select' => '*',
+                //'condition' => 'id=:id',
                 'order' => 'id DESC ',
             ));
 
@@ -50,5 +89,16 @@ class EmployeeService
         }
 
         return $result;
+    }
+
+    public function getEmailByEmployeeId($employeeId): ?string
+    {
+        $employeeModel = Employee::model()->findByPk($employeeId);
+
+        if (!$employeeModel || empty($employeeModel['email'])) {
+            return null;
+        }
+
+        return $employeeModel['email'];
     }
 }
