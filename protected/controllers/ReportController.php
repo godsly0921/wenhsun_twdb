@@ -24,7 +24,9 @@ class ReportController extends Controller{
         $count_eachday_order = $reportService->countEachdayOrder(); // 統計近 20 天的總銷售額
         $count_order_sum = $reportService->getSumOrder(); // 統計總銷售額、點數銷售額、自由載銷售額、單圖銷售額
         $top3_order = $reportService->top3_Order(); // 最近 3 筆訂單資訊
-        $this->render('order',array('count_order_sum'=>$count_order_sum,'count_eachday_order'=>$count_eachday_order,'top3_order'=>$top3_order));
+        $all_order = $reportService->Allorder(); // 所有的訂單
+        //var_dump($count_eachday_order);exit();
+        $this->render('order',array('count_order_sum'=>$count_order_sum,'count_eachday_order'=>$count_eachday_order,'top3_order'=>$top3_order,'all_order'=>$all_order));
     }
 }
 ?>
