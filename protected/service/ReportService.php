@@ -39,6 +39,16 @@ class ReportService
         $result = Yii::app()->db->createCommand($sql)->queryAll();
         return $result;
     }
+
+    public function AllOperationLog(){
+        $operation_log = Yii::app()->db->createCommand()
+        ->select('o.*,a.user_account,a.account_name')
+        ->from('operation_log o')
+        ->leftjoin('account a', 'o.account_id=a.id')
+        ->queryall();
+        return $operation_log;
+    }
+
     public function getSumOrder(){
         $sql= "SELECT SUM(cost_total) as order_total,(select sum(cost_total) from orders_item where order_category=1 and order_detail_status=1) as point_total,(select sum(cost_total) from orders_item where order_category=2 and order_detail_status=1) as sub_total,(select sum(cost_total) from orders_item where order_category=3 and order_detail_status=1) as single_total FROM `orders_item` where order_detail_status=1";
         $result = Yii::app()->db->createCommand($sql)->queryAll();

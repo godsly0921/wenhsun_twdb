@@ -138,7 +138,7 @@ class PhotographController extends Controller{
     }
 
     public function ActionUpdateSingle(){
-        $photographService = new PhotographService();
+        $photographService = new PhotographService();      
         $single_data = array();
         parse_str($_POST['single_data'], $single_data);
         $single_data['copyright'] = $_POST["copyright"];

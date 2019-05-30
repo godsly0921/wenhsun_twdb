@@ -38,6 +38,7 @@ class ProductService
     }
 
     public function update( $input ){
+        $operationlogService = new operationlogService();
         $model = Product::model()->findByPk($input['product_id']);
         $model->product_name = $input['product_name'];
         $model->coupon_id = $input['coupon_id'];
@@ -55,8 +56,14 @@ class ProductService
 
         if (!$model->hasErrors()) {
             if( $model->save() ){
+                $motion = "更新產品";
+                $log = "更新 產品編號 = " . $input['product_id'] . "；產品名稱 = " . $input["product_name"];
+                $operationlogService->create_operationlog( $motion, $log );
                 return array(true,'修改成功',$model);         
-            }else{       
+            }else{      
+                $motion = "更新產品";
+                $log = "更新 產品編號 = " . $input['product_id'] . "；產品名稱 = " . $input["product_name"];
+                $operationlogService->create_operationlog( $motion, $log, 0 ); 
                 return array(false,$model->getErrors());
             }
         }
@@ -65,6 +72,7 @@ class ProductService
     }
 
     public function create( $input ){
+        $operationlogService = new operationlogService();
         $model = new Product();
         $model->product_name = $input['product_name'];
         $model->coupon_id = $input['coupon_id'];
@@ -75,20 +83,41 @@ class ProductService
         $model->status = $input['status'];
         $model->create_time = date('Y-m-d H:i:s');
         $model->create_account_id = Yii::app()->session['uid'];
-        // var_dump($model->getErrors());exit();
         if (!$model->validate()) {
             return $model;
         }
 
         if (!$model->hasErrors()) {
             if( $model->save() ){
+                $motion = "建立產品";
+                $log = "建立 產品名稱 = " . $input["product_name"];
+                $operationlogService->create_operationlog( $motion, $log );
                 return array(true,'新增成功');         
             }else{       
+                $motion = "建立產品";
+                $log = "建立 產品名稱 = " . $input["product_name"];
+                $operationlogService->create_operationlog( $motion, $log, 0 );
                 return array(false,$model->getErrors());
             }
         }
         
         return $model;
+    }
+
+    public function delete($id){
+        $operationlogService = new operationlogService();
+        $post = Product::model()->findByPk( $id );
+        if($post->delete()){
+            $motion = "刪除產品";
+            $log = "刪除 產品編號 = " . $id;
+            $operationlogService->create_operationlog( $motion, $log );
+            return array(true,'刪除成功');
+        }else{
+            $motion = "刪除產品";
+            $log = "刪除 產品編號 = " . $id;
+            $operationlogService->create_operationlog( $motion, $log, 0 );
+            return array(false,$post->getErrors());
+        }
     }
 
     public function findById($id)

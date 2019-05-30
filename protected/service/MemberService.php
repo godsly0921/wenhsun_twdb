@@ -254,7 +254,7 @@ class MemberService
     public function create(array $inputs)
     {
         $model = new Member();
-
+        $operationlogService = new operationlogService();
         $model->account = $inputs['account'];
 
         $member = $this->findByAccount($inputs['account']);
@@ -294,8 +294,14 @@ class MemberService
 
         if (!$model->save()) {
             $model->addError('update_fail', '新增使用者失敗');
+            $motion = "建立會員";
+            $log = "建立 會員帳號 = " . $inputs['account'] . "；會員名稱 = " . $inputs["name"];
+            $operationlogService->create_operationlog( $motion, $log, 0 );
             return $model;
         } else {
+            $motion = "建立會員";
+            $log = "建立 會員帳號 = " . $inputs['account'] . "；會員名稱 = " . $inputs["name"];
+            $operationlogService->create_operationlog( $motion, $log );
             return $model;
         }
     }
@@ -466,6 +472,7 @@ class MemberService
     public function update(array $inputs)
     {
         $service = new MemberService();
+        $operationlogService = new operationlogService();
         $model = $service->findByMemId($inputs['id']);
 
         if ($model === null) {
@@ -502,9 +509,14 @@ class MemberService
 
         if ($success === false) {
             $model->addError('update_fail', '修改失敗');
+            $motion = "更新會員";
+            $log = "更新 會員帳號 = " . $model->account . "；會員名稱 = " . $inputs["name"];
+            $operationlogService->create_operationlog( $motion, $log, 0 );
             return $model;
         }
-
+        $motion = "更新會員";
+        $log = "更新 會員帳號 = " . $model->account . "；會員名稱 = " . $inputs["name"];
+        $operationlogService->create_operationlog( $motion, $log );
         return $model;
     }
 
@@ -514,6 +526,7 @@ class MemberService
      */
     public function updateMemberPassword(array $inputs)
     {
+        $operationlogService = new operationlogService();
         $model = Member::model()->findByPk($inputs["id"]);
         $model->password = $inputs["password"];
 
@@ -523,12 +536,18 @@ class MemberService
 
         if ($inputs["password_confirm"] === "" || $inputs["password"] !== $inputs["password_confirm"]) {
             $model->addError('password_confirm', '確認密碼錯誤, 請重新輸入');
+            $motion = "更新會員密碼";
+            $log = "更新 會員流水號 = " . $inputs["id"] ;
+            $operationlogService->create_operationlog( $motion, $log, 0 );
             return $model;
         }
 
         if (!$model->hasErrors()) {
             $model->password = md5($model->password);
             $model->update();
+            $motion = "更新會員密碼";
+            $log = "更新 會員流水號 = " . $inputs["id"] ;
+            $operationlogService->create_operationlog( $motion, $log );
         }
 
         return $model;
@@ -565,6 +584,7 @@ class MemberService
 
     public function delete($id)
     {
+        $operationlogService = new operationlogService();
         $model = $this->findByMemId($id);
 
         if ($model !== null) {
@@ -574,8 +594,14 @@ class MemberService
         }
 
         if ($success === false) {
+            $motion = "刪除會員";
+            $log = "刪除 會員流水號 = " . $id;
+            $operationlogService->create_operationlog( $motion, $log, 0 );
             return false;
         } else {
+            $motion = "刪除會員";
+            $log = "刪除 會員流水號 = " . $id;
+            $operationlogService->create_operationlog( $motion, $log );
             $success === true;
         }
 

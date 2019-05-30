@@ -26,36 +26,62 @@
 <div class="row">
   <div class="col-md-12">
     <div class="x_panel">
-      <div class="x_title">
-        <h2>每日上圖張數統計</h2>
-        <div class="clearfix"></div>
-      </div>
-      <div class="x_content">
-        <div class="col-md-9 col-sm-12 col-xs-12">
-          <div class="demo-container" style="height:280px">
-            <div id="system_report" class="demo-placeholder"></div>
-          </div>
+        <div class="x_title">
+            <h2>每日上圖張數統計</h2>
+            <div class="clearfix"></div>
         </div>
-
-        <div class="col-md-3 col-sm-12 col-xs-12">
-          <div>
-            <div class="x_title">
-              <h2>Top Profiles</h2>
-              <div class="clearfix"></div>
+        <div class="x_content">
+            <div class="col-md-9 col-sm-12 col-xs-12">
+              <div class="demo-container" style="height:280px">
+                <div id="system_report" class="demo-placeholder"></div>
+              </div>
             </div>
-            <ul class="list-unstyled top_profiles scroll-view">
-              <?php foreach ($top_profile as $key => $value) {?>
-                <li class="media event">
-                  <div class="media-body">
-                    <a class="title" href="#"><?=$value['create_day']?></a>
-                    <p><strong>上傳圖數：<?=$value['each_day_count']?>張</strong></p>
-                  </div>
-                </li>
-              <?php }?>
-            </ul>
-          </div>
+
+            <div class="col-md-3 col-sm-12 col-xs-12">
+              <div>
+                <div class="x_title">
+                  <h2>Top Profiles</h2>
+                  <div class="clearfix"></div>
+                </div>
+                <ul class="list-unstyled top_profiles scroll-view">
+                  <?php foreach ($top_profile as $key => $value) {?>
+                    <li class="media event">
+                      <div class="media-body">
+                        <a class="title" href="#"><?=$value['create_day']?></a>
+                        <p><strong>上傳圖數：<?=$value['each_day_count']?>張</strong></p>
+                      </div>
+                    </li>
+                  <?php }?>
+                </ul>
+              </div>
+            </div>
+            <div class="col-xl-12">
+                <table id="specialcaseTable" width="100%" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid">
+                    <thead>
+                    <tr role="row">
+                        <th>用戶</th>
+                        <th>帳號</th>
+                        <th>操作</th>
+                        <th>Log</th>
+                        <th>狀態</th>
+                        <th>操作時間</th>               
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <?php foreach($all_operation_log as $key => $value){ ?>
+                        <tr class="gradeC" role="row">
+                            <td><?=$value['account_name']?></td>
+                            <td><?=$value['user_account']?></td>
+                            <td><?=$value['motion']?></td>
+                            <td><?=$value['log']?></td>
+                            <td><?=$value['status']==0?'失敗':'成功'?></td>
+                            <td><?=$value['time']?></td>  
+                       </tr>
+                    <?php } ?>
+                    </tbody>
+                </table>
+            </div>
         </div>
-      </div>
     </div>
   </div>
 </div>
@@ -74,6 +100,7 @@
 <!-- bootstrap-daterangepicker -->
 <script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/gentelella/vendors/moment/min/moment.min.js"></script>
 <script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/gentelella/vendors/bootstrap-daterangepicker/daterangepicker.js"></script>
+<script src="<?php echo Yii::app()->request->baseUrl;?>/assets/admin/ext/js/jquery.dataTables.min.js"></script>
 <script>
     $(document).ready(function() {
         var s = '<?=$count_eachday_upload?>';
@@ -159,5 +186,13 @@
             }], system_settings);
             
         }
+        $('#specialcaseTable').DataTable( {
+            //"scrollX": true,
+            "lengthChange": false,
+            "oLanguage": {
+                "oPaginate": {"sFirst": "第一頁", "sPrevious": "上一頁", "sNext": "下一頁", "sLast": "最後一頁"},
+                "sEmptyTable": "無任何聯繫資料"
+            }
+        });
     })
 </script>

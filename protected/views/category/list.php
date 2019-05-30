@@ -23,39 +23,20 @@
             <tbody>
             <?php foreach($category_data as $key => $value){ ?>
                 <tr class="gradeC" role="row">
-                    <td><?=$value['info']['name']?></td>
-                    <td></td>
-                    <td><?=$value['info']['layer']?></td>
-                    <td><?=$value['info']['status']?></td>
-                    <td><?=$value['info']['create_date']?></td>                    
+                    <td><?=$value['root']?></td>
+                    <td><?=$value['name']?></td>
+                    <td><?=$value['layer']?></td>
+                    <td><?=$value['status']?></td>
+                    <td><?=$value['create_date']?></td>                    
                     <td>
-                        <a class="oprate-right" href="<?php echo Yii::app()->createUrl('category/update/id/') ?>/<?= $key ?>">
+                        <a class="oprate-right" href="<?php echo Yii::app()->createUrl('category/update/') ?>/<?= $value['category_id'] ?>">
                             <i class="fa fa-pencil-square-o fa-lg"></i>
                         </a>
                         <a
-                            class="oprate-right oprate-del" data-mem-id="<?= $key ?>" data-mem-name="<?= $value['info']['name'] ?>"><i class="fa fa-times fa-lg"></i>
+                            class="oprate-right oprate-del" data-mem-id="<?= $value['category_id'] ?>" data-mem-name="<?= $value['name'] ?>"><i class="fa fa-times fa-lg"></i>
                         </a>
                     </td>
                </tr>
-                <?php if(isset($value['child'])){?>
-                    <?php foreach ($value['child'] as $child_key => $child_value) {?>
-                        <tr class="gradeC" role="row">
-                            <td><?=$value['info']['name']?></td>
-                            <td><?=$child_value['name']?></td>
-                            <td><?=$child_value['layer']?></td>
-                            <td><?=$child_value['status']?></td>
-                            <td><?=$child_value['create_date']?></td>                            
-                            <td>
-                                <a class="oprate-right" href="<?php echo Yii::app()->createUrl('category/update/id/') ?>/<?= $child_value['category_id'] ?>">
-                                    <i class="fa fa-pencil-square-o fa-lg"></i>
-                                </a>
-                                <a
-                                    class="oprate-right oprate-del" data-mem-id="<?= $child_value['category_id'] ?>" data-mem-name="<?= $child_value['name'] ?>"><i class="fa fa-times fa-lg"></i>
-                                </a>
-                            </td>
-                        </tr>
-                    <?php }?>
-                <?php }?>
             <?php } ?>
             </tbody>
         </table>

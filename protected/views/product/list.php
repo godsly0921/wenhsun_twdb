@@ -6,7 +6,26 @@
        <!-- --><?php /*endif;*/?>
     </div>
 </div>
+<?php if(isset(Yii::app()->session['error_msg']) && Yii::app()->session['error_msg'] !== ''): ?>
+    <div class="alert alert-danger">
+        <ul>
+            <?php foreach (Yii::app()->session['error_msg'] as $error): ?>
+                <li><?= $error[0] ?></li>
+            <?php endforeach; ?>
+        </ul>
+    </div>
+<?php endif; ?>
 
+<?php if(isset(Yii::app()->session['success_msg']) && Yii::app()->session['success_msg'] !== ''): ?>
+<div class="alert alert-success">
+<strong><?=Yii::app()->session['success_msg'];?></strong>
+</div>
+<?php endif; ?>
+
+<?php
+unset( Yii::app()->session['error_msg'] );
+unset( Yii::app()->session['success_msg'] );
+?>
 <div class="panel panel-default" style="width=100%; overflow-y:scroll;">
     <div class="panel-body">
         <table id="specialcaseTable" width="100%" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid">
