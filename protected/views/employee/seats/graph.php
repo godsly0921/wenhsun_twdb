@@ -120,7 +120,7 @@
                 </div>
                 <div class="item_content_info">
                     <?php if(!empty($item['name'])):?><p>姓名:<?=$item['name']?></p><?php endif;?>
-                    <?php if(!empty($item['group_name'])):?><p>職務:<?=$item['group_name']?></p><?php endif;?>
+                    <?php if(!empty($item['position'])):?><p>職務:<?=$item['position']?></p><?php endif;?>
                     <?php if(!empty($item['ext_number'])):?><p>分機:<?=$item['ext_number']?></p><?php endif;?>
                     <?php if(!empty($item['mobile'])):?><p>手機:<?=$item['mobile']?></p><?php endif;?>
                     <?php if(!empty($item['email'])):?><p>E-Mail:<?=$item['email']?></p><?php endif;?>
@@ -138,7 +138,7 @@
                     </div>
                     <div class="item_content_info">
                         <?php if(!empty($item['name'])):?><p>姓名:<?=$item['name']?></p><?php endif;?>
-                        <?php if(!empty($item['group_name'])):?><p>職務:<?=$item['group_name']?></p><?php endif;?>
+                        <?php if(!empty($item['position'])):?><p>職務:<?=$item['position']?></p><?php endif;?>
                         <?php if(!empty($item['ext_number'])):?><p>分機:<?=$item['ext_number']?></p><?php endif;?>
                         <?php if(!empty($item['mobile'])):?><p>手機:<?=$item['mobile']?></p><?php endif;?>
                         <?php if(!empty($item['email'])):?><p>E-Mail:<?=$item['email']?></p><?php endif;?>
@@ -160,7 +160,7 @@
                             </div>
                             <div class="item_content_info">
                                 <?php if(!empty($item['name'])):?><p>姓名:<?=$item['name']?></p><?php endif;?>
-                                <?php if(!empty($item['group_name'])):?><p>職務:<?=$item['group_name']?></p><?php endif;?>
+                                <?php if(!empty($item['position'])):?><p>職務:<?=$item['position']?></p><?php endif;?>
                                 <?php if(!empty($item['ext_number'])):?><p>分機:<?=$item['ext_number']?></p><?php endif;?>
                                 <?php if(!empty($item['mobile'])):?><p>手機:<?=$item['mobile']?></p><?php endif;?>
                                 <?php if(!empty($item['email'])):?><p>E-Mail:<?=$item['email']?></p><?php endif;?>
@@ -181,7 +181,7 @@
                             </div>
                             <div class="item_content_info">
                                 <?php if(!empty($item['name'])):?><p>姓名:<?=$item['name']?></p><?php endif;?>
-                                <?php if(!empty($item['group_name'])):?><p>職務:<?=$item['group_name']?></p><?php endif;?>
+                                <?php if(!empty($item['position'])):?><p>職務:<?=$item['position']?></p><?php endif;?>
                                 <?php if(!empty($item['ext_number'])):?><p>分機:<?=$item['ext_number']?></p><?php endif;?>
                                 <?php if(!empty($item['mobile'])):?><p>手機:<?=$item['mobile']?></p><?php endif;?>
                                 <?php if(!empty($item['email'])):?><p>E-Mail:<?=$item['email']?></p><?php endif;?>
@@ -202,7 +202,7 @@
                     </div>
                     <div class="item_content_info">
                         <?php if(!empty($item['name'])):?><p>姓名:<?=$item['name']?></p><?php endif;?>
-                        <?php if(!empty($item['group_name'])):?><p>職務:<?=$item['group_name']?></p><?php endif;?>
+                        <?php if(!empty($item['position'])):?><p>職務:<?=$item['position']?></p><?php endif;?>
                         <?php if(!empty($item['ext_number'])):?><p>分機:<?=$item['ext_number']?></p><?php endif;?>
                         <?php if(!empty($item['mobile'])):?><p>手機:<?=$item['mobile']?></p><?php endif;?>
                         <?php if(!empty($item['email'])):?><p>E-Mail:<?=$item['email']?></p><?php endif;?>
@@ -221,7 +221,7 @@
                 <?php foreach($data['董事長 專線:2343-3145'] as $item):?>
                 <div class="item_content_info">
                     <?php if(!empty($item['name'])):?><p>姓名:<?=$item['name']?></p><?php endif;?>
-                    <?php if(!empty($item['group_name'])):?><p>職務:<?=$item['group_name']?></p><?php endif;?>
+                    <?php if(!empty($item['position'])):?><p>職務:<?=$item['position']?></p><?php endif;?>
                     <?php if(!empty($item['ext_number'])):?><p>分機:<?=$item['ext_number']?></p><?php endif;?>
                     <?php if(!empty($item['mobile'])):?><p>手機:<?=$item['mobile']?></p><?php endif;?>
                     <?php if(!empty($item['email'])):?><p>E-Mail:<?=$item['email']?></p><?php endif;?>
