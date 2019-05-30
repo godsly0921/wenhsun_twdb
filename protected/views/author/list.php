@@ -65,10 +65,9 @@ use Wenhsun\Transform\MultiColumnTransformer;
                         </tr>
                         </thead>
                         <tbody>
-                            <?php
-                            $multiTransfer = new MultiColumnTransformer();
-                            if(!empty($authors)):
-                            foreach($authors as $data):?>
+                            <?php $multiTransfer = new MultiColumnTransformer();?>
+                            <?php if (!empty($authors)): ?>
+                            <?php foreach($authors as $data):?>
                                 <tr>
                                     <td><?=$multiTransfer->toText('；', $data['pen_name']);?></td>
                                     <td><?=$data['author_name']?></td>
@@ -124,13 +123,13 @@ use Wenhsun\Transform\MultiColumnTransformer;
     </script>
     <?php foreach ($session_jsons as $jsons):?>
         <?php if ($jsons["power_controller"] === 'author/copy_prohibited'): ?>
-            <?= '<script type="text/javascript">
+           <script type="text/javascript">
                 document.oncontextmenu = function(){
                     return false;
                 }
                 document.onselectstart = function(){
                     return false;
                 }
-            </script>' ?>
+            </script>
         <?php endif; ?>
     <?php endforeach; ?>
