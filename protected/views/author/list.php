@@ -67,7 +67,8 @@ use Wenhsun\Transform\MultiColumnTransformer;
                         <tbody>
                             <?php
                             $multiTransfer = new MultiColumnTransformer();
-                            foreach($list as $data):?>
+                            if(!empty($authors)):
+                            foreach($authors as $data):?>
                                 <tr>
                                     <td><?=$multiTransfer->toText('；', $data['pen_name']);?></td>
                                     <td><?=$data['author_name']?></td>
@@ -89,6 +90,7 @@ use Wenhsun\Transform\MultiColumnTransformer;
                                     </td>
                                 </tr>
                             <?php endforeach;?>
+                            <?php endif;?>
                         </tbody>
                     </table>
                 </div>

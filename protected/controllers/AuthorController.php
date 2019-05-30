@@ -18,6 +18,15 @@ class AuthorController extends Controller
         $searchTwo = '';
         $searchCategory = '';
 
+        if (!isset($_POST['search_category']) || !isset($_POST['search_one']) || empty($_POST['search_category']) || empty($_POST['search_one'])) {
+              
+            $_POST['search_category'] = NULL;
+             
+            $_POST['search_one'] = NULL;
+              
+        }
+
+
         if ($_POST['search_category'] !== '' && trim($_POST['search_one']) !== '') {
 
             $searchCategory = $_POST['search_category'];
@@ -27,7 +36,7 @@ class AuthorController extends Controller
             $authors = $this->query($searchCategory, $searchOne, $searchTwo);
 
         } else {
-            $authors = Author::model()->byUpdateAt()->findAll();
+            $authors = '';
         }
 
         $this->render('list', ['list' => $authors, 'searchCategory' => $searchCategory, 'searchOne' => $searchOne, 'searchTwo' => $searchTwo]);
@@ -388,7 +397,7 @@ class AuthorController extends Controller
             );
 
             if ($banks) {
-                foreach($banks as $bank) {
+                foreach ($banks as $bank) {
                     $bank->delete();
                 }
             }
