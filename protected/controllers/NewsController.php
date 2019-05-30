@@ -24,7 +24,10 @@ class NewsController extends Controller
         $service = new AccountService();
         $account = $service->findAccounts();//取出系統管理員帳號
 
-        $this->render('index', ["news" => $news,'account'=>$account]);
+        $EmployeeService = new EmployeeService();
+        $employee = $EmployeeService->findEmployeelist();
+
+        $this->render('index', ["news" => $news,'account'=>$account,'employee'=>$employee]);
     }
 
     public function actionCreate()

@@ -35,6 +35,7 @@ class NewsService
         $news->new_title = $inputs['new_title'];
         $news->new_content = $inputs['new_content'];
         $news->builder = Yii::app()->session['uid'];
+
         $news->sort =  $inputs['sort'];
 
         $upload_image = $inputs['new_image'];
