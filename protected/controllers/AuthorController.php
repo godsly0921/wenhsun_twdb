@@ -92,7 +92,7 @@ class AuthorController extends Controller
             $author->death = !empty($data['death']) ? $data['death'] : null;
             $author->job_title = $data['job_title'];
             $author->service = $data['service'];
-            $author->identity_type = !empty($data['identity_type']) ? implode(',', $data['identity_type']) : null;
+            $author->identity_type = !empty($data['identity_type']) ? json_encode($data['identity_type'], JSON_UNESCAPED_UNICODE) : null;
             $author->nationality = $data['nationality'];
             $author->residence_address = $data['residence_address'];
             $author->office_address = $multiTransfer->toJson('；', $data['office_address']);
@@ -168,7 +168,7 @@ class AuthorController extends Controller
         }
     }
 
-    public function actionEdit($id)
+    public function actionEdit($id): void
     {
         $author = Author::model()->findByPk($id);
 
@@ -177,8 +177,8 @@ class AuthorController extends Controller
         }
 
         $multiTransfer = new MultiColumnTransformer();
-        $author->birth = str_replace("-", "/", $author->birth);
-        $author->death = str_replace("-", "/", $author->death);
+        $author->birth = str_replace('-', '/', $author->birth);
+        $author->death = str_replace('-', '/', $author->death);
         $author->office_address = $multiTransfer->toText('；', $author->office_address);
         $author->office_phone = $multiTransfer->toText('；', $author->office_phone);
         $author->office_fax = $multiTransfer->toText('；', $author->office_fax);
@@ -189,23 +189,23 @@ class AuthorController extends Controller
         $author->mobile = $multiTransfer->toText('；', $author->mobile);
         $author->social_account = $multiTransfer->toText('；', $author->social_account);
         $author->identity_number = $multiTransfer->toText('；', $author->identity_number);
-        $author->identity_type = explode(',', $author->identity_type);
+        $author->identity_type = !empty($author->identity_type) ? json_decode($author->identity_type, true) : [];
         $author->pen_name = $multiTransfer->toText('；', $author->pen_name);
 
         $bankList = [];
 
         $banks = AuthorBank::model()->findAll(
-            "author_id=:author_id",
+            'author_id=:author_id',
             [':author_id' => $id]
         );
 
-        $bankList[0] = (isset($banks[0])) ? $banks[0] : new AuthorBank();
-        $bankList[1] = (isset($banks[1])) ? $banks[1] : new AuthorBank();
+        $bankList[0] = $banks[0] ?? new AuthorBank();
+        $bankList[1] = $banks[1] ?? new AuthorBank();
 
         $this->render('edit', ['data' => $author, 'bank_list' => $bankList]);
     }
 
-    public function actionView($id)
+    public function actionView($id): void
     {
         $author = Author::model()->findByPk($id);
 
@@ -226,7 +226,7 @@ class AuthorController extends Controller
         $author->mobile = $multiTransfer->toText('；', $author->mobile);
         $author->social_account = $multiTransfer->toText('；', $author->social_account);
         $author->identity_number = $multiTransfer->toText('；', $author->identity_number);
-        $author->identity_type = explode(',', $author->identity_type);
+        $author->identity_type = !empty($author->identity_type) ? json_decode($author->identity_type, true) : [];
         $author->pen_name = $multiTransfer->toText('；', $author->pen_name);
 
         $bankList = [];
@@ -277,7 +277,7 @@ class AuthorController extends Controller
             $author->death = (!empty($data['death'])) ? $data['death'] : null;
             $author->job_title = $data['job_title'];
             $author->service = $data['service'];
-            $author->identity_type = (!empty($data['identity_type'])) ? implode(',', $data['identity_type']) : null;
+            $author->identity_type = !empty($data['identity_type']) ? $author->identity_type = json_encode($data['identity_type'], JSON_UNESCAPED_UNICODE) : null;
             $author->nationality = $data['nationality'];
             $author->residence_address = $data['residence_address'];
             $author->office_address = $multiTransfer->toJson(';', $data['office_address']);

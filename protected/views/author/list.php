@@ -132,9 +132,6 @@ use Wenhsun\Transform\MultiColumnTransformer;
             document.onselectstart = function(){
                 return false;
             }
-            document.onmousedown = function(){
-                return false;
-            }
         </script>
     <?php endif; ?>
     <?php endforeach; ?>

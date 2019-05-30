@@ -60,6 +60,13 @@ class AuthorService
 
     public function queryByIdentityType(string $identityType): array
     {
-        return [];
+        return Yii::app()->db->createCommand(
+            "
+              SELECT * FROM author 
+              WHERE JSON_SEARCH(identity_type, 'all', :identity_type) IS NOT NULL
+            "
+        )->bindValues([
+            ':identity_type' => "{$identityType}%",
+        ])->queryAll();
     }
 }
