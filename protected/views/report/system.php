@@ -22,6 +22,13 @@
             <h3>上架張數</h3>
         </div>
     </div>
+    <div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">
+        <div class="tile-stats">
+            <div class="icon"><i class="fa fa-sort-amount-desc"></i></div>
+            <div class="count"><?=count($all_operation_log)?></div>
+            <h3>系統操作</h3>
+        </div>
+    </div>
 </div>
 <div class="row">
   <div class="col-md-12">
