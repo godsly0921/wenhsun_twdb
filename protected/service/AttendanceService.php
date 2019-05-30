@@ -669,6 +669,159 @@ class AttendanceService
 
     }
 
+
+    public function getPartTimeData($day)
+    {
+        try {
+
+            $employee_service = new EmployeeService();
+
+            // 抓出所有PT員工
+            $data = $employee_service->getPTEmployee(7);
+
+
+            foreach ($data as $key => $value) {
+                if (!empty($value->door_card_num) || $value->door_card_num == "0000000000") { // 如果有員工有設定卡號的使用者就去抓
+
+                    $start_date = $day . ' 00:00:00';
+                    $end_date = $day . ' 23:59:59';
+
+                    $model = new RecordService;
+                    $record = $model->get_by_card($value->door_card_num, $start_date, $end_date);//找出所有的刷卡紀錄
+                    $first_time = 0;
+                    $last_time = 0;
+                    $abnormal_type = 0;//0正常 1異常
+                    $abnormal = '';
+                    count($record);
+                    $employee_id = $value->id;
+                    $employee_email = $value->email;
+                    $employee_name = $value->name;
+
+
+                    if (!empty($record)) {
+                        //---------------整理預計要寫入的參數資料
+
+                        $i = 1;
+                        $total = count($record);
+                        foreach ($record as $k => $v) {
+                            if ($i == 1 && $total != 1) {//第一筆
+                                $first_time = $v->flashDate;
+                            }
+                            if ($i == $total) {//最後一筆
+                                $last_time = $v->flashDate;
+                            }
+                            if ($i == 1 && $i == $total) {//最後一筆
+                                $first_time = $v->flashDate;
+                                $last_time = $v->flashDate;
+                            }
+                            $i++;
+                        }
+
+                        //避免奇怪的錯誤發生 在轉換一次
+                        if (strtotime($first_time) > strtotime($last_time)) {
+                            $first_tmp = $first_time;
+                            $last_tmp = $last_time;
+                            $first_time = $last_tmp;
+                            $last_time = $first_tmp;
+
+                        }
+                    }else{
+                        $first_time = '0000-00-00 00:00:00';
+                        $last_time = '0000-00-00 00:00:01';
+                    }
+
+
+                    $ParttimeService = new ParttimeService();
+                    $result = $ParttimeService->findPartTimeDayAllAndDevice($employee_id,$day);//假如今天有排班計錄
+
+                    if($result != false){//假如今天時間沒有排班紀錄
+                        foreach($result as $key =>$value){
+                            $start_record= strtotime($value->start_time);
+                            $end_record = strtotime($value->end_time);
+                            $last_time = strtotime($last_time);
+                            $first_time = strtotime($first_time);
+
+                            $abnormal .= '排班編號：'.$value->id;
+
+                            //第一筆打卡時間小於排班開始時間 最後一筆大於等於 排班結束
+                            if($first_time <= $start_record && $last_time >= $end_record){
+                                $abnormal_type = 0;
+                                $abnormal .= '正常，排班日出勤正常';
+                            }
+
+                            if($first_time > $start_record ){
+                                $abnormal_type = 1;
+                                $abnormal .= '異常： 排班日遲到 ';
+                            }
+
+                            if($last_time < $end_record){
+                                $abnormal_type = 1;
+                                $abnormal .= '異常 排班日早退 ';
+                            }
+
+
+                            $attendance_record_service = new AttendancerecordService();
+                            $model = $attendance_record_service->create($employee_id, $day, $first_time, $last_time, $abnormal_type, $abnormal);
+                            $mail = new MailService();
+                            $mail_type = $mail->sendMail($abnormal_type,$employee_email,$abnormal,$model->id,$employee_name);
+                            if($mail_type){
+                                Yii::log(date("Y-m-d H:i:s").'Attendance PT Record RECORD ID'.$model->id, CLogger::LEVEL_INFO);
+                            }else{
+                                Yii::log(date("Y-m-d H:i:s").'Attendance PT RECORD ID'.$model->id, CLogger::LEVEL_INFO);
+                            }
+
+
+                        }
+                    }else{
+
+                        $diff_time = strtotime($last_time) - strtotime($first_time);//這個員工一整天上班時間
+
+                        if ($diff_time > 32400 && $diff_time > 39601) {
+                            $abnormal_type = 1;
+                            $abnormal .= '異常，非排班日 上班時數超過十小時';
+                        } elseif ($diff_time < 32400 && $diff_time >= 1) {
+                            $abnormal_type = 1;//異常需填寫異常單
+                            $abnormal .= '異常，非排班日 上班時數小於上班八小時';
+                        } elseif ($diff_time == 0) {
+                            $abnormal_type = 1;
+                            $abnormal .= '異常，非排班日有一筆刷卡紀錄';
+                        } else {
+                            $abnormal_type = 0;
+                            $abnormal .= '正常，排班日沒有任何記錄';
+                        }
+
+                        $attendance_record_service = new AttendancerecordService();
+                        $model = $attendance_record_service->create($employee_id, $day, $first_time, $last_time, $abnormal_type, $abnormal);
+                        $mail = new MailService();
+                        $mail_type = $mail->sendMail($abnormal_type,$employee_email,$abnormal,$model->id,$employee_name);
+                        if($mail_type){
+                            Yii::log(date("Y-m-d H:i:s").'Attendance Record RECORD ID'.$model->id, CLogger::LEVEL_INFO);
+                        }else{
+                            Yii::log(date("Y-m-d H:i:s").'Attendance Error Record RECORD ID'.$model->id, CLogger::LEVEL_INFO);
+                        }
+
+                    }
+
+
+                }else{
+
+                    $msg = date("Y-m-d H:i:s").$value->id."該兼職員工卡號設定異常";
+                    Yii::log($msg, CLogger::LEVEL_INFO);
+                    $mail = new MailService();
+                    $mail->sendAdminMail(0,$msg);
+                    continue;
+
+                }
+
+            }
+        } catch (Exception $e) {
+            $msg = Yii::log("Part time attxendance data write exception {$e->getTraceAsString()}", CLogger::LEVEL_INFO);
+            $mail = new MailService();
+            $mail->sendAdminMail(0,$msg);
+        }
+
+    }
+
     function get_chinese_weekday($datetime)
     {
         $weekday = date('w', strtotime($datetime));

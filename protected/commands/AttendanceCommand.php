@@ -15,6 +15,7 @@ class AttendanceCommand extends CConsoleCommand
         }
 
         $res->getAttxendanceData($today);
+        $res->getPartTimeData($today);
     }
 
 }
