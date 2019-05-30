@@ -21,6 +21,8 @@
                         <tr>
                             <th>員工帳號</th>
                             <th>員工姓名</th>
+                            <th>部門</th>
+                            <th>職務</th>
                             <th>應稅薪資合計</th>
                             <th>薪資合計</th>
                             <th>應扣合計</th>
@@ -39,6 +41,8 @@
                                 <?php endif;?>
                                     <td><?php if (!empty($data['employee_login_id'])):?><?=$data['employee_login_id']?><?php endif;?></td>
                                     <td><?php if (!empty($data['employee_name'])):?><?=$data['employee_name']?><?php endif;?></td>
+                                    <td><?php if (!empty($data['employee_department'])):?><?=$data['employee_department']?><?php endif;?></td>
+                                    <td><?php if (!empty($data['employee_position'])):?><?=$data['employee_position']?><?php endif;?></td>
                                     <td><?php if (!empty($data['taxable_salary_total'])):?><?=number_format($data['taxable_salary_total'])?><?php endif;?></td>
                                     <td><?php if (!empty($data['salary_total'])):?><?=number_format($data['salary_total'])?><?php endif;?></td>
                                     <td><?php if (!empty($data['deduction_total'])):?><?=number_format($data['deduction_total'])?><?php endif;?></td>

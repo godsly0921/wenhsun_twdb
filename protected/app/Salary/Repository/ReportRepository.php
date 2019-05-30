@@ -57,6 +57,8 @@ class ReportRepository
             $model->employee_id,
             $model->employee_login_id,
             $model->employee_name,
+            $model->employee_department,
+            $model->employee_position,
             $model->salary,
             $model->draft_allowance,
             $model->traffic_allowance,
@@ -69,7 +71,7 @@ class ReportRepository
         );
     }
 
-    public function updateEmployeeSalary(SalaryReportEmployee $ent)
+    public function updateEmployeeSalary(SalaryReportEmployee $ent): void
     {
         try {
             $now = Common::now();
@@ -131,6 +133,8 @@ class ReportRepository
                 $row['employee_id'],
                 $row['employee_login_id'],
                 $row['employee_name'],
+                $row['employee_department'],
+                $row['employee_position'],
                 (float)$row['salary'],
                 $row['draft_allowance'],
                 $row['traffic_allowance'],

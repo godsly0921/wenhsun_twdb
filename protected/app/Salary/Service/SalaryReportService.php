@@ -188,8 +188,20 @@ class SalaryReportService
                 </thead>
                 <tbody>
                     <tr>
+                        <td style='border: 1px solid black'>員工帳號</td>
+                        <td style='border: 1px solid black'>{$employee->getEmployeeLoginId()}</td>
+                    </tr>
+                    <tr>
                         <td style='border: 1px solid black'>員工姓名</td>
                         <td style='border: 1px solid black'>{$employee->getEmployeeName()}</td>
+                    </tr>
+                    <tr>
+                        <td style='border: 1px solid black'>部門</td>
+                        <td style='border: 1px solid black'>{$employee->getEmployeeDepartment()}</td>
+                    </tr>
+                    <tr>
+                        <td style='border: 1px solid black'>職務</td>
+                        <td style='border: 1px solid black'>{$employee->getEmployeePosition()}</td>
                     </tr>
                     <tr>
                         <td style='border: 1px solid black'>本薪</td>
