@@ -20,10 +20,8 @@ class AuthorController extends Controller
 
 
         if (!isset($_POST['search_category']) || !isset($_POST['search_one']) || empty($_POST['search_category']) || empty($_POST['search_one'])) {
-
             $_POST['search_category']= NULL;
             $_POST['search_one'] = NULL;
-
         }
 
 
@@ -36,7 +34,7 @@ class AuthorController extends Controller
             $authors = $this->query($searchCategory, $searchOne, $searchTwo);
 
         } else {
-           // $authors = Author::model()->byUpdateAt()->findAll();這邊回傳是物件
+            // $authors = Author::model()->byUpdateAt()->findAll();這邊回傳是物件
             $authors = '';
         }
 

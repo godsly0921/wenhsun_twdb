@@ -123,14 +123,14 @@ use Wenhsun\Transform\MultiColumnTransformer;
         });
     </script>
     <?php foreach ($session_jsons as $jsons):?>
-    <?php if ($jsons["power_controller"] === 'author/copy_prohibited'):?>
-        <script type="text/javascript">
-            document.oncontextmenu = function(){
-                return false;
-            }
-            document.onselectstart = function(){
-                return false;
-            }
-        </script>
-    <?php endif; ?>
+        <?php if ($jsons["power_controller"] === 'author/copy_prohibited'): ?>
+            <?= '<script type="text/javascript">
+                document.oncontextmenu = function(){
+                    return false;
+                }
+                document.onselectstart = function(){
+                    return false;
+                }
+            </script>' ?>
+        <?php endif; ?>
     <?php endforeach; ?>
