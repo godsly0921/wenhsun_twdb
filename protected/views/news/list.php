@@ -66,16 +66,16 @@
                                 <span class='btn downloadBtn'>附件下載 <?=$value['image_name'] !=''?$value['image_name']:$file_name[count($file_name)-1]?></span>                      
                                 </a>
                                 <?php endif ?>
-                                <?php if( in_array($value->id,$sawarr) ){ ?>
-                                <span class='btn saw heavsaw' newsid="<?=$value->id?>" memid="<?=Yii::app()->session['uid'];?>">
+                              <!--  <?php /*if( in_array($value->id,$sawarr) ){ */?>
+                                <span class='btn saw heavsaw' newsid="<?/*=$value->id*/?>" memid="<?/*=Yii::app()->session['uid'];*/?>">
                                 已讀取
                                 </span> 
-                                <?php }else{?>
-                                <span class='btn saw' newsid="<?=$value->id?>" memid="<?=Yii::app()->session['uid'];?>">
+                                <?php /*}else{*/?>
+                                <span class='btn saw' newsid="<?/*=$value->id*/?>" memid="<?/*=Yii::app()->session['uid'];*/?>">
                                 讀取
-                                </span> 
+                                </span> -->
                             </div>
-                            <?php }?>
+                          <!--  --><?php /*}*/?>
                         </div>
                     </div>
                 </div>
