@@ -74,8 +74,10 @@ class DoorrecController extends Controller
                 $data = $recordservice->get_by_card_and_key($key_sw, $_POST['keycol'], $cardarr, $choosestart, $chooseend, $_POST['keyword']);
                 $total = count($data);
 
+
                 if (!empty($data) && $total != 0 ) {
                     foreach ($data as $key => $value) {
+                        $temp['e_user_name'] = $value['e_user_name'];
                         $temp['position_name'] = $value['position_name'];
                         $temp['username'] = $value['username'];
                         $temp['card_number'] = $value['card_number'];
@@ -127,7 +129,7 @@ class DoorrecController extends Controller
             ->setCategory("文訊");
         // Add some data 設定匯出欄位資料
         $objPHPExcel->setActiveSheetIndex(0)
-            ->setCellValue('A1', '地點名稱')
+            ->setCellValue('A1', '員工帳號')
             ->setCellValue('B1', '員工姓名')
             ->setCellValue('C1', '卡號')
             ->setCellValue('D1', '刷卡時間')
@@ -138,7 +140,7 @@ class DoorrecController extends Controller
         $i = 2;
         foreach ($model as $value) {
             $objPHPExcel->setActiveSheetIndex(0)
-                ->setCellValue('A' . $i, $value['position_name'])
+                ->setCellValue('A' . $i, $value['e_user_name'])
                 ->setCellValue('B' . $i, $value['username'])
                 ->setCellValue('C' . $i, $value['card_number'])
                 ->setCellValue('D' . $i, $value['flashDate'])

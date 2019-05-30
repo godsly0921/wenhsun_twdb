@@ -140,6 +140,7 @@ class AttendancerecordService{
             ->andWhere(array('in', 'a.employee_id', $employee_id))
             ->andWhere("a.day >= '$star'")
             ->andWhere("a.day <= '$end'")
+            ->order('e.user_name DESC,CONVERT(e.name using big5) ASC,a.day ASC')
             ->queryAll();
 
         return $data;

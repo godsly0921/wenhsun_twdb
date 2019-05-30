@@ -85,6 +85,7 @@
                                class="table table-striped table-bordered table-hover dataTable no-footer">
                             <thead>
                             <tr role="row">
+                                <th>員工帳號</th>
                                 <th>員工姓名</th>
                                 <th>出勤日</th>
                                 <th>首筆出勤紀錄</th>
@@ -105,6 +106,7 @@
                             <tbody>
                             <?php foreach ($rcdata as $key => $value): ?>
                                 <tr class="gradeC" role="row">
+                                    <td><?=$value['user_name']?></td>
                                     <td><?=$value['name']?></td>
                                     <td><?=$value['day']?></td>
                                     <td><?=$value['first_time']?></td>

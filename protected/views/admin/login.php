@@ -38,7 +38,7 @@
                     <div class="separator">
 
                         <p class="change_link">
-                            <a href="<?php echo Yii::app()->createUrl('/admin/register');?>" class="to_register">註冊會員</a>
+                            <!--<a href="<?php /*echo Yii::app()->createUrl('/admin/register');*/?>" class="to_register">註冊會員</a>-->
                             <input style="float:none;" type="submit" id="login-btn" class="btn btn-default submit" value="登入"/>
                         </p>
 
