@@ -26,16 +26,33 @@ use Wenhsun\Transform\MultiColumnTransformer;
         </div>
 
         <div class="clearfix"></div>
-
+        
         <div class="row">
             <div class="col-md-12 col-sm-12 col-xs-12">
+
                 <div class="x_panel">
+                <form action="/author/index" method="post">
+                <select name="search_category">
+                    <option value="" <?php if($searchCategory === ''):?> selected <?endif;?>>請選擇</option>
+                    <option value="birth_year" <?php if($searchCategory === 'birth_year'):?> selected <?endif;?>>出生年</option>
+                    <option value="service" <?php if($searchCategory === "service"):?> selected <?endif;?>>服務單位</option>
+                    <option value="job_title" <?php if($searchCategory === "job_title"):?> selected <?endif;?>>職稱</option>
+                    <option value="address" <?php if($searchCategory === "address"):?> selected <?endif;?>>住家 郵遞區號/地址</option>
+                    <option value="identity_type" <?php if($searchCategory === "identity_type"):?> selected <?endif;?>>身分類型</option>
+                </select>
+                <input type="text" id="search_one" name="search_one" value="<?=$searchOne?>">
+                <span id="search_two_wrapper" style="display: none;">~<input type="text" id="search_two" value="<?=$searchTwo?>" name="search_two"></span>
+                <input type="submit" value="查詢">
+                </form>
                     <table id="datatable" class="table table-striped table-bordered">
                         <thead>
                         <tr>
                             <th>筆名</th>
                             <th>姓名</th>
+                            <th>服務單位</th>
+                            <th>職稱</th>
                             <th>電子郵件</th>
+                            <th>住家地址</th>
                             <th>住家電話</th>
                             <th>手機</th>
                             <th>備註</th>
@@ -48,24 +65,27 @@ use Wenhsun\Transform\MultiColumnTransformer;
                             $multiTransfer = new MultiColumnTransformer();
                             foreach($list as $data):?>
                                 <tr>
-                                    <td><?=$multiTransfer->toText('；', $data->pen_name);?></td>
-                                    <td><?=$data->author_name?></td>
-                                    <td><?=$multiTransfer->toText('；', $data->email);?></td>
-                                    <td><?=$multiTransfer->toText('；', $data->home_phone);?></td>
-                                    <td><?=$multiTransfer->toText('；', $data->mobile);?></td>
+                                    <td><?=$multiTransfer->toText('；', $data['pen_name']);?></td>
+                                    <td><?=$data['author_name']?></td>
+                                    <td><?=$data['service']?></td>
+                                    <td><?=$data['job_title']?></td>
+                                    <td><?=$multiTransfer->toText('；', $data['email']);?></td>
+                                    <td><?=$multiTransfer->toText('；', $data['home_address']);?></td>
+                                    <td><?=$multiTransfer->toText('；', $data['home_phone']);?></td>
+                                    <td><?=$multiTransfer->toText('；', $data['mobile']);?></td>
                                     <td><?=$data->memo?></td>
                                     <td>
-                                        <a href="<?= Yii::app()->createUrl('/author/view?id='.$data->id);?>"><i class="fa fa-newspaper-o" style="font-size:18px"></i></a>
+                                        <a href="<?= Yii::app()->createUrl('/author/view?id='.$data['id']);?>"><i class="fa fa-newspaper-o" style="font-size:18px"></i></a>
                                     <?php foreach ($session_jsons as $jsons):?>
                                         <?php if ($jsons["power_controller"] == 'author/edit'):?>
-                                        <a href="<?= Yii::app()->createUrl('/author/edit?id='.$data->id);?>"><i class="fa fa-edit" style="font-size:18px"></i></a>
+                                        <a href="<?= Yii::app()->createUrl('/author/edit?id='.$data['id']);?>"><i class="fa fa-edit" style="font-size:18px"></i></a>
                                         <?php endif;?>
                                     <?php endforeach;?>
                                     </td>
                                 </tr>
                             <?php endforeach;?>
                         <?php else:?>
-                            <tr><td colspan="7">查無資料, 快去<a href="<?= Yii::app()->createUrl('/author/new');?>">新增資料</a>吧</td></tr>
+                            <tr><td colspan="11">查無資料</td></tr>
                         <?php endif; ?>
                         </tbody>
                     </table>

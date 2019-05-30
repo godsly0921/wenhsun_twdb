@@ -14,9 +14,48 @@ class AuthorController extends Controller
 
     public function actionIndex()
     {
-        $authors = Author::model()->byUpdateAt()->findAll();
+        $searchOne = '';
+        $searchTwo = '';
+        $searchCategory = '';
 
-        $this->render('list', ['list' => $authors]);
+        if ($_POST['search_category'] !== '' && trim($_POST['search_one']) !== '') {
+
+            $searchCategory = $_POST['search_category'];
+            $searchOne = $_POST['search_one'];
+            $searchTwo = $_POST['search_two'];
+
+            $authors = $this->query($searchCategory, $searchOne, $searchTwo);
+
+        } else {
+            $authors = Author::model()->byUpdateAt()->findAll();
+        }
+
+        $this->render('list', ['list' => $authors, 'searchCategory' => $searchCategory, 'searchOne' => $searchOne, 'searchTwo' => $searchTwo]);
+    }
+
+    private function query(string $searchCategory, string $searchOne, string $searchTwo): array
+    {
+        $authorServ = new \Wenhsun\Author\AuthorService();
+
+        switch ($searchCategory) {
+            case 'birth_year':
+                return $authorServ->queryByBirthYear($searchOne, $searchTwo);
+                break;
+            case 'service':
+                return $authorServ->queryByService($searchOne);
+                break;
+            case 'job_title':
+                return $authorServ->queryByJobTitle($searchOne);
+                break;
+            case 'address':
+                return $authorServ->queryByAddress($searchOne);
+                break;
+            case 'identity_type':
+                return $authorServ->queryByIdentityType($searchOne);
+                break;
+            default:
+                return [];
+        }
     }
 
     public function actionNew()
