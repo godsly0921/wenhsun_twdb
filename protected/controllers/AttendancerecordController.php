@@ -17,7 +17,7 @@ class AttendancerecordController extends Controller
         $employee_list = [];
         if(!empty($employee)){
             foreach ($employee as $key => $value) {
-                $employee_list[$value->id] = $value->name;
+                $employee_list[$value->id] = $value->name.'/'.$value->user_name.'/'.$value->door_card_num;
             }
         }
 
@@ -74,6 +74,7 @@ class AttendancerecordController extends Controller
 
         $finaldata = [];
         foreach ($record_data as $key => $value) {
+                $temp['user_name'] = $value['user_name'];
                 $temp['attendance_record_id'] = $value['attendance_record_id'];
                 $temp['name'] = $value['name'];
                 $temp['day'] = $value['day'];
@@ -144,14 +145,15 @@ class AttendancerecordController extends Controller
             ->setCategory( "文訊人資" );
         // Add some data 設定匯出欄位資料
         $objPHPExcel->setActiveSheetIndex( 0 )
-            ->setCellValue( 'A1', '員工姓名' )
-            ->setCellValue( 'B1', '出勤日' )
-            ->setCellValue( 'C1', '首筆出勤紀錄' )
-            ->setCellValue( 'D1', '末筆出勤紀錄' )
-            ->setCellValue( 'E1', '狀態' )
-            ->setCellValue( 'F1', '說明' )
-            ->setCellValue( 'G1', '建立時間' )
-            ->setCellValue( 'H1', '修改時間' );
+            ->setCellValue( 'A1', '員工帳號' )
+            ->setCellValue( 'B1', '員工姓名' )
+            ->setCellValue( 'C1', '出勤日' )
+            ->setCellValue( 'D1', '首筆出勤紀錄' )
+            ->setCellValue( 'E1', '末筆出勤紀錄' )
+            ->setCellValue( 'F1', '狀態' )
+            ->setCellValue( 'G1', '說明' )
+            ->setCellValue( 'H1', '建立時間' )
+            ->setCellValue( 'I1', '修改時間' );
 
 
         // Miscellaneous glyphs, UTF-8 設定內容資料
@@ -159,14 +161,15 @@ class AttendancerecordController extends Controller
         foreach ($model as $value) {
 
             $objPHPExcel->setActiveSheetIndex( 0 )
-                ->setCellValue( 'A' . $i, $value[ 'name' ] )
-                ->setCellValue( 'B' . $i, $value[ 'day' ] )
-                ->setCellValue( 'C' . $i, $value[ 'first_time' ] )
-                ->setCellValue( 'D' . $i, $value[ 'last_time' ] )
-                ->setCellValue( 'E' . $i, $value[ 'abnormal_type' ] )
-                ->setCellValue( 'F' . $i, $value[ 'abnormal' ] )
-                ->setCellValue( 'G' . $i, $value[ 'att_create_at' ] )
-                ->setCellValue( 'H' . $i, $value[ 'update_at' ] );
+                ->setCellValue( 'A' . $i, $value[ 'user_name' ] )
+                ->setCellValue( 'B' . $i, $value[ 'name' ] )
+                ->setCellValue( 'C' . $i, $value[ 'day' ] )
+                ->setCellValue( 'D' . $i, $value[ 'first_time' ] )
+                ->setCellValue( 'E' . $i, $value[ 'last_time' ] )
+                ->setCellValue( 'F' . $i, $value[ 'abnormal_type' ] )
+                ->setCellValue( 'G' . $i, $value[ 'abnormal' ] )
+                ->setCellValue( 'H' . $i, $value[ 'att_create_at' ] )
+                ->setCellValue( 'I' . $i, $value[ 'update_at' ] );
             $i++;
 
         }

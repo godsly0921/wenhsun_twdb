@@ -19,6 +19,7 @@
             <thead>
             <tr role="row">
                 <th>出勤日日期</th>
+                <th>出勤日日期</th>
                 <td>是否為出勤日</td>
                 <td>說明</td>
                 <th>新增時間</th>
