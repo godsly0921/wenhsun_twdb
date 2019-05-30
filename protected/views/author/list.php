@@ -65,7 +65,6 @@ use Wenhsun\Transform\MultiColumnTransformer;
                         </tr>
                         </thead>
                         <tbody>
-                        <?php if(!empty($list)):?>
                             <?php
                             $multiTransfer = new MultiColumnTransformer();
                             foreach($list as $data):?>
@@ -90,9 +89,6 @@ use Wenhsun\Transform\MultiColumnTransformer;
                                     </td>
                                 </tr>
                             <?php endforeach;?>
-                        <?php else:?>
-                            <tr><td colspan="12">查無資料</td></tr>
-                        <?php endif; ?>
                         </tbody>
                     </table>
                 </div>
@@ -110,7 +106,8 @@ use Wenhsun\Transform\MultiColumnTransformer;
                 "info": false,
                 'iDisplayLength': 20,
                 "oLanguage": {
-                    "oPaginate": {"sFirst": "第一頁", "sPrevious": "上一頁","sNext": "下一頁","sLast": "最後一頁"}
+                    "oPaginate": {"sFirst": "第一頁", "sPrevious": "上一頁","sNext": "下一頁","sLast": "最後一頁"},
+                    "sEmptyTable": "查無資料, 快去新增資料吧"
                 }
             });
 
