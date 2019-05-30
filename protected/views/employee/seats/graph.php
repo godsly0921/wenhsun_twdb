@@ -8,13 +8,13 @@
     }
     .graph_item {
         margin:10px;
-        width:500px;
+        width: 440px;
         display: flex;
         flex-wrap: wrap;
         align-items: flex-start;
     }
     .item_title {
-        width: 499px;
+        width: 439px;
         height: 50px;
         margin:0 0 -1px -1px;
         box-sizing: border-box;
@@ -25,7 +25,7 @@
     .graph_item .item_content {
         border: 1px solid grey;
         position: relative;
-        width:250px;
+        width:220px;
         height: 180px;
         box-sizing: border-box;
         margin:0 0 -1px -1px;
@@ -33,7 +33,7 @@
     .inner_item_content {
         border: 1px solid grey;
         position: relative;
-        width:250px;
+        width:220px;
         height: 180px;
         box-sizing: border-box;
         border-top: none;
@@ -44,7 +44,7 @@
         border-top: none;
     }
     .item_content_background {
-        width:250px;
+        width:220px;
         height: 180px;
         position: absolute;
         display: flex;
@@ -69,11 +69,11 @@
 
     .graph_item_single {
         margin:10px;
-        width:250px;
+        width:220px;
         height: 765px;
     }
     .graph_item_single .item_title {
-        width: 250px;
+        width:220px;
         height: 50px;
         margin:0 0 -1px -1px;
         box-sizing: border-box;
@@ -82,19 +82,19 @@
     .graph_item_single .item_content {
         border: 1px solid grey;
         position: relative;
-        width:250px;
+        width:220px;
         height: 715px;
         box-sizing: border-box;
         margin:0 0 -1px -1px;
     }
     .graph_container .door_container {
-        width:500px;
+        width: 440px;
         position: absolute;
         top:0;
     }
     .door_container .door_bar {
         background: #333;
-        width: 460px;
+        width: 400px;
         height: 15px;
         margin: 10px auto 5px auto;
     }
@@ -147,7 +147,7 @@
                 </div>
             <?php endforeach;?>
         </div>
-        <div class="graph_item"></div>
+        <div class="graph_item_single"></div>
         <div class="graph_item">
             <div class="item_title">資料管理部 外線:2343-2131</div>
             <div class="item_content merge_content">

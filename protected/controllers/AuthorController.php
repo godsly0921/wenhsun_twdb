@@ -158,6 +158,43 @@ class AuthorController extends Controller
         $this->render('edit', ['data' => $author, 'bank_list' => $bankList]);
     }
 
+    public function actionView($id)
+    {
+        $author = Author::model()->findByPk($id);
+
+        if (!$author) {
+            $this->redirect('index');
+        }
+
+        $multiTransfer = new MultiColumnTransformer();
+        $author->birth = str_replace("-", "/", $author->birth);
+        $author->death = str_replace("-", "/", $author->death);
+        $author->office_address = $multiTransfer->toText('；', $author->office_address);
+        $author->office_phone = $multiTransfer->toText('；', $author->office_phone);
+        $author->office_fax = $multiTransfer->toText('；', $author->office_fax);
+        $author->email = $multiTransfer->toText('；', $author->email);
+        $author->home_address = $multiTransfer->toText('；', $author->home_address);
+        $author->home_phone = $multiTransfer->toText('；', $author->home_phone);
+        $author->home_fax = $multiTransfer->toText('；', $author->home_fax);
+        $author->mobile = $multiTransfer->toText('；', $author->mobile);
+        $author->social_account = $multiTransfer->toText('；', $author->social_account);
+        $author->identity_number = $multiTransfer->toText('；', $author->identity_number);
+        $author->identity_type = explode(',', $author->identity_type);
+        $author->pen_name = $multiTransfer->toText('；', $author->pen_name);
+
+        $bankList = [];
+
+        $banks = AuthorBank::model()->findAll(
+            "author_id=:author_id",
+            [':author_id' => $id]
+        );
+
+        $bankList[0] = (isset($banks[0])) ? $banks[0] : new AuthorBank();
+        $bankList[1] = (isset($banks[1])) ? $banks[1] : new AuthorBank();
+
+        $this->render('view', ['data' => $author, 'bank_list' => $bankList]);
+    }
+
     /**
      * @throws CException
      */
