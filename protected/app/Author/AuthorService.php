@@ -10,7 +10,16 @@ class AuthorService
 {
     public function queryByBirthYear(string $year, string $toYear): array
     {
-        return [];
+        return Yii::app()->db->createCommand(
+            '
+              SELECT * FROM author 
+              WHERE birth_year >= :year
+              AND birth_year <= :toYear
+            '
+        )->bindValues([
+            ':year' => $year,
+            ':toYear' => $toYear,
+        ])->queryAll();
     }
 
     public function queryByService(string $service): array
@@ -22,8 +31,7 @@ class AuthorService
             '
         )->bindValues([
             ':service' => "{$service}%",
-        ])
-            ->queryAll();
+        ])->queryAll();
     }
 
     public function queryByJobTitle(string $jobTitle): array
@@ -35,8 +43,7 @@ class AuthorService
             '
         )->bindValues([
             ':job_title' => "{$jobTitle}%",
-        ])
-            ->queryAll();
+        ])->queryAll();
     }
 
     public function queryByAddress(string $address): array
@@ -48,8 +55,7 @@ class AuthorService
             "
         )->bindValues([
             ':home_address' => "{$address}%",
-        ])
-            ->queryAll();
+        ])->queryAll();
     }
 
     public function queryByIdentityType(string $identityType): array

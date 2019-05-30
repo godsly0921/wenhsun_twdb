@@ -66,7 +66,7 @@ class AuthorController extends Controller
     /**
      * @throws CException
      */
-    public function actionCreate()
+    public function actionCreate(): void
     {
         $this->checkCSRF('index');
         $now = Common::now();
@@ -80,11 +80,19 @@ class AuthorController extends Controller
 
             $author->author_name = $data['author_name'];
             $author->gender = $data['gender'];
-            $author->birth = (!empty($data['birth'])) ? $data['birth'] : null;
-            $author->death = (!empty($data['death'])) ? $data['death'] : null;
+
+            if (!empty($data['birth'])) {
+                $author->birth = $data['birth'];
+                $author->birth_year = explode('/', $data['birth'])[0];
+            } else {
+                $author->birth = null;
+                $author->birth_year = null;
+            }
+
+            $author->death = !empty($data['death']) ? $data['death'] : null;
             $author->job_title = $data['job_title'];
             $author->service = $data['service'];
-            $author->identity_type = (!empty($data['identity_type'])) ? implode(',', $data['identity_type']) : null;
+            $author->identity_type = !empty($data['identity_type']) ? implode(',', $data['identity_type']) : null;
             $author->nationality = $data['nationality'];
             $author->residence_address = $data['residence_address'];
             $author->office_address = $multiTransfer->toJson('；', $data['office_address']);
@@ -257,7 +265,15 @@ class AuthorController extends Controller
 
             $author->author_name = $data['author_name'];
             $author->gender = $data['gender'];
-            $author->birth = (!empty($data['birth'])) ? $data['birth'] : null;
+
+            if (!empty($data['birth'])) {
+                $author->birth = $data['birth'];
+                $author->birth_year = explode('/', $data['birth'])[0];
+            } else {
+                $author->birth = null;
+                $author->birth_year = null;
+            }
+
             $author->death = (!empty($data['death'])) ? $data['death'] : null;
             $author->job_title = $data['job_title'];
             $author->service = $data['service'];

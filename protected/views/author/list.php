@@ -32,7 +32,7 @@ use Wenhsun\Transform\MultiColumnTransformer;
 
                 <div class="x_panel">
                 <form action="/author/index" method="post">
-                <select name="search_category">
+                <select id="search_category" name="search_category">
                     <option value="" <?php if($searchCategory === ''):?> selected <?endif;?>>請選擇</option>
                     <option value="birth_year" <?php if($searchCategory === 'birth_year'):?> selected <?endif;?>>出生年</option>
                     <option value="service" <?php if($searchCategory === "service"):?> selected <?endif;?>>服務單位</option>
@@ -41,7 +41,11 @@ use Wenhsun\Transform\MultiColumnTransformer;
                     <option value="identity_type" <?php if($searchCategory === "identity_type"):?> selected <?endif;?>>身分類型</option>
                 </select>
                 <input type="text" id="search_one" name="search_one" value="<?=$searchOne?>">
-                <span id="search_two_wrapper" style="display: none;">~<input type="text" id="search_two" value="<?=$searchTwo?>" name="search_two"></span>
+                <?php if($searchCategory === 'birth_year'):?>
+                    <span id="search_two_wrapper">~<input type="text" id="search_two" value="<?=$searchTwo?>" name="search_two"></span>
+                <?php else:?>
+                    <span id="search_two_wrapper" style="display: none;">~<input type="text" id="search_two" value="<?=$searchTwo?>" name="search_two"></span>
+                <?php endif;?>
                 <input type="submit" value="查詢">
                 </form>
                     <table id="datatable" class="table table-striped table-bordered">
@@ -49,6 +53,7 @@ use Wenhsun\Transform\MultiColumnTransformer;
                         <tr>
                             <th>筆名</th>
                             <th>姓名</th>
+                            <th>出生日</th>
                             <th>服務單位</th>
                             <th>職稱</th>
                             <th>電子郵件</th>
@@ -67,6 +72,7 @@ use Wenhsun\Transform\MultiColumnTransformer;
                                 <tr>
                                     <td><?=$multiTransfer->toText('；', $data['pen_name']);?></td>
                                     <td><?=$data['author_name']?></td>
+                                    <td><?=str_replace('-', '/', $data['birth'])?></td>
                                     <td><?=$data['service']?></td>
                                     <td><?=$data['job_title']?></td>
                                     <td><?=$multiTransfer->toText('；', $data['email']);?></td>
@@ -85,7 +91,7 @@ use Wenhsun\Transform\MultiColumnTransformer;
                                 </tr>
                             <?php endforeach;?>
                         <?php else:?>
-                            <tr><td colspan="11">查無資料</td></tr>
+                            <tr><td colspan="12">查無資料</td></tr>
                         <?php endif; ?>
                         </tbody>
                     </table>
@@ -96,6 +102,7 @@ use Wenhsun\Transform\MultiColumnTransformer;
 
     <script>
         $(document).ready(function(){
+
             $('#datatable').DataTable({
                 "lengthChange": false,
                 "paging": true,
@@ -104,6 +111,14 @@ use Wenhsun\Transform\MultiColumnTransformer;
                 'iDisplayLength': 20,
                 "oLanguage": {
                     "oPaginate": {"sFirst": "第一頁", "sPrevious": "上一頁","sNext": "下一頁","sLast": "最後一頁"}
+                }
+            });
+
+            $("#search_category").on('change', function(){
+                if ($(this).val() === "birth_year") {
+                    $("#search_two_wrapper").show();
+                } else {
+                    $("#search_two_wrapper").hide();
                 }
             });
         });
