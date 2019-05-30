@@ -28,13 +28,18 @@
                     <td><?= $value->new_title ?></td>
                     <td><?php echo ($value->new_type == 1) ? "是" : "否" ?></td>
                     <td class="sort"><?= $value->new_createtime ?></td>
-                    <?php $account_name = '';
+                    <?php $name = '';
                     foreach ($account as $v):?>
                         <?php if ($value->builder == $v->id): ?>
-                            <?php $account_name = $v->account_name ?>
+                            <?php $name = $v->account_name ?>
                         <?php endif; ?>
                     <?php endforeach; ?>
-                    <td><?= $account_name ?></td>
+                    <?php foreach ($employee as $v):?>
+                        <?php if ($value->builder == $v->id): ?>
+                            <?php $name = $v->name ?>
+                        <?php endif; ?>
+                    <?php endforeach; ?>
+                    <td><?= $name ?></td>
                     <td>                        <?php foreach ($session_jsons as $jsons): ?><?php if ($jsons["power_controller"] == 'news/update'): ?>
                             <a class="oprate-right"
                                href="<?php echo Yii::app()->createUrl('news/update') ?>/<?= $value->id ?>"><i
