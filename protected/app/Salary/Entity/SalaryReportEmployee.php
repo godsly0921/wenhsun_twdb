@@ -6,14 +6,16 @@ namespace Wenhsun\Salary\Entity;
 
 class SalaryReportEmployee
 {
-    const NOT_SET_SALARY_YET = "YET";
-    const SET_SALARY = "OKZ";
+    public const NOT_SET_SALARY_YET = 'YET';
+    public const SET_SALARY = 'OKZ';
 
     private $id;
     private $batchId;
     private $employeeId;
     private $employeeLoginId;
     private $employeeName;
+    private $employeeDepartment;
+    private $employeePosition;
     private $salary;
     private $draftAllowance;
     private $trafficAllowance;
@@ -25,7 +27,7 @@ class SalaryReportEmployee
     private $pension;
     private $status;
 
-    public function getBatchMonth()
+    public function getBatchMonth(): string
     {
         $batchId = $this->getBatchId();
 
@@ -46,6 +48,16 @@ class SalaryReportEmployee
     public function getEmployeeName()
     {
         return $this->employeeName;
+    }
+
+    public function getEmployeeDepartment()
+    {
+        return $this->employeeDepartment;
+    }
+
+    public function getEmployeePosition()
+    {
+        return $this->employeePosition;
     }
 
     /**
@@ -94,6 +106,8 @@ class SalaryReportEmployee
         $employeeId,
         $employeeLoginId,
         $employeeName,
+        $employeeDepartment,
+        $employeePosition,
         $salary,
         $draftAllowance,
         $trafficAllowance,
@@ -109,6 +123,8 @@ class SalaryReportEmployee
         $this->employeeId = $employeeId;
         $this->employeeLoginId = $employeeLoginId;
         $this->employeeName = $employeeName;
+        $this->employeeDepartment = $employeeDepartment;
+        $this->employeePosition = $employeePosition;
         $this->salary = $salary;
         $this->draftAllowance = $draftAllowance;
         $this->trafficAllowance = $trafficAllowance;

@@ -80,6 +80,8 @@ class SalaryReportService
                 $salaryReportModel->employee_id = $employeeEnt->getEmployeeId();
                 $salaryReportModel->employee_login_id = $employeeEnt->getEmployeeLoginId();
                 $salaryReportModel->employee_name = $employeeEnt->getEmployeeName();
+                $salaryReportModel->employee_department = $employeeEnt->getEmployeeDepartment();
+                $salaryReportModel->employee_position = $employeeEnt->getEmployeePosition();
                 $salaryReportModel->salary = $employeeEnt->getSalary();
                 $salaryReportModel->draft_allowance = $employeeEnt->getDraftAllowance();
                 $salaryReportModel->traffic_allowance = $employeeEnt->getTrafficAllowance();
