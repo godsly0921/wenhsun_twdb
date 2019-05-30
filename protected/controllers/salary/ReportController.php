@@ -92,7 +92,7 @@ class ReportController extends Controller
         $this->sendSuccAjaxRsp();
     }
 
-    public function actionExport()
+    public function actionExport(): void
     {
         $this->checkCSRF('index');
 
@@ -106,6 +106,8 @@ class ReportController extends Controller
             $rows[] = [
                 $employee->getEmployeeLoginId(),
                 $employee->getEmployeeName(),
+                $employee->getEmployeeDepartment(),
+                $employee->getEmployeePosition(),
                 $employee->getSalary(),
                 $employee->getDraftAllowance(),
                 $employee->getTrafficAllowance(),
@@ -128,6 +130,8 @@ class ReportController extends Controller
             ->addRow([
                 '員工帳號',
                 '員工姓名',
+                '部門',
+                '職務',
                 '本薪(+)',
                 '稿費津貼(+)',
                 '交通津貼(+)',
