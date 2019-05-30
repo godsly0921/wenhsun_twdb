@@ -42,8 +42,8 @@
                                class="">
                             <thead>
                             <tr role="row">
-                                <th>地點名稱</th>
-                                <th>使用者姓名</th>
+                                <th>員工帳號</th>
+                                <th>員工姓名</th>
                                 <th>卡號</th>
                                 <th>教授姓名</th>
                                 <th>第二層單位</th>
@@ -53,7 +53,7 @@
                             <tbody>
                             <?php foreach ($model as $key => $value): ?>
                                 <tr class="gradeC" role="row">
-                                    <td><?=$value['positionname']?></td>
+                                    <td><?=$value['e_user_name']?></td>
                                     <td><?=$value['username']?></td>
                                     <td><?=$value['card_number']?></td>
                                     <td><?=$value['professor']?></td>

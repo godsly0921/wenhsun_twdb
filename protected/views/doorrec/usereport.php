@@ -42,6 +42,7 @@
                         <div class="col-sm-6">
                             <select class="form-control" name="keycol" id="keycol"> 
                             <option value="0">姓名</option>
+                            <option value="2">員工帳號</option>
                             <option value="1">卡號</option>
                             </select>
                       </div>
@@ -87,7 +88,8 @@
                                class="table table-striped table-bordered table-hover dataTable no-footer">
                             <thead>
                             <tr role="row">
-                                <th>刷卡地點</th>
+                              <!--  <th>刷卡地點</th>-->
+                                <th>員工帳號</th>
                                 <th>員工姓名</th>
                                 <th>卡號</th>
                                 <th>刷卡時間</th>
@@ -98,7 +100,8 @@
                             <tbody>
                             <?php foreach ($rcdata as $key => $value): ?>
                                 <tr class="gradeC" role="row">
-                                    <td><?=$value['position_name']?></td>
+                                   <!-- <td><?/*=$value['position_name']*/?></td>-->
+                                    <td><?=$value['e_user_name']?></td>
                                     <td><?=$value['username']?></td>
                                     <td><?=$value['card_number']?></td>
                                     <td><?=$value['flashDate']?></td>
