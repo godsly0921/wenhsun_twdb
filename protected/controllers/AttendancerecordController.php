@@ -254,6 +254,10 @@ class AttendancerecordController extends Controller
     {
         $model = Attendancerecord::model()->findByPk($id);
 
+
+        $EmployeeService  =  new EmployeeService();
+        $employee = $EmployeeService->findEmployeeById($model->employee_id);
+
         $data = [
             0=>'正常',
             1=>'普通傷病假',
@@ -268,7 +272,7 @@ class AttendancerecordController extends Controller
 
 
         if ($model !== null) {
-            $this->render('update',['model' => $model,'data'=>$data]);
+            $this->render('update',['model' => $model,'data'=>$data,'employee'=> $employee]);
             $this->clearMsg();
         } else {
             $this->redirect(Yii::app()->createUrl('list'));

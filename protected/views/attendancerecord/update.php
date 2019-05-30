@@ -32,6 +32,28 @@
                 <input type="hidden" name="id" value="<?= $model->id ?>">
             </div>
 
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">異常日期:</label>
+                <div class="col-sm-5">
+                    <input type="text" disabled class="form-control" name="reply_description" value="<?= $model->day  ?>">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">員工帳號:</label>
+                <div class="col-sm-5">
+                    <input type="text" disabled class="form-control"  value="<?= $employee->user_name  ?>">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">員工姓名:</label>
+                <div class="col-sm-5">
+                    <input type="text" disabled class="form-control" value="<?= $employee->name  ?>">
+                </div>
+            </div>
+
             <div class="form-group">
                 <label class="col-sm-2 control-label">假別選擇:</label>
                 <div class="col-sm-5">
