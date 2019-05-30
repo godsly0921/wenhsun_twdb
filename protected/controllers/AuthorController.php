@@ -17,16 +17,21 @@ class AuthorController extends Controller
         $searchOne = '';
         $searchTwo = '';
         $searchCategory = '';
-
-
-        if (!isset($_POST['search_category']) || !isset($_POST['search_one']) || empty($_POST['search_category']) || empty($_POST['search_one'])) {
-            $_POST['search_category']= NULL;
-            $_POST['search_one'] = NULL;
-        }
-
-
-        if ($_POST['search_category'] !== '' && trim($_POST['search_one']) !== '') {
-
+		if(!isset($_POST['search_one'])){
+			$_POST['search_one'] = NULL;
+		}
+		
+		if(!isset($_POST['search_category'])){
+			$_POST['search_category'] = NULL;
+		}
+		if(!isset($_POST['search_two'])){
+			$_POST['search_two'] = NULL;
+		}
+		
+	
+        if ($_POST['search_category'] != NULL && trim($_POST['search_one']) != NULL) {
+			echo 'ab';
+			
             $searchCategory = $_POST['search_category'];
             $searchOne = $_POST['search_one'];
             $searchTwo = $_POST['search_two'];
@@ -34,11 +39,13 @@ class AuthorController extends Controller
             $authors = $this->query($searchCategory, $searchOne, $searchTwo);
 
         } else {
-            // $authors = Author::model()->byUpdateAt()->findAll();這邊回傳是物件
-            $authors = '';
-        }
 
-        $this->render('list', ['list' => $authors, 'searchCategory' => $searchCategory, 'searchOne' => $searchOne, 'searchTwo' => $searchTwo]);
+            // $authors = Author::model()->byUpdateAt()->findAll();這邊回傳是物件
+            $authors = [];
+        }
+		//exit();
+		$this->render('list', ['list'=>$authors,'searchCategory' => $searchCategory, 'searchOne' => $searchOne, 'searchTwo' => $searchTwo]);
+        //$this->render('list', array('list'=>authors,'searchCategory' => $searchCategory, 'searchOne' => $searchOne, 'searchTwo' => $searchTwo));
     }
 
     private function query(string $searchCategory, string $searchOne, string $searchTwo): array
