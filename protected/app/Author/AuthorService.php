@@ -8,8 +8,17 @@ use Yii;
 
 class AuthorService
 {
+    public function queryAll()
+    {
+        return Yii::app()->db->createCommand('SELECT * FROM author')->queryAll();
+    }
+
     public function queryByBirthYear(string $year, string $toYear): array
     {
+        if (empty($toYear)) {
+            $toYear = $year;
+        }
+
         return Yii::app()->db->createCommand(
             '
               SELECT * FROM author 
@@ -30,7 +39,7 @@ class AuthorService
               WHERE service LIKE :service
             '
         )->bindValues([
-            ':service' => "{$service}%",
+            ':service' => $service,
         ])->queryAll();
     }
 
@@ -42,7 +51,7 @@ class AuthorService
               WHERE job_title LIKE :job_title
             '
         )->bindValues([
-            ':job_title' => "{$jobTitle}%",
+            ':job_title' => $jobTitle,
         ])->queryAll();
     }
 
@@ -54,7 +63,7 @@ class AuthorService
               WHERE JSON_SEARCH(home_address, 'all', :home_address) IS NOT NULL
             "
         )->bindValues([
-            ':home_address' => "{$address}%",
+            ':home_address' => $address,
         ])->queryAll();
     }
 
@@ -66,7 +75,7 @@ class AuthorService
               WHERE JSON_SEARCH(identity_type, 'all', :identity_type) IS NOT NULL
             "
         )->bindValues([
-            ':identity_type' => "{$identityType}%",
+            ':identity_type' => $identityType,
         ])->queryAll();
     }
 }

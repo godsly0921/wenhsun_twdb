@@ -12,39 +12,28 @@ class AuthorController extends Controller
         return true;
     }
 
-    public function actionIndex()
+    public function actionIndex(): void
     {
-        $searchOne = '';
-        $searchTwo = '';
-        $searchCategory = '';
-		if(!isset($_POST['search_one'])){
-			$_POST['search_one'] = NULL;
-		}
-		
-		if(!isset($_POST['search_category'])){
-			$_POST['search_category'] = NULL;
-		}
-		if(!isset($_POST['search_two'])){
-			$_POST['search_two'] = NULL;
-		}
-		
-	
-        if ($_POST['search_category'] != NULL && trim($_POST['search_one']) != NULL) {
-			#echo 'ab';
-			
-            $searchCategory = $_POST['search_category'];
-            $searchOne = $_POST['search_one'];
-            $searchTwo = $_POST['search_two'];
+        $authors = [];
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+            $searchCategory = $_POST['search_category'] ?? '';
+            $searchOne = $_POST['search_one'] ?? '';
+            $searchTwo = $_POST['search_two'] ?? '';
 
             $authors = $this->query($searchCategory, $searchOne, $searchTwo);
-
-        } else {
-
-            // $authors = Author::model()->byUpdateAt()->findAll();這邊回傳是物件
-            $authors = [];
         }
-		$this->render('list', ['list'=>$authors,'searchCategory' => $searchCategory, 'searchOne' => $searchOne, 'searchTwo' => $searchTwo]);
-        //$this->render('list', array('list'=>authors,'searchCategory' => $searchCategory, 'searchOne' => $searchOne, 'searchTwo' => $searchTwo));
+
+		$this->render(
+		    'list',
+            [
+                'list' => $authors,
+                'searchCategory' => $searchCategory,
+                'searchOne' => $searchOne,
+                'searchTwo' => $searchTwo,
+            ]
+        );
     }
 
     private function query(string $searchCategory, string $searchOne, string $searchTwo): array
@@ -68,7 +57,7 @@ class AuthorController extends Controller
                 return $authorServ->queryByIdentityType($searchOne);
                 break;
             default:
-                return [];
+                return $authorServ->queryAll();
         }
     }
 
