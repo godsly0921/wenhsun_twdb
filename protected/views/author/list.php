@@ -31,22 +31,27 @@ use Wenhsun\Transform\MultiColumnTransformer;
             <div class="col-md-12 col-sm-12 col-xs-12">
 
                 <div class="x_panel">
-                <form action="/author/index" method="post">
-                <select id="search_category" name="search_category">
-                    <option value="" <?php if($searchCategory === ''):?> selected <?endif;?>>請選擇</option>
-                    <option value="birth_year" <?php if($searchCategory === 'birth_year'):?> selected <?endif;?>>出生年</option>
-                    <option value="service" <?php if($searchCategory === "service"):?> selected <?endif;?>>服務單位</option>
-                    <option value="job_title" <?php if($searchCategory === "job_title"):?> selected <?endif;?>>職稱</option>
-                    <option value="address" <?php if($searchCategory === "address"):?> selected <?endif;?>>住家 郵遞區號/地址</option>
-                    <option value="identity_type" <?php if($searchCategory === "identity_type"):?> selected <?endif;?>>身分類型</option>
-                </select>
-                <input type="text" id="search_one" name="search_one" value="<?=$searchOne?>">
+                <form action="/author/index" method="post" class="form-horizontal">
+                <div class="col-md-2 col-sm-2 col-xs-12 form-group">
+                    <select id="search_category" name="search_category" class="form-control">
+                        <option value="" <?php if($searchCategory === ''):?> selected <?endif;?>>請選擇</option>
+                        <option value="birth_year" <?php if($searchCategory === 'birth_year'):?> selected <?endif;?>>出生年</option>
+                        <option value="service" <?php if($searchCategory === "service"):?> selected <?endif;?>>服務單位</option>
+                        <option value="job_title" <?php if($searchCategory === "job_title"):?> selected <?endif;?>>職稱</option>
+                        <option value="address" <?php if($searchCategory === "address"):?> selected <?endif;?>>住家 郵遞區號/地址</option>
+                        <option value="identity_type" <?php if($searchCategory === "identity_type"):?> selected <?endif;?>>身分類型</option>
+                    </select>
+                </div>
+                <div class="col-md-2 col-sm-2 col-xs-12 form-group">
+                    <input type="text" id="search_one" name="search_one" value="<?=$searchOne?>" class="form-control">
+                </div>
+
                 <?php if($searchCategory === 'birth_year'):?>
-                    <span id="search_two_wrapper">~<input type="text" id="search_two" value="<?=$searchTwo?>" name="search_two"></span>
+                    <div id="search_two_wrapper" class="col-md-2 col-sm-2 col-xs-12 form-group"><input type="text" id="search_two" class="form-control" value="<?=$searchTwo?>" name="search_two" placeholder="至"></span></div>
                 <?php else:?>
-                    <span id="search_two_wrapper" style="display: none;">~<input type="text" id="search_two" value="<?=$searchTwo?>" name="search_two"></span>
+                    <div id="search_two_wrapper" class="col-md-2 col-sm-2 col-xs-12 form-group" style="display: none;"><input type="text" id="search_two" class="form-control" value="<?=$searchTwo?>" name="search_two" placeholder="至"></span></div>
                 <?php endif;?>
-                <input type="submit" value="查詢">
+                <input type="submit" class="btn btn-primary" value="查詢">
                 </form>
                     <table id="datatable" class="table table-striped table-bordered">
                         <thead>
