@@ -31,7 +31,7 @@ use Wenhsun\Transform\MultiColumnTransformer;
             <div class="col-md-12 col-sm-12 col-xs-12">
 
                 <div class="x_panel">
-                <form action="/author/index" method="post">
+                <form action="<?= Yii::app()->createUrl('/author/index');?>" method="post">
                 <select id="search_category" name="search_category">
                     <option value="" <?php if($searchCategory === ''):?> selected <?php endif;?>>請選擇</option>
                     <option value="birth_year" <?php if($searchCategory === 'birth_year'):?> selected <?php endif;?>>出生年</option>
