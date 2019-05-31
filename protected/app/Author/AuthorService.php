@@ -78,4 +78,42 @@ class AuthorService
             ':identity_type' => $identityType,
         ])->queryAll();
     }
+
+    public function queryByPenName($penName): array
+    {
+        return Yii::app()->db->createCommand(
+            "
+              SELECT * FROM author 
+              WHERE JSON_SEARCH(pen_name, 'all', :pen_name) IS NOT NULL
+            "
+        )->bindValues([
+            ':pen_name' => $penName,
+        ])->queryAll();
+    }
+
+    public function queryByAuthorName($authorName): array
+    {
+        return Yii::app()->db->createCommand(
+            '
+              SELECT * FROM author 
+              WHERE author_name LIKE :authorName
+            '
+        )->bindValues([
+            ':authorName' => $authorName,
+        ])->queryAll();
+    }
+
+    public function queryByMemo($memo): array
+    {
+        return Yii::app()->db->createCommand(
+            '
+              SELECT * FROM author 
+              WHERE memo LIKE :memo
+            '
+        )->bindValues([
+            ':memo' => $memo,
+        ])->queryAll();
+    }
+
+
 }

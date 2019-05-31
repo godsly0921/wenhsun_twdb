@@ -41,6 +41,12 @@ class AuthorController extends Controller
         $authorServ = new \Wenhsun\Author\AuthorService();
 
         switch ($searchCategory) {
+            case 'pen_name':
+                return $authorServ->queryByPenName($searchOne);
+                break;
+            case 'author_name':
+                return $authorServ->queryByAuthorName($searchOne);
+                break;
             case 'birth_year':
                 return $authorServ->queryByBirthYear($searchOne, $searchTwo);
                 break;
@@ -55,6 +61,9 @@ class AuthorController extends Controller
                 break;
             case 'identity_type':
                 return $authorServ->queryByIdentityType($searchOne);
+                break;
+            case 'memo':
+                return $authorServ->queryByMemo($searchOne);
                 break;
             default:
                 return $authorServ->queryAll();

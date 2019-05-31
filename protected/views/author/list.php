@@ -35,11 +35,14 @@ use Wenhsun\Transform\MultiColumnTransformer;
                 <div class="col-md-2 col-sm-2 col-xs-12 form-group">
                     <select id="search_category" name="search_category" class="form-control">
                         <option value="" <?php if($searchCategory === ''):?> selected <?php endif;?>>請選擇</option>
+                        <option value="pen_name" <?php if($searchCategory === 'pen_name'):?> selected <?php endif;?>>筆名</option>
+                        <option value="author_name" <?php if($searchCategory === 'author_name'):?> selected <?php endif;?>>作家姓名</option>
                         <option value="birth_year" <?php if($searchCategory === 'birth_year'):?> selected <?php endif;?>>出生年</option>
-                        <option value="service" <?php if($searchCategory === "service"):?> selected <?php endif;?>>服務單位</option>
-                        <option value="job_title" <?php if($searchCategory === "job_title"):?> selected <?php endif;?>>職稱</option>
-                        <option value="address" <?php if($searchCategory === "address"):?> selected <?php endif;?>>住家 郵遞區號/地址</option>
-                        <option value="identity_type" <?php if($searchCategory === "identity_type"):?> selected <?php endif;?>>身分類型</option>
+                        <option value="service" <?php if($searchCategory === 'service'):?> selected <?php endif;?>>服務單位</option>
+                        <option value="job_title" <?php if($searchCategory === 'job_title'):?> selected <?php endif;?>>職稱</option>
+                        <option value="address" <?php if($searchCategory === 'address'):?> selected <?php endif;?>>住家 郵遞區號/地址</option>
+                        <option value="identity_type" <?php if($searchCategory === 'identity_type'):?> selected <?php endif;?>>身分類型</option>
+                        <option value="memo" <?php if($searchCategory === 'memo'):?> selected <?php endif;?>>備註</option>
                     </select>
                 </div>
                 <div class="col-md-2 col-sm-2 col-xs-12 form-group">
