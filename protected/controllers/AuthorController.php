@@ -30,7 +30,7 @@ class AuthorController extends Controller
 		
 	
         if ($_POST['search_category'] != NULL && trim($_POST['search_one']) != NULL) {
-			echo 'ab';
+			#echo 'ab';
 			
             $searchCategory = $_POST['search_category'];
             $searchOne = $_POST['search_one'];
@@ -43,7 +43,6 @@ class AuthorController extends Controller
             // $authors = Author::model()->byUpdateAt()->findAll();這邊回傳是物件
             $authors = [];
         }
-		//exit();
 		$this->render('list', ['list'=>$authors,'searchCategory' => $searchCategory, 'searchOne' => $searchOne, 'searchTwo' => $searchTwo]);
         //$this->render('list', array('list'=>authors,'searchCategory' => $searchCategory, 'searchOne' => $searchOne, 'searchTwo' => $searchTwo));
     }

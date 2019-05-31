@@ -31,15 +31,15 @@ use Wenhsun\Transform\MultiColumnTransformer;
             <div class="col-md-12 col-sm-12 col-xs-12">
 
                 <div class="x_panel">
-                <form action="/author/index" method="post" class="form-horizontal">
+                <form action="<?= Yii::app()->createUrl('/author/index');?>" method="post" class="form-horizontal">
                 <div class="col-md-2 col-sm-2 col-xs-12 form-group">
                     <select id="search_category" name="search_category" class="form-control">
-                        <option value="" <?php if($searchCategory === ''):?> selected <?endif;?>>請選擇</option>
-                        <option value="birth_year" <?php if($searchCategory === 'birth_year'):?> selected <?endif;?>>出生年</option>
-                        <option value="service" <?php if($searchCategory === "service"):?> selected <?endif;?>>服務單位</option>
-                        <option value="job_title" <?php if($searchCategory === "job_title"):?> selected <?endif;?>>職稱</option>
-                        <option value="address" <?php if($searchCategory === "address"):?> selected <?endif;?>>住家 郵遞區號/地址</option>
-                        <option value="identity_type" <?php if($searchCategory === "identity_type"):?> selected <?endif;?>>身分類型</option>
+                        <option value="" <?php if($searchCategory === ''):?> selected <?php endif;?>>請選擇</option>
+                        <option value="birth_year" <?php if($searchCategory === 'birth_year'):?> selected <?php endif;?>>出生年</option>
+                        <option value="service" <?php if($searchCategory === "service"):?> selected <?php endif;?>>服務單位</option>
+                        <option value="job_title" <?php if($searchCategory === "job_title"):?> selected <?php endif;?>>職稱</option>
+                        <option value="address" <?php if($searchCategory === "address"):?> selected <?php endif;?>>住家 郵遞區號/地址</option>
+                        <option value="identity_type" <?php if($searchCategory === "identity_type"):?> selected <?php endif;?>>身分類型</option>
                     </select>
                 </div>
                 <div class="col-md-2 col-sm-2 col-xs-12 form-group">
@@ -83,7 +83,7 @@ use Wenhsun\Transform\MultiColumnTransformer;
                                     <td><?=$multiTransfer->toText('；', $data['home_address']);?></td>
                                     <td><?=$multiTransfer->toText('；', $data['home_phone']);?></td>
                                     <td><?=$multiTransfer->toText('；', $data['mobile']);?></td>
-                                    <td><?=$data->memo?></td>
+                                    <td><?=$data['memo']?></td>
                                     <td>
                                         <a href="<?= Yii::app()->createUrl('/author/view?id='.$data['id']);?>"><i class="fa fa-newspaper-o" style="font-size:18px"></i></a>
                                     <?php foreach ($session_jsons as $jsons):?>
