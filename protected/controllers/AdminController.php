@@ -68,7 +68,7 @@ class AdminController extends CController
     public function actionError()
     {
         $ip = Yii::app()->request->getUserHostAddress();
-        echo 'The system has recorded your IP:'$ip'. If you need permission, please contact the system administrator.';
+        echo 'The system has recorded your IP:'.$ip.'. If you need permission, please contact the system administrator.';
         exit();
     }
 
