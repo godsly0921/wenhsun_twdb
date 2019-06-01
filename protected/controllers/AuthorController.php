@@ -14,14 +14,13 @@ class AuthorController extends Controller
 
     public function actionIndex(): void
     {
+        $searchCategory = $_POST['search_category'] ?? '';
+        $searchOne = $_POST['search_one'] ?? '';
+        $searchTwo = $_POST['search_two'] ?? '';
+
         $authors = [];
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-
-            $searchCategory = $_POST['search_category'] ?? '';
-            $searchOne = $_POST['search_one'] ?? '';
-            $searchTwo = $_POST['search_two'] ?? '';
-
             $authors = $this->query($searchCategory, $searchOne, $searchTwo);
         }
 
