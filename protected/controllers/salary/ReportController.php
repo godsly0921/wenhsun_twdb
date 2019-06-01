@@ -66,17 +66,25 @@ class ReportController extends Controller
         }
     }
 
-    public function actionEmail()
+    public function actionEmail(): void
     {
         $this->checkCSRF('index');
         $batchId = $_POST['batch_id'];
 
         $serv = new SalaryReportService();
-        $batchEnt = $serv->getAllEmployeesByBatch($batchId);
 
-        $serv->sendBatchEmail($batchEnt);
+        if (empty($_POST['checked'])) {
+            $batchEnt = $serv->getAllEmployeesByBatch($batchId);
+        } else {
+            $batchEnt = $serv->getRangeEmployeeByBatch($batchId, $_POST['checked']);
+        }
 
-        $this->sendSuccAjaxRsp();
+        if ($batchEnt === null) {
+            $this->sendErrAjaxRsp('400', '無薪資料可寄送');
+        } else {
+            $serv->sendBatchEmail($batchEnt);
+            $this->sendSuccAjaxRsp();
+        }
     }
 
     public function actionEmailsingle()

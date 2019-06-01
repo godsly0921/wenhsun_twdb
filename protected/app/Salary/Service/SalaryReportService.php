@@ -39,6 +39,13 @@ class SalaryReportService
         return $repo->forAllEmployeeByBatch($batchId);
     }
 
+    public function getRangeEmployeeByBatch($batchId, array $id): ?SalaryReportBatch
+    {
+        $repo = new ReportRepository();
+
+        return $repo->forRangeEmployeeByBatch($batchId, $id);
+    }
+
     public function setEmployeeSalary(SalaryReportEmployee $ent)
     {
         try {

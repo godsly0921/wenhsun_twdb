@@ -124,9 +124,42 @@ class ReportRepository
             return null;
         }
 
+        return $this->makeSalaryReportBatchEnt($batchId, $result);
+    }
+
+    public function forRangeEmployeeByBatch($batchId, $id): ?SalaryReportBatchEnt
+    {
+        $bindValues = [':batch_id' => $batchId];
+        $in = [];
+
+        foreach ($id as $inx => $val) {
+            $bindValues[":id_{$inx}"] = $val;
+            $in[] = ":id_{$inx}";
+        }
+
+        $inCond = implode(',', $in);
+
+        $sql = "
+        SELECT * FROM salary_report_batch b
+        INNER JOIN salary_report e ON b.batch_id = e.batch_id
+        WHERE b.batch_id = :batch_id
+        AND e.id IN ({$inCond})
+        ";
+
+        $result = Yii::app()->db->createCommand($sql)->bindValues($bindValues)->queryAll();
+
+        if (!$result) {
+            return null;
+        }
+
+        return $this->makeSalaryReportBatchEnt($batchId, $result);
+    }
+
+    private function makeSalaryReportBatchEnt($batchId, array $data): SalaryReportBatchEnt
+    {
         $salaryReportBatch = new SalaryReportBatchEnt($batchId);
 
-        foreach ($result as $row) {
+        foreach ($data as $row) {
             $salaryReportEmployee = new SalaryReportEmployee(
                 $row['id'],
                 $batchId,
