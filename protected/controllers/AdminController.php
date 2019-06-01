@@ -62,7 +62,18 @@ class AdminController extends CController
         );
     }
 
-	/**
+    /**
+     * 後台錯誤頁
+     */
+    public function actionError()
+    {
+        $ip = Yii::app()->request->getUserHostAddress();
+        echo 'The system has recorded your IP:'$ip'. If you need permission, please contact the system administrator.';
+        exit();
+    }
+
+
+    /**
 	 * 後台登入頁
 	 */
 	public function actionIndex()
@@ -73,7 +84,7 @@ class AdminController extends CController
             $this->redirect(Yii::app()->createUrl('admin/login'));
         }else{
             Yii::log("login::ip ".$ip." deny(Index)");
-            $this->redirect(Yii::app()->createUrl('site/index'));
+            $this->redirect(Yii::app()->createUrl('admin/error'));
         }
 	}
 
@@ -93,7 +104,7 @@ class AdminController extends CController
             }
         }else{
             Yii::log("login::ip".$ip." deny(Loing)");
-            $this->redirect(Yii::app()->createUrl('site/index'));
+            $this->redirect(Yii::app()->createUrl('admin/error'));
         }
 
     }
