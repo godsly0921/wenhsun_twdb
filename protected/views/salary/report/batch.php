@@ -40,7 +40,7 @@
                                 <?php else:?>
                                 <tr>
                                 <?php endif;?>
-                                    <td><input class="checked_btn" type="checkbox" value="<?=$data['id']?>"></td>
+                                    <td><input class="checked_btn" type="checkbox" name="checked[]" value="<?=$data['id']?>"></td>
                                     <td><?php if (!empty($data['employee_login_id'])):?><?=$data['employee_login_id']?><?php endif;?></td>
                                     <td><?php if (!empty($data['employee_name'])):?><?=$data['employee_name']?><?php endif;?></td>
                                     <td><?php if (!empty($data['employee_department'])):?><?=$data['employee_department']?><?php endif;?></td>
@@ -81,6 +81,15 @@
         $("#export").on("click", function(){
             let r = confirm("確認要匯出薪資?");
             if (r === true) {
+
+                let $exportForm = $("#export_form");
+
+                $exportForm.find(".checked_btn").remove();
+
+                $('.checked_btn:checked').each(function() {
+                    $(this).clone().hide().appendTo($exportForm);
+                });
+
                 $("#export_form").submit();
             }
         });
