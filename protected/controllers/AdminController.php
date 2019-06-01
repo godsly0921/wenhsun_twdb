@@ -67,6 +67,7 @@ class AdminController extends CController
 	 */
 	public function actionIndex()
     {
+        $ip = Yii::app()->request->getUserHostAddress();
         if($this->ipCheck()){
             Yii::log("login::ip ".$ip." yes");
             $this->redirect(Yii::app()->createUrl('admin/login'));
@@ -75,19 +76,27 @@ class AdminController extends CController
             $this->redirect(Yii::app()->createUrl('site/index'));
         }
 	}
-	
-	public function actionLogin()
+
+    public function actionLogin()
     {
-        if(isset($_COOKIE['login_auth'])){
-            if($_COOKIE['login_auth']===Yii::app()->session['auth_check']) {
-                Yii::log("login::cookie and session check ok");
-                $this->redirect(Yii::app()->createUrl('admin/auth'));
+        $ip = Yii::app()->request->getUserHostAddress();
+        if($this->ipCheck()){
+            if(isset($_COOKIE['login_auth'])){
+                if($_COOKIE['login_auth']===Yii::app()->session['auth_check']) {
+                    Yii::log("login::cookie and session check ok");
+                    Yii::log("login::ip".$ip."yes");
+                    $this->redirect(Yii::app()->createUrl('admin/auth'));
+                }
+            }else{
+                Yii::log("login::cookie error");
+                $this->render('login');
             }
         }else{
-            $this->render('login');
+            Yii::log("login::ip".$ip." deny(Loing)");
+            $this->redirect(Yii::app()->createUrl('site/index'));
         }
 
-	}
+    }
 
     public function actionRegister()
     {
