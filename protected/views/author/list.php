@@ -18,6 +18,11 @@ use Wenhsun\Transform\MultiColumnTransformer;
                                 <a href="<?= Yii::app()->createUrl('/author/new');?>">
                                     <button id="new-btn" class="btn btn-primary" type="button">新增作家</button>
                                 </a>
+                                <?php foreach ($session_jsons as $json):?>
+                                        <?php if ($json['power_controller'] === 'author/export'):?>
+                                        <button id="export_btn" class="btn btn-primary" type="button">匯出</button>
+                                        <?php endif;?>
+                                <?php endforeach;?>
                             </div>
                         </div>
                     </div>
@@ -31,7 +36,8 @@ use Wenhsun\Transform\MultiColumnTransformer;
             <div class="col-md-12 col-sm-12 col-xs-12">
 
                 <div class="x_panel">
-                <form action="<?= Yii::app()->createUrl('/author/index');?>" method="post" class="form-horizontal">
+                <form id="search_form" action="<?= Yii::app()->createUrl('/author/index');?>" method="post" class="form-horizontal">
+                <?php CsrfProtector::genHiddenField(); ?>
                 <div class="col-md-2 col-sm-2 col-xs-12 form-group">
                     <select id="search_category" name="search_category" class="form-control">
                         <option value="" <?php if($searchCategory === ''):?> selected <?php endif;?>>請選擇</option>
@@ -156,6 +162,18 @@ use Wenhsun\Transform\MultiColumnTransformer;
                 } else {
                     $("#search_two_wrapper").hide();
                 }
+            });
+
+            $("#export_btn").on("click", function(){
+                if ($(".dataTables_empty").length === 1) {
+                    alert("無資料匯出");
+                    return false;
+                }
+                $("#export_form").remove();
+                let exportForm = $("#search_form").clone().appendTo($("body")).hide();
+                exportForm.prop("action", "<?= Yii::app()->createUrl('/author/export');?>");
+                exportForm.prop("id", "export_form");
+                exportForm.submit();
             });
         });
     </script>

@@ -6,18 +6,29 @@
                 <h3>員工列表</h3>
             </div>
             <div class="title_right">
-                <?php foreach ($session_jsons as $jsons):?>
-                    <?php if ($jsons["power_controller"] == 'employee/management/new'):?>
-                        <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
-                            <div class="input-group">
-                                <a href="<?= Yii::app()->createUrl('/employee/management/new');?>">
-                                    <button class="btn btn-primary" type="button">新增員工</button>
-                                </a>
-                            </div>
-                        </div>
-                    <?php endif; ?>
-                <?php endforeach; ?>
 
+                <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
+                    <div class="input-group">
+                    <?php foreach ($session_jsons as $jsons):?>
+                    <?php if ($jsons["power_controller"] == 'employee/management/new'):?>
+
+                        <a href="<?= Yii::app()->createUrl('/employee/management/new');?>">
+                            <button class="btn btn-primary" type="button">新增員工</button>
+                        </a>
+
+                    <?php endif; ?>
+                    <?php endforeach; ?>
+
+                    <?php foreach ($session_jsons as $jsons):?>
+                    <?php if ($jsons["power_controller"] == 'employee/management/export'):?>
+                        <form action="<?= Yii::app()->createUrl('/employee/management/export');?>" method="post" style="display: inline;">
+                            <?php CsrfProtector::genHiddenField(); ?>
+                            <button id="export_btn" class="btn btn-primary" type="submit">匯出</button>
+                        </form>
+                    <?php endif; ?>
+                    <?php endforeach; ?>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -76,3 +87,21 @@
             </div>
         </div>
     </div>
+    <script>
+        $(document).ready(function(){
+
+            $("#export_btn").on("click", function(){
+
+                if ($(".dataTables_empty").length === 1) {
+                    alert("無資料匯出");
+                    return false;
+                }
+
+                $("#export_form").remove();
+                let exportForm = $("#search_form").clone().appendTo($("body")).hide();
+                exportForm.prop("action", "<?= Yii::app()->createUrl('/author/export');?>");
+                exportForm.prop("id", "export_form");
+                exportForm.submit();
+            });
+        });
+    </script>

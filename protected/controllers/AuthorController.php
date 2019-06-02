@@ -2,6 +2,7 @@
 
 use Wenhsun\Tool\ModelErrorBuilder;
 use Wenhsun\Transform\MultiColumnTransformer;
+use yidas\phpSpreadsheet\Helper;
 
 class AuthorController extends Controller
 {
@@ -33,6 +34,125 @@ class AuthorController extends Controller
                 'searchTwo' => $searchTwo,
             ]
         );
+    }
+
+    private function getGenderText(string $gender): string
+    {
+        switch ($gender) {
+            case 'M':
+                return '男';
+                break;
+            case 'F':
+                return '女';
+                break;
+            default:
+                return '未設定';
+        }
+    }
+
+    public function actionExport(): void
+    {
+        $this->checkCSRF('index');
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            $this->redirect('index');
+        }
+
+        $searchCategory = $_POST['search_category'] ?? '';
+        $searchOne = $_POST['search_one'] ?? '';
+        $searchTwo = $_POST['search_two'] ?? '';
+
+        $fileName = "作家資料匯出_{$searchCategory}_{$searchOne}_{$searchTwo}";
+
+        $multiTransfer = new MultiColumnTransformer();
+
+        $authors = $this->query($searchCategory, $searchOne, $searchTwo);
+
+        $rows = [];
+        foreach ($authors as $index => $author) {
+
+            $banks = AuthorBank::model()->findAll(
+                'author_id=:author_id',
+                [':author_id' => $author['id']]
+            );
+
+            $rows[] = [
+                $multiTransfer->toText('；', $author['pen_name']),
+                $author['author_name'],
+                $this->getGenderText($author['gender']),
+                str_replace('-', '/', $author['birth']),
+                str_replace('-', '/', $author['death']),
+                $multiTransfer->toText('；', $author['email']),
+                $multiTransfer->toText('；', $author['office_address']),
+                $author['service'],
+                $author['job_title'],
+                $multiTransfer->toText('；', $author['office_phone']),
+                $multiTransfer->toText('；', $author['office_fax']),
+                $multiTransfer->toText('；', $author['home_address']),
+                $multiTransfer->toText('；', $author['home_phone']),
+                $multiTransfer->toText('；', $author['home_fax']),
+                $multiTransfer->toText('；', $author['mobile']),
+                !empty($author['identity_type']) ? implode(',', json_decode($author['identity_type'], true)) : '',
+                $multiTransfer->toText('；', $author['social_account']),
+                $author['memo'],
+                $author['nationality'],
+                $multiTransfer->toText('；', $author['identity_number']),
+                $author['residence_address'],
+                $banks[0]['bank_name'] ?? '',
+                $banks[0]['bank_code'] ?? '',
+                $banks[0]['branch_name'] ?? '',
+                $banks[0]['branch_code'] ?? '',
+                $banks[0]['bank_account'] ?? '',
+                $banks[0]['account_name'] ?? '',
+                $banks[1]['bank_name'] ?? '',
+                $banks[1]['bank_code'] ?? '',
+                $banks[1]['branch_name'] ?? '',
+                $banks[1]['branch_code'] ?? '',
+                $banks[1]['bank_account'] ?? '',
+                $banks[1]['account_name'] ?? '',
+            ];
+        }
+
+        Helper::newSpreadsheet()
+            ->addRow([
+                '筆名',
+                '姓名',
+                '性別',
+                '生日',
+                '卒日',
+                '電子郵件',
+                '公司 郵遞區號/地址',
+                '服務單位',
+                '職稱',
+                '辦公電話',
+                '辦公傳真',
+                '住家 郵遞區號/地址',
+                '住家電話',
+                '住家傳真',
+                '手機',
+                '身份類型',
+                '網路社群帳號',
+                '備註',
+                '國籍',
+                '身分證字號/護照號碼/統一編號',
+                '戶籍地',
+                '銀行名稱(1)',
+                '銀行代碼(1)',
+                '分行名稱(1)',
+                '分行代碼(1)',
+                '帳號(1)',
+                '戶名(1)',
+                '銀行名稱(2)',
+                '銀行代碼(2)',
+                '分行名稱(2)',
+                '分行代碼(2)',
+                '帳號(2)',
+                '戶名(2)'
+            ])
+            ->addRows(
+                $rows
+            )
+            ->output($fileName);
     }
 
     private function query(string $searchCategory, string $searchOne, string $searchTwo): array
