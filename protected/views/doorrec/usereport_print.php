@@ -45,9 +45,9 @@
                                 <th>員工帳號</th>
                                 <th>員工姓名</th>
                                 <th>卡號</th>
-                                <th>教授姓名</th>
-                                <th>第二層單位</th>
                                 <th>刷卡時間</th>
+                                <th>刷卡狀態</th>
+                                <th>原廠紀錄編號</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -56,9 +56,9 @@
                                     <td><?=$value['e_user_name']?></td>
                                     <td><?=$value['username']?></td>
                                     <td><?=$value['card_number']?></td>
-                                    <td><?=$value['professor']?></td>
-                                    <td><?=$value['usergrp']?></td>
                                     <td><?=$value['flashDate']?></td>
+                                    <td><?=$value['memol']?></td>
+                                    <td><?=$value['id']?></td>
                                 </tr>
                             <?php endforeach; ?>
                             </tbody>
