@@ -144,8 +144,8 @@ class DoorrecController extends Controller
                 ->setCellValue('B' . $i, $value['username'])
                 ->setCellValue('C' . $i, $value['card_number'])
                 ->setCellValue('D' . $i, $value['flashDate'])
-                ->setCellValue('D' . $i, $value['memol'])
-                ->setCellValue('D' . $i, $value['id']);
+                ->setCellValue('E' . $i, $value['memol'])
+                ->setCellValue('F' . $i, $value['id']);
             $i++;
         }
         // Rename worksheet 表單名稱
@@ -174,12 +174,6 @@ class DoorrecController extends Controller
         // 查詢符合資料
         $biiservice = new BillService;
         $model = Yii::app()->session['doorrec'];
-
-        $p_ser = new ProfessorService;
-        $professor = $p_ser->allprofessor();
-        foreach ($professor as $key => $value) {
-            $proarr[$value->id] = $value->name;
-        }
 
         $this->render('usereport_print', ['model' => $model,
 

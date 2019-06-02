@@ -19,7 +19,6 @@
             <thead>
             <tr role="row">
                 <th>出勤日日期</th>
-                <th>出勤日日期</th>
                 <td>是否為出勤日</td>
                 <td>說明</td>
                 <th>新增時間</th>
@@ -36,11 +35,20 @@
                     <td><?= $value->create_at ?></td>
                     <td><?= $value->update_at ?></td>
                     <td>
-                        
+
+                        <?php foreach ($session_jsons as $jsons): ?>
+                            <?php if ($jsons["power_controller"] == Yii::app()->controller->id.'/update'): ?>
                                 <a class="oprate-right" href="<?php echo Yii::app()->createUrl(Yii::app()->controller->id.'/update') ?>/<?= $value->id ?>"><i class="fa fa-pencil-square-o fa-lg"></i></a>
-                            
+                            <?php endif; ?>
+                        <?php endforeach; ?>
+
+
+                        <?php foreach ($session_jsons as $jsons): ?>
+                            <?php if ($jsons["power_controller"] == Yii::app()->controller->id.'/delete'): ?>
                                 <a class="oprate-right oprate-del" data-attendance-id="<?=$value->id?>" data-attendance-name="<?=$value->day?>"><i class="fa fa-times fa-lg"></i></a>
-                            
+                            <?php endif; ?>
+                        <?php endforeach; ?>
+
                     </td>
                 </tr>
             <?php endforeach; ?>
