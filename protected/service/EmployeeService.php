@@ -15,15 +15,16 @@ class EmployeeService
         return $datas;
     }
 
-    public static function findEmployeeNoPTList($id)
+    public static function findEmployeeNoPTList($role)
     {
         $datas = Employee::model()->findAll(array(
             'select' => '*',
             'condition' => 'role !=:role',
             'order' => 'id DESC',
             'params' => [
-                ':role' => $id,
-            ]);
+                ':role' => $role,
+                ],
+            ));
 
         if ($datas == null) {
             $datas = false;
