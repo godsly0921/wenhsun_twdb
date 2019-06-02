@@ -21,7 +21,7 @@ VALUES
 ('77', '座位列表', 'employee/seats/create', '2', '0', '0'),
 ('77', '座位編輯', 'employee/seats/edit', '2', '0', '0'),
 ('77', '座位更新', 'employee/seats/update', '2', '0', '0'),
-('77', '座位刪除', 'employee/seats/delete', '2', '0', '0')
+('77', '員工匯出', 'employee/management/export', '2', '0', '0')
 ;
 
 

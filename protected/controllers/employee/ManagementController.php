@@ -6,6 +6,7 @@ use Employee as EmployeeModel;
 use Wenhsun\Employee\Service\DepartmentQueryService;
 use Wenhsun\Entity\Employee\EmployeeId;
 use Wenhsun\Entity\Employee\EmployeeInfo;
+use yidas\phpSpreadsheet\Helper;
 
 class ManagementController extends Controller
 {
@@ -18,6 +19,50 @@ class ManagementController extends Controller
     {
         $list = EmployeeModel::model()->byUpdateAt()->findAll();
         $this->render('list', ['list' => $list]);
+    }
+
+    public function actionExport()
+    {
+        $this->checkCSRF('index');
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            $this->redirect('index');
+        }
+
+        $list = EmployeeModel::model()->byUpdateAt()->findAll();
+
+        if (empty($list)) {
+            $this->redirect('index');
+        }
+
+        $fileName = '員工資料匯出';
+
+        $rows = [];
+
+        foreach ($list as $data) {
+            $rows[] = [
+                $data->user_name,
+                $data->name,
+                $data->ext_num,
+                $data->seat_num,
+                str_replace('-', '/', $data->update_at),
+                str_replace('-', '/', $data->create_at),
+            ];
+        }
+
+        Helper::newSpreadsheet()
+            ->addRow([
+                '帳號',
+                '姓名',
+                '分機',
+                '座位',
+                '修改時間',
+                '建立時間',
+            ])
+            ->addRows(
+                $rows
+            )
+            ->output($fileName);
     }
 
     public function actionNew()
