@@ -82,8 +82,8 @@ class AttendanceService
 
             $employee_service = new EmployeeService();
 
-            // 抓出所有員工d
-            $data = $employee_service->findEmployeelist();
+            // 抓出所有不是PT的員工
+            $data = $employee_service->findEmployeeNoPTList(7);
 
 
             foreach ($data as $key => $value) {
@@ -746,17 +746,17 @@ class AttendanceService
                             //第一筆打卡時間小於排班開始時間 最後一筆大於等於 排班結束
                             if($first_time <= $start_record && $last_time >= $end_record){
                                 $abnormal_type = 0;
-                                $abnormal .= '正常，排班日出勤正常';
+                                $abnormal .= '正常，PT排班日出勤正常';
                             }
 
                             if($first_time > $start_record ){
                                 $abnormal_type = 1;
-                                $abnormal .= '異常： 排班日遲到 ';
+                                $abnormal .= '異常： PT排班日遲到 ';
                             }
 
                             if($last_time < $end_record){
                                 $abnormal_type = 1;
-                                $abnormal .= '異常 排班日早退 ';
+                                $abnormal .= '異常： PT排班日早退 ';
                             }
 
 
@@ -778,16 +778,16 @@ class AttendanceService
 
                         if ($diff_time > 32400 && $diff_time > 39601) {
                             $abnormal_type = 1;
-                            $abnormal .= '異常，非排班日 上班時數超過十小時';
+                            $abnormal .= '異常，PT非排班日 上班時數超過十小時';
                         } elseif ($diff_time < 32400 && $diff_time >= 1) {
                             $abnormal_type = 1;//異常需填寫異常單
-                            $abnormal .= '異常，非排班日 上班時數小於上班八小時';
+                            $abnormal .= '異常，PT非排班日 上班時數小於上班八小時';
                         } elseif ($diff_time == 0) {
                             $abnormal_type = 1;
-                            $abnormal .= '異常，非排班日有一筆刷卡紀錄';
+                            $abnormal .= '異常，PT非排班日有一筆刷卡紀錄';
                         } else {
                             $abnormal_type = 0;
-                            $abnormal .= '正常，排班日沒有任何記錄';
+                            $abnormal .= '正常，PT排班日沒有任何記錄';
                         }
 
                         $attendance_record_service = new AttendancerecordService();
@@ -805,7 +805,7 @@ class AttendanceService
 
                 }else{
 
-                    $msg = date("Y-m-d H:i:s").$value->id."該兼職員工卡號設定異常";
+                    $msg = date("Y-m-d H:i:s").$value->id."該PT員工卡號設定異常";
                     Yii::log($msg, CLogger::LEVEL_INFO);
                     $mail = new MailService();
                     $mail->sendAdminMail(0,$msg);

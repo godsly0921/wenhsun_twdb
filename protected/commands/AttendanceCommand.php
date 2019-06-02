@@ -8,7 +8,7 @@ class AttendanceCommand extends CConsoleCommand
 
         $res = new AttendanceService();
 
-        if(false){//false 表示測試
+        if(true){//false 表示測試
             $today = date("Y-m-d", strtotime('-1 day'));
         }else{
             $today = '2019-05-03';//測試日期
