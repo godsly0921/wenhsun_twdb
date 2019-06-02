@@ -112,7 +112,7 @@
             <h2>大門口</h2>
         </div>
         <div class="graph_item">
-            <div class="item_title">圖資管理部 外線:2343-2131</div>
+            <div class="item_title">圖資管理部 外線:2343-2131;分機 307</div>
             <?php foreach($data['圖資管理部 外線:2343-2131'] as $item):?>
             <div class="item_content">
                 <div class="item_content_background">

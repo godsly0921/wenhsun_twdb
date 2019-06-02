@@ -150,4 +150,49 @@ class MailService
         }
     }
 
+    public function sendNewsMail($inputs)
+    {
+        try {
+            // 管理者信箱
+            $admin_email = $this->findAllEmail();
+
+            $mail = new PHPMailer();
+            $mail->IsSMTP();
+            $mail->SMTPAuth = true;
+            $mail->SMTPSecure = 'ssl';
+            $mail->Host = 'smtp.gmail.com';
+            $mail->Port = 465;
+            $mail->CharSet = 'utf-8';
+            $mail->Username = 'wenhsun0509@gmail.com';
+            $mail->Password = 'cute0921';
+            $mail->From = 'wenhsun0509@gmail.com';
+            $mail->FromName = '文訊雜誌社人資系統';
+            $mail->addAddress($inputs['email']);
+            $mail->addCC(isset($admin_email->addressee_1) ? $admin_email->addressee_1 : 'godsly0921@gmail.com');
+            $mail->addCC(isset($admin_email->addressee_2) ? $admin_email->addressee_2 : 'godsly0921@gmail.com');
+            $mail->addCC(isset($admin_email->addressee_3) ? $admin_email->addressee_3 : 'godsly0921@gmail.com');
+            $mail->IsHTML(true);
+
+            $mail->Subject = $inputs['new_title'];
+            $mail->Body =
+                    '<h2>親愛的' . $inputs["name"]  . '您好:<h2>
+                     <p>提醒您，有公告通知。<br>詳細資訊如以下'
+                    . $inputs["new_content"] . '<br><br>' .
+                    '請善待妥善處理，謝謝。<br><br>' .
+                    '文訊雜誌社人資系統敬啟<br><br>' .
+                    '<a href="http://192.168.0.160/wenhsun_hr/'.$inputs["new_image_old"].'">請下載附件</a>'.
+                    '備註：此信箱為公告用信箱，請勿回信，若有疑問，請洽HR。謝謝。</p>';
+
+
+            if($mail->Send()){
+                return true;
+            }else{
+                return false;
+            }
+        } catch (Exception $e) {
+            Yii::log(date('Y-m-d H:i:s') . " Email 02 error write exception {$e->getTraceAsString()}", CLogger::LEVEL_INFO);
+            return false;
+        }
+    }
+
 }
