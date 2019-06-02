@@ -1,7 +1,7 @@
 <?php $session_jsons = CJSON::decode(Yii::app()->session['power_session_jsons']); ?>
 <div class="row">
     <div class="title-wrap col-lg-12">
-        <h3 class="title-left">儀器使用明細表</h3>
+        <h3 class="title-left">出勤紀錄明細表</h3>
     </div>
 
     <DIV class="col-lg-12" id='btnbox'>
