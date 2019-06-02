@@ -37,11 +37,22 @@ class AttendancerecordService{
     {
         $model = Attendancerecord::model()->findByPk($inputs["id"]);
 
+
+       /* Yii::app()->session['uid'] = $sys_account->id;//使用者帳號ID
+        Yii::app()->session['pid'] = $sys_account->user_name;//使用者帳號
+        Yii::app()->session['personal'] = true;*/
+
+
+        if($model->employee_id != Yii::app()->session['uid'] && Yii::app()->session['personal'] == true){
+            $model->addErrors(['employee_id'=>'You can\'t change this record.']);
+            return $model;
+        }
+
         $model->id = $model->id;
         $model->take = $inputs['take'];
         $model->abnormal_type = 2;//員工回覆後 自動改為正常
         $model->reply_description    = $inputs['reply_description'];
-        $model->reply_update_at = date("Y-m-d H:i:s");
+        $model->reply_update_at = date('Y-m-d H:i:s');
 
         if ($model->validate()) {
             $model->update();

@@ -407,7 +407,7 @@ class AttendanceService
                                         $abnormal .= ' ' . $special_attendance_description;
                                     } else {
                                         $abnormal_type = 0;
-                                        $abnormal .= '特殊休假日 正常，沒有任何記錄';
+                                        $abnormal .= '特殊休假日 正常';
                                         $abnormal .= ' ' . $special_attendance_description;
                                     }
                                 } else if ($this->get_chinese_weekday($day) == "星期四") {
@@ -430,7 +430,7 @@ class AttendanceService
                                         $abnormal .= ' ' . $special_attendance_description;
                                     } else {
                                         $abnormal_type = 0;
-                                        $abnormal .= '特殊休假日 正常，沒有任何記錄';
+                                        $abnormal .= '特殊休假日 正常';
                                         $abnormal .= ' ' . $special_attendance_description;
                                     }
                                 } else if ($this->get_chinese_weekday($day) == "星期五") {
@@ -453,7 +453,7 @@ class AttendanceService
                                         $abnormal .= ' ' . $special_attendance_description;
                                     } else {
                                         $abnormal_type = 0;
-                                        $abnormal .= '特殊休假日 正常，沒有任何記錄';
+                                        $abnormal .= '特殊休假日 正常';
                                         $abnormal .= ' ' . $special_attendance_description;
                                     }
                                 } else if ($this->get_chinese_weekday($day) == "星期六") {
@@ -476,7 +476,7 @@ class AttendanceService
                                         $abnormal .= ' ' . $special_attendance_description;
                                     } else {
                                         $abnormal_type = 0;
-                                        $abnormal .= '特殊休假日 正常，沒有任何記錄';
+                                        $abnormal .= '特殊休假日 正常';
                                         $abnormal .= ' ' . $special_attendance_description;
                                     }
                                 }
@@ -498,7 +498,7 @@ class AttendanceService
                                     $abnormal .= '休假日 異常，僅一筆刷卡紀錄';
                                 } else {
                                     $abnormal_type = 0;
-                                    $abnormal .= '休假日 正常，沒有任何記錄';
+                                    $abnormal .= '休假日 正常';
                                 }
                             } else if ($this->get_chinese_weekday($day) == "星期一") {
                                 $diff_time = strtotime($last_time) - strtotime($first_time);//這個員工一整天上班時間
@@ -516,7 +516,7 @@ class AttendanceService
                                     $abnormal .= '出勤日 異常，僅一筆刷卡紀錄';
                                 } else {
                                     $abnormal_type = 1;
-                                    $abnormal .= '出勤日 異常，沒有任何記錄';
+                                    $abnormal .= '出勤日 異常，缺席';
                                 }
                             } else if ($this->get_chinese_weekday($day) == "星期二") {
                                 $diff_time = strtotime($last_time) - strtotime($first_time);//這個員工一整天上班時間
@@ -534,7 +534,7 @@ class AttendanceService
                                     $abnormal .= '出勤日 異常，僅一筆刷卡紀錄';
                                 } else {
                                     $abnormal_type = 1;
-                                    $abnormal .= '出勤日 異常，沒有任何記錄';
+                                    $abnormal .= '出勤日 異常，缺席';
                                 }
                             } else if ($this->get_chinese_weekday($day) == "星期三") {
                                 $diff_time = strtotime($last_time) - strtotime($first_time);//這個員工一整天上班時間
@@ -552,7 +552,7 @@ class AttendanceService
                                     $abnormal .= '出勤日 異常，僅一筆刷卡紀錄';
                                 } else {
                                     $abnormal_type = 1;
-                                    $abnormal .= '出勤日 異常，沒有任何記錄';
+                                    $abnormal .= '出勤日 異常，缺席';
                                 }
                             } else if ($this->get_chinese_weekday($day) == "星期四") {
                                 $diff_time = strtotime($last_time) - strtotime($first_time);//這個員工一整天上班時間
@@ -570,7 +570,7 @@ class AttendanceService
                                     $abnormal .= '出勤日 異常，僅一筆刷卡紀錄';
                                 } else {
                                     $abnormal_type = 1;
-                                    $abnormal .= '出勤日 異常，沒有任何記錄';
+                                    $abnormal .= '出勤日 異常，缺席';
                                 }
                             } else if ($this->get_chinese_weekday($day) == "星期五") {
                                 $diff_time = strtotime($last_time) - strtotime($first_time);//這個員工一整天上班時間
@@ -588,7 +588,7 @@ class AttendanceService
                                     $abnormal .= '出勤日 異常，僅一筆刷卡紀錄';
                                 } else {
                                     $abnormal_type = 1;
-                                    $abnormal .= '出勤日 異常，沒有任何記錄';
+                                    $abnormal .= '出勤日 異常，缺席';
                                 }
                             } else if ($this->get_chinese_weekday($day) == "星期六") {
                                 $diff_time = strtotime($last_time) - strtotime($first_time);//這個員工一整天上班時間
@@ -606,7 +606,7 @@ class AttendanceService
                                     $abnormal .= '休假日 異常，僅一筆刷卡紀錄';
                                 } else {
                                     $abnormal_type = 0;
-                                    $abnormal .= '休假日 正常，沒有任何記錄';
+                                    $abnormal .= '休假日 正常，缺席';
                                 }
                             };
                         }
@@ -614,15 +614,23 @@ class AttendanceService
                         if($diff_time != 1){//0 2~以上
                             //假如第一筆時間大於9:30 //加註 遲到
                             if(strtotime($first_time) >= strtotime(date($day . ' 09:31:00'))){
-                                $abnormal .= ' 遲到';
+                                if($diff_time != 0){
+                                    $abnormal .= ' 遲到';
+                                }
+
                             }
 
                             //假如第一筆時間小於18:00 //加註 早退
                             if(strtotime($last_time) < strtotime(date($day . ' 18:00:00'))){
-                                $abnormal .= ' 早退';
+                                if($diff_time != 0){
+                                    $abnormal .= ' 早退';
+                                }
                             }
 
                         }
+
+                        $abnormal .= ' 總時數：'$this->get_second_to_his($diff_time);
+
 
                         /*
                         var_dump('----start----');
@@ -734,32 +742,63 @@ class AttendanceService
                     $ParttimeService = new ParttimeService();
                     $result = $ParttimeService->findPartTimeDayAllAndDevice($employee_id,$day);//假如今天有排班的記錄
 
-                    if($result != false){//假如今天時間有排班紀錄
+                    if($result != false){
+                        //假如今天時間有排班紀錄
                         foreach($result as $key =>$value){
                             $start_record= strtotime($value->start_time);
                             $end_record = strtotime($value->end_time);
                             $last_time = strtotime($last_time);
                             $first_time = strtotime($first_time);
+                            $diff_time = strtotime($last_time) - strtotime($first_time);//這個員工一整天上班時間
 
                             $abnormal .= '排班編號：'.$value->id;
 
                             //第一筆打卡時間小於排班開始時間 最後一筆大於等於 排班結束
                             if($first_time <= $start_record && $last_time >= $end_record){
                                 $abnormal_type = 0;
-                                $abnormal .= '正常，PT排班日出勤正常';
+                                $abnormal .= '正常，排班日，出勤正常';
                             }
 
-                            if($first_time > $start_record ){
+                            if ($diff_time > 32400 && $diff_time <= 39600) {
                                 $abnormal_type = 1;
-                                $abnormal .= '異常： PT排班日遲到 ';
+                                $abnormal .= '異常 排班日，上班時數超過八小時';
+                            } elseif ($diff_time > 32400 && $diff_time > 39601) {
+                                $abnormal_type = 1;
+                                $abnormal .= '異常 排班日，上班時數超過十小時';
+                            } elseif ($diff_time == 1) {
+                                $abnormal_type = 1;
+                                $abnormal .= '異常 排班日，缺席';
+                            } elseif ($diff_time == 0) {
+                                $abnormal_type = 1;
+                                $abnormal .= '異常 排班日，僅一筆刷卡紀錄';
+                            } else {
+                                $abnormal_type = 0;
+                                $abnormal .= '正常 排班日';
+                            }
+
+                            //第一筆打卡時間小於排班開始時間 最後一筆大於等於 排班結束
+                            if($diff_time == 0){
+                                $abnormal_type = 1;
+                                $abnormal .= '異常，排班日缺席';
+                            }
+
+
+                            if($first_time > $start_record ){
+                                if($diff_time != 0){
+                                    $abnormal_type = 1;
+                                    $abnormal .= ' 排班日遲到 ';
+                                }
                             }
 
                             if($last_time < $end_record){
-                                $abnormal_type = 1;
-                                $abnormal .= '異常： PT排班日早退 ';
+                                if($diff_time != 0){
+                                    $abnormal_type = 1;
+                                    $abnormal .= ' 排班日早退 ';
+                                }
                             }
 
-
+                            $abnormal .= ' 總時數：'$this->get_second_to_his($diff_time);
+                            
                             $attendance_record_service = new AttendancerecordService();
                             $model = $attendance_record_service->create($employee_id, $day, $first_time, $last_time, $abnormal_type, $abnormal);
                             $mail = new MailService();
@@ -789,7 +828,7 @@ class AttendanceService
                             $abnormal .= '異常 PT非排班，僅一筆刷卡紀錄';
                         } else {
                             $abnormal_type = 0;
-                            $abnormal .= '正常 PT非排班，沒有任何記錄';
+                            $abnormal .= '正常 PT非排班日';
                         }
 
                         $attendance_record_service = new AttendancerecordService();
@@ -838,4 +877,9 @@ class AttendanceService
         $post->delete();
 
     }
+
+    function get_second_to_his($s){
+        return str_pad(floor(($s%86400)/3600),2,'0',STR_PAD_LEFT).':'.str_pad(floor((($s%86400)%3600)/60),2,'0',STR_PAD_LEFT).':'.str_pad(floor((($s%86400)%3600)%60),2,'0',STR_PAD_LEFT);
+    }
+
 }

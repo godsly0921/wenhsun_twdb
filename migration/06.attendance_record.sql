@@ -16,3 +16,7 @@ CREATE TABLE `attendance_record` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1;
+
+ALTER TABLE `wenhsun`.`attendance_record`
+CHANGE COLUMN `first_time` `first_time` VARCHAR(64) NULL DEFAULT NULL ,
+CHANGE COLUMN `last_time` `last_time` VARCHAR(64) NULL DEFAULT NULL ;

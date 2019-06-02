@@ -238,6 +238,7 @@ class AttendancerecordController extends Controller
         $inputs["reply_description"] = filter_input(INPUT_POST, "reply_description");
         $inputs["take"] = filter_input(INPUT_POST, "take");
 
+
         $service = new AttendancerecordService();
         $model = $service->update($inputs);
 
@@ -268,7 +269,13 @@ class AttendancerecordController extends Controller
             6=>'產假含例假日',
             7=>'婚假',
             8=>'喪假',
-            9=>'補休假'];
+            9=>'補休假',
+            10=>'生理假',
+            11=>'非請假(加班)',
+            12=>'非請假(早退)',
+            13=>'非請假(遲到加早退)',
+            14=>'非請假(忘記刷卡)',
+            ];
 
 
         if ($model !== null) {
