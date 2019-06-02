@@ -40,13 +40,22 @@
                         <?php endif; ?>
                     <?php endforeach; ?>
                     <td><?= $name ?></td>
-                    <td>                        <?php foreach ($session_jsons as $jsons): ?><?php if ($jsons["power_controller"] == 'news/update'): ?>
+                    <td>
+                        <?php foreach ($session_jsons as $jsons): ?><?php if ($jsons["power_controller"] == 'news/update'): ?>
                             <a class="oprate-right"
                                href="<?php echo Yii::app()->createUrl('news/update') ?>/<?= $value->id ?>"><i
-                                    class="fa fa-pencil-square-o fa-lg"></i></a>                            <?php endif; ?><?php if ($jsons["power_controller"] == 'news/delete'): ?>
-                            <a class="oprate-right oprate-del" data-news-id="<?= $value->id ?>"
-                               data-news-name="<?= $value->new_title ?>"><i
-                                    class="fa fa-times fa-lg"></i></a>                            <?php endif; ?><?php endforeach; ?>
+                                    class="fa fa-pencil-square-o fa-lg"></i></a>                            <?php endif; ?>
+
+                            <?php if ($jsons["power_controller"] == 'news/delete'): ?>
+                            <a class="oprate-right oprate-del" data-news-id="<?= $value->id ?>" data-news-name="<?= $value->new_title ?>"><i class="fa fa-times fa-lg"></i></a>
+                            <?php endif; ?>
+
+                            <?php if ($jsons["power_controller"] == 'news/sendmail'): ?>
+                                <a class="oprate-right"
+                                   href="<?php echo Yii::app()->createUrl('news/sendmail') ?>/<?= $value->id ?>"><i
+                                        class="fa fa-envelope-o fa-lg"></i></a>
+                            <?php endif; ?>
+                        <?php endforeach; ?>
                     </td>
                 </tr>            <?php endforeach; ?>            </tbody>
         </table>
