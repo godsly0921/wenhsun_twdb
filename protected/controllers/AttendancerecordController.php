@@ -9,6 +9,26 @@ class AttendancerecordController extends Controller
         return true;
     }
 
+    public $fake = [
+        0=>'正常',
+        1=>'普通傷病假',
+        2=>'事假',
+        3=>'公假',
+        4=>'公傷病假',
+        5=>'特別休假',
+        6=>'產假含例假日',
+        7=>'婚假',
+        8=>'喪假',
+        9=>'補休假',
+        10=>'生理假',
+        11=>'非請假(加班)',
+        12=>'非請假(早退)',
+        13=>'非請假(遲到加早退)',
+        14=>'非請假(遲到)',
+        15=>'非請假(忘記刷卡)',
+        ];
+
+
     public function actionReport()
     {
         $service = new EmployeeService();
@@ -93,6 +113,8 @@ class AttendancerecordController extends Controller
                 }
                 $temp['abnormal_type'] = $value['abnormal_type'];
                 $temp['abnormal'] = $value['abnormal'];
+                $temp['reply_description'] = $value['reply_description'];
+                $temp['take'] = $this->fake[$value['take']];
                 $temp['att_create_at'] = $value['att_create_at'];
                 $temp['update_at'] = $value['update_at'];
 
@@ -152,8 +174,10 @@ class AttendancerecordController extends Controller
             ->setCellValue( 'E1', '末筆出勤紀錄' )
             ->setCellValue( 'F1', '狀態' )
             ->setCellValue( 'G1', '說明' )
-            ->setCellValue( 'H1', '建立時間' )
-            ->setCellValue( 'I1', '修改時間' );
+            ->setCellValue( 'H1', '假別' )
+            ->setCellValue( 'I1', '員工回覆' )
+            ->setCellValue( 'J1', '建立時間' )
+            ->setCellValue( 'K1', '修改時間' );
 
 
         // Miscellaneous glyphs, UTF-8 設定內容資料
@@ -168,8 +192,10 @@ class AttendancerecordController extends Controller
                 ->setCellValue( 'E' . $i, $value[ 'last_time' ] )
                 ->setCellValue( 'F' . $i, $value[ 'abnormal_type' ] )
                 ->setCellValue( 'G' . $i, $value[ 'abnormal' ] )
-                ->setCellValue( 'H' . $i, $value[ 'att_create_at' ] )
-                ->setCellValue( 'I' . $i, $value[ 'update_at' ] );
+                ->setCellValue( 'H' . $i, $value[ 'take' ] )
+                ->setCellValue( 'I' . $i, $value[ 'reply_description' ] )
+                ->setCellValue( 'J' . $i, $value[ 'att_create_at' ] )
+                ->setCellValue( 'K' . $i, $value[ 'update_at' ] );
             $i++;
 
         }
@@ -259,24 +285,7 @@ class AttendancerecordController extends Controller
         $EmployeeService  =  new EmployeeService();
         $employee = $EmployeeService->findEmployeeById($model->employee_id);
 
-        $data = [
-            0=>'正常',
-            1=>'普通傷病假',
-            2=>'事假',
-            3=>'公假',
-            4=>'公傷病假',
-            5=>'特別休假',
-            6=>'產假含例假日',
-            7=>'婚假',
-            8=>'喪假',
-            9=>'補休假',
-            10=>'生理假',
-            11=>'非請假(加班)',
-            12=>'非請假(早退)',
-            13=>'非請假(遲到加早退)',
-            14=>'非請假(忘記刷卡)',
-            ];
-
+        $data = $this->fake;
 
         if ($model !== null) {
             $this->render('update',['model' => $model,'data'=>$data,'employee'=> $employee]);

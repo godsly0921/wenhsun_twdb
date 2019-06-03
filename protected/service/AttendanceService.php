@@ -629,7 +629,7 @@ class AttendanceService
 
                         }
 
-                        $abnormal .= ' 總時數：'$this->get_second_to_his($diff_time);
+                        $abnormal .= ' 總時數：'.$this->get_second_to_his($diff_time);
 
 
                         /*
@@ -797,7 +797,7 @@ class AttendanceService
                                 }
                             }
 
-                            $abnormal .= ' 總時數：'$this->get_second_to_his($diff_time);
+                            $abnormal .= ' 總時數：'.$this->get_second_to_his($diff_time);
                             
                             $attendance_record_service = new AttendancerecordService();
                             $model = $attendance_record_service->create($employee_id, $day, $first_time, $last_time, $abnormal_type, $abnormal);

@@ -61,17 +61,27 @@
         <div class="panel panel-default">
             <div class="panel-heading col-md-12">
                     
-                    <div class='col-md-2'> 
-                    <form class="form-horizontal" action="<?php echo Yii::app()->createUrl(Yii::app()->controller->id.'/getexcel');?>" method="post">
-                    <button type="submit" class="btn btn-default">匯出excel</button>
+                    <div class='col-md-2'>
+                        <?php foreach ($session_jsons as $jsons):?>
+                            <?php if ($jsons["power_controller"] == Yii::app()->controller->id.'/getexcel'):?>
+                                <form class="form-horizontal" action="<?php echo Yii::app()->createUrl(Yii::app()->controller->id.'/getexcel');?>" method="post">
+                                    <button type="submit" class="btn btn-default">匯出excel</button>
 
-                    </form>                    
+                                </form>
+                            <?php endif; ?>
+                        <?php endforeach; ?>
+
                     </div>
                     
                     <div class='col-md-2'>
-                    <a href="<?=Yii::app()->createUrl(Yii::app()->controller->id.'/printer');?>"  target="_blank">
-                    <button class="btn btn-default">列印</button>
-                    </a> 
+                        <?php foreach ($session_jsons as $jsons):?>
+                            <?php if ($jsons["power_controller"] == Yii::app()->controller->id.'/printer'):?>
+                                <a href="<?=Yii::app()->createUrl(Yii::app()->controller->id.'/printer');?>"  target="_blank">
+                                    <button class="btn btn-default">列印</button>
+                                </a>
+                            <?php endif; ?>
+                        <?php endforeach; ?>
+
                     </div>
 
                 <div class='col-md-2 col-sm-4 col-xs-4'>

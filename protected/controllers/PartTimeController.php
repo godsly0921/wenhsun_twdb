@@ -19,15 +19,16 @@ class PartTimeController extends Controller
 
     public function actionIndex()
     {
-        $memberServer = new MemberService();
-        $result = $memberServer->findByMemId(Yii::app()->session['uid']);
+        $service = new EmployeeService();
+        $result = $service->findEmployeeId(Yii::app()->session['uid']);
         if($result==NULL){
             $accountServer = new AccountService();
             $account = $accountServer->findAccountData(Yii::app()->session['uid']);
             if($account == NULL){
                 echo '沒有找到使用者，請重新登入系統';
                 sleep(1);
-                $this->redirect('admin/login');
+                Yii::app()->createUrl($this->redirect('admin/login'));
+
             }
         }
 
