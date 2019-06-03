@@ -95,6 +95,7 @@
                 "responsive": true,
                 "info": false,
                 'iDisplayLength': 30,
+                "bSort": false,
                 "oLanguage": {
                     "oPaginate": {"sFirst": "第一頁", "sPrevious": "上一頁","sNext": "下一頁","sLast": "最後一頁"},
                     "sEmptyTable": "查無資料, 快去新增資料吧"

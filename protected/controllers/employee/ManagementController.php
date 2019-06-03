@@ -17,7 +17,7 @@ class ManagementController extends Controller
 
     public function actionIndex()
     {
-        $list = EmployeeModel::model()->byUpdateAt()->findAll();
+        $list = EmployeeModel::model()->byUsernameAsc()->findAll();
         $this->render('list', ['list' => $list]);
     }
 
@@ -29,7 +29,7 @@ class ManagementController extends Controller
             $this->redirect('index');
         }
 
-        $list = EmployeeModel::model()->byUpdateAt()->findAll();
+        $list = EmployeeModel::model()->byUsernameAsc()->findAll();
 
         if (empty($list)) {
             $this->redirect('index');
