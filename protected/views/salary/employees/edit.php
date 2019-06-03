@@ -91,7 +91,7 @@
                             <div class="form-group">
                                 <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
                                     <button type="submit" class="btn btn-primary">修改</button>
-                                    <a class="btn btn-default pull-right" href="javascript:history.back()">返回</a>
+                                    <a class="btn btn-default pull-right" href="<?= Yii::app()->createUrl('/salary/employees/index');?>">返回</a>
                                 </div>
                             </div>
 
