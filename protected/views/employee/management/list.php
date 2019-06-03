@@ -1,4 +1,5 @@
 <?php $session_jsons = CJSON::decode(Yii::app()->session['power_session_jsons']);?>
+<script src="<?php echo Yii::app()->request->baseUrl;?>/assets/admin/ext/js/jquery.dataTables.min.js"></script>
 <div role="main">
     <div class="">
         <div class="page-title">
@@ -50,37 +51,35 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <?php if(!empty($list)):?>
-                            <?php foreach($list as $data):?>
-                                <tr>
-                                    <td><?=$data->user_name?></td>
-                                    <td><?=$data->name?></td>
-                                    <td><?= isset($data->ext->ext_number) ? $data->ext->ext_number : '未設定分機' ?></td>
-                                    <td>
-                                        <?php if(isset($data->seat->seat_number)):?>
-                                            <?=$data->seat->seat_number?>(<?=$data->seat->seat_name?>)
-                                        <?php else:?>
-                                            未設定座位
-                                        <?php endif;?>
-                                    </td>
-                                    <td><?=$data->update_at?></td>
-                                    <td><?=$data->create_at?></td>
-                                    <td>
-                                        <?php foreach ($session_jsons as $jsons):?>
-                                            <?php if ($jsons["power_controller"] == 'employee/management/edit'):?>
-                                                <a href="<?= Yii::app()->createUrl('/employee/management/edit?id='.$data->id);?>"><i class="fa fa-edit" style="font-size:18px"></i></a>
-                                            <?php endif; ?>
 
-                                            <?php if ($jsons["power_controller"] == 'employee/management/contract'):?>
-                                                <a href="<?= Yii::app()->createUrl('/employee/management/contract?id='.$data->id);?>" target="_blank" class="print-btn" data-id="<?=$data->id?>"><i class="fa fa-print" style="font-size:18px"></i></a>
-                                            <?php endif; ?>
-                                        <?php endforeach; ?>
-                                    </td>
-                                </tr>
-                            <?php endforeach;?>
-                        <?php else:?>
-                            <tr><td colspan="7">查無資料, 快去<a href="<?= Yii::app()->createUrl('/employee/management/new');?>">新增資料</a>吧</td></tr>
-                        <?php endif; ?>
+                        <?php foreach($list as $data):?>
+                            <tr>
+                                <td><?=$data->user_name?></td>
+                                <td><?=$data->name?></td>
+                                <td><?= isset($data->ext->ext_number) ? $data->ext->ext_number : '未設定分機' ?></td>
+                                <td>
+                                    <?php if(isset($data->seat->seat_number)):?>
+                                        <?=$data->seat->seat_number?>(<?=$data->seat->seat_name?>)
+                                    <?php else:?>
+                                        未設定座位
+                                    <?php endif;?>
+                                </td>
+                                <td><?=$data->update_at?></td>
+                                <td><?=$data->create_at?></td>
+                                <td>
+                                    <?php foreach ($session_jsons as $jsons):?>
+                                        <?php if ($jsons["power_controller"] == 'employee/management/edit'):?>
+                                            <a href="<?= Yii::app()->createUrl('/employee/management/edit?id='.$data->id);?>"><i class="fa fa-edit" style="font-size:18px"></i></a>
+                                        <?php endif; ?>
+
+                                        <?php if ($jsons["power_controller"] == 'employee/management/contract'):?>
+                                            <a href="<?= Yii::app()->createUrl('/employee/management/contract?id='.$data->id);?>" target="_blank" class="print-btn" data-id="<?=$data->id?>"><i class="fa fa-print" style="font-size:18px"></i></a>
+                                        <?php endif; ?>
+                                    <?php endforeach; ?>
+                                </td>
+                            </tr>
+                        <?php endforeach;?>
+
                         </tbody>
                     </table>
                 </div>
@@ -89,6 +88,18 @@
     </div>
     <script>
         $(document).ready(function(){
+
+            $('#datatable').DataTable({
+                "lengthChange": false,
+                "paging": true,
+                "responsive": true,
+                "info": false,
+                'iDisplayLength': 20,
+                "oLanguage": {
+                    "oPaginate": {"sFirst": "第一頁", "sPrevious": "上一頁","sNext": "下一頁","sLast": "最後一頁"},
+                    "sEmptyTable": "查無資料, 快去新增資料吧"
+                }
+            });
 
             $("#export_btn").on("click", function(){
 
