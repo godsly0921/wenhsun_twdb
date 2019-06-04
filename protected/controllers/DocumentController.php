@@ -46,6 +46,7 @@ class DocumentController extends Controller
             $document->send_text_number = trim($_POST['send_text_number']);
             $document->send_text_date = trim($_POST['send_text_date']);
             $document->case_officer = trim($_POST['case_officer']);
+            $document->saved_code = trim($_POST['saved_code']);
             $document->document_file = $destFullFileName;
             $document->create_at = $now;
             $document->update_at = $now;
@@ -107,6 +108,7 @@ class DocumentController extends Controller
             $document->send_text_number = trim($_POST['send_text_number']);
             $document->send_text_date = trim($_POST['send_text_date']);
             $document->case_officer = trim($_POST['case_officer']);
+            $document->saved_code = trim($_POST['saved_code']);
             $document->update_at = $now;
 
             if (!empty($_FILES['document_file']['name'])) {
