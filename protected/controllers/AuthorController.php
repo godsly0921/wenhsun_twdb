@@ -21,7 +21,7 @@ class AuthorController extends Controller
 
         $authors = [];
 
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['search_category'])) {
             $authors = $this->query($searchCategory, $searchOne, $searchTwo);
         }
 
