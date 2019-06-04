@@ -1,3 +1,4 @@
+<script src="<?php echo Yii::app()->request->baseUrl;?>/assets/admin/ext/js/jquery.dataTables.min.js"></script>
 <div role="main">
     <div class="">
         <div class="page-title">
@@ -77,6 +78,18 @@
         <input type="submit" style="display:none;">
     </form>
     <script>
+
+        $('#datatable').DataTable({
+            "lengthChange": false,
+            "paging": true,
+            "responsive": true,
+            "info": false,
+            'iDisplayLength': 30,
+            "oLanguage": {
+                "oPaginate": {"sFirst": "第一頁", "sPrevious": "上一頁","sNext": "下一頁","sLast": "最後一頁"},
+                "sEmptyTable": "查無資料, 快去新增資料吧"
+            }
+        });
 
         $("#export").on("click", function(){
             let r = confirm("確認要匯出薪資?");
