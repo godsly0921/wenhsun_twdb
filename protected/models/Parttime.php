@@ -34,7 +34,7 @@ class Parttime extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('part_time_empolyee_id, start_time, end_time, status, builder, builder_type, create_time', 'required'),
-			array('status, builder, builder_type', 'numerical', 'integerOnly'=>true),
+			array('status, builder_type', 'numerical', 'integerOnly'=>true),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
 			array('id, part_time_empolyee_id, start_time, end_time, status, remark, builder, builder_type, create_time, modify_time', 'safe', 'on'=>'search'),

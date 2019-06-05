@@ -19,19 +19,6 @@ class PartTimeController extends Controller
 
     public function actionIndex()
     {
-        $service = new EmployeeService();
-        $result = $service->findEmployeeId(Yii::app()->session['uid']);
-        if($result==NULL){
-            $accountServer = new AccountService();
-            $account = $accountServer->findAccountData(Yii::app()->session['uid']);
-            if($account == NULL){
-                echo '沒有找到使用者，請重新登入系統';
-                sleep(1);
-                Yii::app()->createUrl($this->redirect('admin/login'));
-
-            }
-        }
-
         $part_time_employees = EmployeeService::getPTEmployee(7);
 
         $service = new ParttimeService();
@@ -67,11 +54,10 @@ class PartTimeController extends Controller
 
         foreach ($model as $key => $value) {
             $part_time = EmployeeService::findEmployeeById($value->part_time_empolyee_id);
-            if($value->builder_type){
-                $service = new MemberService();
-                $members = $service->findByMemId($value->builder);
-                $name = $members['name'];
-
+            if($value->builder_type){//1表示 員工 0表示系統管理員
+                $service = new EmployeeService();
+                $employee = $service->findEmployeeById($value->builder);
+                $name = $employee->name;
 
             }else{
                 $service = new AccountService();
@@ -81,6 +67,8 @@ class PartTimeController extends Controller
             $input_arrays[] = array('start' => $value->start_time, 'end' => $value->end_time, 'title' => $part_time['name'].'已排班 排班者：'.$name, 'url' => Yii::app()->createUrl('parttime/cancelPartTimeByCalendar', ['id' => $value->id]));
 
         }
+
+
 
 
         //開放排班的時段
@@ -109,7 +97,6 @@ class PartTimeController extends Controller
                 $output_arrays[] = $event->toArray();
             }
         }
-
         echo json_encode($output_arrays);
     }
 

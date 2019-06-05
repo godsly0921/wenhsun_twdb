@@ -223,7 +223,7 @@ class ParttimeService
         $model->part_time_empolyee_id = $inputs['part_time_empolyee_id'];
         $model->start_time = $inputs['start_date_time'];
         $model->end_time = $inputs['end_date_time'];
-        $model->builder = (int)Yii::app()->session['uid'];//這邊只能讓使用者建立預約{管理者無法}
+        $model->builder = Yii::app()->session['uid'];//這邊只能讓使用者建立預約{管理者無法}
         $model->builder_type = (int)(Yii::app()->session['personal'])?1:0;//這邊只能讓使用者建立預約{管理者無法}
         $model->status = 0;
         $model->create_time = date("Y-m-d H:i:s");
