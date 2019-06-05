@@ -44,6 +44,20 @@
                                 </div>
                             </div>
 
+                            <div class="form-group">
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="department">部門</label>
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    <input type="text" value="<?=$data->getEmployeeDepartment()?>" disabled class="form-control col-md-7 col-xs-12">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="position">職務</label>
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    <input type="text" value="<?=$data->getEmployeePosition()?>" disabled class="form-control col-md-7 col-xs-12">
+                                </div>
+                            </div>
+
                             <div class="ln_solid"></div>
                             <p>薪資資訊</p>
 
