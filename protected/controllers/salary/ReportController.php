@@ -27,7 +27,7 @@ class ReportController extends Controller
         $this->render('batch', ['list' => $list, 'batch_id' => $batchId]);
     }
 
-    public function actionEmployee($id)
+    public function actionEmployee($id): void
     {
         $serv = new SalaryReportService();
         $data = $serv->findBySalaryId($id);
