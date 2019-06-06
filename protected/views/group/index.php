@@ -12,7 +12,6 @@
             <thead>
             <tr role="row">
                 <th>角色權限名稱</th>
-                <th>角色權限(數字越小權限越高)</th>
                 <th>操作</th>
             </tr>
             </thead>
@@ -21,7 +20,6 @@
                     <?php foreach ($groups as $group): ?>
                         <tr>
                             <td><?= $group->group_name ?></td>
-                            <td><?= $group->group_number ?></td>
                             <td>
                                 <?php foreach ($session_jsons as $jsons):?>
 

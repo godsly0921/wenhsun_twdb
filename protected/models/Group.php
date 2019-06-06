@@ -27,13 +27,8 @@ class Group extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array(
-                'group_number, group_name',
-                'required',
-                'message' => '請輸入{attribute}'
-            ),
             array('group_list', 'required', 'message' => '請勾選{attribute}'),
-			array('group_number', 'numerical', 'integerOnly' => true, 'min' => 0, 'max' => 255),
+			//array('group_number', 'numerical', 'integerOnly' => true, 'min' => 0, 'max' => 255),
 			array('group_name', 'length', 'max' => 20),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.

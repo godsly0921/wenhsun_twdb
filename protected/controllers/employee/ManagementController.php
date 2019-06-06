@@ -185,6 +185,7 @@ class ManagementController extends Controller
                     continue;
                 }
 
+
                 if (!empty($val)) {
                     $employeeInfoModel->{$key} = $val;
                 } else {
