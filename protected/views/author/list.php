@@ -3,6 +3,7 @@ use Wenhsun\Transform\MultiColumnTransformer;
 ?>
 <?php $session_jsons = CJSON::decode(Yii::app()->session['power_session_jsons']);?>
 <script src="<?php echo Yii::app()->request->baseUrl;?>/assets/admin/ext/js/jquery.dataTables.min.js"></script>
+<script src="<?php echo Yii::app()->request->baseUrl;?>/assets/admin/ext/js/dataTables.bootstrap.min.js"></script>
 <div role="main">
     <div class="">
         <div class="page-title">
