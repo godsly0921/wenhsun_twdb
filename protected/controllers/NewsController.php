@@ -259,11 +259,12 @@ class NewsController extends Controller
         }
     }
 
-    public function actiondownloadpdf( $fileName ){
+    public function actiondownload( $fileName ){
         
         $newsSer = new NewsService();
         $newsRes = $newsSer->findById($fileName);
         $tmpUrl  = substr($newsRes->new_image,1);
-        Yii::app()->getRequest()->sendFile( 'dname.pdf' , file_get_contents( $tmpUrl ) );
+        $tmp = explode("/",$tmpUrl);
+        Yii::app()->getRequest()->sendFile( $tmp[2], file_get_contents( $tmpUrl ) );
     }
 }

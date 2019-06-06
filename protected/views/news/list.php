@@ -21,12 +21,12 @@
                 $i=1;
                 foreach ($data as $key => $value) {
                     $explode_new_image = explode(".", $value['new_image']);
-                    $fileType = end($explode_new_image);                
-                    if($fileType == 'pdf'){                  
+                    $fileType = end($explode_new_image);
+                   /* if($fileType == 'pdf'){
                         $fileDownload = 1;
                     }else{
                         $fileDownload = 0;
-                    }
+                    }*/
                 ?>
                 <div class='newsbox col-md-12 col-sm-12 col-xs-12 np_' >
                     <div class='newsleft col-md-1 col-md-offset-1 col-sm-1 col-xs-1 np_'>
@@ -58,24 +58,15 @@
                             <?='公告時間:'.$value->new_createtime.'-'.'   '.'建檔人：'.$account_name?>
                             </span>
                             <div style="float:right">
-                                <?php if ($fileDownload == 1): ?>
-                                <a href="<?php echo Yii::app()->createUrl('news/downloadpdf')."/fileName/{$value['id']}";?>">
+                                <?php if($value['new_image']!=""):?>
+                                <a href="<?php echo Yii::app()->createUrl('news/download')."/fileName/{$value['id']}";?>">
                                 <?php
                                     $file_name = explode('/',$value['new_image']);
                                 ?>
                                 <span class='btn downloadBtn'>附件下載 <?=$value['image_name'] !=''?$value['image_name']:$file_name[count($file_name)-1]?></span>                      
                                 </a>
-                                <?php endif ?>
-                              <!--  <?php /*if( in_array($value->id,$sawarr) ){ */?>
-                                <span class='btn saw heavsaw' newsid="<?/*=$value->id*/?>" memid="<?/*=Yii::app()->session['uid'];*/?>">
-                                已讀取
-                                </span> 
-                                <?php /*}else{*/?>
-                                <span class='btn saw' newsid="<?/*=$value->id*/?>" memid="<?/*=Yii::app()->session['uid'];*/?>">
-                                讀取
-                                </span> -->
+                                <?php endif; ?>
                             </div>
-                          <!--  --><?php /*}*/?>
                         </div>
                     </div>
                 </div>
