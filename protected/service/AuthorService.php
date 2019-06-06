@@ -104,8 +104,8 @@ class AuthorService
 
                 $data['email'] = isset($excel_datas[$i - 1][10]) ? $excel_datas[$i - 1][10] : '';
                 $data['home_address'] = isset($excel_datas[$i - 1][11]) ? $excel_datas[$i - 1][11] : '';
-                $data['office_fax'] = isset($excel_datas[$i - 1][12]) ? $excel_datas[$i - 1][12] : '';
-                $data['home_phone'] = isset($excel_datas[$i - 1][13]) ? $excel_datas[$i - 1][13] : '';
+                $data['home_phone'] = isset($excel_datas[$i - 1][12]) ? $excel_datas[$i - 1][12] : '';
+                $data['home_fax'] = isset($excel_datas[$i - 1][13]) ? $excel_datas[$i - 1][13] : '';
                 $data['mobile'] = isset($excel_datas[$i - 1][14]) ? $excel_datas[$i - 1][14] : '';
 
 
@@ -182,7 +182,6 @@ class AuthorService
 
                     if ($author->hasErrors()) {
                         echo $author->getErrors();
-                        var_dump($author->getErrors());
                         echo ' 第' . $i-1 . '行';
                         echo '\n';
                         Yii::log(date("Y-m-d H:i:s") .$author->getErrors(). '第' . $i . '行', CLogger::LEVEL_ERROR);
@@ -217,10 +216,7 @@ class AuthorService
 
 
                 } catch (Exception $e) {
-                    echo $e->getMessage();
-                    echo ' 第' . ($i+1) . '行';
-                    echo '\n';
-                    //exit();
+                    echo '第' . ($i+1) . '行::錯誤訊息'.$e->getMessage()."\n";
                     $transaction->rollback();
                     Yii::log(date("Y-m-d H:i:s") . $e->getMessage() . '第' . $i . '行', CLogger::LEVEL_ERROR);
                     continue;

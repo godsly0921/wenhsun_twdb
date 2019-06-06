@@ -70,13 +70,9 @@
                     <select class="form-control" multiple="multiple" name="select_roles[]">
                         <?php if (!empty($roles)): ?>
                             <?php foreach ($roles as $role): ?>
-                                <?php if ($role['id'] === $data->role): ?>
                                     <option value="<?= $role['group_number'] ?>"
-                                            selected><?= $role['group_name'] ?></option>
-                                <?php else: ?>
-                                    <option
-                                        value="<?= $role['group_number'] ?>"><?= $role['group_name'] ?></option>
-                                <?php endif; ?>
+                                            selected><?= $role['group_name'] ?>
+                                    </option>
                             <?php endforeach; ?>
                         <?php else: ?>
                             <option value="">無可用角色</option>
