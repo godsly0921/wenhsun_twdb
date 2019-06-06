@@ -35,7 +35,7 @@ class AuthorService
             ':toYear' => $toYear,
         ])->queryAll();
 
-        if($count_total[0]['search_count']<= 8000){
+        if($count_total[0]['search_count']<= self::$result_limit){
             return Yii::app()->db->createCommand(
                 '
                   SELECT * FROM author 
@@ -62,7 +62,7 @@ class AuthorService
             ':service' => $service,
         ])->queryAll();
 
-        if($count_total[0]['search_count']<= 8000){
+        if($count_total[0]['search_count']<= self::$result_limit){
             return Yii::app()->db->createCommand(
                 '
                   SELECT * FROM author 
