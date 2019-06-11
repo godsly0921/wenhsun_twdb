@@ -58,8 +58,8 @@ class Imagemagick {
 	);
 	public static $size_bound_settings = array(
 		'XL' => array( 'dpi' => '300', '>' => 3500 ),
-		'L' => array( 'dpi' => '300', 'bound' => 3500, '>' => 2000, '<=' => 3500 ),
-		'M' => array( 'dpi' => '300', 'bound' => 2000, '>' => 1200, '<=' => 2000 ),
+		'L' => array( 'dpi' => '150', 'bound' => 3500, '>' => 2000, '<=' => 3500 ),
+		'M' => array( 'dpi' => '96', 'bound' => 2000, '>' => 1200, '<=' => 2000 ),
 		'S' => array( 'dpi' => '72', 'bound' => 1200, '>' => 600, '<=' => 1200 ),
 	);
 
