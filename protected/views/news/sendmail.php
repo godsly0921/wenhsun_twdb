@@ -70,7 +70,7 @@
                     <select class="form-control" multiple="multiple" name="select_roles[]">
                         <?php if (!empty($roles)): ?>
                             <?php foreach ($roles as $role): ?>
-                                    <option value="<?= $role['group_number'] ?>"
+                                    <option value="<?= $role['id'] ?>"
                                             selected><?= $role['group_name'] ?>
                                     </option>
                             <?php endforeach; ?>

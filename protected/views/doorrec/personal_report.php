@@ -1,7 +1,7 @@
 <?php $session_jsons = CJSON::decode(Yii::app()->session['power_session_jsons']); ?>
 <div class="row">
     <div class="title-wrap col-lg-12">
-        <h3 class="title-left">出勤紀錄明細表</h3>
+        <h3 class="title-left">個人出勤紀錄明細表</h3>
     </div>
 </div>
 
@@ -12,7 +12,7 @@
         <div class="panel panel-default">
             <div class="panel-heading">查詢條件設定</div>
             <div class="panel-body">
-                <form action="<?php echo Yii::app() -> createUrl('doorrec/report'); ?>"  method="POST" >
+                <form action="<?php echo Yii::app() -> createUrl('doorrec/personal_report'); ?>"  method="POST" >
                     <input type="hidden" name="filter" value="1">
                     <div class="form-group col-md-12">
                         <label for="date_start" class="col-sm-2 control-label">開始日期:</label>
@@ -27,29 +27,7 @@
 
                     </div>
 
-
-
-
-                    <div class="form-group col-md-12">
-                        <label for="sort" class="col-sm-2 control-label"> 關鍵字: </label>
-                        <div class="col-sm-6">
-                            <input type="text" name="keyword" class="form-control">
-                        </div>
-                    </div>
-
-                    <div class="form-group col-md-12">
-                        <label for="sort" class="col-sm-2 control-label"> 關鍵字欄位: </label>
-                        <div class="col-sm-6">
-                            <select class="form-control" name="keycol" id="keycol"> 
-                            <option value="0">姓名</option>
-                            <option value="2">員工帳號</option>
-                            <option value="1">卡號</option>
-                            </select>
-                      </div>
-                    </div>  
-
                     <div class="form-group col-md-12 ">
-
                         <label for="sort" class="col-sm-2 control-label"></label>
                         <div class="col-sm-6">
                         <button type="submit" class="btn btn-default">查詢</button>
@@ -64,8 +42,10 @@
         <div class="panel panel-default">
             <div class="panel-heading col-md-12">
 
+
+
                 <?php foreach ($session_jsons as $jsons):?>
-                    <?php if ($jsons["power_controller"] == 'doorrec/getexcel'):?>
+                    <?php if ($jsons["power_controller"] == 'author/pen_name'):?>
                         <div class='col-md-2'>
                             <form class="form-horizontal" action="<?php echo Yii::app()->createUrl('doorrec/getexcel');?>" method="post">
                                 <button type="submit" class="btn btn-default">匯出excel</button>
@@ -76,7 +56,7 @@
                 <?php endforeach;?>
 
                 <?php foreach ($session_jsons as $jsons):?>
-                    <?php if ($jsons["power_controller"] == 'doorrec/printer'):?>
+                    <?php if ($jsons["power_controller"] == 'author/pen_name'):?>
                         <div class='col-md-2'>
                             <a href="<?=Yii::app()->createUrl('doorrec/printer');?>"  target="_blank">
                                 <button class="btn btn-default">列印</button>

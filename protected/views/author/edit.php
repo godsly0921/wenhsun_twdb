@@ -14,7 +14,7 @@
         </script>
     <?php endif; ?>
 <?php endforeach; ?>
-
+<?php JavascriptEffectsService::goTop();?>
 <div role="main">
     <div class="">
         <div class="row">

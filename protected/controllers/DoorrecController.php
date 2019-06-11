@@ -102,6 +102,101 @@ class DoorrecController extends Controller
         ]);
     }
 
+
+    public function actionPersonal_report()
+    {
+        if( Yii::app()->session['personal'] == false){
+            $this->redirect(Yii::app()->createUrl('admin/login'));
+        }
+        $employee = new EmployeeService();
+        $choose_employee = $employee->findEmployeeById( Yii::app()->session['uid']);
+
+        $idarr = array();
+        $cardarrs = array();
+
+
+        array_push($idarr, $choose_employee['id']);
+        array_push($cardarrs, $choose_employee['door_card_num']);
+
+
+        // 日期
+        if (isset($_POST['date_start']) && !empty($_POST['date_start'])) {
+
+            $choosestart = $_POST['date_start'] . ' 00:00:00';
+
+        } else {
+
+            $choosestart = date("Y-m-d").' 00:00:00';
+        }
+
+        if (isset($_POST['date_end']) && !empty($_POST['date_end'])) {
+
+            $chooseend = $_POST['date_end'] . ' 23:59:59';
+
+        } else {
+
+            $chooseend = date("Y-m-d").' 23:59:59';
+        }
+
+        if (isset($_POST['date_start']) && !empty($_POST['date_start'])) {
+
+            $choosestart = $_POST['date_start'] . ' 00:00:00';
+
+        } else {
+
+            $choosestart = date("Y-m-d").' 00:00:00';
+        }
+
+        if (empty($_POST['keycol'])) {
+            $_POST['keycol'] = 0;
+        }
+
+        if (!empty($_POST['keyword'])) {
+            $key_sw = 1;
+        } else {
+            $key_sw = 0;
+            $_POST['keyword'] = '';
+        }
+
+        // 抓出門禁紀錄
+        $recordservice = new RecordService;
+
+        $finaldata = array();
+
+
+        foreach ($cardarrs as $cardarrk => $cardarr) {
+            if (!empty($cardarr)) {
+                $data = $recordservice->get_by_card_and_key($key_sw, $_POST['keycol'], $cardarr, $choosestart, $chooseend, $_POST['keyword']);
+                $total = count($data);
+
+
+                if (!empty($data) && $total != 0 ) {
+                    foreach ($data as $key => $value) {
+                        $temp['e_user_name'] = $value['e_user_name'];
+                        $temp['position_name'] = $value['position_name'];
+                        $temp['username'] = $value['username'];
+                        $temp['card_number'] = $value['card_number'];
+                        //$temp['usergrp'] = $value['usergrp'];
+                        $temp['flashDate'] = $value['flashDate'];
+                        $temp['memol'] = $value['memol'];
+                        $temp['id'] = $value['id'];
+                        array_push($finaldata, $temp);
+                    }
+
+                }
+            }
+        }
+
+
+
+        // 每次找完資料都將資料存進session 方便匯出跟列印
+        Yii::app()->session['doorrec'] = $finaldata;
+
+        $this->render('personal_report', ['model' => $finaldata,
+            'rcdata' => $finaldata
+        ]);
+    }
+
     // 匯出excel
     function actiongetexcel()
     {
