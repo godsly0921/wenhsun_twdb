@@ -52,6 +52,8 @@ class SeatsController extends Controller
         $this->redirect('index');
     }
 
+
+
     public function actionEdit($id)
     {
         $seat = EmployeeSeats::model()->findByPk($id);
