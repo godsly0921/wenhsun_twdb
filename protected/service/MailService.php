@@ -65,7 +65,7 @@ class MailService
                 $mail->Subject = '出勤通知:出勤正常';
                 $mail->Body =
                     '<h2>親愛的' . $employee_name . '您好:<h2>
-                 <p>提醒您，您昨天的出勤是正常。<br>詳細資訊如以下'
+                 <p>提醒您，您昨天的出勤是正常。<br>詳細資訊如以下<br>'
                     . $message . '<br><br>' .
                     '文訊雜誌社人資系統敬啟<br><br>' .
                     '備註：此信箱為公告用信箱，請勿回信，若有疑問，請洽HR。謝謝。</p>';
@@ -73,9 +73,9 @@ class MailService
                 $mail->Subject = '出勤通知:出勤異常';
                 $mail->Body =
                     '<h2>親愛的' . $employee_name . '您好:<h2>' .
-                    '<p>提醒您，您昨天的出勤是異常。<br>詳細資訊如以下'
+                    '<p>提醒您，您昨天的出勤是異常。<br>詳細資訊如以下<br>'
                     . $message . '<br><br>' .
-                    '<a href="http://192.168.0.160/wenhsun_hr/attendancerecord/update/' . $id . '">請點擊回覆異常</a>' .
+                    '<a href="http://192.168.0.160/wenhsun_hr/attendancerecord/update/' . $id . '">請點擊回覆異常</a><br>' .
                     '文訊雜誌社人資系統敬啟<br>' .
                     '備註：此信箱為公告用信箱，請勿回信，若有疑問，請洽HR。謝謝。</p>';
             }
@@ -122,7 +122,7 @@ class MailService
                 $mail->Subject = '用戶未設定，員工編號';
                 $mail->Body =
                     '<h2>親愛的' . '管理員您好' . '您好:<h2>
-                     <p>提醒您，有異常狀況。<br>詳細資訊如以下'
+                     <p>提醒您，有異常狀況。<br>詳細資訊如以下<br>'
                     . $message . '<br><br>' .
                     '請善待妥善處理，謝謝。<br><br>' .
                     '文訊雜誌社人資系統敬啟<br><br>' .
@@ -133,7 +133,7 @@ class MailService
                 $mail->Subject = '意外異常';
                 $mail->Body =
                     '<h2>親愛的' . '管理員您好' . '您好:<h2>
-                     <p>提醒您，有異常狀況。<br>詳細資訊如以下'
+                     <p>提醒您，有異常狀況。<br>詳細資訊如以下<br>'
                     . $message . '<br><br>' .
                     '請善待妥善處理，謝謝。<br><br>' .
                     '文訊雜誌社人資系統敬啟<br><br>' .
@@ -176,11 +176,11 @@ class MailService
             $mail->Subject = $inputs['new_title'];
             $mail->Body =
                     '<h2>親愛的' . $inputs["name"]  . '您好:<h2>
-                     <p>提醒您，有公告通知。<br>詳細資訊如以下'
+                     <p>提醒您，有公告通知。<br>詳細資訊如以下。<br>'
                     . $inputs["new_content"] . '<br><br>' .
-                    '請善待妥善處理，謝謝。<br><br>' .
+                    '請妥善處理，謝謝。<br><br>' .
                     '文訊雜誌社人資系統敬啟<br><br>' .
-                    '<a href="http://192.168.0.160/wenhsun_hr/'.$inputs["new_image_old"].'">請下載附件</a>'.
+                    '<a href="http://192.168.0.160/wenhsun_hr/'.$inputs["new_image_old"].'">請下載附件</a><br>'.
                     '備註：此信箱為公告用信箱，請勿回信，若有疑問，請洽HR。謝謝。</p>';
 
 
