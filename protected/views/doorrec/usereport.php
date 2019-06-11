@@ -84,7 +84,7 @@
                         </div>
                     <?php endif;?>
                 <?php endforeach;?>
-                
+
             </div>
             <div class="panel-body">
                 <div class="row">

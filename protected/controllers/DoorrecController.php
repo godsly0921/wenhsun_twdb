@@ -138,8 +138,24 @@ class DoorrecController extends Controller
             $chooseend = date("Y-m-d").' 23:59:59';
         }
 
+        if (isset($_POST['date_start']) && !empty($_POST['date_start'])) {
+
+            $choosestart = $_POST['date_start'] . ' 00:00:00';
+
+        } else {
+
+            $choosestart = date("Y-m-d").' 00:00:00';
+        }
+
         if (empty($_POST['keycol'])) {
             $_POST['keycol'] = 0;
+        }
+
+        if (!empty($_POST['keyword'])) {
+            $key_sw = 1;
+        } else {
+            $key_sw = 0;
+            $_POST['keyword'] = '';
         }
 
         // 抓出門禁紀錄
