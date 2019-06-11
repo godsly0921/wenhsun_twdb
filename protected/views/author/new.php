@@ -1,4 +1,5 @@
 <?php $session_jsons = CJSON::decode(Yii::app()->session['power_session_jsons']);?>
+<?php JavascriptEffectsService::goTop();?>
 <div role="main">
     <div class="">
         <div class="row">
@@ -303,7 +304,7 @@
                             <div class="form-group">
                                 <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
                                     <button type="submit" id="create-btn" class="btn btn-primary">新增</button>
-                                    <a class="btn btn-default pull-right" href="/author">返回</a>
+                                    <a class="btn btn-default pull-right" href="<?= Yii::app()->createUrl('/author/index');?>">返回</a>
                                 </div>
                             </div>
 
