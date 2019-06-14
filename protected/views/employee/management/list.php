@@ -1,5 +1,10 @@
 <?php $session_jsons = CJSON::decode(Yii::app()->session['power_session_jsons']);?>
 <script src="<?php echo Yii::app()->request->baseUrl;?>/assets/admin/ext/js/jquery.dataTables.min.js"></script>
+<style>
+    .table tbody tr:hover {
+        background: #ece20d;
+    }
+</style>
 <div role="main">
     <div class="">
         <div class="page-title">

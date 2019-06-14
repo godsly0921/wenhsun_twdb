@@ -1,0 +1,70 @@
+a{
+	color: #3f2211;
+}
+
+body{
+	background-color: #e3decd;
+}
+
+footer{
+	background-color: #9c8f86;
+	color: white;
+}
+
+footer a:hover{
+	text-decoration: none;
+}
+
+.footer_right{
+	font-size: 12px;
+}
+
+.footer_company_name{
+	color: white;
+}
+
+#banner img{
+	width: 100%;
+}
+.slick-initialized .slick-slide {
+    height: auto;
+}
+
+.customer_search_button{
+	color: orange;
+	background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-left: 0px;
+    border-radius: .25rem;
+    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+
+.customer_search_button:hover, .customer_search_button:focus, .customer_search_button:active, .customer_search_button.active, .open>.dropdown-toggle.customer_search_button {
+    color: orange;
+    background-color: #fff;
+    border-color: #ced4da;
+}
+
+.header_navbar{
+	background-color: #e3decd;
+}
+
+.header_navbar_nav{
+	/*width: 100%;*/
+	display: table;
+	table-layout: fixed;
+}
+
+.header_navbar_nav > li {
+    display: table-cell;
+	text-align: center;
+}
+
+.custom-toggler.navbar-toggler{
+	border-color: rgb(255,102,203);
+}
+
+.custom-toggler .navbar-toggler-icon {
+  background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 32 32' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(255,102,203, 0.5)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 8h24M4 16h24M4 24h24'/%3E%3C/svg%3E");
+}

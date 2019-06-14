@@ -8,15 +8,17 @@ use Yii;
 
 class AuthorService
 {
-    private static $result_limit = 8000;
+    private const RESULT_LIMIT = 8000;
+
     public function queryAll()
     {
-        $count_total = Yii::app()->db->createCommand('SELECT count(*) as search_count FROM author')->queryAll();
-        if($count_total[0]['search_count']<= self::$result_limit){
-            return Yii::app()->db->createCommand('SELECT * FROM author')->queryAll();
-        }else{
-            return array();
+        $countTotal = Yii::app()->db->createCommand('SELECT count(*) as search_count FROM author')->queryAll();
+
+        if ($countTotal[0]['search_count'] > self::RESULT_LIMIT) {
+            return [];
         }
+
+        return Yii::app()->db->createCommand('SELECT * FROM author')->queryAll();
     }
 
     public function queryByBirthYear(string $year, string $toYear): array
@@ -24,7 +26,8 @@ class AuthorService
         if (empty($toYear)) {
             $toYear = $year;
         }
-        $count_total = Yii::app()->db->createCommand(
+
+        $countTotal = Yii::app()->db->createCommand(
             '
               SELECT count(*) as search_count FROM author 
               WHERE birth_year >= :year
@@ -35,25 +38,25 @@ class AuthorService
             ':toYear' => $toYear,
         ])->queryAll();
 
-        if($count_total[0]['search_count']<= self::$result_limit){
-            return Yii::app()->db->createCommand(
-                '
+        if ($countTotal[0]['search_count'] > self::RESULT_LIMIT) {
+            return [];
+        }
+
+        return Yii::app()->db->createCommand(
+            '
                   SELECT * FROM author 
                   WHERE birth_year >= :year
                   AND birth_year <= :toYear
                 '
-            )->bindValues([
-                ':year' => $year,
-                ':toYear' => $toYear,
-            ])->queryAll();
-        }else{
-            return array();
-        }
+        )->bindValues([
+            ':year' => $year,
+            ':toYear' => $toYear,
+        ])->queryAll();
     }
 
     public function queryByService(string $service): array
     {
-        $count_total = Yii::app()->db->createCommand(
+        $countTotal = Yii::app()->db->createCommand(
             '
               SELECT count(*) as search_count FROM author 
               WHERE service LIKE :service
@@ -62,23 +65,23 @@ class AuthorService
             ':service' => $service,
         ])->queryAll();
 
-        if($count_total[0]['search_count']<= self::$result_limit){
-            return Yii::app()->db->createCommand(
-                '
-                  SELECT * FROM author 
-                  WHERE service LIKE :service
-                '
-            )->bindValues([
-                ':service' => $service,
-            ])->queryAll();
-        }else{
-            return array();
+        if ($countTotal[0]['search_count'] > self::RESULT_LIMIT) {
+            return [];
         }
+
+        return Yii::app()->db->createCommand(
+            '
+              SELECT * FROM author 
+              WHERE service LIKE :service
+            '
+        )->bindValues([
+            ':service' => $service,
+        ])->queryAll();
     }
 
     public function queryByJobTitle(string $jobTitle): array
     {
-        $count_total = Yii::app()->db->createCommand(
+        $countTotal = Yii::app()->db->createCommand(
             '
               SELECT count(*) as search_count FROM author 
               WHERE job_title LIKE :job_title
@@ -87,48 +90,48 @@ class AuthorService
             ':job_title' => $jobTitle,
         ])->queryAll();
 
-        if($count_total[0]['search_count']<= self::$result_limit){
-            return Yii::app()->db->createCommand(
-                '
-                  SELECT * FROM author 
-                  WHERE job_title LIKE :job_title
-                '
-            )->bindValues([
-                ':job_title' => $jobTitle,
-            ])->queryAll();
-        }else{
-            return array();
+        if ($countTotal[0]['search_count'] > self::RESULT_LIMIT) {
+            return [];
         }
+
+        return Yii::app()->db->createCommand(
+            '
+              SELECT * FROM author 
+              WHERE job_title LIKE :job_title
+            '
+        )->bindValues([
+            ':job_title' => $jobTitle,
+        ])->queryAll();
     }
 
     public function queryByAddress(string $address): array
     {
-        $count_total = Yii::app()->db->createCommand(
-                "
-                  SELECT count(*) as search_count FROM author 
-                  WHERE JSON_SEARCH(home_address, 'all', :home_address) IS NOT NULL
-                "
-            )->bindValues([
-                ':home_address' => $address,
-            ])->queryAll();
+        $countTotal = Yii::app()->db->createCommand(
+            "
+                SELECT count(*) as search_count FROM author 
+                WHERE JSON_SEARCH(home_address, 'all', :home_address) IS NOT NULL
+            "
+        )->bindValues([
+            ':home_address' => $address,
+        ])->queryAll();
 
-        if($count_total[0]['search_count']<= self::$result_limit){
-            return Yii::app()->db->createCommand(
-                "
-                  SELECT * FROM author 
-                  WHERE JSON_SEARCH(home_address, 'all', :home_address) IS NOT NULL
-                "
-            )->bindValues([
-                ':home_address' => $address,
-            ])->queryAll();
-        }else{
-            return array();
+        if ($countTotal[0]['search_count'] > self::RESULT_LIMIT) {
+            return [];
         }
+
+        return Yii::app()->db->createCommand(
+            "
+              SELECT * FROM author 
+              WHERE JSON_SEARCH(home_address, 'all', :home_address) IS NOT NULL
+            "
+        )->bindValues([
+            ':home_address' => $address,
+        ])->queryAll();
     }
 
     public function queryByIdentityType(string $identityType): array
     {
-        $count_total = Yii::app()->db->createCommand(
+        $countTotal = Yii::app()->db->createCommand(
             "
               SELECT count(*) as search_count FROM author 
               WHERE JSON_SEARCH(identity_type, 'all', :identity_type) IS NOT NULL
@@ -136,24 +139,24 @@ class AuthorService
         )->bindValues([
             ':identity_type' => $identityType,
         ])->queryAll();
-        if($count_total[0]['search_count']<= self::$result_limit){
-            return Yii::app()->db->createCommand(
-                "
-                  SELECT * FROM author 
-                  WHERE JSON_SEARCH(identity_type, 'all', :identity_type) IS NOT NULL
-                "
-            )->bindValues([
-                ':identity_type' => $identityType,
-            ])->queryAll();
-        }else{
-            return array();
+
+        if ($countTotal[0]['search_count'] > self::RESULT_LIMIT) {
+            return [];
         }
-        
+
+        return Yii::app()->db->createCommand(
+            "
+              SELECT * FROM author 
+              WHERE JSON_SEARCH(identity_type, 'all', :identity_type) IS NOT NULL
+            "
+        )->bindValues([
+            ':identity_type' => $identityType,
+        ])->queryAll();
     }
 
     public function queryByPenName($penName): array
     {
-        $count_total = Yii::app()->db->createCommand(
+        $countTotal = Yii::app()->db->createCommand(
             "
               SELECT count(*) as search_count FROM author 
               WHERE JSON_SEARCH(pen_name, 'all', :pen_name) IS NOT NULL
@@ -161,42 +164,44 @@ class AuthorService
         )->bindValues([
             ':pen_name' => $penName,
         ])->queryAll();
-        if($count_total[0]['search_count']<= self::$result_limit){
-            return Yii::app()->db->createCommand(
-                "
-                  SELECT * FROM author 
-                  WHERE JSON_SEARCH(pen_name, 'all', :pen_name) IS NOT NULL
-                "
-            )->bindValues([
-                ':pen_name' => $penName,
-            ])->queryAll();
-        }else{
-            return array();
+
+        if ($countTotal[0]['search_count'] > self::RESULT_LIMIT) {
+            return [];
         }
+
+        return Yii::app()->db->createCommand(
+            "
+              SELECT * FROM author 
+              WHERE JSON_SEARCH(pen_name, 'all', :pen_name) IS NOT NULL
+            "
+        )->bindValues([
+            ':pen_name' => $penName,
+        ])->queryAll();
     }
 
     public function queryByAuthorName($authorName): array
     {
-        $count_total = Yii::app()->db->createCommand(
+        $countTotal = Yii::app()->db->createCommand(
             "
               SELECT count(*) as search_count FROM author 
               WHERE author_name LIKE :authorName
             "
         )->bindValues([
-            ':authorName' => "%" . $authorName . "%",
+            ':authorName' => $authorName,
         ])->queryAll();
-        if($count_total[0]['search_count']<= self::$result_limit){
-            return Yii::app()->db->createCommand(
-                '
-                  SELECT * FROM author 
-                  WHERE author_name LIKE :authorName
-                '
-            )->bindValues([
-                ':authorName' =>  "%" . $authorName . "%",
-            ])->queryAll();
-        }else{
-            return array();
+
+        if ($countTotal[0]['search_count'] > self::RESULT_LIMIT) {
+            return [];
         }
+
+        return Yii::app()->db->createCommand(
+            '
+              SELECT * FROM author 
+              WHERE author_name LIKE :authorName
+            '
+        )->bindValues([
+            ':authorName' => $authorName,
+        ])->queryAll();
     }
 
     public function queryByMemo($memo): array
@@ -207,21 +212,20 @@ class AuthorService
               WHERE memo LIKE :memo
             '
         )->bindValues([
-            ':memo' => "%" . $memo . "%",
+            ':memo' => $memo,
         ])->queryAll();
-        if($count_total[0]['search_count']<= self::$result_limit){
-            return Yii::app()->db->createCommand(
-                '
-                  SELECT * FROM author 
-                  WHERE memo LIKE :memo
-                '
-            )->bindValues([
-                ':memo' => "%" . $memo . "%",
-            ])->queryAll();
-        }else{
-            return array();
+
+        if ($count_total[0]['search_count'] > self::RESULT_LIMIT) {
+            return [];
         }
+
+        return Yii::app()->db->createCommand(
+            '
+              SELECT * FROM author 
+              WHERE memo LIKE :memo
+            '
+        )->bindValues([
+            ':memo' => $memo,
+        ])->queryAll();
     }
-
-
 }

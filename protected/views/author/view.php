@@ -89,7 +89,7 @@
                                     <label class="control-label col-md-3 col-sm-3 col-xs-12" for="death">卒日
                                     </label>
                                     <div class="col-md-6 col-sm-6 col-xs-12">
-                                        <input type="date" value="<?=$data->death?>" id="death" name="death" class="form-control col-md-7 col-xs-12" disabled>
+                                        <input type="text" value="<?=$data->death?>" id="death" name="death" class="form-control col-md-7 col-xs-12" disabled>
                                     </div>
                                 </div>
                             <?php endif?>
