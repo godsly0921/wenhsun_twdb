@@ -12,44 +12,47 @@
         <div class="panel panel-default">
             <div class="panel-heading">查詢條件設定</div>
             <div class="panel-body">
-                <form action="<?php echo Yii::app() -> createUrl( Yii::app()->controller->id.'/report'); ?>"  method="POST" >
+                <form action="<?php echo Yii::app() -> createUrl(Yii::app()->controller->id.'/report'); ?>"  method="POST" >
                     <input type="hidden" name="filter" value="1">
                     <div class="form-group col-md-12">
                         <label for="date_start" class="col-sm-2 control-label">開始日期:</label>
-                        <div class="col-sm-2">
-                        <input type="text" class="form-control" id="date_start" name="date_start" placeholder="請匯出開始日期" >
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control"  id="date_start" name="date_start" placeholder="請填入開始日期" >
                         </div>
 
-                        <label for="date_end" class="col-sm-2 control-label">結束日期:</label>
-                        <div class="col-sm-2">
-                        <input type="text" class="form-control" id="date_end" name="date_end" placeholder="請匯出結束日期">
+                        <label for="date_start" class="col-sm-2 control-label">結束日期:</label>
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control"  id="date_end" name="date_end" placeholder="請填入結束日期" >
+                        </div>
+
+                    </div>
+
+
+
+
+                    <div class="form-group col-md-12">
+                        <label for="sort" class="col-sm-2 control-label"> 關鍵字: </label>
+                        <div class="col-sm-6">
+                            <input type="text" name="keyword" class="form-control">
                         </div>
                     </div>
 
                     <div class="form-group col-md-12">
-                        <label for="sort" class="col-sm-2 control-label">員工姓名: </label>
+                        <label for="sort" class="col-sm-2 control-label"> 關鍵字欄位: </label>
                         <div class="col-sm-6">
-                            <?php if(!empty($employee_list)){ ?>
-                                <select class="form-control" name='employee'>
-                                    <option value="all" selected="selected">---請選擇---</option>
-                                    <?php foreach ($employee_list as $key => $value): ?>
-                                        <option value="<?=$key?>"><?=$value?></option>
-                                    <?php endforeach ?>
-                                </select>
-                            <?php }else{ ?>
-                                <select class="form-control" name='employee'>
-                                    <option value="all" selected="selected">---目前有沒任何員工資料---</option>
-                                </select>
-                            <?php } ?>
-                      </div>
+                            <select class="form-control" name="key_column">
+                                <option value="0">姓名</option>
+                                <option value="2">員工帳號</option>
+                                <option value="1">卡號</option>
+                            </select>
+                        </div>
                     </div>
-
 
                     <div class="form-group col-md-12 ">
 
                         <label for="sort" class="col-sm-2 control-label"></label>
                         <div class="col-sm-6">
-                        <button type="submit" class="btn btn-default">查詢</button>
+                            <button type="submit" class="btn btn-default">查詢</button>
                         </div>
                     </div>
 
@@ -81,7 +84,6 @@
                                 </a>
                             <?php endif; ?>
                         <?php endforeach; ?>
-
                     </div>
 
                 <div class='col-md-2 col-sm-4 col-xs-4'>
