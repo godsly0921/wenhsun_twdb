@@ -275,8 +275,8 @@ class PartTimeController extends Controller
                 $service = new ParttimeService();
                 if(Yii::app()->session['personal']){//一般使用者
                     if (isset(Yii::app()->session['uid'])) {//確定該排班是不是使用者自己的
-                        $memberServer = new MemberService();
-                        $result = $memberServer->findByMemId(Yii::app()->session['uid']);
+                        $employeeService = new EmployeeService();
+                        $result = $employeeService->findEmployeeById(Yii::app()->session['uid']);
                         $use_id = $result->id;
 
                         $now_time = date("Y-m-d H:i:s");

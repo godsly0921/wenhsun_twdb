@@ -31,66 +31,39 @@ class AttendancerecordController extends Controller
 
     public function actionReport()
     {
-        $service = new EmployeeService();
-        $employee = $service->findEmployeelist();//取出所有員工
 
-        $employee_list = [];
-        if(!empty($employee)){
-            foreach ($employee as $key => $value) {
-                $employee_list[$value->id] = $value->name.'/'.$value->user_name.'/'.$value->door_card_num;
-            }
-        }
-
-
-        if (isset($_POST['employee'])) {
-            if ($_POST[ 'employee' ] == 'all') {
-                $choos_employee = "all";
-            } else if($_POST[ 'employee' ] != 'all') {
-                $choos_employee = $_POST['employee'];
-            } else{
-                $choos_employee = "all";
-            }
+        if (!empty($_POST['keyword'])) {
+            $keyword_selected = 1;
         } else {
-            $choos_employee = "all";
+            $keyword_selected = 0;
+            $_POST['keyword'] = '';
         }
 
+        // 日期
+        if (isset($_POST['date_start']) && !empty($_POST['date_start'])) {
 
-        $service = new EmployeeService;
-        //var_dump($choos_employee);
-        $choos_employee = $service->getEmployee($choos_employee);
-
-        $idarr = array();
-        $cardarrs = array();
-        foreach ($choos_employee as $k => $v) {
-            array_push($idarr, $v->id );
-            array_push($cardarrs, $v->door_card_num);
-
-        }
-
-        if (isset($_POST[ 'date_start' ]) && !empty($_POST[ 'date_start' ])) {
-
-            $choose_start = $_POST[ 'date_start' ] . ' 00:00:00';
+            $choose_start = $_POST['date_start'] . ' 00:00:00';
 
         } else {
 
-            $choose_start = '0000-00-00 00:00:00';
+            $choose_start = date("Y-m-d").' 00:00:00';
         }
 
-        if (isset($_POST[ 'date_end' ]) && !empty($_POST[ 'date_end' ])) {
+        if (isset($_POST['date_end']) && !empty($_POST['date_end'])) {
 
-            $choose_end = $_POST[ 'date_end' ] . ' 23:59:59';
+            $choose_end = $_POST['date_end'] . ' 23:59:59';
 
         } else {
 
-            $choose_end = date( "Y-m-d H:i:s" );
+            $choose_end = date("Y-m-d").' 23:59:59';
         }
 
-        if (empty($_POST[ 'keycol' ])) {
-            $_POST[ 'keycol' ] = 0;
+        if (empty($_POST['key_column'])) {
+            $_POST['key_column'] = 0;
         }
         // 抓出所有相同卡號的紀錄
         $attendance_service = new AttendancerecordService();
-        $record_data = $attendance_service->get_by_condition($idarr, $choose_start, $choose_end );
+        $record_data = $attendance_service->get_by_condition($keyword_selected,$_POST['keyword'],$_POST['key_column'], $choose_start, $choose_end );
 
         $finaldata = [];
         foreach ($record_data as $key => $value) {

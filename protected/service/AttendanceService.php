@@ -736,25 +736,25 @@ class AttendanceService
                     }else{
                         $first_time = '0000-00-00 00:00:00';
                         $last_time = '0000-00-00 00:00:01';
-                    }
+                     }
+
 
 
                     $ParttimeService = new ParttimeService();
                     $result = $ParttimeService->findPartTimeDayAllAndDevice($employee_id,$day);//假如今天有排班的記錄
-
-                    if($result != false){
+                    if(!empty($result)){
                         //假如今天時間有排班紀錄
-                        foreach($result as $key =>$value){
-                            $start_record= strtotime($value->start_time);
-                            $end_record = strtotime($value->end_time);
-                            $last_time = strtotime($last_time);
-                            $first_time = strtotime($first_time);
+                        foreach($result as $k =>$v){
+                            $start_record= strtotime($v->start_time);
+                            $end_record = strtotime($v->end_time);
                             $diff_time = strtotime($last_time) - strtotime($first_time);//這個員工一整天上班時間
 
-                            $abnormal .= '排班編號：'.$value->id;
+                            $abnormal .= '排班編號：'.$v->id.' ';
+
+
 
                             //第一筆打卡時間小於排班開始時間 最後一筆大於等於 排班結束
-                            if($first_time <= $start_record && $last_time >= $end_record){
+                            if(strtotime($first_time) <= $start_record && strtotime($last_time) >= $end_record){
                                 $abnormal_type = 0;
                                 $abnormal .= '正常，排班日，出勤正常';
                             }
@@ -783,22 +783,22 @@ class AttendanceService
                             }
 
 
-                            if($first_time > $start_record ){
+                            if(strtotime($first_time) > $start_record ){
                                 if($diff_time != 0){
                                     $abnormal_type = 1;
                                     $abnormal .= ' 排班日遲到 ';
                                 }
                             }
 
-                            if($last_time < $end_record){
+                            if(strtotime($last_time) < $end_record){
                                 if($diff_time != 0){
                                     $abnormal_type = 1;
                                     $abnormal .= ' 排班日早退 ';
                                 }
                             }
 
+
                             $abnormal .= ' 總時數：'.$this->get_second_to_his($diff_time);
-                            
                             $attendance_record_service = new AttendancerecordService();
                             $model = $attendance_record_service->create($employee_id, $day, $first_time, $last_time, $abnormal_type, $abnormal);
                             $mail = new MailService();
@@ -830,6 +830,8 @@ class AttendanceService
                             $abnormal_type = 0;
                             $abnormal .= '正常 PT非排班日';
                         }
+
+
 
                         $attendance_record_service = new AttendancerecordService();
                         $model = $attendance_record_service->create($employee_id, $day, $first_time, $last_time, $abnormal_type, $abnormal);

@@ -349,7 +349,7 @@
                             <?php endforeach; ?>
 
                             <?php foreach ($session_jsons as $jsons):?>
-                            <?php if ($jsons["power_controller"] == 'author/update_form'):?>
+                            <?php if ($jsons["power_controller"] == 'author/update'):?>
                                     <div class="form-group">
                                         <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
                                             <button type="submit" id="modify-btn" class="btn btn-primary">修改</button>
