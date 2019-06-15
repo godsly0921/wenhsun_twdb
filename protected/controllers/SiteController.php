@@ -8,7 +8,10 @@ class SiteController extends CController{
     }
     //首頁site
     public function ActionIndex(){
-        $this->render('index');
+        $websiteService = new WebsiteService();
+        $banner_data = $websiteService->findAllBanner();
+        $ad_data = $websiteService->findAllAdInfo();
+        $this->render('index',array('banner_data'=>$banner_data,'ad_data'=>$ad_data));
     }
 }
 ?>
