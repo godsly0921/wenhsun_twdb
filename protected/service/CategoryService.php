@@ -15,32 +15,29 @@ class CategoryService
 
     public function findAllCategory(){
         $accountService = new AccountService();
-        $category_data = array();
+        $category_data = $rootcategory_data = array();
         $rootcategory = $this->findRootCategorys();
-        if($rootcategory){
-            foreach ($rootcategory as $key => $value) {
-                $account = $accountService -> findAccountData($value['builder']);
-                $category_data[$value['category_id']]['info'] = array(
-                    'name' => $value['name'],
-                    'builder' => $account->account_name,
-                    'create_date' => $value['create_date'],
-                    'layer' => $value['layer'],
-                    'status' => $value['status'] == 1 ? '是' : '否',
-                );
-                $child_category = $this -> findCategoryByParents($value['category_id']);
-                if($child_category){
-                    foreach ($child_category as $child_key => $child_value) {
-                        $category_data[$value['category_id']]['child'][] = array(
-                            'category_id' => $child_value['category_id'],
-                            'name' => $child_value['name'],
-                            'builder' => $account->account_name,
-                            'create_date' => $child_value['create_date'],
-                            'layer' => $child_value['layer'],
-                            'status' => $child_value['status'] == 1 ? '是' : '否',
-                        );
-                    }
-                }
+        foreach ($rootcategory as $key => $value) {
+            $rootcategory_data[$value->category_id] = $value->name;
+        }
+        $all_data = Category::model()->findAll();
+        foreach ($all_data as $key => $value) {
+            $account = $accountService -> findAccountData($value->builder);
+            $root ='';
+            if($value->isroot == 0){
+                $root = isset($rootcategory_data[$value->parents])?$rootcategory_data[$value->parents]:'';
+            }else{
+                $root = $value->name;
             }
+            $category_data[] = array(
+                'category_id' => $value->category_id,
+                'root' => $root,
+                'name' => $value->isroot == 1 ?'':$value->name,
+                'builder' => $account->account_name,
+                'create_date' => $value->create_date,
+                'layer' => $value->layer,
+                'status' => $value->status == 1 ? '是' : '否',
+            );
         }
         return $category_data;
     }
@@ -74,6 +71,7 @@ class CategoryService
     }
 
     public function create( $name, $parents, $sort, $status ){
+        $operationlogService = new operationlogService();
         $model = new Category();
         $model->name = $name;    
         $model->isroot = $parents == 0 ? 1:0;
@@ -89,8 +87,14 @@ class CategoryService
 
         if (!$model->hasErrors()) {
             if( $model->save() ){
+                $motion = "建立分類";
+                $log = "建立 分類名稱 = " . $name;
+                $operationlogService->create_operationlog( $motion, $log );
                 return array(true,'新增成功');         
             }else{       
+                $motion = "建立分類";
+                $log = "建立 分類名稱 = " . $name;
+                $operationlogService->create_operationlog( $motion, $log, 0 );
                 return array(false,$model->getErrors());
             }
         }
@@ -98,12 +102,40 @@ class CategoryService
         return $model;
     }
 
-    public function findById($id)
-    {
-        $model = Category::model()->findByAttributes(
-            ['id' => $id]
-        );
+    public function update( $id, $name, $parents, $sort, $status ){
+        $operationlogService = new operationlogService();
+        $model = Category::model()->findByPk($id);
+        $model->name = $name;    
+        $model->isroot = $parents == 0 ? 1:0;
+        $model->parents = $parents;
+        $model->builder = Yii::app()->session['uid'];
+        $model->sort = $sort;
+        $model->layer = $parents == 0?1:2;
+        $model->status = $status;
+        $model->edit_date = date('Y-m-d H:i:s');
+        if (!$model->validate()) {
+            return $model;
+        }
 
+        if (!$model->hasErrors()) {
+            if( $model->save() ){
+                $motion = "更新分類";
+                $log = "更新 分類名稱 = " . $name;
+                $operationlogService->create_operationlog( $motion, $log );
+                return array(true,'更新成功');         
+            }else{       
+                $motion = "更新分類";
+                $log = "更新 分類編號 = " . $id . "；分類名稱 = " . $name;
+                $operationlogService->create_operationlog( $motion, $log, 0 );
+                return array(false,$model->getErrors());
+            }
+        }
+        
+        return $model;
+    }
+
+    public function findById($id){
+        $model = Category::model()->findByPk($id);
         return $model;
     }
 

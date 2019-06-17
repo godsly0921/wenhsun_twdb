@@ -19,18 +19,6 @@ class PartTimeController extends Controller
 
     public function actionIndex()
     {
-        $memberServer = new MemberService();
-        $result = $memberServer->findByMemId(Yii::app()->session['uid']);
-        if($result==NULL){
-            $accountServer = new AccountService();
-            $account = $accountServer->findAccountData(Yii::app()->session['uid']);
-            if($account == NULL){
-                echo '沒有找到使用者，請重新登入系統';
-                sleep(1);
-                $this->redirect('admin/login');
-            }
-        }
-
         $part_time_employees = EmployeeService::getPTEmployee(7);
 
         $service = new ParttimeService();
@@ -66,11 +54,10 @@ class PartTimeController extends Controller
 
         foreach ($model as $key => $value) {
             $part_time = EmployeeService::findEmployeeById($value->part_time_empolyee_id);
-            if($value->builder_type){
-                $service = new MemberService();
-                $members = $service->findByMemId($value->builder);
-                $name = $members['name'];
-
+            if($value->builder_type){//1表示 員工 0表示系統管理員
+                $service = new EmployeeService();
+                $employee = $service->findEmployeeById($value->builder);
+                $name = $employee->name;
 
             }else{
                 $service = new AccountService();
@@ -80,6 +67,8 @@ class PartTimeController extends Controller
             $input_arrays[] = array('start' => $value->start_time, 'end' => $value->end_time, 'title' => $part_time['name'].'已排班 排班者：'.$name, 'url' => Yii::app()->createUrl('parttime/cancelPartTimeByCalendar', ['id' => $value->id]));
 
         }
+
+
 
 
         //開放排班的時段
@@ -108,7 +97,6 @@ class PartTimeController extends Controller
                 $output_arrays[] = $event->toArray();
             }
         }
-
         echo json_encode($output_arrays);
     }
 
@@ -287,8 +275,8 @@ class PartTimeController extends Controller
                 $service = new ParttimeService();
                 if(Yii::app()->session['personal']){//一般使用者
                     if (isset(Yii::app()->session['uid'])) {//確定該排班是不是使用者自己的
-                        $memberServer = new MemberService();
-                        $result = $memberServer->findByMemId(Yii::app()->session['uid']);
+                        $employeeService = new EmployeeService();
+                        $result = $employeeService->findEmployeeById(Yii::app()->session['uid']);
                         $use_id = $result->id;
 
                         $now_time = date("Y-m-d H:i:s");

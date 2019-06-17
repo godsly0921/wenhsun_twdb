@@ -1,4 +1,5 @@
 <?php $session_jsons = CJSON::decode(Yii::app()->session['power_session_jsons']);?>
+<script src="<?php echo Yii::app()->request->baseUrl;?>/assets/admin/ext/js/jquery.dataTables.min.js"></script>
 <div role="main">
     <div class="">
         <div class="page-title">
@@ -35,6 +36,7 @@
                             <th>受文者</th>
                             <th>公文類型</th>
                             <th>承辦人</th>
+                            <th>存檔代號</th>
                             <th>公文附件</th>
                             <th>更新日期</th>
                             <th>建立日期</th>
@@ -43,7 +45,7 @@
                         </thead>
                         <tbody>
 
-                        <?php if ($list): ?>
+
                             <?php foreach ($list as $data): ?>
                                 <tr role="row">
                                     <td><?= $data->title ?></td>
@@ -51,6 +53,7 @@
                                     <td><?= $data->receiver ?></td>
                                     <td><?= $data->d_type->name ?></td>
                                     <td><?= $data->case_officer ?></td>
+                                    <td><?= $data->saved_code ?></td>
                                     <td><?= $data->file_name ?></td>
                                     <td><?= $data->update_at ?></td>
                                     <td><?= $data->create_at ?></td>
@@ -70,11 +73,7 @@
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
-                        <?php else: ?>
-                            <tr role="row">
-                                <td colspan="9">查無資料</td>
-                            </tr>
-                        <?php endif; ?>
+
 
                         </tbody>
                     </table>
@@ -82,3 +81,19 @@
             </div>
         </div>
     </div>
+    <script>
+        $(document).ready(function(){
+
+            $('#datatable').DataTable({
+                "lengthChange": false,
+                "paging": true,
+                "responsive": true,
+                "info": false,
+                'iDisplayLength': 30,
+                "oLanguage": {
+                    "oPaginate": {"sFirst": "第一頁", "sPrevious": "上一頁","sNext": "下一頁","sLast": "最後一頁"},
+                    "sEmptyTable": "查無資料, 快去新增資料吧"
+                }
+            });
+        });
+    </script>

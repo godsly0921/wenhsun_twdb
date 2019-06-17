@@ -12,44 +12,47 @@
         <div class="panel panel-default">
             <div class="panel-heading">查詢條件設定</div>
             <div class="panel-body">
-                <form action="<?php echo Yii::app() -> createUrl( Yii::app()->controller->id.'/report'); ?>"  method="POST" >
+                <form action="<?php echo Yii::app() -> createUrl(Yii::app()->controller->id.'/report'); ?>"  method="POST" >
                     <input type="hidden" name="filter" value="1">
                     <div class="form-group col-md-12">
                         <label for="date_start" class="col-sm-2 control-label">開始日期:</label>
-                        <div class="col-sm-2">
-                        <input type="text" class="form-control" id="date_start" name="date_start" placeholder="請匯出開始日期" >
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control"  id="date_start" name="date_start" placeholder="請填入開始日期" >
                         </div>
 
-                        <label for="date_end" class="col-sm-2 control-label">結束日期:</label>
-                        <div class="col-sm-2">
-                        <input type="text" class="form-control" id="date_end" name="date_end" placeholder="請匯出結束日期">
+                        <label for="date_start" class="col-sm-2 control-label">結束日期:</label>
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control"  id="date_end" name="date_end" placeholder="請填入結束日期" >
+                        </div>
+
+                    </div>
+
+
+
+
+                    <div class="form-group col-md-12">
+                        <label for="sort" class="col-sm-2 control-label"> 關鍵字: </label>
+                        <div class="col-sm-6">
+                            <input type="text" name="keyword" class="form-control">
                         </div>
                     </div>
 
                     <div class="form-group col-md-12">
-                        <label for="sort" class="col-sm-2 control-label">員工姓名: </label>
+                        <label for="sort" class="col-sm-2 control-label"> 關鍵字欄位: </label>
                         <div class="col-sm-6">
-                            <?php if(!empty($employee_list)){ ?>
-                                <select class="form-control" name='employee'>
-                                    <option value="all" selected="selected">---請選擇---</option>
-                                    <?php foreach ($employee_list as $key => $value): ?>
-                                        <option value="<?=$key?>"><?=$value?></option>
-                                    <?php endforeach ?>
-                                </select>
-                            <?php }else{ ?>
-                                <select class="form-control" name='employee'>
-                                    <option value="all" selected="selected">---目前有沒任何員工資料---</option>
-                                </select>
-                            <?php } ?>
-                      </div>
+                            <select class="form-control" name="key_column">
+                                <option value="0">姓名</option>
+                                <option value="2">員工帳號</option>
+                                <option value="1">卡號</option>
+                            </select>
+                        </div>
                     </div>
-
 
                     <div class="form-group col-md-12 ">
 
                         <label for="sort" class="col-sm-2 control-label"></label>
                         <div class="col-sm-6">
-                        <button type="submit" class="btn btn-default">查詢</button>
+                            <button type="submit" class="btn btn-default">查詢</button>
                         </div>
                     </div>
 
@@ -61,17 +64,26 @@
         <div class="panel panel-default">
             <div class="panel-heading col-md-12">
                     
-                    <div class='col-md-2'> 
-                    <form class="form-horizontal" action="<?php echo Yii::app()->createUrl(Yii::app()->controller->id.'/getexcel');?>" method="post">
-                    <button type="submit" class="btn btn-default">匯出excel</button>
+                    <div class='col-md-2'>
+                        <?php foreach ($session_jsons as $jsons):?>
+                            <?php if ($jsons["power_controller"] == Yii::app()->controller->id.'/getexcel'):?>
+                                <form class="form-horizontal" action="<?php echo Yii::app()->createUrl(Yii::app()->controller->id.'/getexcel');?>" method="post">
+                                    <button type="submit" class="btn btn-default">匯出excel</button>
 
-                    </form>                    
+                                </form>
+                            <?php endif; ?>
+                        <?php endforeach; ?>
+
                     </div>
                     
                     <div class='col-md-2'>
-                    <a href="<?=Yii::app()->createUrl(Yii::app()->controller->id.'/printer');?>"  target="_blank">
-                    <button class="btn btn-default">列印</button>
-                    </a> 
+                        <?php foreach ($session_jsons as $jsons):?>
+                            <?php if ($jsons["power_controller"] == Yii::app()->controller->id.'/printer'):?>
+                                <a href="<?=Yii::app()->createUrl(Yii::app()->controller->id.'/printer');?>"  target="_blank">
+                                    <button class="btn btn-default">列印</button>
+                                </a>
+                            <?php endif; ?>
+                        <?php endforeach; ?>
                     </div>
 
                 <div class='col-md-2 col-sm-4 col-xs-4'>
@@ -85,6 +97,7 @@
                                class="table table-striped table-bordered table-hover dataTable no-footer">
                             <thead>
                             <tr role="row">
+                                <th>員工帳號</th>
                                 <th>員工姓名</th>
                                 <th>出勤日</th>
                                 <th>首筆出勤紀錄</th>
@@ -105,6 +118,7 @@
                             <tbody>
                             <?php foreach ($rcdata as $key => $value): ?>
                                 <tr class="gradeC" role="row">
+                                    <td><?=$value['user_name']?></td>
                                     <td><?=$value['name']?></td>
                                     <td><?=$value['day']?></td>
                                     <td><?=$value['first_time']?></td>

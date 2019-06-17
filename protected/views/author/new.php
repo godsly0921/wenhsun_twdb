@@ -1,4 +1,5 @@
 <?php $session_jsons = CJSON::decode(Yii::app()->session['power_session_jsons']);?>
+<?php JavascriptEffectsService::goTop();?>
 <div role="main">
     <div class="">
         <div class="row">
@@ -51,7 +52,7 @@
                                 <label class="control-label col-md-3 col-sm-3 col-xs-12" for="birth">生日
                                 </label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
-                                    <input type="date" id="birth" name="birth" class="form-control col-md-7 col-xs-12">
+                                    <input type="text" id="birth" name="birth" class="form-control col-md-7 col-xs-12">
                                 </div>
                             </div>
 
@@ -59,7 +60,7 @@
                                 <label class="control-label col-md-3 col-sm-3 col-xs-12" for="death">卒日
                                 </label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
-                                    <input type="date" id="death" name="death" class="form-control col-md-7 col-xs-12">
+                                    <input type="text" id="death" name="death" class="form-control col-md-7 col-xs-12">
                                 </div>
                             </div>
 
@@ -303,7 +304,7 @@
                             <div class="form-group">
                                 <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
                                     <button type="submit" id="create-btn" class="btn btn-primary">新增</button>
-                                    <a class="btn btn-default pull-right" href="/author">返回</a>
+                                    <a class="btn btn-default pull-right" href="<?= Yii::app()->createUrl('/author/index');?>">返回</a>
                                 </div>
                             </div>
 

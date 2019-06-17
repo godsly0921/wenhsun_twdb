@@ -15,6 +15,46 @@ class EmployeeService
         return $datas;
     }
 
+
+    public function findEmployeeInRolesList($rolse)
+    {
+        $role = '';
+        $i = 0;
+        foreach ($rolse as $key => $value) {
+            if ($i == 0) {
+                $role .= $value;
+            } elseif ($i != 0 && $i > 0) {
+                $role .= ',' . $value;
+            }
+            $i++;
+        }
+       $select = "SELECT * FROM employee WHERE enable = :enable AND role IN (".$role.")";
+
+        return Yii::app()->db->createCommand($select
+        )->bindValues([
+            ':enable' => 'Y'
+        ])->queryAll();
+    }
+
+
+    public static function findEmployeeNoPTList($role)
+    {
+        $datas = Employee::model()->findAll(array(
+            'select' => '*',
+            'condition' => 'role !=:role',
+            'order' => 'id DESC',
+            'params' => [
+                ':role' => $role,
+                ],
+            ));
+
+        if ($datas == null) {
+            $datas = false;
+        }
+
+        return $datas;
+    }
+
     public static function findEmployeeId($employee_id)
     {
 

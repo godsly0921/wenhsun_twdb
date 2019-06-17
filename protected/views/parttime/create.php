@@ -114,9 +114,6 @@
             </div>
         </div>
     </form>
-    <script type="text/javascript"
-            src="<?php echo Yii::app()->request->baseUrl; ?>/assets/admin/ext/js/jquery-ui-timepicker-addon.js">
-    </script>
     <link rel="stylesheet" type="text/css"
           href="<?php echo Yii::app()->request->baseUrl; ?>/assets/admin/ext/css/jquery-ui-timepicker-addon.css"/>
 
@@ -132,19 +129,6 @@
                 $('#error_msg').show().fadeOut(2000)
             }
         })
-    </script>
-    <script>
-        $(function () {
-            $('.slider_example_2').datetimepicker({
-                dateFormat: 'yy-mm-dd',
-                timeFormat: 'hh:mm:ss',
-                stepHour: 1,
-                stepMinute: 1,
-                stepSecond: 1,
-                timezone: "+0800",
-            });
-        });
-
     </script>
 <?php
 unset(Yii::app()->session['error_msg']);

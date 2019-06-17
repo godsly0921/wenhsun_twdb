@@ -16,6 +16,8 @@
                         <tr>
                             <th>帳號</th>
                             <th>姓名</th>
+                            <th>部門</th>
+                            <th>職務</th>
                             <th>本薪</th>
                             <th>健保</th>
                             <th>勞保</th>
@@ -33,6 +35,8 @@
                                 <?php endif;?>
                                     <td><?=$data['user_name']?></td>
                                     <td><?=$data['name']?></td>
+                                    <td><?php if (!empty($data['department'])):?><?=$data['department']?><?php endif;?></td>
+                                    <td><?php if (!empty($data['position'])):?><?=$data['position']?><?php endif;?></td>
                                     <td><?php if (!empty($data['salary'])):?><?=$data['salary']?><?php endif;?></td>
                                     <td><?php if (!empty($data['health_insurance'])):?><?=$data['health_insurance']?><?php endif;?></td>
                                     <td><?php if (!empty($data['labor_insurance'])):?><?=$data['labor_insurance']?><?php endif;?></td>

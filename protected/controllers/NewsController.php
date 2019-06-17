@@ -24,7 +24,10 @@ class NewsController extends Controller
         $service = new AccountService();
         $account = $service->findAccounts();//取出系統管理員帳號
 
-        $this->render('index', ["news" => $news,'account'=>$account]);
+        $EmployeeService = new EmployeeService();
+        $employee = $EmployeeService->findEmployeelist();
+
+        $this->render('index', ["news" => $news,'account'=>$account,'employee'=>$employee]);
     }
 
     public function actionCreate()
@@ -80,6 +83,67 @@ class NewsController extends Controller
     {
         ($_SERVER['REQUEST_METHOD'] === "POST") ? $this->doPostUpdate() : $this->doGetUpdate($id);
 
+    }
+
+    public function actionSendmail($id = null)
+    {
+        ($_SERVER['REQUEST_METHOD'] === "POST") ? $this->doPostSendmail() : $this->doGetSendmail($id);
+    }
+
+    private function doGetSendmail($id)
+    {
+        $news = News::model()->findByPk($id);
+        $roles = Group::model()->findAll();
+
+        if ($news !== null) {
+            $this->render('sendmail',['news' => $news,'roles' => $roles]);
+            $this->clearMsg();
+        } else {
+            $this->redirect(Yii::app()->createUrl('index'));
+        }
+    }
+
+    private function doPostSendmail()
+    {
+        if (!CsrfProtector::comparePost())
+            $this->redirect('index');
+
+
+        $select_roles = [];
+
+        if(isset($_POST['select_roles']) || !empty($_POST['select_roles'])){
+            $select_roles = $_POST['select_roles'];
+        }
+
+        $service = new EmployeeService();
+        $data = $service->findEmployeeInRolesList($select_roles);
+
+        $inputs = [];
+        $inputs["id"] = filter_input(INPUT_POST, "id");
+        $inputs["new_title"] = filter_input(INPUT_POST, "new_title");
+        $inputs["new_content"] = filter_input(INPUT_POST, "new_content");
+        $inputs["new_image_old"] = filter_input(INPUT_POST, "new_image_old");
+
+        $emil_status = true;
+        foreach($data as $key => $value){
+            $inputs["name"] = $value['name'];
+            $inputs["email"] = $value['email'];
+
+            $service = new MailService();
+            $type = $service->sendNewsMail($inputs);
+            if($type == false){
+                $emil_status = false;
+            }
+        }
+
+
+        if ($emil_status == false) {
+            Yii::app()->session['error_msg'] = '寄送失敗';
+        } else {
+            Yii::app()->session['success_msg'] = '寄送成功';
+        }
+
+        $this->redirect('sendmail/'.$inputs['id']);
     }
 
     private function doPostUpdate()
@@ -195,11 +259,12 @@ class NewsController extends Controller
         }
     }
 
-    public function actiondownloadpdf( $fileName ){
+    public function actiondownload( $fileName ){
         
         $newsSer = new NewsService();
         $newsRes = $newsSer->findById($fileName);
         $tmpUrl  = substr($newsRes->new_image,1);
-        Yii::app()->getRequest()->sendFile( 'dname.pdf' , file_get_contents( $tmpUrl ) );
+        $tmp = explode("/",$tmpUrl);
+        Yii::app()->getRequest()->sendFile( $tmp[2], file_get_contents( $tmpUrl ) );
     }
 }

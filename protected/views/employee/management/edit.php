@@ -60,11 +60,10 @@
                                             <?php if (!empty($roles)): ?>
                                                 <?php foreach ($roles as $role): ?>
                                                     <?php if ($role['id'] === $data->role): ?>
-                                                        <option value="<?= $role['group_number'] ?>"
+                                                        <option value="<?= $role['id'] ?>"
                                                                 selected><?= $role['group_name'] ?></option>
                                                     <?php else: ?>
-                                                        <option
-                                                            value="<?= $role['group_number'] ?>"><?= $role['group_name'] ?></option>
+                                                        <option value="<?= $role['id'] ?>"><?= $role['group_name'] ?></option>
                                                     <?php endif; ?>
                                                 <?php endforeach; ?>
                                             <?php else: ?>

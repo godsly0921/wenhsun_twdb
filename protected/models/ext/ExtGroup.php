@@ -43,19 +43,19 @@ class ExtGroup extends Group
 	//找帳戶權限資料跟Controller路徑
 	public static function findAccountGroup($find_group){
 		return Group::model()->find(array(
-			'select' => 'group_list,group_number',
-			'condition'=>'group_number=:group_number ',
+			'select' => 'group_list,id',
+			'condition'=>'id=:id ',
 			'params'=>array(
-				':group_number'=>$find_group,
+				':id'=>$find_group,
 			)
 		));
 	}
 	
-	public static function findByGroupNumber($group_number){
+	public static function findByGroupNumber($id){
 		return ExtGroup::model()->find(array(
-			'condition'=>'group_number=:group_number ',
+			'condition'=>'id=:id ',
 			'params'=>array(
-				':group_number'=>$group_number,
+				':id'=>$id,
 			)
 		));
 	}
@@ -78,8 +78,8 @@ class ExtGroup extends Group
     {
         $sql = "
             SELECT * FROM `group` g
-            INNER JOIN account a on g.`group_number` = a.`account_group` and a.account_type = 1
-            ORDER BY g.`group_number` ASC
+            INNER JOIN account a on g.`id` = a.`account_group` and a.account_type = 1
+            ORDER BY g.`id` ASC
         ";
 
         $result = Yii::app()->db->createCommand($sql)->queryAll($sql);
@@ -91,8 +91,8 @@ class ExtGroup extends Group
 	{
 		$sql = "
             SELECT * FROM `group` g
-            INNER JOIN adviser a on g.`group_number` = a.`adv_group` and a.adv_type = 1 and a.adv_deletedate = '0000-00-00 00:00:00'
-            ORDER BY g.`group_number` ASC
+            INNER JOIN adviser a on g.`id` = a.`adv_group` and a.adv_type = 1 and a.adv_deletedate = '0000-00-00 00:00:00'
+            ORDER BY g.`id` ASC
         ";
 
 		$result = Yii::app()->db->createCommand($sql)->queryAll($sql);
@@ -104,8 +104,8 @@ class ExtGroup extends Group
 	{
 		$sql = "
             SELECT * FROM `group` g
-            INNER JOIN member m on g.`group_number` = m.`mem_group` and m.mem_type = 1 and m.mem_deletedate = '0000-00-00 00:00:00'
-            ORDER BY g.`group_number` ASC
+            INNER JOIN member m on g.`id` = m.`mem_group` and m.mem_type = 1 and m.mem_deletedate = '0000-00-00 00:00:00'
+            ORDER BY g.`id` ASC
         ";
 
 		$result = Yii::app()->db->createCommand($sql)->queryAll($sql);

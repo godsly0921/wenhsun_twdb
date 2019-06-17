@@ -27,7 +27,7 @@ class ReportController extends Controller
         $this->render('batch', ['list' => $list, 'batch_id' => $batchId]);
     }
 
-    public function actionEmployee($id)
+    public function actionEmployee($id): void
     {
         $serv = new SalaryReportService();
         $data = $serv->findBySalaryId($id);
@@ -66,83 +66,89 @@ class ReportController extends Controller
         }
     }
 
-    public function actionEmail()
+    public function actionEmail(): void
     {
         $this->checkCSRF('index');
         $batchId = $_POST['batch_id'];
 
         $serv = new SalaryReportService();
-        $batchEnt = $serv->getAllEmployeesByBatch($batchId);
 
-        $serv->sendBatchEmail($batchEnt);
-
-        $this->sendSuccAjaxRsp();
-    }
-
-    public function actionEmailsingle()
-    {
-        $this->checkCSRF('index');
-        $id = $_POST['id'];
-
-        $serv = new SalaryReportService();
-        $salaryReportEmployee = $serv->findBySalaryId($id);
-
-        $serv->sendEmployeeSalaryEmail($salaryReportEmployee);
-
-        $this->sendSuccAjaxRsp();
-    }
-
-    public function actionExport()
-    {
-        $this->checkCSRF('index');
-
-        $batchId = $_POST['batch_id'];
-
-        $serv = new SalaryReportService();
-        $batchEnt = $serv->getAllEmployeesByBatch($batchId);
-
-        $rows = [];
-        foreach ($batchEnt->getEmployees() as $employee) {
-            $rows[] = [
-                $employee->getEmployeeLoginId(),
-                $employee->getEmployeeName(),
-                $employee->getSalary(),
-                $employee->getDraftAllowance(),
-                $employee->getTrafficAllowance(),
-                $employee->getOvertimeWage(),
-                $employee->getProjectAllowance(),
-                $employee->calcTaxableSalaryTotal(),
-                $employee->getTaxFreeOvertimeWage(),
-                $employee->calcSalaryTotal(),
-                $employee->getHealthInsurance() * -1,
-                $employee->getLaborInsurance() * -1,
-                $employee->getPension() * -1,
-                $employee->calcDeductionTotal() * -1,
-                $employee->calcRealSalary(),
-            ];
+        if (empty($_POST['checked'])) {
+            $batchEnt = $serv->getAllEmployeesByBatch($batchId);
+        } else {
+            $batchEnt = $serv->getRangeEmployeeByBatch($batchId, $_POST['checked']);
         }
 
-        $fileName = "{$batchEnt->getBatchId()}_文訊員工薪資報表";
+        if ($batchEnt === null) {
+            $this->sendErrAjaxRsp('400', '無薪資料可寄送');
+        } else {
+            $serv->sendBatchEmail($batchEnt);
+            $this->sendSuccAjaxRsp();
+        }
+    }
 
-        Helper::newSpreadsheet()
-            ->addRow([
-                '員工帳號',
-                '員工姓名',
-                '本薪(+)',
-                '稿費津貼(+)',
-                '交通津貼(+)',
-                '應稅加班費(+)',
-                '專案津貼(+)',
-                '應稅薪資合計(+)',
-                '免稅加班費(+)',
-                '薪資合計(+)',
-                '健保(-)',
-                '勞保(-)',
-                '退休金提撥(-)',
-                '應扣合計(-)',
-                '實領薪資'
-            ])
-            ->addRows($rows)
-            ->output($fileName);
+    public function actionExport(): void
+    {
+        $this->checkCSRF('index');
+
+        $batchId = $_POST['batch_id'];
+
+        $serv = new SalaryReportService();
+
+        if (empty($_POST['checked'])) {
+            $batchEnt = $serv->getAllEmployeesByBatch($batchId);
+        } else {
+            $batchEnt = $serv->getRangeEmployeeByBatch($batchId, $_POST['checked']);
+        }
+
+        if ($batchEnt !== null) {
+            $rows = [];
+            foreach ($batchEnt->getEmployees() as $employee) {
+                $rows[] = [
+                    $employee->getEmployeeLoginId(),
+                    $employee->getEmployeeName(),
+                    $employee->getEmployeeDepartment(),
+                    $employee->getEmployeePosition(),
+                    $employee->getSalary(),
+                    $employee->getDraftAllowance(),
+                    $employee->getTrafficAllowance(),
+                    $employee->getOvertimeWage(),
+                    $employee->getProjectAllowance(),
+                    $employee->calcTaxableSalaryTotal(),
+                    $employee->getTaxFreeOvertimeWage(),
+                    $employee->calcSalaryTotal(),
+                    $employee->getHealthInsurance() * -1,
+                    $employee->getLaborInsurance() * -1,
+                    $employee->getPension() * -1,
+                    $employee->calcDeductionTotal() * -1,
+                    $employee->calcRealSalary(),
+                ];
+            }
+
+            $fileName = "{$batchEnt->getBatchId()}_文訊員工薪資報表";
+
+            Helper::newSpreadsheet()
+                ->addRow([
+                    '員工帳號',
+                    '員工姓名',
+                    '部門',
+                    '職務',
+                    '本薪(+)',
+                    '稿費津貼(+)',
+                    '交通津貼(+)',
+                    '應稅加班費(+)',
+                    '專案津貼(+)',
+                    '應稅薪資合計(+)',
+                    '免稅加班費(+)',
+                    '薪資合計(+)',
+                    '健保(-)',
+                    '勞保(-)',
+                    '退休金提撥(-)',
+                    '應扣合計(-)',
+                    '實領薪資'
+                ])
+                ->addRows($rows)
+                ->output($fileName);
+        }
     }
 }

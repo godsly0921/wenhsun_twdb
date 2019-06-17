@@ -113,13 +113,13 @@ class GroupService
      * @param $group_number
      * @return bool
      */
-    public function groupNumberExist($group_number)
+    public function groupNumberExist($id)
     {
         $result = Group::model()->find([
-            'select' => 'group_number',
-            'condition'=>'group_number=:group_number',
+            'select' => 'id',
+            'condition'=>'id=:id',
             'params'=> [
-                ':group_number' => $group_number,
+                ':id' => $id,
             ]
         ]);
 

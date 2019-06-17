@@ -33,10 +33,12 @@ class News extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('new_title,new_content,new_createtime', 'required'),
-			array('new_type, sort, builder', 'numerical', 'integerOnly'=>true),
+			array('new_type, sort', 'numerical', 'integerOnly'=>true),
+			array('builder','length', 'max'=>12),
 			//array('new_language', 'length', 'max'=>5),
 			array('new_title','length', 'max'=>30),
 			array('image_name, new_image', 'length', 'max'=>256),
+			array('new_image', 'file', 'allowEmpty'=>true, 'types'=>'pdf,tiff,png,xls,docx,jpg'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
 			array('id, new_title, new_content, image_name, new_image, new_createtime, new_type, sort, builder', 'safe', 'on'=>'search'),

@@ -40,6 +40,8 @@ class SalaryReportCommand extends CConsoleCommand
                     $employee['employee_id'],
                     $employee['user_name'],
                     $employee['name'],
+                    $employee['department'],
+                    $employee['position'],
                     (float)$employee['salary'],
                     0,
                     0,

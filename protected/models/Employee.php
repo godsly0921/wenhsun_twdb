@@ -35,7 +35,9 @@ class Employee extends CActiveRecord
 
     public function scopes() {
         return array(
-            'byUpdateAt' => array('order' => 'update_at DESC'),
+            'byUpdateAt' => ['order' => 'update_at DESC'],
+            'byUsernameDesc' => ['order' => 'user_name DESC'],
+            'byUsernameAsc' => ['order' => 'user_name ASC'],
         );
     }
 }

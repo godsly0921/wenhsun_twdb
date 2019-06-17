@@ -14,7 +14,7 @@
         </script>
     <?php endif; ?>
 <?php endforeach; ?>
-
+<?php JavascriptEffectsService::goTop();?>
 <div role="main">
     <div class="">
         <div class="row">
@@ -80,7 +80,7 @@
                                 <label class="control-label col-md-3 col-sm-3 col-xs-12" for="birth">生日
                                 </label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
-                                    <input type="date" value="<?= $data->birth = str_replace("/", "-", $data->birth) ?>" id="birth" name="birth" class="form-control col-md-7 col-xs-12">
+                                    <input type="text" value="<?= $data->birth?>" id="birth" name="birth" class="form-control col-md-7 col-xs-12">
                                 </div>
                             </div>
 
@@ -88,7 +88,7 @@
                                 <label class="control-label col-md-3 col-sm-3 col-xs-12" for="death">卒日
                                 </label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
-                                    <input type="date" value="<?=$data->death = str_replace("/", "-", $data->death);?>" id="death" name="death" class="form-control col-md-7 col-xs-12">
+                                    <input type="text" value="<?=$data->death?>" id="death" name="death" class="form-control col-md-7 col-xs-12">
                                 </div>
                             </div>
 
@@ -227,6 +227,22 @@
                                 </div>
                             </div>
 
+                            <div class="form-group">
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="residence_address">最後更新時間
+                                </label>
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    <input type="text" value="<?=$data->update_at?>" class="form-control col-md-7 col-xs-12" disabled>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="residence_address">建立時間
+                                </label>
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    <input type="text" value="<?=$data->create_at?>" class="form-control col-md-7 col-xs-12" disabled>
+                                </div>
+                            </div>
+
                             <div class="ln_solid"></div>
                             <?php foreach ($session_jsons as $jsons):?>
                                 <?php if ($jsons["power_controller"] == 'author/view_bank'):?>
@@ -333,11 +349,10 @@
                             <?php endforeach; ?>
 
                             <?php foreach ($session_jsons as $jsons):?>
-                            <?php if ($jsons["power_controller"] == 'author/update_form'):?>
+                            <?php if ($jsons["power_controller"] == 'author/update'):?>
                                     <div class="form-group">
                                         <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
                                             <button type="submit" id="modify-btn" class="btn btn-primary">修改</button>
-                                            <a class="btn btn-default pull-right" href="<?= Yii::app()->createUrl('/author/index');?>">返回</a>
                                         </div>
                                     </div>
                                 <?php endif; ?>

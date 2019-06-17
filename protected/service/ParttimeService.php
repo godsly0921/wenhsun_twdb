@@ -152,30 +152,12 @@ class ParttimeService
     }
 
 
-    public function findPartTimeDayAllAndDevice($inputs)
+    public function findPartTimeDayAllAndDevice($empolyee_id,$day)
     {
         $criteria = new CDbCriteria();
         $criteria->select = '*';
-
-
-        if ($inputs['device_id'] === "0" && $inputs['start_time'] !== "" && $inputs['end_time'] !== "") {
-            $criteria->condition = 'start_time >= :start_time and end_time <= :end_time';
-            $criteria->params = array(':start_time' => $inputs['start_time'] . ' 00:00:00', ':end_time' => $inputs['end_time'] . ' 23:59:59');
-
-        }
-
-        if ($inputs['device_id'] !== "" && $inputs['start_time'] === "" && $inputs['end_time'] === "") {
-            $criteria->condition = 'device_id = :device_id';
-            $criteria->params = array(':device_id' => $inputs['device_id']);
-
-        }
-
-        if ($inputs['device_id'] !== "0" && $inputs['start_time'] !== "" && $inputs['end_time'] !== "") {
-            $criteria->condition = 'start_time >= :start_time and end_time <= :end_time and device_id = :device_id';
-            $criteria->params = array(':start_time' => $inputs['start_time'] . ' 00:00:00', ':end_time' => $inputs['end_time'] . ' 23:59:59', ':device_id' => $inputs['device_id']);
-
-        }
-
+        $criteria->condition = 'status = :status and part_time_empolyee_id = :part_time_empolyee_id and start_time >= :start_time and end_time <= :end_time';
+        $criteria->params = array(':status' => 0,':part_time_empolyee_id' => $empolyee_id,':start_time' => $day. ' 00:00:00', ':end_time' => $day. ' 23:59:59');
 
         $datas = PartTime::model()->findAll($criteria);
 
@@ -241,7 +223,7 @@ class ParttimeService
         $model->part_time_empolyee_id = $inputs['part_time_empolyee_id'];
         $model->start_time = $inputs['start_date_time'];
         $model->end_time = $inputs['end_date_time'];
-        $model->builder = (int)Yii::app()->session['uid'];//這邊只能讓使用者建立預約{管理者無法}
+        $model->builder = Yii::app()->session['uid'];//這邊只能讓使用者建立預約{管理者無法}
         $model->builder_type = (int)(Yii::app()->session['personal'])?1:0;//這邊只能讓使用者建立預約{管理者無法}
         $model->status = 0;
         $model->create_time = date("Y-m-d H:i:s");

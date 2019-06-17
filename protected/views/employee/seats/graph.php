@@ -8,13 +8,13 @@
     }
     .graph_item {
         margin:10px;
-        width:500px;
+        width: 440px;
         display: flex;
         flex-wrap: wrap;
         align-items: flex-start;
     }
     .item_title {
-        width: 499px;
+        width: 439px;
         height: 50px;
         margin:0 0 -1px -1px;
         box-sizing: border-box;
@@ -25,7 +25,7 @@
     .graph_item .item_content {
         border: 1px solid grey;
         position: relative;
-        width:250px;
+        width:220px;
         height: 180px;
         box-sizing: border-box;
         margin:0 0 -1px -1px;
@@ -33,7 +33,7 @@
     .inner_item_content {
         border: 1px solid grey;
         position: relative;
-        width:250px;
+        width:220px;
         height: 180px;
         box-sizing: border-box;
         border-top: none;
@@ -44,7 +44,7 @@
         border-top: none;
     }
     .item_content_background {
-        width:250px;
+        width:220px;
         height: 180px;
         position: absolute;
         display: flex;
@@ -69,11 +69,11 @@
 
     .graph_item_single {
         margin:10px;
-        width:250px;
+        width:220px;
         height: 765px;
     }
     .graph_item_single .item_title {
-        width: 250px;
+        width:220px;
         height: 50px;
         margin:0 0 -1px -1px;
         box-sizing: border-box;
@@ -82,19 +82,19 @@
     .graph_item_single .item_content {
         border: 1px solid grey;
         position: relative;
-        width:250px;
+        width:220px;
         height: 715px;
         box-sizing: border-box;
         margin:0 0 -1px -1px;
     }
     .graph_container .door_container {
-        width:500px;
+        width: 440px;
         position: absolute;
         top:0;
     }
     .door_container .door_bar {
         background: #333;
-        width: 460px;
+        width: 400px;
         height: 15px;
         margin: 10px auto 5px auto;
     }
@@ -112,7 +112,7 @@
             <h2>大門口</h2>
         </div>
         <div class="graph_item">
-            <div class="item_title">圖資管理部 外線:2343-2131</div>
+            <div class="item_title">圖資管理部 外線:2343-2131;分機 307</div>
             <?php foreach($data['圖資管理部 外線:2343-2131'] as $item):?>
             <div class="item_content">
                 <div class="item_content_background">
@@ -120,7 +120,7 @@
                 </div>
                 <div class="item_content_info">
                     <?php if(!empty($item['name'])):?><p>姓名:<?=$item['name']?></p><?php endif;?>
-                    <?php if(!empty($item['group_name'])):?><p>職務:<?=$item['group_name']?></p><?php endif;?>
+                    <?php if(!empty($item['position'])):?><p>職務:<?=$item['position']?></p><?php endif;?>
                     <?php if(!empty($item['ext_number'])):?><p>分機:<?=$item['ext_number']?></p><?php endif;?>
                     <?php if(!empty($item['mobile'])):?><p>手機:<?=$item['mobile']?></p><?php endif;?>
                     <?php if(!empty($item['email'])):?><p>E-Mail:<?=$item['email']?></p><?php endif;?>
@@ -138,7 +138,7 @@
                     </div>
                     <div class="item_content_info">
                         <?php if(!empty($item['name'])):?><p>姓名:<?=$item['name']?></p><?php endif;?>
-                        <?php if(!empty($item['group_name'])):?><p>職務:<?=$item['group_name']?></p><?php endif;?>
+                        <?php if(!empty($item['position'])):?><p>職務:<?=$item['position']?></p><?php endif;?>
                         <?php if(!empty($item['ext_number'])):?><p>分機:<?=$item['ext_number']?></p><?php endif;?>
                         <?php if(!empty($item['mobile'])):?><p>手機:<?=$item['mobile']?></p><?php endif;?>
                         <?php if(!empty($item['email'])):?><p>E-Mail:<?=$item['email']?></p><?php endif;?>
@@ -147,7 +147,7 @@
                 </div>
             <?php endforeach;?>
         </div>
-        <div class="graph_item"></div>
+        <div class="graph_item_single"></div>
         <div class="graph_item">
             <div class="item_title">資料管理部 外線:2343-2131</div>
             <div class="item_content merge_content">
@@ -160,7 +160,7 @@
                             </div>
                             <div class="item_content_info">
                                 <?php if(!empty($item['name'])):?><p>姓名:<?=$item['name']?></p><?php endif;?>
-                                <?php if(!empty($item['group_name'])):?><p>職務:<?=$item['group_name']?></p><?php endif;?>
+                                <?php if(!empty($item['position'])):?><p>職務:<?=$item['position']?></p><?php endif;?>
                                 <?php if(!empty($item['ext_number'])):?><p>分機:<?=$item['ext_number']?></p><?php endif;?>
                                 <?php if(!empty($item['mobile'])):?><p>手機:<?=$item['mobile']?></p><?php endif;?>
                                 <?php if(!empty($item['email'])):?><p>E-Mail:<?=$item['email']?></p><?php endif;?>
@@ -181,7 +181,7 @@
                             </div>
                             <div class="item_content_info">
                                 <?php if(!empty($item['name'])):?><p>姓名:<?=$item['name']?></p><?php endif;?>
-                                <?php if(!empty($item['group_name'])):?><p>職務:<?=$item['group_name']?></p><?php endif;?>
+                                <?php if(!empty($item['position'])):?><p>職務:<?=$item['position']?></p><?php endif;?>
                                 <?php if(!empty($item['ext_number'])):?><p>分機:<?=$item['ext_number']?></p><?php endif;?>
                                 <?php if(!empty($item['mobile'])):?><p>手機:<?=$item['mobile']?></p><?php endif;?>
                                 <?php if(!empty($item['email'])):?><p>E-Mail:<?=$item['email']?></p><?php endif;?>
@@ -202,7 +202,7 @@
                     </div>
                     <div class="item_content_info">
                         <?php if(!empty($item['name'])):?><p>姓名:<?=$item['name']?></p><?php endif;?>
-                        <?php if(!empty($item['group_name'])):?><p>職務:<?=$item['group_name']?></p><?php endif;?>
+                        <?php if(!empty($item['position'])):?><p>職務:<?=$item['position']?></p><?php endif;?>
                         <?php if(!empty($item['ext_number'])):?><p>分機:<?=$item['ext_number']?></p><?php endif;?>
                         <?php if(!empty($item['mobile'])):?><p>手機:<?=$item['mobile']?></p><?php endif;?>
                         <?php if(!empty($item['email'])):?><p>E-Mail:<?=$item['email']?></p><?php endif;?>
@@ -221,7 +221,7 @@
                 <?php foreach($data['董事長 專線:2343-3145'] as $item):?>
                 <div class="item_content_info">
                     <?php if(!empty($item['name'])):?><p>姓名:<?=$item['name']?></p><?php endif;?>
-                    <?php if(!empty($item['group_name'])):?><p>職務:<?=$item['group_name']?></p><?php endif;?>
+                    <?php if(!empty($item['position'])):?><p>職務:<?=$item['position']?></p><?php endif;?>
                     <?php if(!empty($item['ext_number'])):?><p>分機:<?=$item['ext_number']?></p><?php endif;?>
                     <?php if(!empty($item['mobile'])):?><p>手機:<?=$item['mobile']?></p><?php endif;?>
                     <?php if(!empty($item['email'])):?><p>E-Mail:<?=$item['email']?></p><?php endif;?>

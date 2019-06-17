@@ -93,6 +93,7 @@ class PhotographController extends Controller{
                 );
                 $time = microtime(true) - $time_start;
                 $return_data['runtime'] = $time;
+                echo $e;
                 echo json_encode($return_data);exit();
                 exit();
             }
@@ -138,7 +139,7 @@ class PhotographController extends Controller{
     }
 
     public function ActionUpdateSingle(){
-        $photographService = new PhotographService();
+        $photographService = new PhotographService();      
         $single_data = array();
         parse_str($_POST['single_data'], $single_data);
         $single_data['copyright'] = $_POST["copyright"];

@@ -18,6 +18,7 @@ class AuthorService
             clearstatcache();// 函数清除文件状态缓存
             $excel_datas = Exceler::read_excel($file, 1);
             $excel_datas_total = count($excel_datas) + 1;
+            $birth_year = NULL;
             for ($i = 1; $i < $excel_datas_total; $i++) {
                 try {
                 $now = Common::now();
@@ -48,6 +49,7 @@ class AuthorService
                         $str = $excel_datas[$i - 1][3];
                         $str_sec = explode("/",$str);
                         $excel_datas[$i - 1][3] = $str_sec[2].'-'.$str_sec[1].'-'.$str_sec[0];
+                        $birth_year = (string)$str_sec[2];
 
                         //echo '******';
                         $excel_datas[$i - 1][3] = date('Y-m-d',strtotime($excel_datas[$i - 1][3].' -1 day'));
@@ -58,10 +60,12 @@ class AuthorService
                     } else {
                         //echo 'A2';
                         $excel_datas[$i - 1][3] = NULL;
+                        $birth_year = NULL;
                     }
                 } else {
                     //echo 'A3';
                     $excel_datas[$i - 1][3] = NULL;
+                    $birth_year = NULL;
                 }
 
 
@@ -100,8 +104,8 @@ class AuthorService
 
                 $data['email'] = isset($excel_datas[$i - 1][10]) ? $excel_datas[$i - 1][10] : '';
                 $data['home_address'] = isset($excel_datas[$i - 1][11]) ? $excel_datas[$i - 1][11] : '';
-                $data['office_fax'] = isset($excel_datas[$i - 1][12]) ? $excel_datas[$i - 1][12] : '';
-                $data['home_phone'] = isset($excel_datas[$i - 1][13]) ? $excel_datas[$i - 1][13] : '';
+                $data['home_phone'] = isset($excel_datas[$i - 1][12]) ? $excel_datas[$i - 1][12] : '';
+                $data['home_fax'] = isset($excel_datas[$i - 1][13]) ? $excel_datas[$i - 1][13] : '';
                 $data['mobile'] = isset($excel_datas[$i - 1][14]) ? $excel_datas[$i - 1][14] : '';
 
 
@@ -154,7 +158,7 @@ class AuthorService
                     $author->death = (!empty($data['death'])) ? $data['death'] : null;
                     $author->job_title = $data['job_title'];
                     $author->service = $data['service'];
-                    $author->identity_type = (!empty($data['identity_type'])) ? $data['identity_type'] : null;
+                    $author->identity_type = AuthorService::toJson('；', trim($data['identity_type']));
                     $author->nationality = $data['nationality'];
                     $author->residence_address = $data['residence_address'];
                     $author->office_address = AuthorService::toJson('；', trim($data['office_address']));
@@ -171,13 +175,13 @@ class AuthorService
                     $author->pen_name = AuthorService::toJson('；', trim($data['pen_name']));
                     $author->create_at = $now;
                     $author->update_at = $now;
+                    $author->birth_year = $birth_year;
                     $author->save();
 
                     $pk = Yii::app()->db->getLastInsertID();
 
                     if ($author->hasErrors()) {
                         echo $author->getErrors();
-                        var_dump($author->getErrors());
                         echo ' 第' . $i-1 . '行';
                         echo '\n';
                         Yii::log(date("Y-m-d H:i:s") .$author->getErrors(). '第' . $i . '行', CLogger::LEVEL_ERROR);
@@ -212,10 +216,7 @@ class AuthorService
 
 
                 } catch (Exception $e) {
-                    echo $e->getMessage();
-                    echo ' 第' . ($i+1) . '行';
-                    echo '\n';
-                    //exit();
+                    echo '第' . ($i+1) . '行::錯誤訊息'.$e->getMessage()."\n";
                     $transaction->rollback();
                     Yii::log(date("Y-m-d H:i:s") . $e->getMessage() . '第' . $i . '行', CLogger::LEVEL_ERROR);
                     continue;

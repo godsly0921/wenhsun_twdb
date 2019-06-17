@@ -14,3 +14,6 @@ CREATE TABLE `part_time` (
   `canceler_type` int(1) NOT NULL DEFAULT '1' COMMENT '0：管理者 1：使用者',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='排班';
+
+ALTER TABLE `wenhsun`.`part_time`
+CHANGE COLUMN `builder` `builder` VARCHAR(32) NOT NULL COMMENT '預約者' ;

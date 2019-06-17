@@ -57,6 +57,8 @@ class ReportRepository
             $model->employee_id,
             $model->employee_login_id,
             $model->employee_name,
+            $model->employee_department,
+            $model->employee_position,
             $model->salary,
             $model->draft_allowance,
             $model->traffic_allowance,
@@ -69,7 +71,7 @@ class ReportRepository
         );
     }
 
-    public function updateEmployeeSalary(SalaryReportEmployee $ent)
+    public function updateEmployeeSalary(SalaryReportEmployee $ent): void
     {
         try {
             $now = Common::now();
@@ -122,15 +124,50 @@ class ReportRepository
             return null;
         }
 
+        return $this->makeSalaryReportBatchEnt($batchId, $result);
+    }
+
+    public function forRangeEmployeeByBatch($batchId, $id): ?SalaryReportBatchEnt
+    {
+        $bindValues = [':batch_id' => $batchId];
+        $in = [];
+
+        foreach ($id as $inx => $val) {
+            $bindValues[":id_{$inx}"] = $val;
+            $in[] = ":id_{$inx}";
+        }
+
+        $inCond = implode(',', $in);
+
+        $sql = "
+        SELECT * FROM salary_report_batch b
+        INNER JOIN salary_report e ON b.batch_id = e.batch_id
+        WHERE b.batch_id = :batch_id
+        AND e.id IN ({$inCond})
+        ";
+
+        $result = Yii::app()->db->createCommand($sql)->bindValues($bindValues)->queryAll();
+
+        if (!$result) {
+            return null;
+        }
+
+        return $this->makeSalaryReportBatchEnt($batchId, $result);
+    }
+
+    private function makeSalaryReportBatchEnt($batchId, array $data): SalaryReportBatchEnt
+    {
         $salaryReportBatch = new SalaryReportBatchEnt($batchId);
 
-        foreach ($result as $row) {
+        foreach ($data as $row) {
             $salaryReportEmployee = new SalaryReportEmployee(
                 $row['id'],
                 $batchId,
                 $row['employee_id'],
                 $row['employee_login_id'],
                 $row['employee_name'],
+                $row['employee_department'],
+                $row['employee_position'],
                 (float)$row['salary'],
                 $row['draft_allowance'],
                 $row['traffic_allowance'],

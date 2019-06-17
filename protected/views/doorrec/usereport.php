@@ -42,6 +42,7 @@
                         <div class="col-sm-6">
                             <select class="form-control" name="keycol" id="keycol"> 
                             <option value="0">姓名</option>
+                            <option value="2">員工帳號</option>
                             <option value="1">卡號</option>
                             </select>
                       </div>
@@ -62,23 +63,28 @@
 
         <div class="panel panel-default">
             <div class="panel-heading col-md-12">
-                    
-                    <div class='col-md-2'> 
-                    <form class="form-horizontal" action="<?php echo Yii::app()->createUrl('doorrec/getexcel');?>" method="post">
-                    <button type="submit" class="btn btn-default">匯出excel</button>
 
-                    </form>                    
-                    </div>
-                    
-                    <div class='col-md-2'>
-                    <a href="<?=Yii::app()->createUrl('doorrec/printer');?>"  target="_blank">     
-                    <button class="btn btn-default">列印</button>
-                    </a> 
-                    </div>
+                <?php foreach ($session_jsons as $jsons):?>
+                    <?php if ($jsons["power_controller"] == 'doorrec/getexcel'):?>
+                        <div class='col-md-2'>
+                            <form class="form-horizontal" action="<?php echo Yii::app()->createUrl('doorrec/getexcel');?>" method="post">
+                                <button type="submit" class="btn btn-default">匯出excel</button>
 
-                <div class='col-md-2 col-sm-4 col-xs-4'>
-                    
-                </div>                
+                            </form>
+                        </div>
+                    <?php endif;?>
+                <?php endforeach;?>
+
+                <?php foreach ($session_jsons as $jsons):?>
+                    <?php if ($jsons["power_controller"] == 'doorrec/printer'):?>
+                        <div class='col-md-2'>
+                            <a href="<?=Yii::app()->createUrl('doorrec/printer');?>"  target="_blank">
+                                <button class="btn btn-default">列印</button>
+                            </a>
+                        </div>
+                    <?php endif;?>
+                <?php endforeach;?>
+
             </div>
             <div class="panel-body">
                 <div class="row">
@@ -87,7 +93,8 @@
                                class="table table-striped table-bordered table-hover dataTable no-footer">
                             <thead>
                             <tr role="row">
-                                <th>刷卡地點</th>
+                              <!--  <th>刷卡地點</th>-->
+                                <th>員工帳號</th>
                                 <th>員工姓名</th>
                                 <th>卡號</th>
                                 <th>刷卡時間</th>
@@ -98,7 +105,8 @@
                             <tbody>
                             <?php foreach ($rcdata as $key => $value): ?>
                                 <tr class="gradeC" role="row">
-                                    <td><?=$value['position_name']?></td>
+                                   <!-- <td><?/*=$value['position_name']*/?></td>-->
+                                    <td><?=$value['e_user_name']?></td>
                                     <td><?=$value['username']?></td>
                                     <td><?=$value['card_number']?></td>
                                     <td><?=$value['flashDate']?></td>

@@ -25,12 +25,12 @@ class SalaryReportBatch
         return $this->batchId;
     }
 
-    public function addEmployee(SalaryReportEmployee $employee)
+    public function addEmployee(SalaryReportEmployee $employee): void
     {
         $this->employees[] = $employee;
     }
 
-    public function getEmployees()
+    public function getEmployees(): array
     {
         return $this->employees;
     }

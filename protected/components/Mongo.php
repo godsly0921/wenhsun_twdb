@@ -6,6 +6,12 @@ Class Mongo{
         $this->mongo_connect = new MongoDB\Driver\Manager(MONGO);
     }
 
+    public function search_record( $datatable, $collection, $filter, $options=array() ){
+        $mongo_connection = $this->mongo_connect;
+        $query = new MongoDB\Driver\Query( $filter, $options );
+        $rows = $mongo_connection->executeQuery( $datatable . '.' . $collection, $query );
+        return $rows;
+    }
     public function insert_record( $datatable, $collection, $input ){
     	$this->bulk = new MongoDB\Driver\BulkWrite;
         $mongo_connection = $this->mongo_connect;

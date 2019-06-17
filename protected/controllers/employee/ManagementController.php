@@ -6,6 +6,7 @@ use Employee as EmployeeModel;
 use Wenhsun\Employee\Service\DepartmentQueryService;
 use Wenhsun\Entity\Employee\EmployeeId;
 use Wenhsun\Entity\Employee\EmployeeInfo;
+use yidas\phpSpreadsheet\Helper;
 
 class ManagementController extends Controller
 {
@@ -16,8 +17,78 @@ class ManagementController extends Controller
 
     public function actionIndex()
     {
-        $list = EmployeeModel::model()->byUpdateAt()->findAll();
+        $list = EmployeeModel::model()->byUsernameAsc()->findAll();
         $this->render('list', ['list' => $list]);
+    }
+
+    public function actionExport()
+    {
+        $this->checkCSRF('index');
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            $this->redirect('index');
+        }
+
+        $list = EmployeeModel::model()->byUsernameAsc()->findAll();
+
+        if (empty($list)) {
+            $this->redirect('index');
+        }
+
+        $fileName = '員工資料匯出';
+
+        $rows = [];
+        //員工列表匯出功能：除了帳號與姓名，還需要匯出1部門、2職務、3生日、4身分證字號、5手機、6電子郵件、7地址、8匯款資料，這幾個欄位，其他則不用
+        foreach ($list as $data) {
+            $rows[] = [
+                $data->user_name,
+                $data->name,
+                $data->ext_num,
+                $data->seat_num,
+                $data->department,
+                $data->position,
+                str_replace('-', '/', $data->birth),
+                $data->person_id,
+                $data->mobile,
+                $data->email,
+                $data->country . $data->dist . $data->address,
+                $data->bank_name,
+                $data->bank_code,
+                $data->bank_branch_name,
+                $data->bank_branch_code,
+                $data->bank_account,
+                $data->bank_account_name,
+                str_replace('-', '/', $data->update_at),
+                str_replace('-', '/', $data->create_at),
+            ];
+        }
+
+        Helper::newSpreadsheet()
+            ->addRow([
+                '帳號',
+                '姓名',
+                '分機',
+                '座位',
+                '部門',
+                '職務',
+                '生日',
+                '身分證字號',
+                '手機',
+                '電子郵件',
+                '地址',
+                '銀行名稱',
+                '銀行代碼',
+                '分行名稱',
+                '分行代碼',
+                '帳號',
+                '戶名',
+                '修改時間',
+                '建立時間',
+            ])
+            ->addRows(
+                $rows
+            )
+            ->output($fileName);
     }
 
     public function actionNew()
@@ -139,6 +210,7 @@ class ManagementController extends Controller
                 if ($key === "_token" || $key === "id" || $key === "zipcode") {
                     continue;
                 }
+
 
                 if (!empty($val)) {
                     $employeeInfoModel->{$key} = $val;

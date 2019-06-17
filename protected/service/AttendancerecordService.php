@@ -1,6 +1,6 @@
 <?php
 class AttendancerecordService{
-    
+
     // 新增一筆紀錄
     public function create($employee_id , $day , $first_time , $last_time ,$abnormal_type,$abnormal){
       $transaction = Yii::app()->db->beginTransaction();
@@ -37,11 +37,22 @@ class AttendancerecordService{
     {
         $model = Attendancerecord::model()->findByPk($inputs["id"]);
 
+
+       /* Yii::app()->session['uid'] = $sys_account->id;//使用者帳號ID
+        Yii::app()->session['pid'] = $sys_account->user_name;//使用者帳號
+        Yii::app()->session['personal'] = true;*/
+
+
+        if($model->employee_id != Yii::app()->session['uid'] && Yii::app()->session['personal'] == true){
+            $model->addErrors(['employee_id'=>'You can\'t change this record.']);
+            return $model;
+        }
+
         $model->id = $model->id;
         $model->take = $inputs['take'];
         $model->abnormal_type = 2;//員工回覆後 自動改為正常
         $model->reply_description    = $inputs['reply_description'];
-        $model->reply_update_at = date("Y-m-d H:i:s");
+        $model->reply_update_at = date('Y-m-d H:i:s');
 
         if ($model->validate()) {
             $model->update();
@@ -53,7 +64,7 @@ class AttendancerecordService{
 
     // 全取
     public function getall(){
-        
+
         $data = Yii::app()->db->createCommand()
         ->select('b.*,m.name as mname,d.use_date as in,d2.use_date as out,dv.name as dvname')
         ->from('bill b')
@@ -62,7 +73,7 @@ class AttendancerecordService{
         ->leftjoin('device_record d2','b.out_id = d2.id')
         ->leftjoin('device dv','b.dev_id = dv.id')
         ->queryAll();
-        
+
         return $data;
         //return ( Bill::model()->findAll() );
 
@@ -89,7 +100,7 @@ class AttendancerecordService{
         ->queryAll();
 
         return $data;
-    }    
+    }
     public function get_by_mid_in_and_month($mid , $end ){
       $data = Yii::app()->db->createCommand()
       ->select('b.*,
@@ -105,10 +116,10 @@ class AttendancerecordService{
       ->queryAll();
 
       return $data;
-  }  
+  }
   public function update_bill_door_status($checkout_time,$member_id,$bill_record_id){
     //$doorBill_sql = 'SELECT b.* from bill_door b LEFT JOIN record r on b.in_id=r.id where b.member_id in('.$member_id.') and r.flashDate <="'.$checkout_time.'" and b.status = 0';
-    
+
     $update_sql = 'update bill_door b LEFT JOIN record r on b.in_id=r.id set b.status=1,b.bill_record_id='.$bill_record_id.' where r.flashDate <="'.$checkout_time.'" and b.status = 0 and b.member_id in('.$member_id.')';
     //update bill_door b LEFT JOIN record r on b.in_id=r.id set b.status=1,b.bill_record_id=1 where b.member_id in(208,209,210,211) and r.flashDate <="2019-03-22 00:14:14" and b.status = 0
     $doorBills = Yii::app()->db->createCommand($update_sql)->query();
@@ -126,24 +137,92 @@ class AttendancerecordService{
     /*----------------------------------------------------------------
      |依照條件找
      |----------------------------------------------------------------
-     | $employee_id - 員工id陣列
+     |
      | $star - 開始時間
      | $end  - 結束時間
-     |
+     |   <option value="0">姓名</option>
+     |   <option value="2">員工帳號</option>
+     |   <option value="1">卡號</option>
+
+    $temp['user_name'] = $value['user_name'];
+                $temp['attendance_record_id'] = $value['attendance_record_id'];
+                $temp['name'] = $value['name'];
+                $temp['day'] = $value['day'];
+                $temp['first_time'] = $value['first_time'];
+                $temp['last_time'] = $value['last_time'];
+                switch ($value['abnormal_type']) {
+                    case "0":
+                        $value['abnormal_type'] = "正常";
+                        break;
+                    case "1":
+                        $value['abnormal_type'] = "異常";
+                        break;
+                    case "2":
+                        $value['abnormal_type'] = "用戶已回覆，正常";
+                        break;
+                }
+                $temp['abnormal_type'] = $value['abnormal_type'];
+                $temp['abnormal'] = $value['abnormal'];
+                $temp['reply_description'] = $value['reply_description'];
+                $temp['take'] = $this->fake[$value['take']];
+                $temp['att_create_at'] = $value['att_create_at'];
+                $temp['update_at'] = $value['update_at'];
      */
-    public function get_by_condition($employee_id,$star,$end){
+    public function get_by_condition($keyword_selected,$keyword,$key_column, $choose_start, $choose_end ){
+        if($keyword_selected == 1){
+            //echo '1';
+            if($key_column == 0){
+                echo '2';
+                $data = Yii::app()->db->createCommand()
+                    ->select('e.*,a.*,a.create_at as att_create_at')
+                    ->from('employee e')
+                    ->leftjoin('attendance_record a','a.employee_id = e.id')
+                    ->where(array('like', 'e.name', "%$keyword%"))
+                    ->andWhere("a.day >= '$choose_start'")
+                    ->andWhere("a.day <= '$choose_end'")
+                    ->order('e.user_name DESC,CONVERT(e.name using big5) ASC,a.day ASC')
+                    ->queryAll();
+                return $data;
 
+
+            }else if($key_column == 1){ //卡號
+                //echo '2';
+                $data = Yii::app()->db->createCommand()
+                    ->select('a.*,e.*,a.create_at as att_create_at')
+                    ->from('employee e')
+                    ->leftjoin('attendance_record a','a.employee_id = e.id')
+                    ->where('e.door_card_num = :door_card_num', array(':door_card_num'=>$keyword))
+                    ->andWhere("a.day >= '$choose_start'")
+                    ->andWhere("a.day <= '$choose_end'")
+                    ->order('e.user_name DESC,CONVERT(e.name using big5) ASC,a.day ASC')
+                    ->queryAll();
+                return $data;
+
+            }else if($key_column == 2){ //帳號
+                //echo '3';
+                $data = Yii::app()->db->createCommand()
+                    ->select('a.*,e.*,a.create_at as att_create_at')
+                    ->from('employee e')
+                    ->leftjoin('attendance_record a','a.employee_id = e.id')
+                    ->where('e.user_name = :user_name', array(':user_name'=>$keyword))
+                    ->andWhere("a.day >= '$choose_start'")
+                    ->andWhere("a.day <= '$choose_end'")
+                    ->order('e.user_name DESC,CONVERT(e.name using big5) ASC,a.day ASC')
+                    ->queryAll();
+                return $data;
+            }
+
+        }else{
             $data = Yii::app()->db->createCommand()
-            ->select('a.*,a.create_at as att_create_at,e.*,a.id as attendance_record_id')
-            ->from('attendance_record a')
-            ->leftjoin('employee e','a.employee_id = e.id')
-            ->andWhere(array('in', 'a.employee_id', $employee_id))
-            ->andWhere("a.day >= '$star'")
-            ->andWhere("a.day <= '$end'")
-            ->queryAll();
-
-        return $data;
-
+                ->select('a.*,e.*,a.create_at as att_create_at')
+                ->from('employee e')
+                ->leftjoin('attendance_record a','a.employee_id = e.id')
+                ->andWhere("a.day >= '$choose_start'")
+                ->andWhere("a.day <= '$choose_end'")
+                ->order('e.user_name DESC,CONVERT(e.name using big5) ASC,a.day ASC')
+                ->queryAll();
+            return $data;
+        }
     }
 
     /*----------------------------------------------------------------

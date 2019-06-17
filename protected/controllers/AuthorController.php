@@ -2,6 +2,7 @@
 
 use Wenhsun\Tool\ModelErrorBuilder;
 use Wenhsun\Transform\MultiColumnTransformer;
+use yidas\phpSpreadsheet\Helper;
 
 class AuthorController extends Controller
 {
@@ -12,11 +13,180 @@ class AuthorController extends Controller
         return true;
     }
 
-    public function actionIndex()
+    public function actionIndex(): void
     {
-        $authors = Author::model()->byUpdateAt()->findAll();
+        $searchCategory = $_POST['search_category'] ?? '';
+        $searchOne = $_POST['search_one'] ?? '';
+        $searchTwo = $_POST['search_two'] ?? '';
 
-        $this->render('list', ['list' => $authors]);
+        $authors = [];
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['search_category'])) {
+            $authors = $this->query($searchCategory, $searchOne, $searchTwo);
+        }
+
+		$this->render(
+		    'list',
+            [
+                'list' => $authors,
+                'searchCategory' => $searchCategory,
+                'searchOne' => $searchOne,
+                'searchTwo' => $searchTwo,
+            ]
+        );
+    }
+
+    private function getGenderText(string $gender): string
+    {
+        switch ($gender) {
+            case 'M':
+                return '男';
+                break;
+            case 'F':
+                return '女';
+                break;
+            default:
+                return '未設定';
+        }
+    }
+
+    public function actionExport(): void
+    {
+        $this->checkCSRF('index');
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            $this->redirect('index');
+        }
+
+        $searchCategory = $_POST['search_category'] ?? '';
+        $searchOne = $_POST['search_one'] ?? '';
+        $searchTwo = $_POST['search_two'] ?? '';
+
+        $fileName = "作家資料匯出_{$searchCategory}_{$searchOne}_{$searchTwo}";
+
+        $multiTransfer = new MultiColumnTransformer();
+
+        $authors = $this->query($searchCategory, $searchOne, $searchTwo);
+
+        $rows = [];
+        foreach ($authors as $index => $author) {
+
+            $banks = AuthorBank::model()->findAll(
+                'author_id=:author_id',
+                [':author_id' => $author['id']]
+            );
+
+            $rows[] = [
+                $multiTransfer->toText('；', $author['pen_name']),
+                $author['author_name'],
+                $this->getGenderText($author['gender']),
+                str_replace('-', '/', $author['birth']),
+                str_replace('-', '/', $author['death']),
+                $multiTransfer->toText('；', $author['email']),
+                $multiTransfer->toText('；', $author['office_address']),
+                $author['service'],
+                $author['job_title'],
+                $multiTransfer->toText('；', $author['office_phone']),
+                $multiTransfer->toText('；', $author['office_fax']),
+                $multiTransfer->toText('；', $author['home_address']),
+                $multiTransfer->toText('；', $author['home_phone']),
+                $multiTransfer->toText('；', $author['home_fax']),
+                $multiTransfer->toText('；', $author['mobile']),
+                !empty($author['identity_type']) ? implode(',', json_decode($author['identity_type'], true)) : '',
+                $multiTransfer->toText('；', $author['social_account']),
+                $author['memo'],
+                $author['nationality'],
+                $multiTransfer->toText('；', $author['identity_number']),
+                $author['residence_address'],
+                $banks[0]['bank_name'] ?? '',
+                $banks[0]['bank_code'] ?? '',
+                $banks[0]['branch_name'] ?? '',
+                $banks[0]['branch_code'] ?? '',
+                $banks[0]['bank_account'] ?? '',
+                $banks[0]['account_name'] ?? '',
+                $banks[1]['bank_name'] ?? '',
+                $banks[1]['bank_code'] ?? '',
+                $banks[1]['branch_name'] ?? '',
+                $banks[1]['branch_code'] ?? '',
+                $banks[1]['bank_account'] ?? '',
+                $banks[1]['account_name'] ?? '',
+            ];
+        }
+
+        Helper::newSpreadsheet()
+            ->addRow([
+                '筆名',
+                '姓名',
+                '性別',
+                '生日',
+                '卒日',
+                '電子郵件',
+                '公司 郵遞區號/地址',
+                '服務單位',
+                '職稱',
+                '辦公電話',
+                '辦公傳真',
+                '住家 郵遞區號/地址',
+                '住家電話',
+                '住家傳真',
+                '手機',
+                '身份類型',
+                '網路社群帳號',
+                '備註',
+                '國籍',
+                '身分證字號/護照號碼/統一編號',
+                '戶籍地',
+                '銀行名稱(1)',
+                '銀行代碼(1)',
+                '分行名稱(1)',
+                '分行代碼(1)',
+                '帳號(1)',
+                '戶名(1)',
+                '銀行名稱(2)',
+                '銀行代碼(2)',
+                '分行名稱(2)',
+                '分行代碼(2)',
+                '帳號(2)',
+                '戶名(2)'
+            ])
+            ->addRows(
+                $rows
+            )
+            ->output($fileName);
+    }
+
+    private function query(string $searchCategory, string $searchOne, string $searchTwo): array
+    {
+        $authorServ = new \Wenhsun\Author\AuthorService();
+
+        switch ($searchCategory) {
+            case 'pen_name':
+                return $authorServ->queryByPenName($searchOne);
+                break;
+            case 'author_name':
+                return $authorServ->queryByAuthorName($searchOne);
+                break;
+            case 'birth_year':
+                return $authorServ->queryByBirthYear($searchOne, $searchTwo);
+                break;
+            case 'service':
+                return $authorServ->queryByService($searchOne);
+                break;
+            case 'job_title':
+                return $authorServ->queryByJobTitle($searchOne);
+                break;
+            case 'address':
+                return $authorServ->queryByAddress($searchOne);
+                break;
+            case 'identity_type':
+                return $authorServ->queryByIdentityType($searchOne);
+                break;
+            case 'memo':
+                return $authorServ->queryByMemo($searchOne);
+                break;
+            default:
+                return $authorServ->queryAll();
+        }
     }
 
     public function actionNew()
@@ -27,7 +197,7 @@ class AuthorController extends Controller
     /**
      * @throws CException
      */
-    public function actionCreate()
+    public function actionCreate(): void
     {
         $this->checkCSRF('index');
         $now = Common::now();
@@ -41,11 +211,19 @@ class AuthorController extends Controller
 
             $author->author_name = $data['author_name'];
             $author->gender = $data['gender'];
-            $author->birth = (!empty($data['birth'])) ? $data['birth'] : null;
-            $author->death = (!empty($data['death'])) ? $data['death'] : null;
+
+            if (!empty($data['birth'])) {
+                $author->birth = $data['birth'];
+                $author->birth_year = explode('/', $data['birth'])[0];
+            } else {
+                $author->birth = null;
+                $author->birth_year = null;
+            }
+
+            $author->death = !empty($data['death']) ? $data['death'] : null;
             $author->job_title = $data['job_title'];
             $author->service = $data['service'];
-            $author->identity_type = (!empty($data['identity_type'])) ? implode(',', $data['identity_type']) : null;
+            $author->identity_type = !empty($data['identity_type']) ? json_encode($data['identity_type'], JSON_UNESCAPED_UNICODE) : null;
             $author->nationality = $data['nationality'];
             $author->residence_address = $data['residence_address'];
             $author->office_address = $multiTransfer->toJson('；', $data['office_address']);
@@ -121,7 +299,44 @@ class AuthorController extends Controller
         }
     }
 
-    public function actionEdit($id)
+    public function actionEdit($id): void
+    {
+        $author = Author::model()->findByPk($id);
+
+        if (!$author) {
+            $this->redirect('index');
+        }
+
+        $multiTransfer = new MultiColumnTransformer();
+        $author->birth = str_replace('-', '/', $author->birth);
+        $author->death = str_replace('-', '/', $author->death);
+        $author->office_address = $multiTransfer->toText('；', $author->office_address);
+        $author->office_phone = $multiTransfer->toText('；', $author->office_phone);
+        $author->office_fax = $multiTransfer->toText('；', $author->office_fax);
+        $author->email = $multiTransfer->toText('；', $author->email);
+        $author->home_address = $multiTransfer->toText('；', $author->home_address);
+        $author->home_phone = $multiTransfer->toText('；', $author->home_phone);
+        $author->home_fax = $multiTransfer->toText('；', $author->home_fax);
+        $author->mobile = $multiTransfer->toText('；', $author->mobile);
+        $author->social_account = $multiTransfer->toText('；', $author->social_account);
+        $author->identity_number = $multiTransfer->toText('；', $author->identity_number);
+        $author->identity_type = !empty($author->identity_type) ? json_decode($author->identity_type, true) : [];
+        $author->pen_name = $multiTransfer->toText('；', $author->pen_name);
+
+        $bankList = [];
+
+        $banks = AuthorBank::model()->findAll(
+            'author_id=:author_id',
+            [':author_id' => $id]
+        );
+
+        $bankList[0] = $banks[0] ?? new AuthorBank();
+        $bankList[1] = $banks[1] ?? new AuthorBank();
+
+        $this->render('edit', ['data' => $author, 'bank_list' => $bankList]);
+    }
+
+    public function actionView($id): void
     {
         $author = Author::model()->findByPk($id);
 
@@ -142,7 +357,7 @@ class AuthorController extends Controller
         $author->mobile = $multiTransfer->toText('；', $author->mobile);
         $author->social_account = $multiTransfer->toText('；', $author->social_account);
         $author->identity_number = $multiTransfer->toText('；', $author->identity_number);
-        $author->identity_type = explode(',', $author->identity_type);
+        $author->identity_type = !empty($author->identity_type) ? json_decode($author->identity_type, true) : [];
         $author->pen_name = $multiTransfer->toText('；', $author->pen_name);
 
         $bankList = [];
@@ -155,7 +370,7 @@ class AuthorController extends Controller
         $bankList[0] = (isset($banks[0])) ? $banks[0] : new AuthorBank();
         $bankList[1] = (isset($banks[1])) ? $banks[1] : new AuthorBank();
 
-        $this->render('edit', ['data' => $author, 'bank_list' => $bankList]);
+        $this->render('view', ['data' => $author, 'bank_list' => $bankList]);
     }
 
     /**
@@ -181,11 +396,19 @@ class AuthorController extends Controller
 
             $author->author_name = $data['author_name'];
             $author->gender = $data['gender'];
-            $author->birth = (!empty($data['birth'])) ? $data['birth'] : null;
+
+            if (!empty($data['birth'])) {
+                $author->birth = $data['birth'];
+                $author->birth_year = explode('/', $data['birth'])[0];
+            } else {
+                $author->birth = null;
+                $author->birth_year = null;
+            }
+
             $author->death = (!empty($data['death'])) ? $data['death'] : null;
             $author->job_title = $data['job_title'];
             $author->service = $data['service'];
-            $author->identity_type = (!empty($data['identity_type'])) ? implode(',', $data['identity_type']) : null;
+            $author->identity_type = !empty($data['identity_type']) ? $author->identity_type = json_encode($data['identity_type'], JSON_UNESCAPED_UNICODE) : null;
             $author->nationality = $data['nationality'];
             $author->residence_address = $data['residence_address'];
             $author->office_address = $multiTransfer->toJson(';', $data['office_address']);
@@ -296,7 +519,7 @@ class AuthorController extends Controller
             );
 
             if ($banks) {
-                foreach($banks as $bank) {
+                foreach ($banks as $bank) {
                     $bank->delete();
                 }
             }

@@ -1,7 +1,7 @@
 <?php $session_jsons = CJSON::decode(Yii::app()->session['power_session_jsons']); ?>
 <div class="row">
     <div class="title-wrap col-lg-12">
-        <h3 class="title-left">儀器使用明細表</h3>
+        <h3 class="title-left">出勤紀錄明細表</h3>
     </div>
 
     <DIV class="col-lg-12" id='btnbox'>
@@ -42,23 +42,23 @@
                                class="">
                             <thead>
                             <tr role="row">
-                                <th>地點名稱</th>
-                                <th>使用者姓名</th>
+                                <th>員工帳號</th>
+                                <th>員工姓名</th>
                                 <th>卡號</th>
-                                <th>教授姓名</th>
-                                <th>第二層單位</th>
                                 <th>刷卡時間</th>
+                                <th>刷卡狀態</th>
+                                <th>原廠紀錄編號</th>
                             </tr>
                             </thead>
                             <tbody>
                             <?php foreach ($model as $key => $value): ?>
                                 <tr class="gradeC" role="row">
-                                    <td><?=$value['positionname']?></td>
+                                    <td><?=$value['e_user_name']?></td>
                                     <td><?=$value['username']?></td>
                                     <td><?=$value['card_number']?></td>
-                                    <td><?=$value['professor']?></td>
-                                    <td><?=$value['usergrp']?></td>
                                     <td><?=$value['flashDate']?></td>
+                                    <td><?=$value['memol']?></td>
+                                    <td><?=$value['id']?></td>
                                 </tr>
                             <?php endforeach; ?>
                             </tbody>

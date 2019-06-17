@@ -13,6 +13,7 @@ class ProductController extends Controller{
         $product = array();
         $couponService = new CouponService();
         $productService = new ProductService();
+        
         if( Yii::app()->request->isPostRequest ){
             if (!CsrfProtector::comparePost()) {
                 $this->redirect('index');
@@ -27,7 +28,7 @@ class ProductController extends Controller{
             $inputs["status"] = filter_input(INPUT_POST, "status");
             $product_create = $productService -> create( $inputs );
             if( $product_create[0] === true ){
-                Yii::app()->session['success_msg'] = $product_create[1];
+                Yii::app()->session['success_msg'] = $product_create[1];                
             }else{
                 Yii::app()->session['error_msg'] = $product_create[1];
             }
@@ -49,6 +50,7 @@ class ProductController extends Controller{
     public function ActionUpdate($id){
         $couponService = new CouponService();
         $productService = new ProductService();
+        $operationlogService = new operationlogService();
         $coupon = $couponService->findAllCouponWithStatus(1);
         if( Yii::app()->request->isPostRequest ){
             if (!CsrfProtector::comparePost()) {
@@ -79,8 +81,13 @@ class ProductController extends Controller{
 
     public function Actiondelete(){
         $product_id = $_POST['id'];
-        $post = Product::model()->findByPk( $product_id );
-        $post->delete();
+        $productService = new ProductService();
+        $product_delete = $productService->delete($product_id);
+        if( $product_delete[0] === true ){
+            Yii::app()->session['success_msg'] = $product_delete[1];                
+        }else{
+            Yii::app()->session['error_msg'] = $product_delete[1];
+        }
         $this->redirect(Yii::app()->createUrl('product/list'));
     }
 }

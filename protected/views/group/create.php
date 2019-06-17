@@ -20,12 +20,7 @@
     <div class="panel panel-default">
         <div class="panel-body">
 
-            <div class="form-group">
-                <label for="group_number"  class="col-sm-2 control-label">角色權重:</label>
-                <div class="col-sm-3">
-                    <input type="text" class="form-control" id="group_number" name="group_number" placeholder="請輸入權重(數字)" value="<?php echo Yii::app()->session['group_number']?>">
-                </div>
-            </div>
+            <input type="hidden" class="form-control" id="group_number" name="group_number" placeholder="請輸入權重(數字)" value="0">
 
             <div class="form-group">
                 <label for="group_name" class="col-sm-2 control-label">角色名稱:</label>

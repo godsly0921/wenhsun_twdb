@@ -8,6 +8,7 @@
  * @property string $account_id
  * @property string $motion
  * @property string $log
+ * @property integer $status
  * @property string $time
  */
 class Operationlog extends CActiveRecord
@@ -29,11 +30,12 @@ class Operationlog extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('account_id, motion, log, time', 'required'),
+			array('status', 'numerical', 'integerOnly'=>true),
 			array('account_id', 'length', 'max'=>30),
 			array('motion', 'length', 'max'=>50),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, account_id, motion, log, time', 'safe', 'on'=>'search'),
+			array('id, account_id, motion, log, status, time', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -58,6 +60,7 @@ class Operationlog extends CActiveRecord
 			'account_id' => '帳號ID',
 			'motion' => '動作',
 			'log' => '操作記錄',
+			'status' => '狀態 ( 0:失敗 1:成功 )',
 			'time' => '時間',
 		);
 	}
@@ -84,6 +87,7 @@ class Operationlog extends CActiveRecord
 		$criteria->compare('account_id',$this->account_id,true);
 		$criteria->compare('motion',$this->motion,true);
 		$criteria->compare('log',$this->log,true);
+		$criteria->compare('status',$this->status);
 		$criteria->compare('time',$this->time,true);
 
 		return new CActiveDataProvider($this, array(

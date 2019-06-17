@@ -9,71 +9,65 @@ class AttendancerecordController extends Controller
         return true;
     }
 
+    public $fake = [
+        0=>'正常',
+        1=>'普通傷病假',
+        2=>'事假',
+        3=>'公假',
+        4=>'公傷病假',
+        5=>'特別休假',
+        6=>'產假含例假日',
+        7=>'婚假',
+        8=>'喪假',
+        9=>'補休假',
+        10=>'生理假',
+        11=>'非請假(加班)',
+        12=>'非請假(早退)',
+        13=>'非請假(遲到加早退)',
+        14=>'非請假(遲到)',
+        15=>'非請假(忘記刷卡)',
+        ];
+
+
     public function actionReport()
     {
-        $service = new EmployeeService();
-        $employee = $service->findEmployeelist();//取出所有員工
 
-        $employee_list = [];
-        if(!empty($employee)){
-            foreach ($employee as $key => $value) {
-                $employee_list[$value->id] = $value->name;
-            }
-        }
-
-
-        if (isset($_POST['employee'])) {
-            if ($_POST[ 'employee' ] == 'all') {
-                $choos_employee = "all";
-            } else if($_POST[ 'employee' ] != 'all') {
-                $choos_employee = $_POST['employee'];
-            } else{
-                $choos_employee = "all";
-            }
+        if (!empty($_POST['keyword'])) {
+            $keyword_selected = 1;
         } else {
-            $choos_employee = "all";
+            $keyword_selected = 0;
+            $_POST['keyword'] = '';
         }
 
+        // 日期
+        if (isset($_POST['date_start']) && !empty($_POST['date_start'])) {
 
-        $service = new EmployeeService;
-        //var_dump($choos_employee);
-        $choos_employee = $service->getEmployee($choos_employee);
-
-        $idarr = array();
-        $cardarrs = array();
-        foreach ($choos_employee as $k => $v) {
-            array_push($idarr, $v->id );
-            array_push($cardarrs, $v->door_card_num);
-
-        }
-
-        if (isset($_POST[ 'date_start' ]) && !empty($_POST[ 'date_start' ])) {
-
-            $choose_start = $_POST[ 'date_start' ] . ' 00:00:00';
+            $choose_start = $_POST['date_start'] . ' 00:00:00';
 
         } else {
 
-            $choose_start = '0000-00-00 00:00:00';
+            $choose_start = date("Y-m-d").' 00:00:00';
         }
 
-        if (isset($_POST[ 'date_end' ]) && !empty($_POST[ 'date_end' ])) {
+        if (isset($_POST['date_end']) && !empty($_POST['date_end'])) {
 
-            $choose_end = $_POST[ 'date_end' ] . ' 23:59:59';
+            $choose_end = $_POST['date_end'] . ' 23:59:59';
 
         } else {
 
-            $choose_end = date( "Y-m-d H:i:s" );
+            $choose_end = date("Y-m-d").' 23:59:59';
         }
 
-        if (empty($_POST[ 'keycol' ])) {
-            $_POST[ 'keycol' ] = 0;
+        if (empty($_POST['key_column'])) {
+            $_POST['key_column'] = 0;
         }
         // 抓出所有相同卡號的紀錄
         $attendance_service = new AttendancerecordService();
-        $record_data = $attendance_service->get_by_condition($idarr, $choose_start, $choose_end );
+        $record_data = $attendance_service->get_by_condition($keyword_selected,$_POST['keyword'],$_POST['key_column'], $choose_start, $choose_end );
 
         $finaldata = [];
         foreach ($record_data as $key => $value) {
+                $temp['user_name'] = $value['user_name'];
                 $temp['attendance_record_id'] = $value['attendance_record_id'];
                 $temp['name'] = $value['name'];
                 $temp['day'] = $value['day'];
@@ -92,6 +86,8 @@ class AttendancerecordController extends Controller
                 }
                 $temp['abnormal_type'] = $value['abnormal_type'];
                 $temp['abnormal'] = $value['abnormal'];
+                $temp['reply_description'] = $value['reply_description'];
+                $temp['take'] = $this->fake[$value['take']];
                 $temp['att_create_at'] = $value['att_create_at'];
                 $temp['update_at'] = $value['update_at'];
 
@@ -144,14 +140,17 @@ class AttendancerecordController extends Controller
             ->setCategory( "文訊人資" );
         // Add some data 設定匯出欄位資料
         $objPHPExcel->setActiveSheetIndex( 0 )
-            ->setCellValue( 'A1', '員工姓名' )
-            ->setCellValue( 'B1', '出勤日' )
-            ->setCellValue( 'C1', '首筆出勤紀錄' )
-            ->setCellValue( 'D1', '末筆出勤紀錄' )
-            ->setCellValue( 'E1', '狀態' )
-            ->setCellValue( 'F1', '說明' )
-            ->setCellValue( 'G1', '建立時間' )
-            ->setCellValue( 'H1', '修改時間' );
+            ->setCellValue( 'A1', '員工帳號' )
+            ->setCellValue( 'B1', '員工姓名' )
+            ->setCellValue( 'C1', '出勤日' )
+            ->setCellValue( 'D1', '首筆出勤紀錄' )
+            ->setCellValue( 'E1', '末筆出勤紀錄' )
+            ->setCellValue( 'F1', '狀態' )
+            ->setCellValue( 'G1', '說明' )
+            ->setCellValue( 'H1', '假別' )
+            ->setCellValue( 'I1', '員工回覆' )
+            ->setCellValue( 'J1', '建立時間' )
+            ->setCellValue( 'K1', '修改時間' );
 
 
         // Miscellaneous glyphs, UTF-8 設定內容資料
@@ -159,14 +158,17 @@ class AttendancerecordController extends Controller
         foreach ($model as $value) {
 
             $objPHPExcel->setActiveSheetIndex( 0 )
-                ->setCellValue( 'A' . $i, $value[ 'name' ] )
-                ->setCellValue( 'B' . $i, $value[ 'day' ] )
-                ->setCellValue( 'C' . $i, $value[ 'first_time' ] )
-                ->setCellValue( 'D' . $i, $value[ 'last_time' ] )
-                ->setCellValue( 'E' . $i, $value[ 'abnormal_type' ] )
-                ->setCellValue( 'F' . $i, $value[ 'abnormal' ] )
-                ->setCellValue( 'G' . $i, $value[ 'att_create_at' ] )
-                ->setCellValue( 'H' . $i, $value[ 'update_at' ] );
+                ->setCellValue( 'A' . $i, $value[ 'user_name' ] )
+                ->setCellValue( 'B' . $i, $value[ 'name' ] )
+                ->setCellValue( 'C' . $i, $value[ 'day' ] )
+                ->setCellValue( 'D' . $i, $value[ 'first_time' ] )
+                ->setCellValue( 'E' . $i, $value[ 'last_time' ] )
+                ->setCellValue( 'F' . $i, $value[ 'abnormal_type' ] )
+                ->setCellValue( 'G' . $i, $value[ 'abnormal' ] )
+                ->setCellValue( 'H' . $i, $value[ 'take' ] )
+                ->setCellValue( 'I' . $i, $value[ 'reply_description' ] )
+                ->setCellValue( 'J' . $i, $value[ 'att_create_at' ] )
+                ->setCellValue( 'K' . $i, $value[ 'update_at' ] );
             $i++;
 
         }
@@ -235,6 +237,7 @@ class AttendancerecordController extends Controller
         $inputs["reply_description"] = filter_input(INPUT_POST, "reply_description");
         $inputs["take"] = filter_input(INPUT_POST, "take");
 
+
         $service = new AttendancerecordService();
         $model = $service->update($inputs);
 
@@ -251,21 +254,14 @@ class AttendancerecordController extends Controller
     {
         $model = Attendancerecord::model()->findByPk($id);
 
-        $data = [
-            0=>'正常',
-            1=>'普通傷病假',
-            2=>'事假',
-            3=>'公假',
-            4=>'公傷病假',
-            5=>'特別休假',
-            6=>'產假含例假日',
-            7=>'婚假',
-            8=>'喪假',
-            9=>'補休假'];
 
+        $EmployeeService  =  new EmployeeService();
+        $employee = $EmployeeService->findEmployeeById($model->employee_id);
+
+        $data = $this->fake;
 
         if ($model !== null) {
-            $this->render('update',['model' => $model,'data'=>$data]);
+            $this->render('update',['model' => $model,'data'=>$data,'employee'=> $employee]);
             $this->clearMsg();
         } else {
             $this->redirect(Yii::app()->createUrl('list'));

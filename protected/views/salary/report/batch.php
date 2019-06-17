@@ -1,3 +1,4 @@
+<script src="<?php echo Yii::app()->request->baseUrl;?>/assets/admin/ext/js/jquery.dataTables.min.js"></script>
 <div role="main">
     <div class="">
         <div class="page-title">
@@ -19,8 +20,11 @@
                     <table id="datatable" class="table table-striped table-bordered">
                         <thead>
                         <tr>
+                            <th>選取</th>
                             <th>員工帳號</th>
                             <th>員工姓名</th>
+                            <th>部門</th>
+                            <th>職務</th>
                             <th>應稅薪資合計</th>
                             <th>薪資合計</th>
                             <th>應扣合計</th>
@@ -37,8 +41,11 @@
                                 <?php else:?>
                                 <tr>
                                 <?php endif;?>
+                                    <td><input class="checked_btn" type="checkbox" name="checked[]" value="<?=$data['id']?>"></td>
                                     <td><?php if (!empty($data['employee_login_id'])):?><?=$data['employee_login_id']?><?php endif;?></td>
                                     <td><?php if (!empty($data['employee_name'])):?><?=$data['employee_name']?><?php endif;?></td>
+                                    <td><?php if (!empty($data['employee_department'])):?><?=$data['employee_department']?><?php endif;?></td>
+                                    <td><?php if (!empty($data['employee_position'])):?><?=$data['employee_position']?><?php endif;?></td>
                                     <td><?php if (!empty($data['taxable_salary_total'])):?><?=number_format($data['taxable_salary_total'])?><?php endif;?></td>
                                     <td><?php if (!empty($data['salary_total'])):?><?=number_format($data['salary_total'])?><?php endif;?></td>
                                     <td><?php if (!empty($data['deduction_total'])):?><?=number_format($data['deduction_total'])?><?php endif;?></td>
@@ -55,7 +62,6 @@
                                     </td>
                                     <td>
                                         <a href="<?= Yii::app()->createUrl("/salary/report/employee?id={$data['id']}");?>"><i class="fa fa-edit" style="font-size:18px"></i></a>
-                                        <a style="margin-left:5px;" data-id="<?=$data['id']?>" class="send_single_email" href="">寄送郵件</a>
                                     </td>
                                 </tr>
                             <?php endforeach;?>
@@ -73,9 +79,30 @@
     </form>
     <script>
 
+        $('#datatable').DataTable({
+            "lengthChange": false,
+            "paging": true,
+            "responsive": true,
+            "info": false,
+            'iDisplayLength': 30,
+            "oLanguage": {
+                "oPaginate": {"sFirst": "第一頁", "sPrevious": "上一頁","sNext": "下一頁","sLast": "最後一頁"},
+                "sEmptyTable": "查無資料, 快去新增資料吧"
+            }
+        });
+
         $("#export").on("click", function(){
             let r = confirm("確認要匯出薪資?");
             if (r === true) {
+
+                let $exportForm = $("#export_form");
+
+                $exportForm.find(".checked_btn").remove();
+
+                $('.checked_btn:checked').each(function() {
+                    $(this).clone().hide().appendTo($exportForm);
+                });
+
                 $("#export_form").submit();
             }
         });
@@ -86,41 +113,17 @@
 
                 $(".lmask").show();
 
+                var checked = [];
+                $('.checked_btn:checked').each(function() {
+                    checked.push($(this).val());
+                });
+
                 var token = $("#_token").prop("value");
                 var batchId = "<?=$batch_id?>";
                 var request = $.ajax({
                     url: "<?=Yii::app()->createUrl('/salary/report/email'); ?>",
                     method: "POST",
-                    data: {"batch_id":batchId, "_token":token},
-                    dataType: "json"
-                });
-
-                request.done(function(data) {
-                    alert("寄送成功");
-                    $(".lmask").hide();
-                });
-
-                request.fail(function(jqXHR, textStatus) {
-                    $(".lmask").hide();
-                    alert(jqXHR.responseJSON.message);
-                });
-            }
-        });
-
-        $(".send_single_email").on("click", function(){
-
-            let r = confirm("確認要寄出薪資郵件?");
-
-            if (r === true) {
-
-                $(".lmask").show();
-
-                var token = $("#_token").prop("value");
-                var id = $(this).data("id");
-                var request = $.ajax({
-                    url: "<?=Yii::app()->createUrl('/salary/report/emailsingle'); ?>",
-                    method: "POST",
-                    data: {"id":id, "_token":token},
+                    data: {"batch_id":batchId, "_token":token, "checked":checked},
                     dataType: "json"
                 });
 

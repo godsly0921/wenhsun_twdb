@@ -31,6 +31,27 @@ class CategoryController extends Controller{
         }
     }
 
+    public function Actionupdate($id){
+        $categoryService = new CategoryService();
+        $categorys    = $categoryService -> findRootCategorys();
+        if( Yii::app()->request->isPostRequest ){
+            $name = $_POST['name'];
+            $parents = $_POST['parents'];
+            $sort = $_POST['sort'];
+            $status = $_POST['status'];
+            $category_create = $categoryService -> update( $id, $name, $parents, $sort, $status );
+            if( $category_create[0] === true ){
+                Yii::app()->session['success_msg'] = $category_create[1];
+            }else{
+                Yii::app()->session['error_msg'] = $category_create[1];
+            }
+            $category_data = $categoryService -> findById($id);
+            $this->render('update',array('categorys'=>$categorys, 'category_data'=>$category_data)); 
+        }else{           
+            $category_data = $categoryService -> findById($id);
+            $this->render('update',array('categorys'=>$categorys, 'category_data'=>$category_data)); 
+        }       
+    }
     public function Actionlist(){
         $categoryService = new CategoryService();
         $category_data = $categoryService->findAllCategory();

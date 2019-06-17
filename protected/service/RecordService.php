@@ -181,7 +181,7 @@ class RecordService{
                 // 找姓名
                 if($key_col == 0){
                     $data = Yii::app()->db->createCommand()
-                    ->select('l.name as position_name,r.memol as memol,r.id as id,
+                    ->select('l.name as position_name,r.memol as memol,r.id as id,e.user_name as e_user_name,
                               e.name as username,
                               e.door_card_num as card_number,
                               r.*')
@@ -195,13 +195,14 @@ class RecordService{
                     ->andwhere(array('like', 'e.name', "%$keyword%"))
                     ->andwhere('r.flashDate >= :start', array(':start'=>$start))
                     ->andwhere('r.flashDate <= :end', array(':end'=>$end))
+                    ->order('e.user_name DESC,CONVERT(e.name using big5) ASC')
                     ->queryAll();
                     return $data;
 
 
-                }else{ //卡號
-                        $data = Yii::app()->db->createCommand()
-                        ->select('l.name as position_name,r.memol as memol,r.id as id,
+                }else if($key_col == 1){ //卡號
+                    $data = Yii::app()->db->createCommand()
+                        ->select('l.name as position_name,r.memol as memol,r.id as id,e.user_name as e_user_name,
                               e.name as username,
                               e.door_card_num as card_number,
                               r.*')
@@ -215,14 +216,37 @@ class RecordService{
                         ->andwhere(array('like', 'e.door_card_num', "%$keyword%"))
                         ->andwhere('r.flashDate >= :start', array(':start'=>$start))
                         ->andwhere('r.flashDate <= :end', array(':end'=>$end))
+                        ->order('e.user_name DESC,CONVERT(e.name using big5) ASC')
+                        ->queryAll();
+                    return $data;
+
+                }else if($key_col == 2){ //帳號
+                    echo '2';
+                    $data = Yii::app()->db->createCommand()
+                        ->select('l.name as position_name,r.memol as memol,r.id as id,e.user_name as e_user_name,
+                              e.name as username,
+                              e.door_card_num as card_number,
+                              r.*')
+                        ->from('record r')
+                        ->leftjoin('door d', 'r.reader_num = d.station')
+                        ->leftjoin('local l', 'd.position  = l.id')
+                        ->leftjoin('employee e', 'start_five=:start_five and end_five=:end_five')
+                        ->where('r.start_five = :start_five', array(':start_five'=>$car_arr[0]))
+                        ->andwhere('r.end_five = :end_five', array(':end_five'=>$car_arr[1]))
+                        ->andwhere('e.door_card_num = :door_card_num', array(':door_card_num'=>$car_arr[0].$car_arr[1]))
+                        ->andwhere(array('like', 'e.user_name', "%$keyword%"))
+                        ->andwhere('r.flashDate >= :start', array(':start'=>$start))
+                        ->andwhere('r.flashDate <= :end', array(':end'=>$end))
+                        ->order('e.user_name DESC,CONVERT(e.name using big5) ASC')
                         ->queryAll();
                     return $data;
 
                 }
 
             }else{
+
                 $data = Yii::app()->db->createCommand()
-                ->select('l.name as position_name,r.memol as memol,r.id as id,
+                ->select('l.name as position_name,r.memol as memol,r.id as id,e.user_name as e_user_name,
                               e.name as username,
                               e.door_card_num as card_number,flashDate')
                 ->from('record r')

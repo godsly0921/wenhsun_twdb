@@ -25,7 +25,7 @@ class CouponController extends Controller{
             $inputs["status"] = filter_input(INPUT_POST, "status");
             $coupon_create = $couponService -> create( $inputs );
             if( $coupon_create[0] === true ){
-                Yii::app()->session['success_msg'] = $coupon_create[1];
+                Yii::app()->session['success_msg'] = $coupon_create[1];                
             }else{
                 Yii::app()->session['error_msg'] = $coupon_create[1];
             }
@@ -45,6 +45,7 @@ class CouponController extends Controller{
 
     public function ActionUpdate($id){
         $couponService = new CouponService();
+        $operationlogService = new operationlogService();
         if( Yii::app()->request->isPostRequest ){
             if (!CsrfProtector::comparePost()) {
                 $this->redirect('index');
@@ -59,7 +60,7 @@ class CouponController extends Controller{
             $inputs["status"] = filter_input(INPUT_POST, "status");
             $coupon_data = $couponService -> update( $inputs );
             if( $coupon_data[0] === true ){
-                Yii::app()->session['success_msg'] = $coupon_data[1];
+                Yii::app()->session['success_msg'] = $coupon_data[1];                
             }else{
                 Yii::app()->session['error_msg'] = $coupon_data[1];
             }
@@ -72,8 +73,13 @@ class CouponController extends Controller{
 
     public function Actiondelete(){
         $coupon_id = $_POST['id'];
-        $post = Coupon::model()->findByPk( $coupon_id );
-        $post->delete();
+        $couponService = new CouponService();
+        $coupon_delete = $couponService->delete($coupon_id);
+        if( $coupon_delete[0] === true ){
+            Yii::app()->session['success_msg'] = $coupon_delete[1];                
+        }else{
+            Yii::app()->session['error_msg'] = $coupon_delete[1];
+        }
         $this->redirect(Yii::app()->createUrl('coupon/list'));
     }
 }

@@ -65,7 +65,7 @@ class MailService
                 $mail->Subject = '出勤通知:出勤正常';
                 $mail->Body =
                     '<h2>親愛的' . $employee_name . '您好:<h2>
-                 <p>提醒您，您昨天的出勤是正常。<br>詳細資訊如以下'
+                 <p>提醒您，您昨天的出勤是正常。<br>詳細資訊如以下<br>'
                     . $message . '<br><br>' .
                     '文訊雜誌社人資系統敬啟<br><br>' .
                     '備註：此信箱為公告用信箱，請勿回信，若有疑問，請洽HR。謝謝。</p>';
@@ -73,9 +73,9 @@ class MailService
                 $mail->Subject = '出勤通知:出勤異常';
                 $mail->Body =
                     '<h2>親愛的' . $employee_name . '您好:<h2>' .
-                    '<p>提醒您，您昨天的出勤是異常。<br>詳細資訊如以下'
+                    '<p>提醒您，您昨天的出勤是異常。<br>詳細資訊如以下<br>'
                     . $message . '<br><br>' .
-                    '<a href="http://192.168.0.160/wenhsun_hr/attendancerecord/update/' . $id . '">請點擊回覆異常</a>' .
+                    '<a href="http://192.168.0.160/wenhsun_hr/attendancerecord/update/' . $id . '">請點擊回覆異常</a><br>' .
                     '文訊雜誌社人資系統敬啟<br>' .
                     '備註：此信箱為公告用信箱，請勿回信，若有疑問，請洽HR。謝謝。</p>';
             }
@@ -122,7 +122,7 @@ class MailService
                 $mail->Subject = '用戶未設定，員工編號';
                 $mail->Body =
                     '<h2>親愛的' . '管理員您好' . '您好:<h2>
-                     <p>提醒您，有異常狀況。<br>詳細資訊如以下'
+                     <p>提醒您，有異常狀況。<br>詳細資訊如以下<br>'
                     . $message . '<br><br>' .
                     '請善待妥善處理，謝謝。<br><br>' .
                     '文訊雜誌社人資系統敬啟<br><br>' .
@@ -133,7 +133,7 @@ class MailService
                 $mail->Subject = '意外異常';
                 $mail->Body =
                     '<h2>親愛的' . '管理員您好' . '您好:<h2>
-                     <p>提醒您，有異常狀況。<br>詳細資訊如以下'
+                     <p>提醒您，有異常狀況。<br>詳細資訊如以下<br>'
                     . $message . '<br><br>' .
                     '請善待妥善處理，謝謝。<br><br>' .
                     '文訊雜誌社人資系統敬啟<br><br>' .
@@ -147,6 +147,62 @@ class MailService
             }
         } catch (Exception $e) {
             Yii::log(date('Y-m-d H:i:s') . " Email 02 error write exception {$e->getTraceAsString()}", CLogger::LEVEL_INFO);
+        }
+    }
+
+    public function sendNewsMail($inputs)
+    {
+        try {
+            // 管理者信箱
+            $admin_email = $this->findAllEmail();
+
+            $mail = new PHPMailer();
+            $mail->IsSMTP();
+            $mail->SMTPAuth = true;
+            $mail->SMTPSecure = 'ssl';
+            $mail->Host = 'smtp.gmail.com';
+            $mail->Port = 465;
+            $mail->CharSet = 'utf-8';
+            $mail->Username = 'wenhsun0509@gmail.com';
+            $mail->Password = 'cute0921';
+            $mail->From = 'wenhsun0509@gmail.com';
+            $mail->FromName = '文訊雜誌社人資系統';
+            $mail->addAddress($inputs['email']);
+            $mail->addCC(isset($admin_email->addressee_1) ? $admin_email->addressee_1 : 'godsly0921@gmail.com');
+            $mail->addCC(isset($admin_email->addressee_2) ? $admin_email->addressee_2 : 'godsly0921@gmail.com');
+            $mail->addCC(isset($admin_email->addressee_3) ? $admin_email->addressee_3 : 'godsly0921@gmail.com');
+            $mail->IsHTML(true);
+
+            $mail->Subject = $inputs['new_title'];
+
+            if($inputs["new_image_old"]!=''){
+                $mail->Body =
+                    '<h2>親愛的' . $inputs["name"]  . '您好:<h2>
+                     <p>提醒您，有公告通知。<br>詳細資訊如以下。<br>'
+                    . $inputs["new_content"] . '<br><br>' .
+                    '請妥善處理，謝謝。<br><br>' .
+                    '文訊雜誌社人資系統敬啟<br><br>' .
+                    '<a href="http://192.168.0.160/wenhsun_hr/'.$inputs["new_image_old"].'">請下載附件</a><br>'.
+                    '備註：此信箱為公告用信箱，請勿回信，若有疑問，請洽HR。謝謝。</p>';
+
+            }elseif(empty($inputs["new_image_old"])) {
+                $mail->Body =
+                    '<h2>親愛的' . $inputs["name"] . '您好:<h2>
+                     <p>提醒您，有公告通知。<br>詳細資訊如以下。<br>'
+                    . $inputs["new_content"] . '<br><br>' .
+                    '請妥善處理，謝謝。<br><br>' .
+                    '文訊雜誌社人資系統敬啟<br><br>' .
+                    '備註：此信箱為公告用信箱，請勿回信，若有疑問，請洽HR。謝謝。</p>';
+            }
+
+            if($mail->Send()){
+                return true;
+            }else{
+                return false;
+            }
+        } catch (Exception $e) {
+            Yii::log(date('Y-m-d H:i:s') . " Email 02 error write exception {$e->getTraceAsString()}", CLogger::LEVEL_INFO);
+            return false;
         }
     }
 

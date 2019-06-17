@@ -51,6 +51,7 @@ class CouponService
      */
     public function create(array $input)
     {
+        $operationlogService = new operationlogService();
         $model = new Coupon();
         $model->coupon_name = $input['coupon_name'];
         $model->coupon_code = $input['coupon_code'];
@@ -63,11 +64,16 @@ class CouponService
         if (!$model->validate()) {
             return $model;
         }
-
         if (!$model->hasErrors()) {
             if( $model->save() ){
+                $motion = "建立優惠";
+                $log = "建立 產品名稱 = " . $inputs["coupon_name"];
+                $operationlogService->create_operationlog( $motion, $log );
                 return array(true,'新增成功');         
             }else{       
+                $motion = "建立優惠";
+                $log = "建立 產品名稱 = " . $inputs["coupon_name"];
+                $operationlogService->create_operationlog( $motion, $log, 0 );
                 return array(false,$model->getErrors());
             }
         }
@@ -78,6 +84,7 @@ class CouponService
 
     public function update(array $input)
     {
+        $operationlogService = new operationlogService();
         $model = Coupon::model()->findByPk($input['id']);
         $model->coupon_name = $input['coupon_name'];
         $model->coupon_code = $input['coupon_code'];
@@ -90,18 +97,37 @@ class CouponService
         if (!$model->validate()) {
             return $model;
         }
-
         if (!$model->hasErrors()) {
             if( $model->save() ){
+                $motion = "更新優惠";
+                $log = "更新 優惠編號 = " . $id . "；優惠名稱 = " . $inputs["coupon_name"];
+                $operationlogService->create_operationlog( $motion, $log );
                 return array(true,'修改成功',$model);         
             }else{       
+                $motion = "更新優惠";
+                $log = "更新 優惠編號 = " . $id . "；優惠名稱 = " . $inputs["coupon_name"];
+                $operationlogService->create_operationlog( $motion, $log, 0 );
                 return array(false,$model->getErrors());
             }
-        }
-        
+        }      
         return $model;
     }
 
+    public function delete($id){
+        $operationlogService = new operationlogService();
+        $post = Coupon::model()->findByPk( $id );
+        if($post->delete()){
+            $motion = "刪除優惠";
+            $log = "刪除 優惠編號 = " . $id;
+            $operationlogService->create_operationlog( $motion, $log );
+            return array(true,'刪除成功');
+        }else{
+            $motion = "刪除優惠";
+            $log = "刪除 優惠編號 = " . $id;
+            $operationlogService->create_operationlog( $motion, $log, 0 );
+            return array(false,$post->getErrors());
+        }
+    }
     public function findById($id)
     {
         $model = Coupon::model()->findByPk($id);

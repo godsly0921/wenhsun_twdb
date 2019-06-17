@@ -41,6 +41,20 @@
                                 </div>
                             </div>
 
+                            <div class="form-group">
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="department">部門</label>
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    <input type="text" value="<?=$data['department']?>" disabled class="form-control col-md-7 col-xs-12">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="position">職務</label>
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    <input type="text" value="<?=$data['position']?>" disabled class="form-control col-md-7 col-xs-12">
+                                </div>
+                            </div>
+
                             <div class="ln_solid"></div>
                             <p>薪資資訊</p>
 
@@ -77,7 +91,7 @@
                             <div class="form-group">
                                 <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
                                     <button type="submit" class="btn btn-primary">修改</button>
-                                    <a class="btn btn-default pull-right" href="javascript:history.back()">返回</a>
+                                    <a class="btn btn-default pull-right" href="<?= Yii::app()->createUrl('/salary/employees/index');?>">返回</a>
                                 </div>
                             </div>
 

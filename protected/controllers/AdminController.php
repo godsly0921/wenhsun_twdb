@@ -10,6 +10,46 @@ class AdminController extends CController
 
 	public $layout = "//layouts/admin";
 
+    private $ipFilters = '220.135.48.168,220.135.48.164,114.32.137.240';
+
+    public function ipCheck(){
+        $ip = Yii::app()->request->getUserHostAddress();
+        $filters = explode(',',$this->ipFilters);
+        if(in_array($ip,$filters)){
+            return true;
+        }else{
+            if($this->ipIsPrivate($ip)==true){
+                return true;
+
+            }
+            return false;
+        }
+
+    }
+
+    public function ipIsPrivate ($ip) {
+        $pri_addrs = array (
+            '10.0.0.0|10.255.255.255', // single class A network
+            '172.16.0.0|172.31.255.255', // 16 contiguous class B network
+            '192.168.0.0|192.168.255.255', // 256 contiguous class C network
+            '127.0.0.0|127.255.255.255' // localhost
+        );
+
+        $long_ip = ip2long ($ip);
+        if ($long_ip != -1) {
+
+            foreach ($pri_addrs AS $pri_addr) {
+                list ($start, $end) = explode('|', $pri_addr);
+
+                // IF IS PRIVATE
+                if ($long_ip >= ip2long ($start) && $long_ip <= ip2long ($end)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     public function actions() {
 
         return array (
@@ -22,26 +62,52 @@ class AdminController extends CController
         );
     }
 
-	/**
+    /**
+     * 後台錯誤頁
+     */
+    public function actionError()
+    {
+        $ip = Yii::app()->request->getUserHostAddress();
+        echo 'The system has recorded your IP:'.$ip.'. If you need permission, please contact the system administrator.';
+        exit();
+    }
+
+
+    /**
 	 * 後台登入頁
 	 */
 	public function actionIndex()
     {
-		$this->redirect(Yii::app()->createUrl('admin/login'));
+        $ip = Yii::app()->request->getUserHostAddress();
+        if($this->ipCheck()){
+            Yii::log("login::ip ".$ip." yes");
+            $this->redirect(Yii::app()->createUrl('admin/login'));
+        }else{
+            Yii::log("login::ip ".$ip." deny(Index)");
+            $this->redirect(Yii::app()->createUrl('admin/error'));
+        }
 	}
-	
-	public function actionLogin()
+
+    public function actionLogin()
     {
-        if(isset($_COOKIE['login_auth'])){
-            if($_COOKIE['login_auth']===Yii::app()->session['auth_check']) {
-                Yii::log("login::cookie and session check ok");
-                $this->redirect(Yii::app()->createUrl('admin/auth'));
+        $ip = Yii::app()->request->getUserHostAddress();
+        if($this->ipCheck()){
+            if(isset($_COOKIE['login_auth'])){
+                if($_COOKIE['login_auth']===Yii::app()->session['auth_check']) {
+                    Yii::log("login::cookie and session check ok");
+                    Yii::log("login::ip".$ip."yes");
+                    $this->redirect(Yii::app()->createUrl('admin/auth'));
+                }
+            }else{
+                Yii::log("login::cookie error");
+                $this->render('login');
             }
         }else{
-            $this->render('login');
+            Yii::log("login::ip".$ip." deny(Loing)");
+            $this->redirect(Yii::app()->createUrl('admin/error'));
         }
 
-	}
+    }
 
     public function actionRegister()
     {

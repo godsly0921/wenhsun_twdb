@@ -64,13 +64,13 @@
                 <label for="sex" class="col-sm-2 control-label">性別:</label>
                 <div class="col-sm-6">
                     <label class="radio-inline">
-                        <input type="radio" name="sex" value="F" <?php echo ($data->gender == 'F') ? 'checked="checked"' : '' ?>>女
+                        <input type="radio" name="gender" value="F" <?php echo ($data->gender == 'F') ? 'checked="checked"' : '' ?>>女
                     </label>
                     <label class="radio-inline">
-                        <input type="radio" name="sex" value="M" <?php echo ($data->gender == 'M') ? 'checked="checked"' : '' ?>>男
+                        <input type="radio" name="gender" value="M" <?php echo ($data->gender == 'M') ? 'checked="checked"' : '' ?>>男
                     </label>
                     <label class="radio-inline">
-                        <input type="radio" name="sex" value="" <?php echo (!in_array($data->gender, array('F', 'M'))) ? 'checked="checked"' : '' ?>>尚未設定
+                        <input type="radio" name="gender" value="" <?php echo (!in_array($data->gender, array('F', 'M'))) ? 'checked="checked"' : '' ?>>尚未設定
                     </label>
                 </div>
             </div>

@@ -39,6 +39,13 @@ class SalaryReportService
         return $repo->forAllEmployeeByBatch($batchId);
     }
 
+    public function getRangeEmployeeByBatch($batchId, array $id): ?SalaryReportBatch
+    {
+        $repo = new ReportRepository();
+
+        return $repo->forRangeEmployeeByBatch($batchId, $id);
+    }
+
     public function setEmployeeSalary(SalaryReportEmployee $ent)
     {
         try {
@@ -80,6 +87,8 @@ class SalaryReportService
                 $salaryReportModel->employee_id = $employeeEnt->getEmployeeId();
                 $salaryReportModel->employee_login_id = $employeeEnt->getEmployeeLoginId();
                 $salaryReportModel->employee_name = $employeeEnt->getEmployeeName();
+                $salaryReportModel->employee_department = $employeeEnt->getEmployeeDepartment();
+                $salaryReportModel->employee_position = $employeeEnt->getEmployeePosition();
                 $salaryReportModel->salary = $employeeEnt->getSalary();
                 $salaryReportModel->draft_allowance = $employeeEnt->getDraftAllowance();
                 $salaryReportModel->traffic_allowance = $employeeEnt->getTrafficAllowance();
@@ -186,8 +195,20 @@ class SalaryReportService
                 </thead>
                 <tbody>
                     <tr>
+                        <td style='border: 1px solid black'>員工帳號</td>
+                        <td style='border: 1px solid black'>{$employee->getEmployeeLoginId()}</td>
+                    </tr>
+                    <tr>
                         <td style='border: 1px solid black'>員工姓名</td>
                         <td style='border: 1px solid black'>{$employee->getEmployeeName()}</td>
+                    </tr>
+                    <tr>
+                        <td style='border: 1px solid black'>部門</td>
+                        <td style='border: 1px solid black'>{$employee->getEmployeeDepartment()}</td>
+                    </tr>
+                    <tr>
+                        <td style='border: 1px solid black'>職務</td>
+                        <td style='border: 1px solid black'>{$employee->getEmployeePosition()}</td>
                     </tr>
                     <tr>
                         <td style='border: 1px solid black'>本薪</td>
