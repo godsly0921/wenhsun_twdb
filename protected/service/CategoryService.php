@@ -71,7 +71,7 @@ class CategoryService
     }
 
     public function create( $name, $parents, $sort, $status ){
-        $operationlogService = new operationlogService();
+        $operationlogService = new OperationlogService();
         $model = new Category();
         $model->name = $name;    
         $model->isroot = $parents == 0 ? 1:0;
@@ -103,7 +103,7 @@ class CategoryService
     }
 
     public function update( $id, $name, $parents, $sort, $status ){
-        $operationlogService = new operationlogService();
+        $operationlogService = new OperationlogService();
         $model = Category::model()->findByPk($id);
         $model->name = $name;    
         $model->isroot = $parents == 0 ? 1:0;

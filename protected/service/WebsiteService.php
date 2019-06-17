@@ -30,7 +30,7 @@ class WebsiteService
         return $all_ad;
     }
     public function banner_update( $input ){
-        $operationlogService = new operationlogService();
+        $operationlogService = new OperationlogService();
         $model = $this->findBannerById($input['home_banner_id']);
         $model->link = $input['link'];
         $model->title = $input['title'];
@@ -68,7 +68,7 @@ class WebsiteService
     }
 
     public function banner_create( $input ){
-        $operationlogService = new operationlogService();
+        $operationlogService = new OperationlogService();
         $model = new Homebanner();
         $model->link = $input['link'];
         $model->title = $input['title'];
@@ -107,7 +107,7 @@ class WebsiteService
     }
 
     public function banner_delete($id){
-        $operationlogService = new operationlogService();
+        $operationlogService = new OperationlogService();
         $post = Homebanner::model()->findByPk( $id );
         if($post->delete()){
             $motion = "刪除輪播圖";
@@ -155,7 +155,7 @@ class WebsiteService
     }
 
     public function ad_create( $input ){
-        $operationlogService = new operationlogService();
+        $operationlogService = new OperationlogService();
         foreach ($input['single_id'] as $key => $value) {
             if(!$this->findAdById($value)){
                 $model = new Homead();
@@ -185,7 +185,7 @@ class WebsiteService
     }
 
     public function ad_update( $input ){
-        $operationlogService = new operationlogService();
+        $operationlogService = new OperationlogService();
         $model = $this->findAdById($input['single_id']);
         $model->sort = $input['sort'];
         $model->update_time = date('Y-m-d H:i:s');
@@ -211,7 +211,7 @@ class WebsiteService
     }
 
     public function ad_delete($id){
-        $operationlogService = new operationlogService();
+        $operationlogService = new OperationlogService();
         $post = Homead::model()->findByPk( $id );
         if($post->delete()){
             $motion = "刪除廣告圖";

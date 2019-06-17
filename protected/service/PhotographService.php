@@ -157,7 +157,7 @@ class PhotographService{
 
     public function updateSingle ( $single_id, $input ){
         $mongo = new Mongo();  
-        $operationlogService = new operationlogService();
+        $operationlogService = new OperationlogService();
     	$single = Single::model()->findByPk($single_id);;
     	foreach ($input as $key => $value) {
     		$single->$key = $value;
@@ -181,7 +181,7 @@ class PhotographService{
 
     public function updateAllSingle ( $single_id, $input ){
         $mongo = new Mongo();
-        $operationlogService = new operationlogService();       
+        $operationlogService = new OperationlogService();       
         Single::model()->updateAll($input, 'single_id in('.$single_id.')');
         $update_find = array('single_id'=> array('$in'=>explode(',',$single_id)));
         $input['category_id'] = explode(',', $input['category_id']);
@@ -194,7 +194,7 @@ class PhotographService{
 
     public function updateAllSingleSize ( $single_id, $size_type, $input ){
         $mongo = new Mongo();
-        $operationlogService = new operationlogService();
+        $operationlogService = new OperationlogService();
         $update_find = array('single_id'=> array('$in'=>explode(',',$single_id)), 'size_type' => $size_type);
         $update_input = array('$set' => $input);
         $mongo->update_record('wenhsun', 'single_size', $update_find, $update_input);
@@ -263,7 +263,7 @@ class PhotographService{
     }
 
     public function deletePhotograph($single_id){
-        $operationlogService = new operationlogService();
+        $operationlogService = new OperationlogService();
         $single = Single::model()->findByPk($single_id);
         if($single){
             $ds          = DIRECTORY_SEPARATOR; // '/'
