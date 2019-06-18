@@ -157,13 +157,14 @@ class PhotographService{
 
     public function updateSingle ( $single_id, $input ){
         $mongo = new Mongo();  
-        $operationlogService = new operationlogService();
+        $operationlogService = new OperationlogService();
     	$single = Single::model()->findByPk($single_id);;
     	foreach ($input as $key => $value) {
     		$single->$key = $value;
     	}
     	if($single->save()){
             $update_find = array('single_id'=>$single_id);
+            $input['category_id'] = explode(',', $input['category_id']);
             $update_input = array('$set' => $input);
             $mongo->update_record('wenhsun', 'single', $update_find, $update_input);
             $motion = "更新圖資";
@@ -180,11 +181,12 @@ class PhotographService{
 
     public function updateAllSingle ( $single_id, $input ){
         $mongo = new Mongo();
-        $operationlogService = new operationlogService();
+        $operationlogService = new OperationlogService();       
+        Single::model()->updateAll($input, 'single_id in('.$single_id.')');
         $update_find = array('single_id'=> array('$in'=>explode(',',$single_id)));
+        $input['category_id'] = explode(',', $input['category_id']);
         $update_input = array('$set' => $input);
         $mongo->update_record('wenhsun', 'single', $update_find, $update_input);
-        Single::model()->updateAll($input, 'single_id in('.$single_id.')');
         $motion = "更新圖資";
         $log = "更新 single_id = " . $single_id . " 圖資";
         $operationlogService->create_operationlog( $motion, $log );
@@ -192,13 +194,13 @@ class PhotographService{
 
     public function updateAllSingleSize ( $single_id, $size_type, $input ){
         $mongo = new Mongo();
-        $operationlogService = new operationlogService();
+        $operationlogService = new OperationlogService();
         $update_find = array('single_id'=> array('$in'=>explode(',',$single_id)), 'size_type' => $size_type);
         $update_input = array('$set' => $input);
         $mongo->update_record('wenhsun', 'single_size', $update_find, $update_input);
         Singlesize::model()->updateAll($input, 'single_id in('.$single_id.') and size_type="' . $size_type . '"');
         $motion = "更新圖片價格";
-        $log = "更新 single_id = " . $_POST['single_id'] . " 圖片價格";
+        $log = "更新 single_id = " . $single_id . " 圖片價格";
         $operationlogService->create_operationlog( $motion, $log );
     }
     public function storeUpdataSingle( $single_id, $photograph_data ){
@@ -261,7 +263,7 @@ class PhotographService{
     }
 
     public function deletePhotograph($single_id){
-        $operationlogService = new operationlogService();
+        $operationlogService = new OperationlogService();
         $single = Single::model()->findByPk($single_id);
         if($single){
             $ds          = DIRECTORY_SEPARATOR; // '/'

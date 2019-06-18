@@ -38,7 +38,7 @@ class ProductService
     }
 
     public function update( $input ){
-        $operationlogService = new operationlogService();
+        $operationlogService = new OperationlogService();
         $model = Product::model()->findByPk($input['product_id']);
         $model->product_name = $input['product_name'];
         $model->coupon_id = $input['coupon_id'];
@@ -72,7 +72,7 @@ class ProductService
     }
 
     public function create( $input ){
-        $operationlogService = new operationlogService();
+        $operationlogService = new OperationlogService();
         $model = new Product();
         $model->product_name = $input['product_name'];
         $model->coupon_id = $input['coupon_id'];
@@ -105,7 +105,7 @@ class ProductService
     }
 
     public function delete($id){
-        $operationlogService = new operationlogService();
+        $operationlogService = new OperationlogService();
         $post = Product::model()->findByPk( $id );
         if($post->delete()){
             $motion = "刪除產品";

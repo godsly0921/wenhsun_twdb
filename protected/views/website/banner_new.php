@@ -87,7 +87,4 @@ unset( Yii::app()->session['success_msg'] );
            }
         }
     }
-    $(document).ready(function () {
-        
-    })
 </script>

@@ -254,7 +254,7 @@ class MemberService
     public function create(array $inputs)
     {
         $model = new Member();
-        $operationlogService = new operationlogService();
+        $operationlogService = new OperationlogService();
         $model->account = $inputs['account'];
 
         $member = $this->findByAccount($inputs['account']);
@@ -472,7 +472,7 @@ class MemberService
     public function update(array $inputs)
     {
         $service = new MemberService();
-        $operationlogService = new operationlogService();
+        $operationlogService = new OperationlogService();
         $model = $service->findByMemId($inputs['id']);
 
         if ($model === null) {
@@ -526,7 +526,7 @@ class MemberService
      */
     public function updateMemberPassword(array $inputs)
     {
-        $operationlogService = new operationlogService();
+        $operationlogService = new OperationlogService();
         $model = Member::model()->findByPk($inputs["id"]);
         $model->password = $inputs["password"];
 
@@ -584,7 +584,7 @@ class MemberService
 
     public function delete($id)
     {
-        $operationlogService = new operationlogService();
+        $operationlogService = new OperationlogService();
         $model = $this->findByMemId($id);
 
         if ($model !== null) {

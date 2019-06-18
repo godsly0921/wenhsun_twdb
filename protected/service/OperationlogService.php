@@ -2,7 +2,7 @@
 class OperationlogService{
 	public static function create_operationlog( $motion, $log, $status=1 ){
 		$model = new Operationlog();
-		$model->account_id = Yii::app()->session['uid'];
+		$model->account_id = isset(Yii::app()->session['uid'])?Yii::app()->session['uid']:'0';
 		$model->motion = $motion;
 		$model->log = $log;
         $model->status = $status;

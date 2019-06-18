@@ -51,7 +51,7 @@ class CouponService
      */
     public function create(array $input)
     {
-        $operationlogService = new operationlogService();
+        $operationlogService = new OperationlogService();
         $model = new Coupon();
         $model->coupon_name = $input['coupon_name'];
         $model->coupon_code = $input['coupon_code'];
@@ -84,7 +84,7 @@ class CouponService
 
     public function update(array $input)
     {
-        $operationlogService = new operationlogService();
+        $operationlogService = new OperationlogService();
         $model = Coupon::model()->findByPk($input['id']);
         $model->coupon_name = $input['coupon_name'];
         $model->coupon_code = $input['coupon_code'];
@@ -114,7 +114,7 @@ class CouponService
     }
 
     public function delete($id){
-        $operationlogService = new operationlogService();
+        $operationlogService = new OperationlogService();
         $post = Coupon::model()->findByPk( $id );
         if($post->delete()){
             $motion = "刪除優惠";

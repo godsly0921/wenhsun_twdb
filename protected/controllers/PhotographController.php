@@ -93,6 +93,7 @@ class PhotographController extends Controller{
                 );
                 $time = microtime(true) - $time_start;
                 $return_data['runtime'] = $time;
+                echo $e;
                 echo json_encode($return_data);exit();
                 exit();
             }
