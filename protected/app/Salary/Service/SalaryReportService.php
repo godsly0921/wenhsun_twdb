@@ -60,6 +60,18 @@ class SalaryReportService
         }
     }
 
+    public function deleteBatch(string $batchId): void
+    {
+        try {
+            $repo = new ReportRepository();
+            $repo->deleteBatch($batchId);
+        } catch (Throwable $ex) {
+            Yii::log($ex->getMessage(), CLogger::LEVEL_ERROR);
+            Yii::log($ex->getTraceAsString(), CLogger::LEVEL_ERROR);
+            throw new SalaryReportServiceException($ex->getMessage());
+        }
+    }
+
     public function addBatch(SalaryReportBatch $ent)
     {
         $now = Common::now();
@@ -113,17 +125,15 @@ class SalaryReportService
                 }
 
                 $cnt++;
-                echo "inserted {$employeeEnt->getEmployeeId()} salary in report\n";
+                Yii::log("inserted {$employeeEnt->getEmployeeId()} salary in report\n");
             }
 
             $tx->commit();
 
-            echo "inserted {$cnt} empoyees\n";
+            Yii::log("inserted {$cnt} empoyees\n");
 
         } catch (Throwable $ex) {
             $tx->rollback();
-            echo $ex->getMessage();
-            echo $ex->getTraceAsString();
             Yii::log($ex->getMessage(), CLogger::LEVEL_ERROR);
             Yii::log($ex->getTraceAsString(), CLogger::LEVEL_ERROR);
 

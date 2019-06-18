@@ -184,4 +184,23 @@ class ReportRepository
 
         return $salaryReportBatch;
     }
+
+    public function deleteBatch(string $batchId): void
+    {
+        $bindValues = [':batch_id' => $batchId];
+
+        $sql = "
+        DELETE FROM salary_report
+        WHERE batch_id = :batch_id
+        ";
+
+        Yii::app()->db->createCommand($sql)->bindValues($bindValues)->execute();
+
+        $sql = "
+        DELETE FROM salary_report_batch
+        WHERE batch_id = :batch_id
+        ";
+
+        Yii::app()->db->createCommand($sql)->bindValues($bindValues)->execute();
+    }
 }
