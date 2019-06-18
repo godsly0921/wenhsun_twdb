@@ -188,7 +188,7 @@ class AttendancerecordService{
             }else if($key_column == 1){ //卡號
                 //echo '2';
                 $data = Yii::app()->db->createCommand()
-                    ->select('a.*,e.*,a.create_at as att_create_at')
+                    ->select('a.*,e.*,a.create_at as att_create_at,a.id as attendance_record_id')
                     ->from('employee e')
                     ->leftjoin('attendance_record a','a.employee_id = e.id')
                     ->where('e.door_card_num = :door_card_num', array(':door_card_num'=>$keyword))
@@ -201,7 +201,7 @@ class AttendancerecordService{
             }else if($key_column == 2){ //帳號
                 //echo '3';
                 $data = Yii::app()->db->createCommand()
-                    ->select('a.*,e.*,a.create_at as att_create_at')
+                    ->select('a.*,e.*,a.create_at as att_create_at,a.id as attendance_record_id')
                     ->from('employee e')
                     ->leftjoin('attendance_record a','a.employee_id = e.id')
                     ->where('e.user_name = :user_name', array(':user_name'=>$keyword))
@@ -214,7 +214,7 @@ class AttendancerecordService{
 
         }else{
             $data = Yii::app()->db->createCommand()
-                ->select('a.*,e.*,a.create_at as att_create_at')
+                ->select('a.*,e.*,a.create_at as att_create_at,a.id as attendance_record_id')
                 ->from('employee e')
                 ->leftjoin('attendance_record a','a.employee_id = e.id')
                 ->andWhere("a.day >= '$choose_start'")
