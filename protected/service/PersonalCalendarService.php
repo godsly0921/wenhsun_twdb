@@ -217,9 +217,6 @@ class PersonalCalendarService
     {
         $model = new PersonalCalendar();
 
-      //  var_dump(Yii::app()->session['personal']);
-      //  exit();
-
         $model->employee_id = $inputs['employee_id'];
         $model->start_time = $inputs['start_date_time'];
         $model->end_time = $inputs['end_date_time'];

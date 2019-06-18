@@ -60,7 +60,6 @@ class PersonalCalendarController extends Controller
         $input_arrays = array();
 
         foreach ($model as $key => $value) {
-            $employee = EmployeeService::findEmployeeById($value->employee_id);
             if($value->builder_type){//1表示 員工 0表示系統管理員
                 $service = new EmployeeService();
                 $employee = $service->findEmployeeById($value->builder);
