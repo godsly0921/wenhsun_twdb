@@ -174,7 +174,7 @@ class AttendancerecordService{
             if($key_column == 0){
                 echo '2';
                 $data = Yii::app()->db->createCommand()
-                    ->select('e.*,a.*,a.create_at as att_create_at')
+                    ->select('e.*,a.*,a.create_at as att_create_at,a.id as attendance_record_id')
                     ->from('employee e')
                     ->leftjoin('attendance_record a','a.employee_id = e.id')
                     ->where(array('like', 'e.name', "%$keyword%"))
