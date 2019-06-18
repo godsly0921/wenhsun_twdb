@@ -97,7 +97,7 @@ class AttendancerecordController extends Controller
         Yii::app()->session[ 'record_data' ] = $finaldata;
 
         $this->render( 'usereport', ['model' => $record_data,
-            'employee_list' => $employee_list,
+            //'employee_list' => $employee_list,
             'rcdata' => $finaldata
         ] );
     }
