@@ -164,6 +164,7 @@
             <p>中  華  民  國 <input type="text" class="short-input"> 年 <input type="text" class="short-input"> 月 <input type="text" class="short-input"> 日</p>
         </section>
 
+        <!--
         <section class="contract-wrapper page-break">
             <h1>保密契約書<span>「個人資料保護法」</span></h1>
             <p>
@@ -213,7 +214,7 @@
             <p>戶 籍 地 址：<input type="text" class="long-input" value="<?=$data->country?><?=$data->dist?><?=$data->address?>" disabled></p>
             <p>中  華  民  國 <input type="text" class="short-input"> 年 <input type="text" class="short-input"> 月 <input type="text" class="short-input"> 日</p>
         </section>
-
+        -->
         <script>
             $(function(){
                 $('#print-btn').on('click', function(){
