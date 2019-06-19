@@ -243,7 +243,7 @@ class Imagemagick {
 		//o
 		$target_o_path = $storeFolder . 'O' . $ds;
 		exec('convert -strip -density 72 -geometry 500x500 "' . $source_folder . $filename . '" "' . $target_o_path . $filename . '" &');
-		exec('composite -dissolve 100% -gravity center "' . WATERMARK . '" "' . $target_o_path .$filename . '" "' . $target_o_path . $filename . '" &');
+		exec('composite -dissolve 25 -tile "' . WATERMARK . '" "' . $target_o_path .$filename . '" "' . $target_o_path . $filename . '" &');
 		return array('p_path' => $target_p_path, 'o_path' => $target_o_path);
 	}
 
