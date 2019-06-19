@@ -79,8 +79,8 @@ unset( Yii::app()->session['success_msg'] );
     function checkImage(image){
         var file = image.files[0];
         var _URL = window.URL || window.webkitURL;
-        var maxwidth = 1902;
-        var maxheight = 736;
+        var maxwidth = 1170;
+        var maxheight = 400;
         img = new Image();
         img.src = _URL.createObjectURL(file);
         img.onload = function() {

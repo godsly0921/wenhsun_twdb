@@ -2,7 +2,12 @@
 
 declare(strict_types=1);
 
+use Wenhsun\Salary\Entity\SalaryReportBatch;
+use Wenhsun\Salary\Entity\SalaryReportEmployee;
+use Wenhsun\Salary\Repository\EmployeeRepository;
 use Wenhsun\Salary\Service\SalaryReportService;
+use Wenhsun\Salary\Service\SalaryService;
+use Wenhsun\Tool\Uuid;
 use yidas\phpSpreadsheet\Helper;
 
 class ReportController extends Controller
@@ -17,6 +22,65 @@ class ReportController extends Controller
         $serv = new SalaryReportService();
         $list = $serv->getBatchList();
         $this->render('list', ['list' => $list]);
+    }
+
+    public function actionNew(): void
+    {
+        $this->render('new');
+    }
+
+    public function actionCreate(): void
+    {
+        try {
+
+            $this->checkCSRF('index');
+
+            $batchId = $_POST['year'] . $_POST['month'];
+
+            $salaryReportServ = new SalaryReportService();
+            $salaryReportServ->deleteBatch($batchId);
+
+            $salaryRepository = new EmployeeRepository();
+            $salaryServ = new SalaryService($salaryRepository);
+
+            $employees = $salaryServ->getEmployees();
+
+            $batchReportBatch = new SalaryReportBatch($batchId);
+
+            foreach ($employees as $employee) {
+
+                if (!empty($employee['salary'])) {
+                    $salaryReportEmployee = new SalaryReportEmployee(
+                        Uuid::gen(),
+                        $batchId,
+                        $employee['employee_id'],
+                        $employee['user_name'],
+                        $employee['name'],
+                        $employee['department'],
+                        $employee['position'],
+                        (float)$employee['salary'],
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        (float)$employee['health_insurance'],
+                        (float)$employee['labor_insurance'],
+                        (float)$employee['pension']
+                    );
+
+                    $batchReportBatch->addEmployee($salaryReportEmployee);
+                }
+            }
+
+            $salaryReportServ = new SalaryReportService();
+            $salaryReportServ->addBatch($batchReportBatch);
+
+        } catch (Throwable $ex) {
+            Yii::app()->session[Controller::ERR_MSG_KEY] = $ex->getMessage();
+            $this->redirect("employee?id={$_POST['id']}");
+        }
+
     }
 
     public function actionBatch($batchId)

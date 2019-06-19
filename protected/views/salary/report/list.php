@@ -4,6 +4,15 @@
             <div class="title_left">
                 <h3>薪資報表 - 批次清單</h3>
             </div>
+            <div class="title_right">
+                <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
+                    <div class="input-group">
+                        <a href="<?= Yii::app()->createUrl('salary/report/new');?>">
+                            <button id="new-btn" class="btn btn-primary" type="button">產生薪資報表</button>
+                        </a>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div class="clearfix"></div>

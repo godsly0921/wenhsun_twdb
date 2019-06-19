@@ -11,5 +11,7 @@ VALUES
 ('142', '薪資設定更新', 'salary/report/update', '5', '0', '0'),
 ('143', '薪資寄信', 'salary/report/email', '5', '0', '0'),
 ('144', '單一員工薪資寄信', 'salary/report/emailsingle', '5', '0', '0'),
-('145', '薪資匯出', 'salary/report/export', '5', '0', '0')
+('145', '薪資匯出', 'salary/report/export', '5', '0', '0'),
+('146', '產生薪資報表頁面', 'salary/report/new', '5', '0', '0'),
+('147', '產生薪資報表', 'salary/report/create', '5', '0', '0')
 ;
