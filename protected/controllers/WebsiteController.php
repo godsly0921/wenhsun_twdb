@@ -41,7 +41,7 @@ class WebsiteController extends Controller{
 
     public function ActionBanner_update($id){
         $websiteService = new WebsiteService();
-        $operationlogService = new operationlogService();
+        $operationlogService = new OperationlogService();
         
         if( Yii::app()->request->isPostRequest ){
             if (!CsrfProtector::comparePost()) {
@@ -122,7 +122,7 @@ class WebsiteController extends Controller{
 
     public function ActionAd_update($id){
         $websiteService = new WebsiteService();
-        $operationlogService = new operationlogService();
+        $operationlogService = new OperationlogService();
         
         if( Yii::app()->request->isPostRequest ){
             if (!CsrfProtector::comparePost()) {
