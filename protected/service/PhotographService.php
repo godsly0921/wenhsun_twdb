@@ -164,7 +164,7 @@ class PhotographService{
     	}
     	if($single->save()){
             $update_find = array('single_id'=>$single_id);
-            $input['category_id'] = explode(',', $input->category_id);
+            $input['category_id'] = explode(',', $single->category_id);
             $update_input = array('$set' => $input);
             $mongo->update_record('wenhsun', 'single', $update_find, $update_input);
             $motion = "更新圖資";
