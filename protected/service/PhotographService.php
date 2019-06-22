@@ -164,6 +164,7 @@ class PhotographService{
     	}
     	if($single->save()){
             $update_find = array('single_id'=>$single_id);
+            $input['keyword'] = explode(',', $single->keyword);
             $input['category_id'] = explode(',', $single->category_id);
             $update_input = array('$set' => $input);
             $mongo->update_record('wenhsun', 'single', $update_find, $update_input);
@@ -185,6 +186,7 @@ class PhotographService{
         Single::model()->updateAll($input, 'single_id in('.$single_id.')');
         $update_find = array('single_id'=> array('$in'=>explode(',',$single_id)));
         $input['category_id'] = explode(',', $input['category_id']);
+        $input['keyword'] = explode(',', $input['keyword']);
         $update_input = array('$set' => $input);
         $mongo->update_record('wenhsun', 'single', $update_find, $update_input);
         $motion = "更新圖資";

@@ -40,6 +40,16 @@ Class Mongo{
         $mongo_connection->executeBulkWrite( $datatable . "." . $collection, $this->bulk );
         return $mongo_connection;
     }
+    /**
+     * 执行MongoDB命令
+     * @param array $param
+     * @return \MongoDB\Driver\Cursor
+     */
+    function command( $datatable, array $param ){
+        $mongo_connection = $this->mongo_connect;
+        $cmd = new \MongoDB\Driver\Command($param);
+        return $mongo_connection->executeCommand($datatable, $cmd);
+    }
 }
 
 ?>
