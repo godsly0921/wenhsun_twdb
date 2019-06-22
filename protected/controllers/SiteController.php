@@ -36,10 +36,13 @@ class SiteController extends CController{
         $filming_date = isset($_GET["filming_date"])?$_GET["filming_date"]:"";
         $object_name = isset($_GET["object_name"])?$_GET["object_name"]:"";
         $siteService = new SiteService();
-        $filming_date_range 
+        $category_service = new CategoryService();
+        $filming_date_range = $siteService->findPhotoFilmingRange();
+        $distinct_object_name = $siteService->findPhotoObjectname();        
+        $category_data = $category_service->findCategoryMate();
         $total_result = $siteService->findPhotoCount("", $keyword, $category_id, $filming_date, $object_name);
         $total_result = ceil($total_result / $limit );
-        $this->render('search',array('total_result'=>$total_result));
+        $this->render('search',array( 'total_result' => $total_result, 'filming_date_range' => $filming_date_range, 'distinct_object_name' => $distinct_object_name, 'category_data' => $category_data ));
     }
 }
 ?>

@@ -72,5 +72,48 @@ class SiteService
         $result = $mongo->search_record('wenhsun', 'single', $filter, $option);
         return iterator_to_array($result);
     }
+    public function findPhotoFilmingRange(){
+        $filming_date_range = array();
+        $min_year = $max_year = 0;
+        $filming_date_range = Yii::app()->db->createCommand()
+        ->select('DATE_FORMAT(MAX(filming_date),"%Y") as max_filming_date,DATE_FORMAT(MIN(filming_date),"%Y") as min_filming_date')
+        ->from('single')
+        ->where('copyright=:copyright and publish=:publish', array(':copyright'=>1,':publish'=>1))
+        ->queryAll();
+        if($filming_date_range){
+            if(($filming_date_range[0]['min_filming_date']%10)!=0){
+                $min_year = $filming_date_range[0]['min_filming_date']-($filming_date_range[0]['min_filming_date']%10);
+            }else{
+                $min_year = $filming_date_range[0]['min_filming_date'];
+            }
+
+            if(($filming_date_range[0]['max_filming_date']%10)!=0){
+                $max_year = $filming_date_range[0]['max_filming_date'] + (10 - ($filming_date_range[0]['max_filming_date']%10));
+            }else{
+                $max_year = $filming_date_range[0]['max_filming_date'];
+            }
+        }
+        $filming_date_range = array();
+        if($min_year != $max_year){
+            for ($i=$min_year; $i<=$max_year ; $i+=10) {
+                array_push($filming_date_range, $i);
+            }
+        }
+        $ticks_positions = array();
+        for ($i=0; $i<count($filming_date_range); $i++) {
+            if($i == count($filming_date_range)-1) array_push($ticks_positions, 100);
+            else array_push($ticks_positions, $i*ceil(100/count($filming_date_range)));
+        }
+        return array('filming_date_range'=>$filming_date_range,'ticks_positions'=>$ticks_positions);
+    }
+
+    public function findPhotoObjectname(){
+        $distinct_object_name  = Yii::app()->db->createCommand()
+        ->select('DISTINCT(object_name) as distinct_object_name')
+        ->from('single')
+        ->where('copyright=:copyright and publish=:publish and object_name != ""', array(':copyright'=>1,':publish'=>1))
+        ->queryAll(); 
+        return $distinct_object_name;
+    }
 }
 ?>
