@@ -45,18 +45,22 @@
                             <h4><?=$value->new_title?></h4>                       
                             <hr>                   
                             <p>
-                            <?=$value->new_content?>
-                            </p>                       
-                            <span class='about'>
+                                <?php
+                                    echo nl2br($value->new_content);
+                                ?>
+
+                                <span class='about'>
                                 <?php
                                 $account_name = '';
                                 foreach ($account as $v):?>
                                     <?php if($value->builder  == $v->id):
-                                         $account_name = $v->account_name ?>
+                                        $account_name = $v->account_name ?>
                                     <?php endif; ?>
                                 <?php endforeach; ?>
-                            <?='公告時間:'.$value->new_createtime.'-'.'   '.'建檔人：'.$account_name?>
+                                <?='公告時間:'.$value->new_createtime.'-'.'   '.'建檔人：'.$account_name?>
                             </span>
+                            </p>                       
+
                             <div style="float:right">
                                 <?php if($value['new_image']!=""):?>
                                 <a href="<?php echo Yii::app()->createUrl('news/download')."/fileName/{$value['id']}";?>">

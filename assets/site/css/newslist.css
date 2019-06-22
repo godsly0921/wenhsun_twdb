@@ -114,6 +114,7 @@
     .newsmain{
         height: 100%;
         border:5px solid white;
+        overflow:auto;
 
     }
     .lastbot{
@@ -144,10 +145,12 @@
         color: white;
     }
     .about{
-      position: absolute;
-      left:2px;
-      bottom: 2px;
+      /*overflow:auto;
+      position: absolute;*/
+      left:1px;
+      bottom: 1px;
       color:white;
+      float:left;
     }
     .downloadBtn{
         color: white;
