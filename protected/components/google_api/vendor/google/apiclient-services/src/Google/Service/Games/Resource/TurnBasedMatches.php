@@ -150,7 +150,7 @@ class Google_Service_Games_Resource_TurnBasedMatches extends Google_Service_Reso
   {
     $params = array('matchId' => $matchId);
     $params = array_merge($params, $optParams);
-    return $this->call('leave', array($params), "Google_Service_Games_TurnBasedMatch");
+    return $this->call('LeaveRecord', array($params), "Google_Service_Games_TurnBasedMatch");
   }
   /**
    * Leave a turn-based match during the current player's turn, without canceling

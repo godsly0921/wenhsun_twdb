@@ -6,7 +6,6 @@ namespace Wenhsun\Leave\Domain\Model;
 
 interface EmployeeLeaveRepository
 {
-    public function save(Leave $leave): void;
-
-    public function isSetAnnualLeave(EmployeeId $employeeId, string $annualYear): bool;
+    public function resetLeave(EmployeeLeave $employeeLeave): void;
+    public function saveRecord(LeaveRecord $leave): void;
 }

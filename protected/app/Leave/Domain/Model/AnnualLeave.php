@@ -6,7 +6,7 @@ namespace Wenhsun\Leave\Domain\Model;
 
 class AnnualLeave extends Leave
 {
-    protected function determineLeaveType(): string
+    public function determineType(): string
     {
         return 'ANNUAL';
     }

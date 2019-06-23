@@ -7,7 +7,7 @@ namespace Wenhsun\Leave\Domain\Service;
 use DateTime;
 use Mockery;
 use PHPUnit\Framework\TestCase;
-use Wenhsun\Leave\Domain\Model\AnnualLeave;
+use Wenhsun\Leave\Domain\Model\AnnualLeaveRecord;
 use Wenhsun\Leave\Domain\Model\Employee;
 use Wenhsun\Leave\Domain\Model\EmployeeId;
 use Wenhsun\Leave\Domain\Model\EmployeeLeaveRepository;
@@ -39,7 +39,7 @@ class EmployeeAnnualLeaveCalculatorTest extends TestCase
         $fakeEmployeeLeaveRepository->shouldHaveReceived('save')->once()
             ->withArgs(function($leave) use ($expectLeaveDay) {
 
-                /** @var $leave AnnualLeave */
+                /** @var $leave AnnualLeaveRecord */
 
                 $this->assertEquals($expectLeaveDay * 8 * 60, $leave->getMinutes());
 

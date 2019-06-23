@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-class Leave extends CActiveRecord
+class EmployeeLeave extends CActiveRecord
 {
     public function tableName()
     {
-        return 'leave';
+        return 'employee_leave';
     }
 
     public static function model($className=__CLASS__)

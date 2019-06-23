@@ -22,9 +22,9 @@ class MySQLEmployeeRepository implements EmployeeRepository
         $sql = "
             SELECT * FROM employee
             WHERE NOT EXISTS (
-            SELECT 1 FROM `leave`
-              WHERE `employee`.id = `leave`.employee_id 
-              AND `leave`.annual_year = :annual_year
+            SELECT 1 FROM `leave_record`
+              WHERE `employee`.id = `leave_record`.employee_id 
+              AND `leave_record`.annual_year = :annual_year
             )
         ";
 

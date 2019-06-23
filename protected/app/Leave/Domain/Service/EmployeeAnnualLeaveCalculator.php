@@ -7,9 +7,10 @@ namespace Wenhsun\Leave\Domain\Service;
 use DateTime;
 use RuntimeException;
 use Wenhsun\Leave\Domain\Model\AnnualLeave;
+use Wenhsun\Leave\Domain\Model\EmployeeLeave;
 use Wenhsun\Leave\Domain\Model\EmployeeLeaveRepository;
 use Wenhsun\Leave\Domain\Model\EmployeeRepository;
-use Wenhsun\Leave\Domain\Model\LeaveStatus;
+use Wenhsun\Leave\Domain\Model\LeaveRecord;
 
 class EmployeeAnnualLeaveCalculator
 {
@@ -97,14 +98,19 @@ class EmployeeAnnualLeaveCalculator
 
                 echo "{$employee->getEmployeeId()->value()}:{$diffYear}:{$employee->getOnBoardDate()}:{$leaveMinutes}\n";
 
-                $leave = new AnnualLeave(
+                $leaveRecord = new LeaveRecord(
                     $employee->getEmployeeId(),
                     $annualYear,
-                    LeaveStatus::ALIVE,
-                    $leaveMinutes
+                    [new AnnualLeave($leaveMinutes)]
                 );
 
-                $this->employeeLeaveRepository->save($leave);
+                $employeeLeave = new EmployeeLeave(
+                    $employee->getEmployeeId(),
+                    [new AnnualLeave($leaveMinutes)]
+                );
+
+                $this->employeeLeaveRepository->resetLeave($employeeLeave);
+                $this->employeeLeaveRepository->saveRecord($leaveRecord);
             }
         }
     }

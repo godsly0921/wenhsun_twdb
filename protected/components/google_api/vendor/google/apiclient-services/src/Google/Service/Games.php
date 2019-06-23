@@ -594,7 +594,7 @@ class Google_Service_Games extends Google_Service
                   'type' => 'string',
                 ),
               ),
-            ),'leave' => array(
+            ), 'LeaveRecord' => array(
               'path' => 'rooms/{roomId}/leave',
               'httpMethod' => 'POST',
               'parameters' => array(
@@ -934,7 +934,7 @@ class Google_Service_Games extends Google_Service
                   'type' => 'string',
                 ),
               ),
-            ),'leave' => array(
+            ), 'LeaveRecord' => array(
               'path' => 'turnbasedmatches/{matchId}/leave',
               'httpMethod' => 'PUT',
               'parameters' => array(
