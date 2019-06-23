@@ -53,8 +53,7 @@ class SiteController extends CController{
         $category_data = $category_service->findCategoryMate();
         $photograph_data['photograph_info']['keyword'] = explode(",", $photograph_data['photograph_info']['keyword']);
         $same_category = $siteService->findSameCategory($photograph_data['photograph_info']['category_id'],$id);
-        //var_dump($same_category);exit();
-        //var_dump($photograph_data);exit();
+
         $this->render('image_info',array('photograph_data'=>$photograph_data,'category_service'=>$category_service,'same_category'=>$same_category));
     }
 
