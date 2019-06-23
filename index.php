@@ -1,5 +1,7 @@
 <?php
 
+date_default_timezone_set('Asia/Taipei');
+
 require __DIR__ . '/vendor/autoload.php';
 
 ini_set('mbstring.internal_encoding','UTF-8');

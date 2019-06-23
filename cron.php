@@ -1,5 +1,7 @@
 <?php
 
+date_default_timezone_set('Asia/Taipei');
+
 $yii    = dirname(__FILE__).'/framework/yii.php';
 $config = dirname(__FILE__).'/protected/config/console.php'; 
 
