@@ -23,7 +23,7 @@
         <div class="navbar-collapse collapse dual-nav order-1 order-md-1 justify-content-end">
             <ul class="navbar-nav header_navbar_nav col-md-12 col-lg-8 mx-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="#">關於我們</a>
+                    <a class="nav-link" href="about">關於我們</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#">最新消息</a>
