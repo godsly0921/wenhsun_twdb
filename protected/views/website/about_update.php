@@ -27,7 +27,9 @@ unset( Yii::app()->session['success_msg'] );
 
 
 <div class="panel panel-default">
-    <div class="panel-heading">關於我們內容更新</div>
+    <div class="panel-heading">
+        <a href="<?php echo Yii::app()->createUrl('website/about_list'); ?>" class="btn btn-success btn-right">回關於我們列表</a>
+    </div>
     <div class="panel-body">
         <form name="group_form" class="form-horizontal" action="<?php echo Yii::app()->createUrl('website/about_update');?>/<?=$about->id?>" method="post" enctype="multipart/form-data">
             <?php CsrfProtector::genHiddenField(); ?>
