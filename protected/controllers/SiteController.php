@@ -44,5 +44,11 @@ class SiteController extends CController{
         $total_result = ceil($total_result / $limit );
         $this->render('search',array( 'total_result' => $total_result, 'filming_date_range' => $filming_date_range, 'distinct_object_name' => $distinct_object_name, 'category_data' => $category_data ));
     }
+
+    public function ActionAbout(){
+        $aboutService = new AboutService();
+        $about = $aboutService->getAllAbout();
+        $this->render('about', array('about' => $about));
+    }
 }
 ?>
