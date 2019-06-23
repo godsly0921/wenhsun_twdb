@@ -30,6 +30,8 @@ define('HOMEAD', dirname(__FILE__).'/assets/AD/');
 define('PHOTOGRAPH_STORAGE_URL', 'image_storage/O/');
 define('DOMAIN', 'http://web.taiwanblacktea.com.tw/');
 //define('DOMAIN', 'http://localhost:8080/wenhsun_hr/'); //測試環境
+define('ABOUT_IMAGE', '/assets/image/about/');
+define('ABOUT_IMAGE_UPLOAD', dirname(__FILE__) . '/assets/image/about/');
 //載入系統設定檔
 $config=dirname(__FILE__).'/protected/config/main.php';
 //Yii Debug models開啟
