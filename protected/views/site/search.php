@@ -1,6 +1,7 @@
 <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/assets/css/justifiedGallery.min.css">
 <link href="<?php echo Yii::app()->request->baseUrl; ?>/assets/css/bootstrap-slider.css" rel="stylesheet">
-
+<link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/assets/css/jquery.fancybox.min.css">
+<script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/jquery.fancybox.min.js"></script>
 <script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/jquery.justifiedGallery.min.js"></script>
 <script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/jquery.twbsPagination.js"></script>
 <script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/bootstrap-slider.js"></script>
@@ -139,13 +140,19 @@
     	border-color: transparent;
     }
     /* 頁碼 客製 css -- end */
+    .fancybox-slide--iframe .fancybox-content {
+	    width  : 90%;
+	    height : 90%;
+	    max-width  : 90%;
+	    max-height : 90%;
+	}
 </style>
 <div class="container">
 	<!-- Search Bar -- Start -->
 	 <form name="group_form" class="col-lg-12 form-horizontal" id="keyword_search" action="<?php echo Yii::app()->createUrl('site/search');?>" method="post">
 	    <div class="mx-auto input-group input-group-lg my-2">
-	      	<input type="text" class="form-control" placeholder="推薦關鍵字：洛夫" aria-label="推薦關鍵字：洛夫" aria-describedby="basic-addon2" name="keyword" id="keyword" required>
-	      	<input type="hidden" name="page" value="1" id="page">
+	      	<input type="text" class="form-control" placeholder="推薦關鍵字：洛夫" aria-label="推薦關鍵字：洛夫" aria-describedby="basic-addon2" name="keyword" id="keyword" value="<?=$_GET['keyword']?>" required>
+	      	<input type="hidden" name="page" value="<?=$_GET['page']?>" id="page">
 	      	<div class="input-group-append">
 	        	<button class="btn btn-outline-light customer_search_button" onclick="search();">搜尋</button>
 	      	</div>
@@ -155,17 +162,17 @@
 	    		<i class="fa fa-caret-down" aria-hidden="true"></i>
 	    	</div>
 	    	<div id="advanced_filter">
-	    		<div class="row my-3">
+	    		<div class="row my-3 mb-5">
 	    			<div class="col-lg-1">依時代</div>
 	    			<div class="col-lg-11"><input id="filming_date" type="text"></div>
 	    		</div>
-	    		<div class="row my-3">
+	    		<div class="row my-4">
 	    			<div class="col-lg-1">依作品</div>
 		    		<div class="col-lg-11">
 		    			<?php foreach ($distinct_object_name as $key => $value) {?>
 		    				<div class="d-inline-block">
 			    				<div class="tiffany_checkbox">
-		                            <input type="checkbox" name="object_name[]" value="<?=$value['distinct_object_name']?>">
+		                            <input type="checkbox" class="object_name" name="object_name" value="<?=$value['distinct_object_name']?>" <?=isset($_GET["object_name"]) && in_array($value['distinct_object_name'],explode(",",$_GET["object_name"]))?"checked":""?> onchange="adv_checkbox(this)">
 		                            <span class="checkmark"></span>		                            
 		                        </div>
 		                        <div class="d-inline-block mx-2"><?=$value['distinct_object_name']?></div>
@@ -173,13 +180,13 @@
 		    			<?php }?>		    			
 		    		</div>
 		    	</div>
-	    		<div class="row my-3">
+	    		<div class="row my-4">
 	    			<div class="col-lg-1">依類別</div>
 	    			<div class="col-lg-11">
 	    				<?php foreach ($category_data as $key => $value) {?>
 		    				<div class="d-inline-block">
 			    				<div class="tiffany_checkbox">
-		                            <input type="checkbox" name="category_id[]" value="<?=$value['category_id']?>">
+		                            <input type="checkbox" class="category_id" name="category_id" value="<?=$value['category_id']?>" <?=isset($_GET["category_id"]) && in_array($value['category_id'],explode(",",$_GET["category_id"]))?"checked":""?> onchange="adv_checkbox(this)">
 		                            <span class="checkmark"></span>		                            
 		                        </div>
 		                        <div class="d-inline-block mx-2"><?=$value['child_name']?></div>
@@ -196,6 +203,48 @@
 </div>
 <div class="row my-5" id="page_selection"></div>
 <script type="text/javascript">
+	function search(){
+	    var keyword = $("#keyword").val();
+	    var page = $("#page").val();
+	    if(keyword != '' && page >0){
+	      $('#keyword_search').attr('action',"<?php echo Yii::app()->createUrl('site/search');?>/" + keyword + "/" + page);
+	      $('#keyword_search').submit();
+	    }   
+	}
+	function open_image_info(a,single_id){
+		$.fancybox.open({
+	        type: 'iframe',
+	        src: '<?= Yii::app()->createUrl('site/ImageInfo');?>/'+single_id,
+	        toolbar  : false,
+			smallBtn : true,
+			iframe : {
+				preload : true,
+				css : {
+					width : '90%',
+					height: '90%'
+				}
+			}
+	    });
+	}
+	function adv_checkbox(a){
+		var query_name = $(a).attr('name');
+		var class_name = $(a).attr('class');
+		var checkedValue = new Array();
+		$('.' + class_name + ':checked[name="'+query_name+'"]').each(function(i) { checkedValue[i] = this.value; });
+		if(location.href.indexOf('?') < 0){//辨別網址是否帶get參數
+			$('#keyword_search').attr('action', location.href + "?" + query_name + "=" + checkedValue);
+		}else{
+			var query = window.location.search.substring(1);
+			var query_string = parse_query_string(query,query_name,checkedValue);
+			query_string = Object.keys(query_string).map(function(key) {
+			  return [key + "=" + query_string[key]];
+			});
+	    	$('#keyword_search').attr('action',location.href.split("?")[0]+"?"+query_string.join("&"));
+		}
+	    
+  		$('#keyword_search').submit();
+	}
+
 	function adv_show_hide(){
 		if($('#advanced_filter').css('display') === 'block'){
 			$('#advanced_filter').fadeOut('fast');
@@ -205,7 +254,7 @@
 	}
 
 	function create_image(value){
-		$html = '<div><img src="<?=DOMAIN.PHOTOGRAPH_STORAGE_URL?>'+value.single_id+'.jpg"><div>';
+		$html = '<div onclick="open_image_info(this,\''+value.single_id+'\')"><img src="<?=DOMAIN.PHOTOGRAPH_STORAGE_URL?>'+value.single_id+'.jpg"><div>';
         $('#image_result').append($html);
 	}
 
@@ -217,6 +266,22 @@
 	      	// refreshTime: 1000,
 	      	rel : 'gallery1',
 	    });
+    }
+    function parse_query_string(query,query_name,query_value) {
+    	var vars = query.split("&");
+		var query_string = [];
+        for (var i = 0; i < vars.length; i++) {
+            var pair = vars[i].split("=");
+            var key = decodeURIComponent(pair[0]);
+            var value = decodeURIComponent(pair[1]);
+            query_string[key] = decodeURIComponent(value);
+        }
+        if(query_name in query_string){
+        	query_string[query_name] = decodeURIComponent(query_value);
+        }else{
+        	query_string[query_name] = decodeURIComponent(query_value);
+        }
+        return query_string;
     }
   	$(document).ready( function() {
   		$("#filming_date").slider({
@@ -233,19 +298,34 @@
 		  // 'horizontal' or 'vertical'
 			orientation: 'horizontal',
 		  // initial value
-			//value: 1950,
+			value: [<?=isset($_GET['filming_date'])?explode('-',$_GET['filming_date'])[0]:$filming_date_range['filming_date_range'][0]?>,<?=isset($_GET['filming_date'])?explode('-',$_GET['filming_date'])[1]:$filming_date_range['filming_date_range'][count($filming_date_range['filming_date_range'])-1]?>],
 		  // enable range slider
 			range: true,
 			ticks: <?=json_encode($filming_date_range['filming_date_range'])?>,
 		    ticks_labels: <?=json_encode($filming_date_range['filming_date_range'])?>,
-		    ticks_positions: <?=json_encode($filming_date_range['ticks_positions'])?>,
-
+		    ticks_positions: <?=json_encode($filming_date_range['ticks_positions'])?>,     
 		    //ticks_snap_bounds: 30
 		  
 		});
-	  	
+
+	  	$('#filming_date').slider().change(function(event, ui) {
+	  		var filming_date_range = event.value.newValue[0] + "-" + event.value.newValue[1];
+			if(location.href.indexOf('?') < 0){//辨別網址是否帶get參數
+				$('#keyword_search').attr('action',location.href+"?filming_date="+filming_date_range);
+			}else{
+				var query = window.location.search.substring(1);
+				var query_string = parse_query_string(query, "filming_date", filming_date_range);
+                query_string = Object.keys(query_string).map(function(key) {
+					return [key + "=" + query_string[key]];
+				});
+		    	$('#keyword_search').attr('action',location.href.split("?")[0]+"?"+query_string.join("&"));
+			}
+		    
+      		$('#keyword_search').submit();
+		});
+
 	    $('#page_selection').twbsPagination({
-	        totalPages: <?=$total_result?>,
+	        totalPages: <?=$total_result != 0 ?$total_result:1?>,
 	        visiblePages: 10,
 	        first: '第一頁',
 	        prev: '上一頁',

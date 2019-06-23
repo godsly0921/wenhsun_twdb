@@ -1,0 +1,278 @@
+<link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/assets/css/slick-theme.css">
+<link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/assets/css/slick.css">
+<script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/slick.js"></script>
+<style type="text/css">
+	/*.container{
+		
+	}*/
+	.backgroud-white{
+		padding-top: 80px;
+		background-color: white;
+	}
+	.container:after {
+	  	background-color:white;
+	  	position:absolute;
+	  	content:"";
+	  	left:0;
+	  	right:0;
+	  	height:0px;
+	  	top:0px;
+	}
+	.info_color{
+		color: #66370e;
+	}
+
+	.brown_text_underline{
+		cursor: pointer;
+		padding-bottom: 5px;
+		border-bottom: 2px solid #66370e;
+	}
+	.size_color,#size_info{
+		color: #d0604e;
+		
+	}
+	.text_underline{
+		border-color: #d0604e;
+		border-width: 2px;
+	}
+	.badge-keyword{
+		background-color: #e8e8e8;
+		color: #5e5e5e;
+	}
+	/* 進階搜尋 checkout 客製 css -- start */
+	input[type="radio"] {
+		-webkit-appearance: checkbox; /* Chrome, Safari, Opera */
+		-moz-appearance: checkbox;    /* Firefox */
+		-ms-appearance: checkbox;     /* not currently supported */
+	}
+	/* The container */
+    .tiffany_checkbox {
+        display: inline-block;
+        position: relative;
+        /*margin: 5px auto;*/
+        height: 100%;
+        cursor: pointer;
+        font-size: 18px;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+
+    /* Hide the browser's default checkbox */
+    .tiffany_checkbox input {
+        position: absolute;
+        opacity: 0;
+        top: 0;
+        left: 0;
+        vertical-align: middle;
+        /*margin-left: -12px;*/
+        cursor: pointer;
+        height: 100%;
+        width: 100%;
+        z-index: 2;
+    }
+
+    /* Create a custom checkbox */
+    .tiffany_checkbox label {
+        background-color: transparent;
+        border: 1px solid #a8a8a9;
+        color: #727171;
+        cursor: pointer;
+        border-radius: 5px;
+    }
+
+    /* On mouse-over, add a grey background color */
+    .tiffany_checkbox:hover input ~ label {
+        background-color: #eee;
+    }
+
+    /* When the checkbox is checked, add a blue background */
+    .tiffany_checkbox input:checked ~ label{
+    	border-color: #d0604e;
+        background-color: #d0604e;
+        color: #fcfcfc;
+    }
+    /* Create the checkmark/indicator (hidden when not checked) */
+    .checkmark:after {
+        content: "";
+        position: absolute;
+        display: none;
+    }
+
+    /* Show the checkmark when checked */
+    .tiffany_checkbox label>input:checked ~ .checkmark:after {
+        display: block;
+    }
+    /* 進階搜尋 checkout 客製 css -- end */
+    .tooltip-inner{
+    	background-color: #f7f7f7;
+    	color: #a7a6a6;
+    	font-size: 12px;
+    	max-width: 100%;
+    }
+    .tooltip.show{
+    	opacity: 1;
+    }
+    .tooltip.bs-tooltip-auto[x-placement^=right] .arrow::before, .tooltip.bs-tooltip-right .arrow::before {
+	    border-width: 5px 5px 5px 0;
+	    border-right-color: #f7f7f7;
+	}
+	.hidden{
+		display: none;
+	}
+	.dropdown .dropdown-toggle::after{
+		color: #a8a8a9;
+	}
+	.btn-outline-secondary:not(:disabled):not(.disabled).active, .btn-outline-secondary:not(:disabled):not(.disabled):active, .show>.btn-outline-secondary.dropdown-toggle{
+		background-color: transparent;
+		color: #db5524;
+	}
+	.dropdown .btn-outline-secondary,.dropdown .btn-outline-secondary:hover{
+		border-color: #d8d9d9;
+		color: #db5524;
+		background-color: transparent;
+	}
+	.dropdown-item{
+		color: #a8a8a9;
+	}
+	#download_cost{
+		color: #727171;
+	}
+	.btn-download{
+		background-color: #21a069;
+		color: white;
+	}
+	.btn-favorite{
+		background-color: #e48a22;
+		color: white;
+	}
+	header,footer{
+		display: none;
+	}
+</style>
+<div class="col-lg-12 backgroud-white px-5">
+	<div class="row">
+		<div class="col-lg-7">
+			<img src="<?=DOMAIN.PHOTOGRAPH_STORAGE_URL.$_GET['id']?>.jpg">
+			<h5 class="info_color my-3 mt-5">圖片庫關鍵字</h5>
+			<div>
+				<?php foreach ($photograph_data['photograph_info']['keyword'] as $key => $value) {?>
+					<a href="<?= Yii::app()->createUrl('site/search');?>/<?=$value?>/1"><span class="badge badge-keyword py-2 px-3 mr-2"><?=$value?></span></a>
+				<?php }?>
+			</div>
+			<h5 class="info_color my-3 mt-5 brown_text_underline">更多資訊<i class="fa fa-caret-down" aria-hidden="true"></i></h5>
+			<p class="info_color">照片類型：<?=$photograph_data['photograph_info']['category_name']?></p>
+			<p class="info_color">色彩：<?=$photograph_data['source']['color']?></p>
+			<p class="info_color">原件尺寸：<?=$photograph_data['source']['w_h']?></p>
+			<p class="info_color">檔案格式：<?=$photograph_data['source']['ext']?></p>
+		</div>
+		<div class="col-lg-5">
+			<h4 class="size_color">尺寸選擇</h4>
+			<hr class="text_underline">
+			<?php foreach ($photograph_data['size'] as $key => $value) {?>
+				<div class="d-inline-block">
+					<div class="tiffany_checkbox">                   
+	                    <input type="radio" class="size_type" name="size_type" value="<?=$value['size_type']?>" data-w_h="<?=$value['w_h']?>" data-print_w_h="<?=$value['print_w_h']?>" data-dpi="<?=$value['dpi']?>" data-ext="<?=$value['ext']?>" <?=$key==0?"checked":""?> onchange="size_type(this)">
+		                <label class="d-inline-block py-0 px-4 mb-0 mr-2"><?=$value['size_type']?></label>	                
+	                </div>
+	            </div>
+			<?php } ?>
+
+            <div id="size_info" class="my-2"><?=$photograph_data['size'][0]['w_h']?> px | <?=$photograph_data['size'][0]['print_w_h']?> cm | <?=$photograph_data['size'][0]['dpi']?> dpi | <?=$photograph_data['size'][0]['ext']?></div>
+            <div class="row">
+	            <div class="col-lg-5"><span class="info_color brown_text_underline">圖像授權協議概要</span></div>
+	            <div class="col-lg-7"><span class="info_color brown_text_underline tip" data-placement="right" data-tip="size_type_info">尺寸指南</span></div>
+	            <!-- Tips content -->
+				<div id="size_type_info" class="tip-content hidden">
+					<p>小型 (S) 下載時間最短，適合數位用途。</p> 
+					<p>中型 (M) 適合小型印刷品和數位用途。</p>
+					<p>大型 (L) 適合大型印刷品和數位用途。</p> 
+					<p>大型 (XL) 適合大型印刷品和牆面印刷。</p>
+				</div>
+				<!-- Tips content -->
+	        </div>
+	        <div class="my-4">
+	        	<span id="download_cost"> 3 個下載點數從您的</span>
+	        	<div class="dropdown d-inline-block">
+				  	<button class="btn btn-outline-secondary dropdown-toggle" type="button" id="download_method" data-toggle="dropdown" data-download_method="1" aria-haspopup="true" aria-expanded="false">
+				    點數方案
+				  	</button>
+				  	<div class="dropdown-menu" aria-labelledby="download_method">
+						<button class="dropdown-item" type="button" data-download_method="1">點數方案</button>
+						<button class="dropdown-item" type="button"data-download_method="2">自由載</button>
+					</div>
+				</div>
+	        </div>
+	        <div>
+	        	<button type="button" class="btn btn-download mr-2">我要下載 <i class="fa fa-download"></i></button>
+	        	<button type="button" class="btn btn-favorite mx-2"><i class="fa fa-star"></i> 加入收藏</button>
+	        </div>
+	        <div class="my-4">
+	        	<p class="info_color">人物資訊：<?=$photograph_data['photograph_info']['people_info']?></p>
+	        	<p class="info_color">事件名稱：<?=$photograph_data['photograph_info']['object_name']?></p>
+	        	<p class="info_color">拍攝時間：<?=$photograph_data['photograph_info']['filming_date']?></p>
+	        	<p class="info_color">拍攝地點：<?=$photograph_data['photograph_info']['filming_location']?></p>
+	        	<p class="info_color">內容描述：<?=$photograph_data['photograph_info']['description']?></p>
+	        	<p class="info_color">入藏來源：<?=$photograph_data['photograph_info']['photo_source']?></p>
+	        </div>
+		</div>
+	</div>
+	<div class="row pb-5">
+		<div class="col-lg-12">
+			<h5 class="info_color brown_text_underline my-3 mt-5">類似的圖片</h5>
+		</div>
+		<div class="col-lg-6 mx-auto slider-for">
+			<?php foreach ($same_category as $key => $value) {?>
+				<img class="px-3" src="<?=DOMAIN.PHOTOGRAPH_STORAGE_URL.$value->single_id?>.jpg">
+			<?php }?>
+		</div>
+		<div class="col-lg-10 mx-auto slider-nav"> 
+			<?php foreach ($same_category as $key => $value) {?>
+				<img class="px-3" src="<?=DOMAIN.PHOTOGRAPH_STORAGE_URL.$value->single_id?>.jpg">
+			<?php }?>
+			
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+	function size_type(a){
+		var w_h = $(a).attr('data-w_h');
+		var print_w_h = $(a).attr('data-print_w_h');
+		var dpi = $(a).attr('data-dpi');
+		var ext = $(a).attr('data-ext');
+		$("#size_info").text(w_h + " px | " + print_w_h + " cm | " + dpi + " dpi | " + ext );
+	}
+	$(document).ready( function() {
+		$('.dropdown-menu button').on('click', function(){    
+		    $('#download_method').html($(this).html());
+		    var download_method = $(this).data('download_method');
+		    $('#download_method').attr('data-download_method',download_method);
+		})
+		// Tooltips
+		$('.tip').each(function () {
+			$(this).tooltip({
+				html: true,
+				title: $('#' + $(this).data('tip')).html()
+			});
+		});
+
+		$('.slider-for').slick({
+			slidesToShow: 1,
+			slidesToScroll: 1,
+		 	arrows: false,
+			fade: true,
+			asNavFor: '.slider-nav'
+		});
+
+		$('.slider-nav').slick({
+			slidesToShow: 3,
+			slidesToScroll: 1,
+			asNavFor: '.slider-for',
+			dots: true,
+			centerMode: true,
+			focusOnSelect: true
+		});
+
+	});
+</script>

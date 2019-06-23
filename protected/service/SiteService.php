@@ -72,6 +72,24 @@ class SiteService
         $result = $mongo->search_record('wenhsun', 'single', $filter, $option);
         return iterator_to_array($result);
     }
+
+    //尋找相同類型的圖片
+    public function findSameCategory($category_id,$single_id){
+        $store_filter = array();
+        $mongo = new Mongo();
+        $store_filter['category_id'] = array( '$all' => $category_id );
+        $store_filter['single_id'] = array('$ne' => $single_id);
+        // 圖片狀態是已上架且已通過著作權審核
+        $filter['$and'] = array(array('copyright' => '1'),array('publish' => '1'));
+        // 組合所有搜尋條件
+        foreach ($store_filter as $key => $value) {
+            array_push($filter['$and'], array($key=>$value));
+        }
+        $option['projection'] = array('single_id'=>1,'people_info'=>1,'object_name'=>1,'filming_date'=>1,'filming_location'=>1,'keyword'=>1);
+        $option['limit'] = 10;
+        $result = $mongo->search_record('wenhsun', 'single', $filter, $option);
+        return iterator_to_array($result);
+    }
     public function findPhotoFilmingRange(){
         $filming_date_range = array();
         $min_year = $max_year = 0;
