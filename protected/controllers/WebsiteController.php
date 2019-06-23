@@ -156,5 +156,45 @@ class WebsiteController extends Controller{
         }
         $this->redirect(Yii::app()->createUrl('website/ad_list'));
     }
+
+    public function ActionAbout_list() {
+        $aboutService = new AboutService();
+        $about = $aboutService->getAllAbout();
+        $this->render('about_list', array('about' => $about));
+    }
+
+    public function ActionAbout_update($id){
+        $_SERVER['REQUEST_METHOD'] === "POST" ? $this->doPostAboutUpdate($id) : $this->doGetAboutUpdate($id);
+    }
+
+    public function doGetAboutUpdate($id) {
+        $aboutService = new AboutService();
+        $about = $aboutService->findById($id);
+        $this->render('about_update', array('about' => $about));
+    }
+
+    public function doPostAboutUpdate($id) {
+        $aboutService = new AboutService();
+        if(Yii::app()->request->isPostRequest) {
+            if (!CsrfProtector::comparePost()) {
+                $this->redirect('about_list');
+            }
+            $inputs = [];
+            $inputs['id'] = $id;
+            $inputs['description'] = filter_input(INPUT_POST, 'description');
+            $inputs['paragraph'] = filter_input(INPUT_POST, 'paragraph');
+            $inputs['image'] = $_FILES['image'];
+            $result = $aboutService->update($inputs);
+
+            if ($result[0]) {
+                Yii::app()->session['success_msg'] = '更新成功';
+            } else {
+                Yii::app()->session['error_msg'] = $result[1];
+            }
+        }
+
+        $about = $aboutService->findById($id);
+        $this->render('about_update', array('about' => $about));
+    }
 }
 ?>

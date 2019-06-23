@@ -58,5 +58,10 @@ class SiteController extends CController{
         $this->render('image_info',array('photograph_data'=>$photograph_data,'category_service'=>$category_service,'same_category'=>$same_category));
     }
 
+    public function ActionAbout(){
+        $aboutService = new AboutService();
+        $about = $aboutService->getAllAbout();
+        $this->render('about', array('about' => $about));
+    }
 }
 ?>
