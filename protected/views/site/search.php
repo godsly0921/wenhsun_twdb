@@ -340,7 +340,10 @@
 	                dataType: "json",  
 	                data: {
 	                	page: page,
-	                	keyword: "<?=$_GET['keyword']?>"
+	                	keyword: "<?=$_GET['keyword']?>",
+	                	category_id: "<?=isset($_GET['category_id'])?$_GET['category_id']:''?>",
+	                	filming_date: "<?=isset($_GET['filming_date'])?$_GET['filming_date']:''?>",
+	                	object_name: "<?=isset($_GET['object_name'])?$_GET['object_name']:''?>",
 	                }, 
 	                success: function(data) { 
 	                    $('#image_result').html('');
