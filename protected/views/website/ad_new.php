@@ -43,7 +43,7 @@ unset( Yii::app()->session['success_msg'] );
             <div class="col-sm-6">
             	<select class="select2_multiple form-control" id="category_id" name="category_id[]" multiple="multiple" required>
                   <?php foreach ($category_data as $key => $value) { ?>
-                    <option value="<?=$value['category_id']?>" <?=$key==0?'selected':''?>><?=$value['parents_name']?>_<?=$value['child_name']?></option>
+                    <option value="<?=$value['category_id']?>"><?=$value['parents_name']?>_<?=$value['child_name']?></option>
                   <?php }?>
                 </select>
             </div>
@@ -63,6 +63,7 @@ unset( Yii::app()->session['success_msg'] );
                 <th>事件名稱</th>
                 <th>拍攝時間</th>
                 <th>拍攝地點</th>
+                <th>關鍵字</th>
             </tr>
             </thead>
             <tbody> 
@@ -83,6 +84,7 @@ unset( Yii::app()->session['success_msg'] );
 				                <th>事件名稱</th>
 				                <th>拍攝時間</th>
 				                <th>拍攝地點</th>
+                                <th>關鍵字</th>
 				                <th>排序</th>
 				            </tr>
 			            </thead>
@@ -123,7 +125,8 @@ unset( Yii::app()->session['success_msg'] );
             $(a).parents('tr').children('td:eq(2)').text(),
             $(a).parents('tr').children('td:eq(3)').text(),
             $(a).parents('tr').children('td:eq(4)').text(),
-            $(a).parents('tr').children('td:eq(5)').text()
+            $(a).parents('tr').children('td:eq(5)').text(),
+            $(a).parents('tr').children('td:eq(6)').text()
         ]).draw( false );
     }
 
@@ -136,6 +139,7 @@ unset( Yii::app()->session['success_msg'] );
             $(a).parents('tr').children('td:eq(3)').text(),
             $(a).parents('tr').children('td:eq(4)').text(),
             $(a).parents('tr').children('td:eq(5)').text(),
+            $(a).parents('tr').children('td:eq(6)').text(),
             '<input type="number" class="form-control" name="sort[]" placeholder="請輸入排序" value="0">'
         ]).draw( false );
 	}
@@ -163,7 +167,7 @@ unset( Yii::app()->session['success_msg'] );
                     if(result.status == true){
                     	var table_row = "";
                         $.each(result.data, function(index, value){
-                        	table_row += '<tr><td><input type="checkbox" value="' +value.single_id+ '" onclick="select_image(this)"></td><td><img width="200" src="<?=DOMAIN.PHOTOGRAPH_STORAGE_URL?>' +value.single_id+ '.jpg"/><br><center>' +value.single_id+ '</center></td><td>'+value.people_info+'</td><td>'+value.object_name+'</td><td>'+value.filming_date+'</td><td>'+value.filming_location+'</td></tr>';
+                        	table_row += '<tr><td><input type="checkbox" value="' +value.single_id+ '" onclick="select_image(this)"></td><td><img width="200" src="<?=DOMAIN.PHOTOGRAPH_STORAGE_URL?>' +value.single_id+ '.jpg"/><br><center>' +value.single_id+ '</center></td><td>'+value.people_info+'</td><td>'+value.object_name+'</td><td>'+value.filming_date+'</td><td>'+value.filming_location+'</td><td>'+value.keyword.toString()+'</td></tr>';
 						});
 						$('#search_single_result').DataTable().clear().destroy();
 						$('#search_single_result').append(table_row);

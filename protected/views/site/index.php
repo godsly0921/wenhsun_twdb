@@ -1,7 +1,7 @@
 <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/assets/css/justifiedGallery.min.css">
 <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/assets/css/slick-theme.css">
 <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/assets/css/slick.css">
-<link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/assets/css/layout.css">
+
 <script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/jquery.justifiedGallery.min.js"></script>
 <script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/slick.js"></script>
 <!-- 輪播圖 -- Start -->
@@ -15,11 +15,12 @@
 <!-- 輪播圖 -- End -->
 <div class="container">
   <!-- Search Bar -- Start -->
-  <form name="group_form" class="form-horizontal" action="#" method="get">
+  <form name="group_form" class="form-horizontal" id="keyword_search" action="<?php echo Yii::app()->createUrl('site/search');?>" method="post">
     <div class="col-lg-9 mx-auto input-group input-group-lg my-5">
-      <input type="text" class="form-control" placeholder="推薦關鍵字：洛夫" aria-label="推薦關鍵字：洛夫" aria-describedby="basic-addon2">
+      <input type="text" class="form-control" placeholder="推薦關鍵字：洛夫" aria-label="推薦關鍵字：洛夫" aria-describedby="basic-addon2" name="keyword" id="keyword" required>
+      <input type="hidden" name="page" value="1" id="page">
       <div class="input-group-append">
-        <button class="btn btn-outline-light customer_search_button" type="submit">搜尋</button>
+        <button class="btn btn-outline-light customer_search_button" onclick="search();">搜尋</button>
       </div>
     </div>
   </form>
@@ -62,6 +63,14 @@
   </div>
 </div>
 <script type="text/javascript">
+  function search(){
+    var keyword = $("#keyword").val();
+    var page = $("#page").val();
+    if(keyword != '' && page >0){
+      $('#keyword_search').attr('action',"<?php echo Yii::app()->createUrl('site/search');?>/" + keyword + "/" + page);
+      $('#keyword_search').submit();
+    }   
+  }
   $(document).ready( function() {
     $('#ad_image').justifiedGallery({
       rowHeight: 200,

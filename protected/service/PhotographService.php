@@ -19,11 +19,12 @@ class PhotographService{
             if($key == 0){
                 $data['size'][] = array(
                     'size_type' => $value['size_type'],
-                    // 'size_description' => $value['size_description'],
-                    // 'dpi' => $value['dpi'],
-                    // 'mp' => $value['mp'],
+                    'size_description' => $value['size_description'],
+                    'dpi' => $value['dpi'],
+                    'mp' => $value['mp'],
                     'w_h' => $value['w_h'],
-                    // 'print_w_h' => $value['print_w_h'],
+                    'ext' => $value['ext'],
+                    'print_w_h' => $value['print_w_h'],
                     'file_size' => round($value['file_size']/1024/1024,2) . " MB",
                     'sale_twd' => $value['sale_twd'],
                     'sale_point' => $value['sale_point'],
@@ -67,15 +68,17 @@ class PhotographService{
                     'photo_limit' => $value['photo_limit'],
                     'publish' => $value['publish'],
                     'copyright' => $value['copyright'],
+                    'photo_source' => $value['photo_source'],
                 );
             }else{
                 $data['size'][] = array(
                     'size_type' => $value['size_type'],
-                    // 'size_description' => $value['size_description'],
-                    // 'dpi' => $value['dpi'],
-                    // 'mp' => $value['mp'],
+                    'size_description' => $value['size_description'],
+                    'dpi' => $value['dpi'],
+                    'mp' => $value['mp'],
                     'w_h' => $value['w_h'],
-                    // 'print_w_h' => $value['print_w_h'],
+                    'ext' => $value['ext'],
+                    'print_w_h' => $value['print_w_h'],
                     'file_size' => round($value['file_size']/1024/1024,2) . " MB",
                     'sale_twd' => $value['sale_twd'],
                     'sale_point' => $value['sale_point'],
@@ -164,6 +167,7 @@ class PhotographService{
     	}
     	if($single->save()){
             $update_find = array('single_id'=>$single_id);
+            $input['keyword'] = explode(',', $single->keyword);
             $input['category_id'] = explode(',', $single->category_id);
             $update_input = array('$set' => $input);
             $mongo->update_record('wenhsun', 'single', $update_find, $update_input);
@@ -185,6 +189,7 @@ class PhotographService{
         Single::model()->updateAll($input, 'single_id in('.$single_id.')');
         $update_find = array('single_id'=> array('$in'=>explode(',',$single_id)));
         $input['category_id'] = explode(',', $input['category_id']);
+        $input['keyword'] = explode(',', $input['keyword']);
         $update_input = array('$set' => $input);
         $mongo->update_record('wenhsun', 'single', $update_find, $update_input);
         $motion = "更新圖資";

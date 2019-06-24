@@ -135,21 +135,21 @@ class WebsiteService
             $store_filter['single_id'] = $single_id;          
         }
         if( $category_id != '' ){
-            $store_filter['category_id'] = array( '$in' => $category_id );
+            $store_filter['category_id'] = array( '$all' => $category_id );
         }
         if( $keyword != '' ){
-            $store_filter['keyword'] = array( '$regex' => '/' . $keyword . '/' );
+            $explode_keyword = explode(',', $keyword);
+            $store_filter['keyword'] = array( '$all' => $explode_keyword ); 
         }
-        if(count($store_filter) > 1){
-            $filter['$or'] = array(); 
-            foreach ($store_filter as $key => $value) {
-                array_push($filter['$or'], array($key=>$value));
-            }
-        }else{
-            $filter = $store_filter; 
-        }
+
+        // 圖片狀態是已上架且已通過著作權審核
         $filter['$and'] = array(array('copyright' => '1'),array('publish' => '1'));
-        $option['projection'] = array('single_id'=>1,'people_info'=>1,'object_name'=>1,'filming_date'=>1,'filming_location'=>1);
+        // 組合所有搜尋條件
+        foreach ($store_filter as $key => $value) {
+            array_push($filter['$and'], array($key=>$value));
+        }
+
+        $option['projection'] = array('single_id'=>1,'people_info'=>1,'object_name'=>1,'filming_date'=>1,'filming_location'=>1,'keyword'=>1);
         $result = $mongo->search_record('wenhsun', 'single', $filter, $option);
         return $result;
     }

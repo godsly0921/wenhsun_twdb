@@ -122,7 +122,7 @@ class Google_Service_Games_Resource_Rooms extends Google_Service_Resource
   {
     $params = array('roomId' => $roomId, 'postBody' => $postBody);
     $params = array_merge($params, $optParams);
-    return $this->call('leave', array($params), "Google_Service_Games_Room");
+    return $this->call('LeaveRecord', array($params), "Google_Service_Games_Room");
   }
   /**
    * Returns invitations to join rooms. (rooms.listRooms)
