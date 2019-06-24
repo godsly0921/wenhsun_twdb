@@ -19,9 +19,9 @@ class SiteController extends CController{
         $limit = self::PERPAGE;
         $keyword = isset($_GET["keyword"])?$_GET["keyword"]:"";
         $page = isset($_GET["page"])?$_GET["page"]:"";
-        $category_id = isset($_GET["category_id"])?$_GET["category_id"]:"";
+        $category_id = isset($_GET["category_id"])?explode(",",$_GET["category_id"]):"";
         $filming_date = isset($_GET["filming_date"])?$_GET["filming_date"]:"";
-        $object_name = isset($_GET["object_name"])?$_GET["object_name"]:"";
+        $object_name = isset($_GET["object_name"])?explode(",",$_GET["object_name"]):"";
         $siteService = new SiteService();
         $result = $siteService->findPhoto("", $keyword, $category_id, $filming_date, $object_name, $page, $limit);
         echo json_encode($result);
