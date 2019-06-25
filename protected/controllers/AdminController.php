@@ -253,29 +253,27 @@ class AdminController extends CController
 
         if (isset($_COOKIE['login_auth'])) {
 
-            Yii::log("login::auth cookie form");
+            Yii::log('login::auth cookie form');
             $cookie = json_decode(Yii::app()->session['auth_data'],true);
             $input = [];
-            $input['user_account'] = $cookie['user_account'];
             $input['user_account'] = explode('@', $cookie['user_account'])[0];
             $input['password'] = $cookie['password'];
             $input['login_type'] = $cookie['login_type'];
-            $input['remember'] = "0";
+            $input['remember'] = '0';
 
         } else if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-            Yii::log("login::auth login form");
+            Yii::log('login::auth login form');
             $input = [];
-            $input['user_account'] = filter_input(INPUT_POST, "user_account");
+            $input['user_account'] = filter_input(INPUT_POST, 'user_account');
             $input['user_account'] = explode('@', $input['user_account'])[0];
-            $input['password'] = filter_input(INPUT_POST, "password");
-            $input['login_type'] = filter_input(INPUT_POST, "login_type");
-            $input['remember'] = filter_input(INPUT_POST, "remember");
+            $input['password'] = filter_input(INPUT_POST, 'password');
+            $input['login_type'] = filter_input(INPUT_POST, 'login_type');
+            $input['remember'] = filter_input(INPUT_POST, 'remember');
 
         } else {
             $this->redirect(Yii::app()->createUrl('admin/index'));
         }
-        
 
 		switch ($input['login_type']) {
 			case "0":
@@ -302,7 +300,7 @@ class AdminController extends CController
 
 			case "1":
 
-                Yii::log("user login::1 start login");
+                Yii::log('user login::1 start login');
 
                 $userName = $input['user_account'];
 
@@ -314,7 +312,7 @@ class AdminController extends CController
                 ]);
 
                 if ($model === null) {
-                    Yii::log("user login::user account is null");
+                    Yii::log('user login::user account is null');
 					Yii::app()->session['message'] = '找不到該使用者帳號，請聯絡系統管理員。';
 					$this->redirect(Yii::app()->createUrl('admin/index'));
 				}
@@ -325,7 +323,7 @@ class AdminController extends CController
                     'password' => $model->password,
                     'id' => $model->id,
                     'group' => $model->role,
-                    'type' => ($model->enable === 'Y') ? "0" : "1",
+                    'type' => ($model->enable === 'Y') ? '0' : '1',
                 ];
 
                 $this->actionSetLogin($model, $account, $input);
@@ -364,45 +362,41 @@ class AdminController extends CController
     {
 
         if ($account['type'] === '1') {
-            Yii::log("Set login::account is disabled");
+            Yii::log('Set login::account is disabled');
             Yii::app()->session['message'] = '帳號被停用，請聯絡系統管理員。';
             $this->redirect(Yii::app()->createUrl('admin/index'));
         }
 
         if (md5($input['password']) !== $account['password']) {
-            Yii::log("Set login::password is error");
+            Yii::log('Set login::password is error');
             Yii::app()->session['message'] = '密碼錯誤';
             $this->redirect(Yii::app()->createUrl('admin/index'));
         }
 
-        if ($input['remember'] === "1") {
-            Yii::log("Set login::set cookie info");
+        if ($input['remember'] === '1') {
+            Yii::log('Set login::set cookie info');
             $login_auth = md5(json_encode($input));
             Yii::app()->session['auth_data'] = json_encode($input);
             Yii::app()->session['auth_check'] = $login_auth;
-            setcookie("login_auth", $login_auth, time()+3600*24, '/', '', false, true);
+            setcookie('login_auth', $login_auth, time()+3600*24, '/', '', false, true);
         }
 
         $this->setLoginSession($sysAccount, $input['login_type']);
-        
-        //$account_group_list = ExtGroup::findAccountGroup($account['group']);
+
         $account_group_list = ExtGroup::findByGroupNumber($account['group']);
         
         $account_group_lists = $account_group_list->group_list;
 
-        //$system_name_arrays = ExtSystem::findSystemNameArray($account_group_lists);
-        //$system_session_jsons = CJSON::encode($system_name_arrays);
         $power_name_arrays = ExtPower::findPowerNameArray($account_group_lists);
         $power_session_jsons = CJSON::encode($power_name_arrays);
         $system_name_array = ExtPower::findByPowerMasterNumber($account_group_lists);
 
         $system_session_jsons = CJSON::encode($system_name_array);
 
-
         Yii::app()->session['system_session_jsons'] = $system_session_jsons;
         Yii::app()->session['power_session_jsons'] = $power_session_jsons;
         Yii::app()->session['group_session_jsons'] = $account_group_list->group_number;
-        Yii::app()->session['group_list_session_jsons'] = CJSON::encode(explode(",",$account_group_list->group_list));
+        Yii::app()->session['group_list_session_jsons'] = CJSON::encode(explode(',', $account_group_list->group_list));
         $this->redirect(Yii::app()->createUrl('news/list'));
 
 	}
