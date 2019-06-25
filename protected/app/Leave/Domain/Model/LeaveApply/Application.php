@@ -6,6 +6,7 @@ namespace Wenhsun\Leave\Domain\Model\LeaveApply;
 
 use Wenhsun\Leave\Domain\Model\EmployeeId;
 use Wenhsun\Leave\Domain\Model\Leave;
+use Wenhsun\Leave\Domain\Model\LeaveType;
 
 class Application
 {
@@ -19,7 +20,7 @@ class Application
     private $startDate;
     private $endDate;
     private $status;
-    private $leave;
+    private $leaveType;
     private $memo;
     private $fileLocation;
 
@@ -29,18 +30,82 @@ class Application
         string $startDate,
         string $endDate,
         string $status,
-        Leave $leave,
+        LeaveType $leaveType,
         string $memo,
-        string $fileLocation
+        ?string $fileLocation = null
     ) {
         $this->applicationId = $applicationId;
         $this->employeeId = $employeeId;
         $this->startDate = $startDate;
         $this->endDate = $endDate;
         $this->status = $status;
-        $this->leave = $leave;
+        $this->leaveType = $leaveType;
         $this->memo = $memo;
         $this->fileLocation = $fileLocation;
+    }
+
+    /**
+     * @return LeaveApplicationId
+     */
+    public function getApplicationId(): LeaveApplicationId
+    {
+        return $this->applicationId;
+    }
+
+    /**
+     * @return EmployeeId
+     */
+    public function getEmployeeId(): EmployeeId
+    {
+        return $this->employeeId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getStartDate(): string
+    {
+        return $this->startDate;
+    }
+
+    /**
+     * @return string
+     */
+    public function getEndDate(): string
+    {
+        return $this->endDate;
+    }
+
+    /**
+     * @return string
+     */
+    public function getStatus(): string
+    {
+        return $this->status;
+    }
+
+    /**
+     * @return LeaveType
+     */
+    public function getLeaveType(): LeaveType
+    {
+        return $this->leaveType;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMemo(): string
+    {
+        return $this->memo;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFileLocation(): ?string
+    {
+        return $this->fileLocation;
     }
 
     public function calcMinutes(): int

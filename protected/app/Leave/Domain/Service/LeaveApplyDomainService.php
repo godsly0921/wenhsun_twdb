@@ -6,10 +6,10 @@ namespace Wenhsun\Leave\Domain\Service;
 
 use Wenhsun\Leave\Domain\Model\AnnualLeaveType;
 use Wenhsun\Leave\Domain\Model\EmployeeId;
-use Wenhsun\Leave\Domain\Model\Leave;
 use Wenhsun\Leave\Domain\Model\LeaveApply\Application;
 use Wenhsun\Leave\Domain\Model\LeaveApply\LeaveApplicationId;
 use Wenhsun\Leave\Domain\Model\LeaveApply\LeaveApplicationStatusEnum;
+use Wenhsun\Leave\Domain\Model\LeaveType;
 
 class LeaveApplyDomainService
 {
@@ -24,10 +24,10 @@ class LeaveApplyDomainService
         string $endDate,
         string $type,
         string $memo,
-        string $fileLocation
-    ) {
+        ?string $fileLocation = null
+    ): Application {
 
-        new Application(
+        return new Application(
             new LeaveApplicationId(),
             $employeeId,
             $startDate,
@@ -39,7 +39,7 @@ class LeaveApplyDomainService
         );
     }
 
-    private function genLeaveFromType(string $type): Leave
+    private function genLeaveFromType(string $type): LeaveType
     {
         switch ($type) {
             case 'ANNUAL':

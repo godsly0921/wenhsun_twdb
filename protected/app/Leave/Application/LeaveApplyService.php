@@ -5,24 +5,26 @@ declare(strict_types=1);
 namespace Wenhsun\Leave\Application;
 
 use Wenhsun\Leave\Domain\Model\EmployeeId;
+use Wenhsun\Leave\Domain\Model\LeaveApply\LeaveApplyRepository;
 use Wenhsun\Leave\Domain\Service\LeaveApplyDomainService;
 
 class LeaveApplyService
 {
-    private $domainServ;
+    private $leaveApplyRepository;
 
-    public function __construct(LeaveApplyDomainService $domainServ)
+    public function __construct(LeaveApplyRepository $leaveApplyRepository)
     {
-        $this->domainServ = $domainServ;
+        $this->leaveApplyRepository = $leaveApplyRepository;
     }
 
     public function applyLeave(LeaveApplyCommand $applyCommand): void
     {
         //start a transaction
 
+        $domainServ = new LeaveApplyDomainService();
         $employeeId = new EmployeeId($applyCommand->employeeId);
 
-        $application = $this->domainServ->apply(
+        $application = $domainServ->apply(
             $employeeId,
             $applyCommand->startDate,
             $applyCommand->endDate,
@@ -31,7 +33,6 @@ class LeaveApplyService
             $applyCommand->fileLocation
         );
 
-        //repo insert
-
+        $this->leaveApplyRepository->save($application);
     }
 }
