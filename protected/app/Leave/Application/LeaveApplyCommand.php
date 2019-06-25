@@ -7,7 +7,9 @@ namespace Wenhsun\Leave\Application;
 class LeaveApplyCommand
 {
     public $employeeId;
-    public $type;
     public $startDate;
     public $endDate;
+    public $type;
+    public $memo;
+    public $fileLocation;
 }

@@ -6,5 +6,5 @@ namespace Wenhsun\Leave\Domain\Model;
 
 abstract class LeaveType
 {
-    public const ANNUAL = 'ANNUAL';
+    abstract public function type(): string;
 }

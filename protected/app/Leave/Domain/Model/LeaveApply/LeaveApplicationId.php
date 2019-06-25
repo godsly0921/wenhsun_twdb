@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Wenhsun\Leave\Domain\Model;
+namespace Wenhsun\Leave\Domain\Model\LeaveApply;
 
 use Wenhsun\Tool\Uuid;
 
