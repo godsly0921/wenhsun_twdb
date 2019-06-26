@@ -207,7 +207,7 @@ class ReportController extends Controller
                     '薪資合計(+)',
                     '健保(-)',
                     '勞保(-)',
-                    '退休金提撥(-)',
+                    '退休金提撥',
                     '應扣合計(-)',
                     '實領薪資'
                 ])
