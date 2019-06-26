@@ -66,7 +66,10 @@ class ReportController extends Controller
                         0,
                         (float)$employee['health_insurance'],
                         (float)$employee['labor_insurance'],
-                        (float)$employee['pension']
+                        (float)$employee['pension'],
+                        '',
+                        0,
+                        0
                     );
 
                     $batchReportBatch->addEmployee($salaryReportEmployee);
@@ -76,9 +79,11 @@ class ReportController extends Controller
             $salaryReportServ = new SalaryReportService();
             $salaryReportServ->addBatch($batchReportBatch);
 
+            $this->redirect('index');
+
         } catch (Throwable $ex) {
             Yii::app()->session[Controller::ERR_MSG_KEY] = $ex->getMessage();
-            $this->redirect("employee?id={$_POST['id']}");
+            $this->redirect('new');
         }
 
     }
