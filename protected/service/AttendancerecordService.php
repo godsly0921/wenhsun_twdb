@@ -210,6 +210,18 @@ class AttendancerecordService{
                     ->order('e.user_name DESC,CONVERT(e.name using big5) ASC,a.day ASC')
                     ->queryAll();
                 return $data;
+            }else if($key_column == 3){ //個人查詢
+                //echo '3';
+                $data = Yii::app()->db->createCommand()
+                    ->select('a.*,e.*,a.create_at as att_create_at,a.id as attendance_record_id')
+                    ->from('employee e')
+                    ->leftjoin('attendance_record a','a.employee_id = e.id')
+                    ->where('e.id = :employee_id', array(':employee_id'=>$keyword))
+                    ->andWhere("a.day >= '$choose_start'")
+                    ->andWhere("a.day <= '$choose_end'")
+                    ->order('e.user_name DESC,CONVERT(e.name using big5) ASC,a.day ASC')
+                    ->queryAll();
+                return $data;
             }
 
         }else{

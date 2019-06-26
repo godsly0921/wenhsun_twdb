@@ -7,14 +7,6 @@ define("TWO_SECOND",2);//上班時數小於上班八小時
 define("ONE_SECOND",1);//1秒未出勤預設相差時間
 class AttendanceService
 {
-
-    public $nine_total_seconds = 32400 ;
-    public $ten_total_seconds = 39600;
-    public $over_ten_total_seconds = 39601;
-    public $zero_seconds = 0;
-    public $two_seconds = 2;
-    public $one_seconds = 1;
-
     public function getArriveLateTime(){
         return strtotime(date('Y-m-d'.' 09:31:00'));
     }

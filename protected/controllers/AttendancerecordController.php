@@ -102,6 +102,84 @@ class AttendancerecordController extends Controller
         ] );
     }
 
+    public function actionPersonal()
+    {
+        if( Yii::app()->session['personal'] == false){
+            $this->redirect(Yii::app()->createUrl('admin/login'));
+        }
+        $employee = new EmployeeService();
+        $keyword = Yii::app()->session['uid'];
+
+        $keyword_selected = 1;
+        $key_column = 3;
+
+
+
+
+
+        // 日期
+        if (isset($_POST['date_start']) && !empty($_POST['date_start'])) {
+
+            $choose_start = $_POST['date_start'] . ' 00:00:00';
+
+        } else {
+
+            $choose_start = date("Y-m-d").' 00:00:00';
+        }
+
+        if (isset($_POST['date_end']) && !empty($_POST['date_end'])) {
+
+            $choose_end = $_POST['date_end'] . ' 23:59:59';
+
+        } else {
+
+            $choose_end = date("Y-m-d").' 23:59:59';
+        }
+
+        if (empty($_POST['key_column'])) {
+            $_POST['key_column'] = 0;
+        }
+        // 抓出所有相同卡號的紀錄
+        $attendance_service = new AttendancerecordService();
+        $record_data = $attendance_service->get_by_condition($keyword_selected,$keyword,$key_column, $choose_start, $choose_end );
+
+        $finaldata = [];
+        foreach ($record_data as $key => $value) {
+            $temp['user_name'] = $value['user_name'];
+            $temp['attendance_record_id'] = $value['attendance_record_id'];
+            $temp['name'] = $value['name'];
+            $temp['day'] = $value['day'];
+            $temp['first_time'] = $value['first_time'];
+            $temp['last_time'] = $value['last_time'];
+            switch ($value['abnormal_type']) {
+                case "0":
+                    $value['abnormal_type'] = "正常";
+                    break;
+                case "1":
+                    $value['abnormal_type'] = "異常";
+                    break;
+                case "2":
+                    $value['abnormal_type'] = "用戶已回覆，正常";
+                    break;
+            }
+            $temp['abnormal_type'] = $value['abnormal_type'];
+            $temp['abnormal'] = $value['abnormal'];
+            $temp['reply_description'] = $value['reply_description'];
+            $temp['take'] = $this->fake[$value['take']];
+            $temp['att_create_at'] = $value['att_create_at'];
+            $temp['update_at'] = $value['update_at'];
+
+            array_push($finaldata, $temp);
+        }
+        // 每次找完資料都將資料存進session 方便匯出跟列印
+        Yii::app()->session[ 'record_data' ] = $finaldata;
+
+        $this->render( 'personal', ['model' => $record_data,
+            //'employee_list' => $employee_list,
+            'rcdata' => $finaldata
+        ] );
+    }
+
     // 匯出excel
     function actiongetexcel()
     {
