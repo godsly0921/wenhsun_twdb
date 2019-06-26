@@ -57,7 +57,7 @@
                                         $account_name = $v->account_name ?>
                                     <?php endif; ?>
                                 <?php endforeach; ?>
-                                <?='公告時間:'.$value->new_createtime.'-'.'   '.'建檔人：'.$account_name?>
+                                <?='公告時間:'.$value->new_createtime.' -'.'   '.'建檔人：'.$account_name?>
                             </span>
                             </p>                       
 
