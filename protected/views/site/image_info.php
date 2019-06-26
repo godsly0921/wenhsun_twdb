@@ -50,7 +50,7 @@
         display: inline-block;
         position: relative;
         /*margin: 5px auto;*/
-        height: 100%;
+        /*height: 100%;*/
         cursor: pointer;
         font-size: 18px;
         -webkit-user-select: none;

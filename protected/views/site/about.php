@@ -7,7 +7,6 @@
         <?php endif; ?>
     ">
 </div>
-<br>
 <div class="container">
     <div class="paragraph">
         <p class="header">
@@ -48,7 +47,7 @@
             </div>
         </div>
     </div>
-    <div class="paragraph">
+    <div class="paragraph2">
         <div class="row">
             <div class="col-sm-7">
                 <p>
@@ -83,8 +82,16 @@
     }
 
     .paragraph {
-        padding-top: 20px;
-        padding-bottom: 20px;
+        padding-bottom: 65px;
 
+    }
+
+    .paragraph2 {
+        padding-bottom: 85px;
+
+    }
+
+    #banner {
+        padding-bottom: 85px;
     }
 </style>
