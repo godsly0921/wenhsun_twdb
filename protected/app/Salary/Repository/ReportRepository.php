@@ -67,7 +67,10 @@ class ReportRepository
             $model->tax_free_overtime_wage,
             $model->health_insurance,
             $model->labor_insurance,
-            $model->pension
+            $model->pension,
+            $model->memo,
+            $model->other_plus,
+            $model->other_minus
         );
     }
 
@@ -85,6 +88,9 @@ class ReportRepository
             $model->project_allowance = $ent->getProjectAllowance();
             $model->taxable_salary_total = $ent->calcTaxableSalaryTotal();
             $model->tax_free_overtime_wage = $ent->getTaxFreeOvertimeWage();
+            $model->memo = $ent->getMemo();
+            $model->other_plus = $ent->getOtherPlus();
+            $model->other_minus = $ent->getOtherMinus();
             $model->salary_total = $ent->calcSalaryTotal();
             $model->health_insurance = $ent->getHealthInsurance();
             $model->labor_insurance = $ent->getLaborInsurance();
@@ -176,7 +182,10 @@ class ReportRepository
                 $row['tax_free_overtime_wage'],
                 (float)$row['health_insurance'],
                 (float)$row['labor_insurance'],
-                (float)$row['pension']
+                (float)$row['pension'],
+                $row['memo'],
+                (float)$row['other_plus'],
+                (float)$row['other_minus']
             );
 
             $salaryReportBatch->addEmployee($salaryReportEmployee);
