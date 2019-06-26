@@ -7,12 +7,12 @@ define("TWO_SECOND",2);//上班時數小於上班八小時
 define("ONE_SECOND",1);//1秒未出勤預設相差時間
 class AttendanceService
 {
-    public function getArriveLateTime(){
-        return strtotime(date('Y-m-d'.' 09:31:00'));
+    public function getArriveLateTime($day){
+        return strtotime(date($day.' 09:31:00'));
     }
 
-    public function getLeaveEarlyTime(){
-        return strtotime(date('Y-m-d'.' 18:30:00'));
+    public function getLeaveEarlyTime($day){
+        return strtotime(date($day.' 18:30:00'));
     }
 
     public static function findAttendance()
@@ -621,16 +621,18 @@ class AttendanceService
 
                         if($diff_time != 1){//0 2~以上
                             //假如第一筆時間大於9:30 //加註 遲到
-                            if(strtotime($first_time) >= $this->getArriveLateTime()){
+                            if(strtotime($first_time) >= $this->getArriveLateTime($day)){
                                 if($diff_time != 0){
+                                    //$abnormal_type = 1;
                                     $abnormal .= ' 遲到';
                                 }
 
                             }
 
                             //假如第一筆時間小於18:00 //加註 早退
-                            if(strtotime($last_time) < $this->getLeaveEarlyTime()){
+                            if(strtotime($last_time) < $this->getLeaveEarlyTime($day)){
                                 if($diff_time != 0){
+                                    //$abnormal_type = 1;
                                     $abnormal .= ' 早退';
                                 }
                             }
@@ -757,65 +759,47 @@ class AttendanceService
                             $end_record = strtotime($v->end_time);
                             $diff_time = strtotime($last_time) - strtotime($first_time);//這個員工一整天上班時間
 
-                            $abnormal .= '排班編號：'.$v->id.' ';
+                            $abnormal .= '排班編號：'.$v->id.' |';
 
 
 
                             //第一筆打卡時間小於排班開始時間 最後一筆大於等於 排班結束
                             if(strtotime($first_time) <= $start_record && strtotime($last_time) >= $end_record){
-                                $abnormal .= '正常，排班日，出勤正常';
-                            }
-
-                            if ($diff_time > NINE_HOUR && $diff_time <= TEN_HOUR) {
+                                $abnormal_type = 0;
+                                $abnormal .= '排班日:出勤正常 |';
+                            }else{
                                 $abnormal_type = 1;
-                                $abnormal .= '異常 排班日，上班時數超過八小時';
+                                $abnormal .= '異常:未在排班時間內|';
+                            }
+                            if ($diff_time >= NINE_HOUR && $diff_time <= TEN_HOUR) {
+                                $abnormal_type = 0;
+                                $abnormal .= '上班八小時';
                             } elseif ($diff_time > NINE_HOUR && $diff_time > OVER_TEN_HOUR) {
                                 $abnormal_type = 1;
-                                $abnormal .= '異常 排班日，上班時數超過十小時';
+                                $abnormal .= '異常:排班日，上班時數超過十小時';
                             } elseif ($diff_time == ONE_SECOND) {
                                 $abnormal_type = 1;
-                                $abnormal .= '異常 排班日，缺席';
+                                $abnormal .= '異常:排班日，缺席';
                             } elseif ($diff_time == ZERO_SECOND) {
                                 $abnormal_type = 1;
-                                $abnormal .= '異常 排班日，僅一筆刷卡紀錄';
-                            } else {
-                                $abnormal_type = 0;
-                                $abnormal .= '正常 排班日';
-                            }
+                                $abnormal .= '異常:排班日，僅一筆刷卡紀錄';
 
-                            //第一筆打卡時間小於排班開始時間 最後一筆大於等於 排班結束
-                            if($diff_time == 0){
-                                $abnormal_type = 1;
-                                $abnormal .= '異常，排班日缺席';
                             }
 
 
-                            /*
-                            if(strtotime($first_time) > $start_record ){
-                                if($diff_time != 0){
-                                    $abnormal_type = 1;
-                                    $abnormal .= ' 排班日遲到 ';
+                            if($diff_time != 1) {//0 2~以上
+                                if (strtotime($first_time) >= $this->getArriveLateTime($day)) {
+                                    if ($diff_time != 0) {
+                                        //$abnormal_type = 1;
+                                        $abnormal .= ' 遲到 ';
+                                    }
                                 }
-                            }
 
-                            if(strtotime($last_time) < $end_record){
-                                if($diff_time != 0){
-                                    $abnormal_type = 1;
-                                    $abnormal .= ' 排班日早退 ';
-                                }
-                            }*/
-
-                            if(strtotime($first_time) >= $this->getArriveLateTime() ){
-                                if($diff_time != 0){
-                                    $abnormal_type = 1;
-                                    $abnormal .= ' 排班日遲到 ';
-                                }
-                            }
-
-                            if(strtotime($last_time) < $this->getLeaveEarlyTime()){
-                                if($diff_time != 0){
-                                    $abnormal_type = 1;
-                                    $abnormal .= ' 排班日早退 ';
+                                if (strtotime($last_time) < $this->getLeaveEarlyTime($day)) {
+                                    if ($diff_time != 0) {
+                                        //$abnormal_type = 1;
+                                        $abnormal .= ' 早退 ';
+                                    }
                                 }
                             }
 
@@ -836,23 +820,27 @@ class AttendanceService
                     }else{
 
                         $diff_time = strtotime($last_time) - strtotime($first_time);//這個員工一整天上班時間
-                        if ($diff_time > NINE_HOUR && $diff_time <= TEN_HOUR) {
+
+
+                        if ($diff_time >= NINE_HOUR && $diff_time <= TEN_HOUR) {
                             $abnormal_type = 1;
-                            $abnormal .= '異常 PT非排班，上班時數超過八小時';
+                            $abnormal .= '異常 非排班日，上班時數超過八小時';
                         } elseif ($diff_time > NINE_HOUR && $diff_time > OVER_TEN_HOUR) {
                             $abnormal_type = 1;
-                            $abnormal .= '異常 PT非排班，上班時數超過十小時';
+                            $abnormal .= '異常 非排班日，上班時數超過十小時';
                         } elseif ($diff_time < NINE_HOUR && $diff_time > 2) {
                             $abnormal_type = 1;
-                            $abnormal .= '異常 PT非排班，上班時數小於上班八小時';
+                            $abnormal .= '異常 非排班日，上班時數小於上班八小時';
+                        } elseif ($diff_time == ONE_SECOND) {
+                            $abnormal_type = 0;
+                            $abnormal .= '正常 非排班日';
                         } elseif ($diff_time == ZERO_SECOND) {
                             $abnormal_type = 1;
-                            $abnormal .= '異常 PT非排班，僅一筆刷卡紀錄';
-                        } else {
+                            $abnormal .= '異常 非排班日，僅一筆刷卡紀錄';
+                        }else {
                             $abnormal_type = 0;
-                            $abnormal .= '正常 PT非排班日';
+                            $abnormal .= '正常 非排班日';
                         }
-
 
 
                         $attendance_record_service = new AttendancerecordService();
