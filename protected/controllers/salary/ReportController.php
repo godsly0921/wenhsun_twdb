@@ -170,6 +170,9 @@ class ReportController extends Controller
 
         if ($batchEnt !== null) {
             $rows = [];
+            $totalSalaryOutcome = 0;
+            $employeeCount = 0;
+
             foreach ($batchEnt->getEmployees() as $employee) {
                 $rows[] = [
                     $employee->getEmployeeLoginId(),
@@ -193,7 +196,17 @@ class ReportController extends Controller
                     $employee->calcRealSalary(),
                     $employee->getMemo()
                 ];
+
+                $totalSalaryOutcome += $employee->calcRealSalary();
+                $employeeCount++;
             }
+
+            $rows[] = [
+                '總人數',
+                $employeeCount,
+                '薪資總金額',
+                $totalSalaryOutcome,
+            ];
 
             $fileName = "{$batchEnt->getBatchId()}_文訊員工薪資報表";
 
