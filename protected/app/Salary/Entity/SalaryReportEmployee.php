@@ -250,7 +250,7 @@ class SalaryReportEmployee
      */
     public function calcDeductionTotal()
     {
-        return $this->healthInsurance + $this->laborInsurance + $this->pension;
+        return $this->healthInsurance + $this->laborInsurance;
     }
 
     /**
