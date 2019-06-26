@@ -249,6 +249,10 @@ class SalaryReportService
                         <td style='border: 1px solid black'>{$employee->getTaxFreeOvertimeWage()}</td>
                     </tr>
                     <tr>
+                        <td style='border: 1px solid black'>其他加項</td>
+                        <td style='border: 1px solid black'>{$employee->getOtherPlus()}</td>
+                    </tr>
+                    <tr>
                         <td style='border: 1px solid black'>薪資合計</td>
                         <td style='border: 1px solid black'>{$employee->calcSalaryTotal()}</td>
                     </tr>
@@ -261,7 +265,11 @@ class SalaryReportService
                         <td style='border: 1px solid black'>-{$employee->getLaborInsurance()}</td>
                     </tr>
                     <tr>
-                        <td style='border: 1px solid black'>退休金提撥</td>
+                        <td style='border: 1px solid black'>其他減項</td>
+                        <td style='border: 1px solid black'>-{$employee->getOtherMinus()}</td>
+                    </tr>
+                    <tr>
+                        <td style='border: 1px solid black'>退休金提撥(不計算)</td>
                         <td style='border: 1px solid black'>-{$employee->getPension()}</td>
                     </tr>
                     <tr>
