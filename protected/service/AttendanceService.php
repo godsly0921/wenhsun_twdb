@@ -875,6 +875,96 @@ class AttendanceService
 
     }
 
+    function getAttxendanceAbnormal($day){
+        try {
+            $employee_service = new EmployeeService();
+            $start_date = $day . ' 00:00:00';
+            $end_date = $day . ' 09:30:59';
+            $pt_start_date = $day . ' 00:00:00';
+            $pt_end_date = $day . ' 23:59:59';
+            //找出所有的刷卡紀錄
+            $data = $this->getAttxendanceAndCheckPT($start_date,$end_date,$pt_start_date,$pt_end_date);
+            foreach ($data as $key => $value) {                
+                if (empty($value['flashDate'])) {
+                    $abnormal_type = 2;
+                    $employee_email = $value['email'];
+                    $employee_name = $value['name'];
+                    $mail = new MailService();
+                    $mail_type = $mail->sendMail($abnormal_type,$employee_email,null,null,$employee_name);
+                    if($mail_type){
+                        Yii::log(date("Y-m-d H:i:s").'Attendance Abnormal member_id'.$value['employee_id'], CLogger::LEVEL_INFO);
+                    }else{
+                        Yii::log(date("Y-m-d H:i:s").'Attendance Abnormal Error member_id'.$value['employee_id'],  CLogger::LEVEL_INFO);
+                    }
+                }
+            }
+        } catch (Exception $e) {
+            $msg = Yii::log("Attxendance abnormal exception {$e->getTraceAsString()}", CLogger::LEVEL_INFO);
+            $mail = new MailService();
+            $mail->sendAdminMail(0,$msg);
+        }
+    }
+
+    function getAttxendanceAndCheckPT($start_date,$end_date,$pt_start_date,$pt_end_date){
+        
+        //檢查 pt 當天有沒有排班，有班的才列
+        $checkPTtime = $apartments2 = Yii::app()->db->createCommand()
+        ->select("e.name,e.id as employee_id,e.email,e.user_name,e.door_card_num,r.flashDate,r.memol,r.id")
+        ->from('employee e')
+        ->rightjoin('part_time pt',"e.id=pt.part_time_empolyee_id and pt.start_time BETWEEN '".$pt_start_date."' and '".$pt_end_date."'")
+        ->leftjoin('record r', "SUBSTRING(e.door_card_num,1,5) = r.start_five and SUBSTRING(e.door_card_num,6)=r.end_five and r.flashDate BETWEEN '".$start_date."' and '".$end_date."'")
+        ->where('e.role=7')
+        ->getText();
+
+        $data = Yii::app()->db->createCommand()
+        ->select('e.name,e.id as employee_id,e.email,e.user_name,e.door_card_num,r.flashDate,r.memol,r.id')
+        ->from('employee e')
+        ->leftjoin('record r', "SUBSTRING(e.door_card_num,1,5) = r.start_five and SUBSTRING(e.door_card_num,6)=r.end_five and r.flashDate BETWEEN '".$start_date."' and '".$end_date."'")
+        ->where('e.role!=7')
+        ->union($checkPTtime)
+        ->queryAll();
+        return $data;
+    }
+    function getAttxendanceReport($day){
+        try {
+            $start_date = $day . ' 00:00:00';
+            $end_date = $day . ' 09:30:59';
+            $pt_start_date = $day . ' 00:00:00';
+            $pt_end_date = $day . ' 23:59:59';
+            $data = $this->getAttxendanceAndCheckPT($start_date,$end_date,$pt_start_date,$pt_end_date);
+            $table = '<h2>正常出勤記錄明細</h2><table border="1" style="color:black;border-color:black;"><tr><th>員工帳號</th><th>員工姓名</th><th>卡號</th><th>刷卡時間</th><th>刷卡狀態</th><th>原廠紀錄編號</th></tr>';
+            $table_abnormal = '<h2>異常出勤記錄明細</h2><table border="1" style="color:black;border-color:black;"><tr><th>員工帳號</th><th>員工姓名</th><th>卡號</th><th>刷卡時間</th><th>刷卡狀態</th><th>原廠紀錄編號</th></tr>';
+            foreach ($data as $key => $value) {
+                if(!empty($value['flashDate'])){
+                    $table .= "<tr><td>" . $value['user_name'] . "</td><td>" . $value['name'] . "</td><td>" . $value['door_card_num'] . "</td><td>" . $value['flashDate'] . "</td><td>" . $value['memol'] . "</td><td>" . $value['id'] . "</td></tr>"; 
+                }else{
+                    $table_abnormal .= "<tr><td>" . $value['user_name'] . "</td><td>" . $value['name'] . "</td><td>" . $value['door_card_num'] . "</td><td>" . $value['flashDate'] . "</td><td>" . $value['memol'] . "</td><td>" . $value['id'] . "</td></tr>"; 
+                }
+            }
+            $table .= "</table>";
+            $table_abnormal .= "</table>";
+            $employee_service = new EmployeeService();
+            // 抓出人事主管／會計
+            $account = $employee_service->getEmployeeByRole(26);
+            $abnormal_type = 3;
+            foreach ($account as $key => $value) {
+                $employee_email = $value->email;
+                $employee_name = $value->name;
+                $mail = new MailService();
+                $mail_type = $mail->sendMail($abnormal_type,$employee_email,$table.$table_abnormal,null,$employee_name);
+                if($mail_type){
+                    Yii::log(date("Y-m-d H:i:s").'Attendance Report employee_id'.$value->id, CLogger::LEVEL_INFO);
+                }else{
+                    Yii::log(date("Y-m-d H:i:s").'Attendance Report Error employee_id'.$value->id,  CLogger::LEVEL_INFO);
+                }
+            }
+        } catch (Exception $e) {
+            $msg = Yii::log("Attxendance Report exception {$e->getTraceAsString()}", CLogger::LEVEL_INFO);
+            $mail = new MailService();
+            $mail->sendAdminMail(0,$msg);
+        }
+    }
+
     function get_chinese_weekday($datetime)
     {
         $weekday = date('w', strtotime($datetime));

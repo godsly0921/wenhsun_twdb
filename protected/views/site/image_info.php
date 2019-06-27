@@ -27,6 +27,10 @@
 		padding-bottom: 5px;
 		border-bottom: 2px solid #66370e;
 	}
+	.thumbnail{
+		max-width: 500px;
+		max-height: 500px;
+	}
 	.size_color,#size_info{
 		color: #d0604e;
 		
@@ -44,6 +48,12 @@
 		-webkit-appearance: checkbox; /* Chrome, Safari, Opera */
 		-moz-appearance: checkbox;    /* Firefox */
 		-ms-appearance: checkbox;     /* not currently supported */
+	}
+	.mt_70{
+		margin-top: 70px !important;
+	}
+	.mt_45{
+		margin-top: 45px !important;
 	}
 	/* The container */
     .tiffany_checkbox {
@@ -150,39 +160,64 @@
 	header,footer{
 		display: none;
 	}
+	.pc_des{
+		display: none;
+	}
+	.mobile_des {
+		display: flex;
+	}
+	.slick-prev:hover, .slick-prev:focus, .slick-next:hover, .slick-next:focus{
+		background-color: #e8e8e8;
+		border-radius: 50%;
+	}
+
+	.slick-prev,.slick-next{
+		background-color: #eaebeb;
+		border-radius: 50%;
+	}
+	.slick-prev::before {
+	    content: "<";
+	    color: #db5524;
+	}
+	.slick-next::before {
+	    content: ">";
+	    color: #db5524;
+	    font-weight: bold;
+	}
+
+	@media (min-width: 992px){
+		.mobile_des {
+			display: none;
+		}
+		.pc_des{
+			display: flex;
+		}
+	}
+		
 </style>
 <div class="col-lg-12 backgroud-white px-5">
 	<div class="row">
-		<div class="col-lg-7">
-			<img src="<?=DOMAIN.PHOTOGRAPH_STORAGE_URL.$_GET['id']?>.jpg">
-			<h5 class="info_color my-3 mt-5">圖片庫關鍵字</h5>
-			<div>
-				<?php foreach ($photograph_data['photograph_info']['keyword'] as $key => $value) {?>
-					<a href="<?= Yii::app()->createUrl('site/search');?>/<?=$value?>/1"><span class="badge badge-keyword py-2 px-3 mr-2"><?=$value?></span></a>
-				<?php }?>
-			</div>
-			<h5 class="info_color my-3 mt-5 brown_text_underline">更多資訊<i class="fa fa-caret-down" aria-hidden="true"></i></h5>
-			<p class="info_color">照片類型：<?=$photograph_data['photograph_info']['category_name']?></p>
-			<p class="info_color">色彩：<?=$photograph_data['source']['color']?></p>
-			<p class="info_color">原件尺寸：<?=$photograph_data['source']['w_h']?></p>
-			<p class="info_color">檔案格式：<?=$photograph_data['source']['ext']?></p>
+		<div class="col-lg-7 my-auto">
+			<img class="thumbnail" src="<?=DOMAIN.PHOTOGRAPH_STORAGE_URL.$_GET['id']?>.jpg">
 		</div>
 		<div class="col-lg-5">
-			<h4 class="size_color">尺寸選擇</h4>
+			<h4 class="size_color mt_70">尺寸選擇</h4>
 			<hr class="text_underline">
 			<?php foreach ($photograph_data['size'] as $key => $value) {?>
 				<div class="d-inline-block">
-					<div class="tiffany_checkbox">                   
+					<div class="tiffany_checkbox mt_45">                   
 	                    <input type="radio" class="size_type" name="size_type" value="<?=$value['size_type']?>" data-w_h="<?=$value['w_h']?>" data-print_w_h="<?=$value['print_w_h']?>" data-dpi="<?=$value['dpi']?>" data-ext="<?=$value['ext']?>" <?=$key==0?"checked":""?> onchange="size_type(this)">
 		                <label class="d-inline-block py-0 px-4 mb-0 mr-2"><?=$value['size_type']?></label>	                
 	                </div>
 	            </div>
 			<?php } ?>
 
-            <div id="size_info" class="my-2"><?=$photograph_data['size'][0]['w_h']?> px | <?=$photograph_data['size'][0]['print_w_h']?> cm | <?=$photograph_data['size'][0]['dpi']?> dpi | <?=$photograph_data['size'][0]['ext']?></div>
-            <div class="row">
-	            <div class="col-lg-5"><span class="info_color brown_text_underline">圖像授權協議概要</span></div>
-	            <div class="col-lg-7"><span class="info_color brown_text_underline tip" data-placement="right" data-tip="size_type_info">尺寸指南</span></div>
+            <div id="size_info" class="my-2 mt_45"><?=$photograph_data['size'][0]['w_h']?> px | <?=$photograph_data['size'][0]['print_w_h']?> cm | <?=$photograph_data['size'][0]['dpi']?> dpi | <?=$photograph_data['size'][0]['ext']?></div>
+            <div class="row mt_45">
+            	<div class="col-lg-12">
+		            <span class="info_color brown_text_underline mr-5">圖像授權協議概要</span>
+		            <span class="info_color brown_text_underline tip" data-placement="right" data-tip="size_type_info">尺寸指南</span>
+	        	</div>
 	            <!-- Tips content -->
 				<div id="size_type_info" class="tip-content hidden">
 					<p>小型 (S) 下載時間最短，適合數位用途。</p> 
@@ -192,7 +227,7 @@
 				</div>
 				<!-- Tips content -->
 	        </div>
-	        <div class="my-4">
+	        <div class="my-4 mt_45">
 	        	<span id="download_cost"> 3 個下載點數從您的</span>
 	        	<div class="dropdown d-inline-block">
 				  	<button class="btn btn-outline-secondary dropdown-toggle" type="button" id="download_method" data-toggle="dropdown" data-download_method="1" aria-haspopup="true" aria-expanded="false">
@@ -204,23 +239,66 @@
 					</div>
 				</div>
 	        </div>
-	        <div>
+	        <div class="mt_45">
 	        	<button type="button" class="btn btn-download mr-2">我要下載 <i class="fa fa-download"></i></button>
 	        	<button type="button" class="btn btn-favorite mx-2"><i class="fa fa-star"></i> 加入收藏</button>
 	        </div>
-	        <div class="my-4">
+	        
+		</div>
+	</div>
+	<div class="row pc_des">
+		<div class="col-lg-7">
+			<h5 class="info_color my-3 mt-5 mt_70">圖片庫關鍵字</h5>
+			<div>
+				<?php foreach ($photograph_data['photograph_info']['keyword'] as $key => $value) {?>
+					<a href="<?= Yii::app()->createUrl('site/search');?>/<?=$value?>/1"><span class="badge badge-keyword py-2 px-3 mr-2"><?=$value?></span></a>
+				<?php }?>
+			</div>
+			<h5 class="info_color my-3 mt-5 brown_text_underline mt_45">更多資訊<i class="fa fa-caret-down" aria-hidden="true"></i></h5>
+			<p class="info_color">照片類型：<?=$photograph_data['photograph_info']['category_name']?></p>
+			<p class="info_color">色彩：<?=$photograph_data['source']['color']?></p>
+			<p class="info_color">原件尺寸：<?=$photograph_data['source']['w_h']?></p>
+			<p class="info_color">檔案格式：<?=$photograph_data['source']['ext']?></p>
+		</div>
+		<div class="col-lg-5">
+			<div class="my-4">
 	        	<p class="info_color">人物資訊：<?=$photograph_data['photograph_info']['people_info']?></p>
 	        	<p class="info_color">事件名稱：<?=$photograph_data['photograph_info']['object_name']?></p>
 	        	<p class="info_color">拍攝時間：<?=$photograph_data['photograph_info']['filming_date']?></p>
 	        	<p class="info_color">拍攝地點：<?=$photograph_data['photograph_info']['filming_location']?></p>
-	        	<p class="info_color">內容描述：<?=$photograph_data['photograph_info']['description']?></p>
-	        	<p class="info_color">入藏來源：<?=$photograph_data['photograph_info']['photo_source']?></p>
+	        	<p class="info_color mt_45">內容描述：<?=$photograph_data['photograph_info']['description']?></p>
+	        	<p class="info_color mt_45">入藏來源：<?=$photograph_data['photograph_info']['photo_source']?></p>
 	        </div>
 		</div>
 	</div>
+	<div class="row mobile_des">
+		<div class="col-lg-5">
+			<div class="my-4">
+	        	<p class="info_color">人物資訊：<?=$photograph_data['photograph_info']['people_info']?></p>
+	        	<p class="info_color">事件名稱：<?=$photograph_data['photograph_info']['object_name']?></p>
+	        	<p class="info_color">拍攝時間：<?=$photograph_data['photograph_info']['filming_date']?></p>
+	        	<p class="info_color">拍攝地點：<?=$photograph_data['photograph_info']['filming_location']?></p>
+	        	<p class="info_color mt_45">內容描述：<?=$photograph_data['photograph_info']['description']?></p>
+	        	<p class="info_color mt_45">入藏來源：<?=$photograph_data['photograph_info']['photo_source']?></p>
+	        </div>
+		</div>
+		<div class="col-lg-7">
+			<h5 class="info_color my-3 mt-5 mt_70">圖片庫關鍵字</h5>
+			<div>
+				<?php foreach ($photograph_data['photograph_info']['keyword'] as $key => $value) {?>
+					<a href="<?= Yii::app()->createUrl('site/search');?>/<?=$value?>/1"><span class="badge badge-keyword py-2 px-3 mr-2"><?=$value?></span></a>
+				<?php }?>
+			</div>
+			<h5 class="info_color my-3 mt-5 brown_text_underline mt_45">更多資訊<i class="fa fa-caret-down" aria-hidden="true"></i></h5>
+			<p class="info_color">照片類型：<?=$photograph_data['photograph_info']['category_name']?></p>
+			<p class="info_color">色彩：<?=$photograph_data['source']['color']?></p>
+			<p class="info_color">原件尺寸：<?=$photograph_data['source']['w_h']?></p>
+			<p class="info_color">檔案格式：<?=$photograph_data['source']['ext']?></p>
+		</div>		
+	</div>
 	<div class="row pb-5">
 		<div class="col-lg-12">
-			<h5 class="info_color brown_text_underline my-3 mt-5">類似的圖片</h5>
+			<h5 class="info_color brown_text_underline my-3 mt-5 mt_45">類似的圖片</h5>
 		</div>
 		<div class="col-lg-6 mx-auto slider-for">
 			<?php foreach ($same_category as $key => $value) {?>
@@ -235,6 +313,7 @@
 		</div>
 	</div>
 </div>
+
 <script type="text/javascript">
 	function size_type(a){
 		var w_h = $(a).attr('data-w_h');
@@ -260,7 +339,7 @@
 		$('.slider-for').slick({
 			slidesToShow: 1,
 			slidesToScroll: 1,
-		 	arrows: false,
+		 	arrows: true,
 			fade: true,
 			asNavFor: '.slider-nav'
 		});
@@ -269,7 +348,8 @@
 			slidesToShow: 3,
 			slidesToScroll: 1,
 			asNavFor: '.slider-for',
-			dots: true,
+			dots: false,
+			arrows: false,
 			centerMode: true,
 			focusOnSelect: true
 		});
