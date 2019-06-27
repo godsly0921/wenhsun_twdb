@@ -623,7 +623,7 @@ class AttendanceService
                             //假如第一筆時間大於9:30 //加註 遲到
                             if(strtotime($first_time) >= $this->getArriveLateTime($day)){
                                 if($diff_time != 0){
-                                    //$abnormal_type = 1;
+                                    $abnormal_type = 1;
                                     $abnormal .= ' 遲到';
                                 }
 
@@ -632,11 +632,15 @@ class AttendanceService
                             //假如第一筆時間小於18:00 //加註 早退
                             if(strtotime($last_time) < $this->getLeaveEarlyTime($day)){
                                 if($diff_time != 0){
-                                    //$abnormal_type = 1;
+                                    $abnormal_type = 1;
                                     $abnormal .= ' 早退';
                                 }
                             }
 
+                        }
+
+                        if($diff_time == ONE_SECOND){
+                            $diff_time = 0;
                         }
 
                         $abnormal .= ' 總時數：'.$this->get_second_to_his($diff_time);
@@ -762,14 +766,11 @@ class AttendanceService
                             $abnormal .= '排班編號：'.$v->id.' |';
 
 
-
+                            //兼職員工依排班時間，若不足，算早退，若超過8小時，不用算異常
                             //第一筆打卡時間小於排班開始時間 最後一筆大於等於 排班結束
                             if(strtotime($first_time) <= $start_record && strtotime($last_time) >= $end_record){
                                 $abnormal_type = 0;
-                                $abnormal .= '排班日:出勤正常 |';
-                            }else{
-                                $abnormal_type = 1;
-                                $abnormal .= '異常:未在排班時間內|';
+                                $abnormal .= '排班日:出勤正常';
                             }
                             if ($diff_time >= NINE_HOUR && $diff_time <= TEN_HOUR) {
                                 $abnormal_type = 0;
@@ -788,22 +789,22 @@ class AttendanceService
 
 
                             if($diff_time != 1) {//0 2~以上
-                                if (strtotime($first_time) >= $this->getArriveLateTime($day)) {
-                                    if ($diff_time != 0) {
-                                        //$abnormal_type = 1;
+                                if ($diff_time != 0) {
+                                    if (strtotime($first_time) >= $this->getArriveLateTime($day)) {
+                                        $abnormal_type = 1;
                                         $abnormal .= ' 遲到 ';
                                     }
-                                }
 
-                                if (strtotime($last_time) < $this->getLeaveEarlyTime($day)) {
-                                    if ($diff_time != 0) {
-                                        //$abnormal_type = 1;
+                                    if(strtotime($last_time) < $end_record){
                                         $abnormal .= ' 早退 ';
+                                        $abnormal_type = 1;
                                     }
                                 }
                             }
 
-
+                            if($diff_time == ONE_SECOND){
+                                $diff_time = 0;
+                            }
                             $abnormal .= ' 總時數：'.$this->get_second_to_his($diff_time);
                             $attendance_record_service = new AttendancerecordService();
                             $model = $attendance_record_service->create($employee_id, $day, $first_time, $last_time, $abnormal_type, $abnormal);
@@ -842,6 +843,11 @@ class AttendanceService
                             $abnormal .= '正常 非排班日';
                         }
 
+
+                        if($diff_time == ONE_SECOND){
+                            $diff_time = 0;
+                        }
+                        $abnormal .= ' 總時數：'.$this->get_second_to_his($diff_time);
 
                         $attendance_record_service = new AttendancerecordService();
                         $model = $attendance_record_service->create($employee_id, $day, $first_time, $last_time, $abnormal_type, $abnormal);
