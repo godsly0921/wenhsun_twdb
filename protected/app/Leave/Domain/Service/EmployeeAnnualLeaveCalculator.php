@@ -7,10 +7,12 @@ namespace Wenhsun\Leave\Domain\Service;
 use DateTime;
 use RuntimeException;
 use Wenhsun\Leave\Domain\Model\AnnualLeave;
+use Wenhsun\Leave\Domain\Model\Employee;
 use Wenhsun\Leave\Domain\Model\EmployeeLeave;
 use Wenhsun\Leave\Domain\Model\EmployeeLeaveRepository;
 use Wenhsun\Leave\Domain\Model\EmployeeRepository;
 use Wenhsun\Leave\Domain\Model\LeaveRecord;
+use Wenhsun\Leave\Domain\Model\Minute;
 
 class EmployeeAnnualLeaveCalculator
 {
