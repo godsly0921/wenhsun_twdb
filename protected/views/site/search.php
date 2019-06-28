@@ -169,6 +169,7 @@
 	    bottom: 120px;
 	    right: 20px;
 	    cursor: pointer;
+	    z-index: 9;
 	}
 </style>
 <div class="container">
@@ -310,8 +311,9 @@
     }
   	$(document).ready( function() {
   		$( ".to_top" ).click(function() {
-			document.body.scrollTop = 0; // For Safari
-  			document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+			// document.body.scrollTop = 0; // For Safari
+  	// 		document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+  			$("html, body").animate({ scrollTop: 0 }, "slow");
 		});
   		$("#filming_date").slider({
 		  // the id of the slider element
