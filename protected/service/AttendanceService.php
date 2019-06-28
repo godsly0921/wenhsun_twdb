@@ -924,6 +924,22 @@ class AttendanceService
 
     }
 
+    function checkAttxendanceDay($day){
+        $attendance_day = $this->findAttendance();
+        $getWeekday = date("w");
+        foreach ($attendance_day as $k => $v) {
+            if ($day == $v->day) {
+                if($v->type == 1)
+                    return true;
+                else
+                    return false;
+            }
+        }
+        if ($getWeekday > 0 && $getWeekday <= 5){
+            return true;
+        }
+        return false;
+    }
     function getAttxendanceAbnormal($day){
         try {
             $employee_service = new EmployeeService();
