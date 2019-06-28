@@ -111,6 +111,13 @@
                             </div>
 
                             <div class="form-group">
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="other_plus">其他加項(+)</label>
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    <input type="text" id="other_plus" name="other_plus" value="<?=$data->getOtherPlus()?>" required="required" class="form-control col-md-7 col-xs-12">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
                                 <label class="control-label col-md-3 col-sm-3 col-xs-12 red" for="salary_total">薪資合計(+)</label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
                                     <input type="text" id="salary_total" name="salary_total" value="<?=$data->calcSalaryTotal()?>" disabled class="form-control col-md-7 col-xs-12">
@@ -132,7 +139,14 @@
                             </div>
 
                             <div class="form-group">
-                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="pension">退休金提撥(-)</label>
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="other_minus">其他減項(-)</label>
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    <input type="text" id="other_minus" name="other_minus" value="<?=$data->getOtherMinus()?>" required="required" class="form-control col-md-7 col-xs-12">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="pension">退休金提撥(不計算)</label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
                                     <input type="text" id="pension" name="pension" value="<?=$data->getPension()?>" disabled class="form-control col-md-7 col-xs-12">
                                 </div>
@@ -149,6 +163,13 @@
                                 <label class="control-label col-md-3 col-sm-3 col-xs-12 red" for="real_salary">實領薪資</label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
                                     <input type="text" id="real_salary" name="real_salary" value="<?=$data->calcRealSalary()?>" disabled class="form-control col-md-7 col-xs-12">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="memo">備註</label>
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    <textarea type="text" id="memo" name="memo" class="form-control col-md-7 col-xs-12"><?=$data->getMemo()?></textarea>
                                 </div>
                             </div>
 

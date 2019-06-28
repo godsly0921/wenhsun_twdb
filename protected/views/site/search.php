@@ -146,6 +146,30 @@
 	    max-width  : 90%;
 	    max-height : 90%;
 	}
+	.tri_up{
+		width: 0;
+		height:0;
+		border-left:10px solid transparent;
+		border-right: 10px solid transparent;
+		border-bottom: 15px solid white;
+	}
+	.tri_up_underline{
+		width:20px;
+		background-color: white;
+		height: 2px;
+	}
+	.to_top{
+		background-color: #d0604e;
+	    width: 40px;
+	    height: 40px;
+	    display: inline-grid;
+	    padding: 10px;
+	    border-radius: 5px;
+	    position: fixed;
+	    bottom: 120px;
+	    right: 20px;
+	    cursor: pointer;
+	}
 </style>
 <div class="container">
 	<!-- Search Bar -- Start -->
@@ -202,6 +226,7 @@
 	<div class="col-lg-12" id="image_result"></div>		
 </div>
 <div class="row my-5" id="page_selection"></div>
+<div class="to_top"><span class="tri_up"></span><span class="tri_up_underline"></span></div>
 <script type="text/javascript">
 	function search(){
 	    var keyword = $("#keyword").val();
@@ -284,6 +309,10 @@
         return query_string;
     }
   	$(document).ready( function() {
+  		$( ".to_top" ).click(function() {
+			document.body.scrollTop = 0; // For Safari
+  			document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+		});
   		$("#filming_date").slider({
 		  // the id of the slider element
 			id: "",

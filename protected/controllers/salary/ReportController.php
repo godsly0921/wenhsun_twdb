@@ -66,7 +66,10 @@ class ReportController extends Controller
                         0,
                         (float)$employee['health_insurance'],
                         (float)$employee['labor_insurance'],
-                        (float)$employee['pension']
+                        (float)$employee['pension'],
+                        '',
+                        0,
+                        0
                     );
 
                     $batchReportBatch->addEmployee($salaryReportEmployee);
@@ -76,9 +79,11 @@ class ReportController extends Controller
             $salaryReportServ = new SalaryReportService();
             $salaryReportServ->addBatch($batchReportBatch);
 
+            $this->redirect('index');
+
         } catch (Throwable $ex) {
             Yii::app()->session[Controller::ERR_MSG_KEY] = $ex->getMessage();
-            $this->redirect("employee?id={$_POST['id']}");
+            $this->redirect('new');
         }
 
     }
@@ -118,6 +123,9 @@ class ReportController extends Controller
             $employeeSalary->setOvertimeWage($_POST['overtime_wage']);
             $employeeSalary->setProjectAllowance($_POST['project_allowance']);
             $employeeSalary->setTaxFreeOvertimeWage($_POST['tax_free_overtime_wage']);
+            $employeeSalary->setMemo($_POST['memo']);
+            $employeeSalary->setOtherPlus($_POST['other_plus']);
+            $employeeSalary->setOtherMinus($_POST['other_minus']);
 
             $serv->setEmployeeSalary($employeeSalary);
 
@@ -167,6 +175,9 @@ class ReportController extends Controller
 
         if ($batchEnt !== null) {
             $rows = [];
+            $totalSalaryOutcome = 0;
+            $employeeCount = 0;
+
             foreach ($batchEnt->getEmployees() as $employee) {
                 $rows[] = [
                     $employee->getEmployeeLoginId(),
@@ -180,14 +191,27 @@ class ReportController extends Controller
                     $employee->getProjectAllowance(),
                     $employee->calcTaxableSalaryTotal(),
                     $employee->getTaxFreeOvertimeWage(),
+                    $employee->getOtherPlus(),
                     $employee->calcSalaryTotal(),
                     $employee->getHealthInsurance() * -1,
                     $employee->getLaborInsurance() * -1,
+                    $employee->getOtherMinus() * -1,
                     $employee->getPension() * -1,
                     $employee->calcDeductionTotal() * -1,
                     $employee->calcRealSalary(),
+                    $employee->getMemo()
                 ];
+
+                $totalSalaryOutcome += $employee->calcRealSalary();
+                $employeeCount++;
             }
+
+            $rows[] = [
+                '總人數',
+                $employeeCount,
+                '薪資總金額',
+                $totalSalaryOutcome,
+            ];
 
             $fileName = "{$batchEnt->getBatchId()}_文訊員工薪資報表";
 
@@ -204,12 +228,15 @@ class ReportController extends Controller
                     '專案津貼(+)',
                     '應稅薪資合計(+)',
                     '免稅加班費(+)',
+                    '其他加項(+)',
                     '薪資合計(+)',
                     '健保(-)',
                     '勞保(-)',
-                    '退休金提撥(-)',
+                    '其他減項(-)',
+                    '退休金提撥(不計算)',
                     '應扣合計(-)',
-                    '實領薪資'
+                    '實領薪資',
+                    '備註'
                 ])
                 ->addRows($rows)
                 ->output($fileName);

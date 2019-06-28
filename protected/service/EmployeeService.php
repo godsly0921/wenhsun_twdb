@@ -86,6 +86,24 @@ class EmployeeService
         }
     }
 
+    public static function getEmployeeByRole($id)
+    {
+        $result = Employee::model()->findAll(array(
+                'select' => '*',
+                'condition' => 'role=:role',
+                'order' => 'id DESC',
+                'params' => [
+                    ':role' => $id,
+                ],
+        ));
+
+        if ($result == null) {
+            $result = false;
+        }
+
+        return $result;
+
+    }
 
     public static function getPTEmployee($id)
     {

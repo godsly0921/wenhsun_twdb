@@ -41,7 +41,6 @@ class MailService
         try {
             // 管理者信箱
             $admin_email = $this->findAllEmail();
-
             $mail = new PHPMailer();
             $mail->IsSMTP();
             $mail->SMTPAuth = true;
@@ -54,7 +53,7 @@ class MailService
             $mail->From = 'wenhsun0509@gmail.com';
             $mail->FromName = '文訊雜誌社人資系統';
             $mail->addAddress($employee_email);
-
+            
             $mail->addCC(isset($admin_email->addressee_1) ? $admin_email->addressee_1 : 'godsly0921@gmail.com');
             $mail->addCC(isset($admin_email->addressee_2) ? $admin_email->addressee_2 : 'godsly0921@gmail.com');
             $mail->addCC(isset($admin_email->addressee_3) ? $admin_email->addressee_3 : 'godsly0921@gmail.com');
@@ -78,6 +77,21 @@ class MailService
                     '<a href="http://192.168.0.160/wenhsun_hr/attendancerecord/update/' . $id . '">請點擊回覆異常</a><br>' .
                     '文訊雜誌社人資系統敬啟<br>' .
                     '備註：此信箱為公告用信箱，請勿回信，若有疑問，請洽HR。謝謝。</p>';
+            }else if ($email_type == 2) { // 每日早上 9:30 執行排程，9:30 前未打卡發送異常信
+                $mail->Subject = '出勤通知:出勤異常';
+                $mail->Body =
+                    '<h2>親愛的' . $employee_name . '您好:<h2>' .
+                    '<p>提醒您，您今天的出勤是異常。<br>詳細資訊如以下<br>'.
+                    '出勤日異常，9:30未打卡,遲到<br>' .
+                    '請您及時告知主管與人事主管遲到或請假原因。<br>' .
+                    '文訊雜誌社人資系統敬啟<br>' .
+                    '備註：此信箱為公告用信箱，請勿回信，若有疑問，請洽HR。謝謝。</p>';
+            }else if ($email_type == 3) { // 每日早上 9:30 執行排程，9:30 前的打卡明細給人事主管／會計
+                $mail->Subject = '出勤記錄明細';
+                $mail->Body =
+                    '<h2 style="color:black;">今日出勤記錄明細：</h2><br>'.
+                    $message .
+                    '<br><p style="color:black;">備註：此信箱為公告用信箱，請勿回信。謝謝。</p>';
             }
 
             if($mail->Send()){

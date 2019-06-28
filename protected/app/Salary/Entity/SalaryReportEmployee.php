@@ -26,6 +26,9 @@ class SalaryReportEmployee
     private $laborInsurance;
     private $pension;
     private $status;
+    private $memo;
+    private $otherPlus;
+    private $otherMinus;
 
     public function getBatchMonth(): string
     {
@@ -100,6 +103,36 @@ class SalaryReportEmployee
         $this->taxFreeOvertimeWage = $taxFreeOvertimeWage;
     }
 
+    public function getOtherPlus()
+    {
+        return $this->otherPlus;
+    }
+
+    public function getOtherMinus()
+    {
+        return $this->otherMinus;
+    }
+
+    public function getMemo()
+    {
+        return $this->memo;
+    }
+
+    public function setMemo($memo): void
+    {
+        $this->memo = $memo;
+    }
+
+    public function setOtherPlus($otherPlus): void
+    {
+        $this->otherPlus = $otherPlus;
+    }
+
+    public function setOtherMinus($otherMinus): void
+    {
+        $this->otherMinus = $otherMinus;
+    }
+
     public function __construct(
         $id,
         $batchId,
@@ -116,7 +149,10 @@ class SalaryReportEmployee
         $taxFreeOvertimeWage,
         $healthInsurance,
         $laborInsurance,
-        $pension
+        $pension,
+        $memo,
+        $otherPlus,
+        $otherMinus
     ) {
         $this->id = $id;
         $this->batchId = $batchId;
@@ -134,6 +170,9 @@ class SalaryReportEmployee
         $this->healthInsurance = $healthInsurance;
         $this->laborInsurance = $laborInsurance;
         $this->pension = $pension;
+        $this->memo = $memo;
+        $this->otherPlus = $otherPlus;
+        $this->otherMinus = $otherMinus;
     }
 
     /**
@@ -218,7 +257,7 @@ class SalaryReportEmployee
      */
     public function calcSalaryTotal()
     {
-        return $this->calcTaxableSalaryTotal() + $this->taxFreeOvertimeWage;
+        return $this->calcTaxableSalaryTotal() + $this->taxFreeOvertimeWage + $this->otherPlus;
     }
 
     /**
@@ -250,7 +289,7 @@ class SalaryReportEmployee
      */
     public function calcDeductionTotal()
     {
-        return $this->healthInsurance + $this->laborInsurance + $this->pension;
+        return $this->healthInsurance + $this->laborInsurance + $this->otherMinus;
     }
 
     /**

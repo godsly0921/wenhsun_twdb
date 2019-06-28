@@ -20,7 +20,7 @@
                     <table id="datatable" class="table table-striped table-bordered">
                         <thead>
                         <tr>
-                            <th>選取</th>
+                            <th><input id="check_all" class="checked_btn" type="checkbox" value=""> 全選</th>
                             <th>員工帳號</th>
                             <th>員工姓名</th>
                             <th>部門</th>
@@ -41,7 +41,7 @@
                                 <?php else:?>
                                 <tr>
                                 <?php endif;?>
-                                    <td><input class="checked_btn" type="checkbox" name="checked[]" value="<?=$data['id']?>"></td>
+                                    <td><input class="checked_btn check_row" type="checkbox" name="checked[]" value="<?=$data['id']?>"></td>
                                     <td><?php if (!empty($data['employee_login_id'])):?><?=$data['employee_login_id']?><?php endif;?></td>
                                     <td><?php if (!empty($data['employee_name'])):?><?=$data['employee_name']?><?php endif;?></td>
                                     <td><?php if (!empty($data['employee_department'])):?><?=$data['employee_department']?><?php endif;?></td>
@@ -89,6 +89,16 @@
                 "oPaginate": {"sFirst": "第一頁", "sPrevious": "上一頁","sNext": "下一頁","sLast": "最後一頁"},
                 "sEmptyTable": "查無資料, 快去新增資料吧"
             }
+        });
+
+        $("#check_all").on("click", function(e){
+
+            if ($(this).prop("checked") === true) {
+                $(".check_row").prop("checked", "checked");
+            } else {
+                $(".check_row").prop("checked", "");
+            }
+
         });
 
         $("#export").on("click", function(){
