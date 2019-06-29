@@ -2,7 +2,7 @@
     <div>
         <div class="page-title">
             <div class="title_left">
-                <h3>員工休假歷程</h3>
+                <h3><?=$employeeName?>(<?=$employeeId?>) - 員工休假歷程(<?=$year?>年)</h3>
             </div>
         </div>
         <div class="clearfix"></div>
@@ -20,9 +20,9 @@
                         <tbody>
                         <?php foreach($list as $row):?>
                             <tr role="row">
-                                <td><?=$row['category']?></td>
-                                <td><?=$row['leave_applied']?></td>
-                                <td><?=$row['leave_available']?></td>
+                                <td><?=$row['take']?></td>
+                                <td><?=$row['leave_time']?></td>
+                                <td><?=$row['leave_minutes'] / 60?></td>
                             </tr>
                         <?php endforeach;?>
                         </tbody>

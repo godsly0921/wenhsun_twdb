@@ -291,19 +291,23 @@ class AttendancerecordService{
 
     public function getEmployeeLeaveList($employeeId, $year): array
     {
+        $startDateTime = "{$year}-01-01 00:00:00";
+        $yearEndDT = new DateTime($startDateTime);
+        $yearEndDT->add(DateInterval::createFromDateString('1 year'));
+        $endDateTime = $yearEndDT->format('Y-m-d') . ' 00:00:00';
+
         return Yii::app()->db->createCommand(
             '
               SELECT * FROM attendance_record
               WHERE employee_id = :employee_id
-              AND take = :leave_type
               AND leave_time >= :start_time
               AND leave_time < :end_time
+              ORDER BY leave_time DESC
             '
         )->bindValues([
             ':employee_id' => $employeeId,
-            ':leave_type' => $leaveType,
             ':start_time' => $startDateTime,
             ':end_time' => $endDateTime,
-        ])->queryRow();
+        ])->queryAll();
     }
 }
