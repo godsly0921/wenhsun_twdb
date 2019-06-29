@@ -280,6 +280,10 @@ class SalaryReportService
                         <td style='border: 1px solid black'>實領薪資</td>
                         <td style='border: 1px solid black'>{$employee->calcRealSalary()}</td>
                     </tr>
+                    <tr>
+                        <td style='border: 1px solid black'>備註</td>
+                        <td style='border: 1px solid black'>{$employee->getMemo()}</td>
+                    </tr>
                 </tbody>
             </table>
             ";
