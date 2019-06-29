@@ -64,4 +64,30 @@ class EmployeeLeaveCalculator
 
         return new Minute(30 * 8 * 60);
     }
+
+    public function personalLeaveAnnualMinutes(): int
+    {
+        return 14 * 8 * 60;
+    }
+
+    public function sickLeaveAnnualMinutes(): int
+    {
+        return 30 * 8 * 60;
+    }
+
+    public function getEmployeeNearlyAnnualLeaveStartDate(Employee $employee, DateTime $now): string
+    {
+        $now->setTime(0, 0);
+        $onBoardDate = new DateTime($employee->getOnBoardDate());
+        $onBoardDate->setTime(0, 0);
+
+        $dDiff = $now->diff($onBoardDate);
+        $diffYear = $dDiff->format('%y');
+
+        if ($diffYear < 1) {
+            return $onBoardDate->format('Y-m-d');
+        }
+
+        return $now->format('Y') . '-' . $onBoardDate->format('m-d');
+    }
 }
