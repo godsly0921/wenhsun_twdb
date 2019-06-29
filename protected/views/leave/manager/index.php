@@ -4,6 +4,15 @@
             <div class="title_left">
                 <h3>查詢員工休假</h3>
             </div>
+            <div class="title_right">
+                <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
+                    <div class="input-group">
+                        <a href="<?= Yii::app()->createUrl('/leave/manager/new');?>">
+                            <button class="btn btn-primary" type="button">新增假單</button>
+                        </a>
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="clearfix"></div>
         <div class="row">

@@ -54,8 +54,13 @@ class ManagerController extends Controller
         ]);
     }
 
-    private function getLeaveText()
+    public function actionNew(): void
     {
+        $employees = EmployeeORM::model()->findAll();
 
+        $this->render('new', [
+            'employees' => $employees,
+            'leaveMap' => $this->leaveMap,
+        ]);
     }
 }
