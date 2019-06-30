@@ -23,7 +23,10 @@
                                 <label class="control-label col-md-3 col-sm-3 col-xs-12">類別</label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
                                     <select class="form-control" id="leave_type" name="leave_type">
-                                        <option value="ANNUAL">特休假</option>
+                                        <?php foreach($leaveMap as $leaveCode => $leaveText):?>
+                                            <option value="<?=$leaveCode?>"><?=$leaveText?></option>
+                                        <?php endforeach;?>
+
                                     </select>
                                 </div>
                             </div>

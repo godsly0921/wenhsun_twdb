@@ -260,5 +260,54 @@ class AttendancerecordService{
         return $data;
 
     }
+
+    public function summaryMinutesByPeriodOfTimeAndLeaveType(
+        string $employeeId,
+        string $startDateTime,
+        string $endDateTime,
+        string $leaveType): int
+    {
+        $r = Yii::app()->db->createCommand(
+            '
+              SELECT SUM(leave_minutes) AS summary_leave_minutes FROM attendance_record
+              WHERE employee_id = :employee_id
+              AND take = :leave_type
+              AND leave_time >= :start_time
+              AND leave_time < :end_time
+            '
+        )->bindValues([
+            ':employee_id' => $employeeId,
+            ':leave_type' => $leaveType,
+            ':start_time' => $startDateTime,
+            ':end_time' => $endDateTime,
+        ])->queryRow();
+
+        if (empty($r)) {
+            return 0;
+        }
+
+        return (int) $r['summary_leave_minutes'];
+    }
+
+    public function getEmployeeLeaveList($employeeId, $year): array
+    {
+        $startDateTime = "{$year}-01-01 00:00:00";
+        $yearEndDT = new DateTime($startDateTime);
+        $yearEndDT->add(DateInterval::createFromDateString('1 year'));
+        $endDateTime = $yearEndDT->format('Y-m-d') . ' 00:00:00';
+
+        return Yii::app()->db->createCommand(
+            '
+              SELECT * FROM attendance_record
+              WHERE employee_id = :employee_id
+              AND leave_time >= :start_time
+              AND leave_time < :end_time
+              ORDER BY leave_time DESC
+            '
+        )->bindValues([
+            ':employee_id' => $employeeId,
+            ':start_time' => $startDateTime,
+            ':end_time' => $endDateTime,
+        ])->queryAll();
+    }
 }
-?>
