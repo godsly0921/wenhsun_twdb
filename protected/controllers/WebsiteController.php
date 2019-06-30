@@ -196,5 +196,92 @@ class WebsiteController extends Controller{
         $about = $aboutService->findById($id);
         $this->render('about_update', array('about' => $about));
     }
+
+    public function Actionpiccolumn_list(){
+        $websiteService = new WebsiteService();
+        $picColumn_date = $websiteService->findAllPicColumn();
+        $this->render('piccolumn_list',['picColumn_date'=>$picColumn_date]);
+    }
+    public function Actionpiccolumn_new(){
+        $_SERVER['REQUEST_METHOD'] === "POST" ? $this->doPostPiccolumnNew() : $this->doGetPiccolumnNew();
+    }
+    public function doPostPiccolumnNew(){
+        if (!CsrfProtector::comparePost()) {
+            $this->redirect('index');
+        }
+        $websiteService = new WebsiteService();
+        $inputs = [];
+        $inputs["pic"] = $_FILES["pic"];
+        $inputs["title"] = filter_input(INPUT_POST, 'title');
+        $inputs["date_start"] = filter_input(INPUT_POST, 'date_start');
+        $inputs["date_end"] = filter_input(INPUT_POST, 'date_end');
+        $inputs["time_desc"] = filter_input(INPUT_POST, 'time_desc');
+        $inputs["address"] = filter_input(INPUT_POST, 'address');
+        $inputs["publish_start"] = filter_input(INPUT_POST, 'publish_start');
+        $inputs["publish_end"] = filter_input(INPUT_POST, 'publish_end');
+        $inputs["content"] = filter_input(INPUT_POST, 'content');
+        $inputs["status"] = filter_input(INPUT_POST, 'status');
+        $inputs["recommend_single_id"] = $_POST['single_id'];
+        $piccolumn_create = $websiteService -> piccolumn_create( $inputs );
+        if( $piccolumn_create[0] === true ){
+            Yii::app()->session['success_msg'] = $piccolumn_create[1];                
+        }else{
+            Yii::app()->session['error_msg'] = $piccolumn_create[1];
+        }
+        $this->redirect(array('website/piccolumn_list'));
+    }
+    public function doGetPiccolumnNew(){
+        $category_service = new CategoryService();
+        $category_data = $category_service->findCategoryMate();
+        $this->render('piccolumn_new',array('category_data'=>$category_data));
+    }
+    public function Actionpiccolumn_update($id){
+        $_SERVER['REQUEST_METHOD'] === "POST" ? $this->doPostPiccolumnUpdate($id) : $this->doGetPiccolumnUpdate($id);
+    }
+    public function doPostPiccolumnUpdate($id){
+        if (!CsrfProtector::comparePost()) {
+            $this->redirect('index');
+        }
+        $websiteService = new WebsiteService();
+        $inputs = [];
+        $inputs["piccolumn_id"] = $id;
+        $inputs["pic"] = $_FILES["pic"];
+        $inputs["title"] = filter_input(INPUT_POST, 'title');
+        $inputs["date_start"] = filter_input(INPUT_POST, 'date_start');
+        $inputs["date_end"] = filter_input(INPUT_POST, 'date_end');
+        $inputs["time_desc"] = filter_input(INPUT_POST, 'time_desc');
+        $inputs["address"] = filter_input(INPUT_POST, 'address');
+        $inputs["publish_start"] = filter_input(INPUT_POST, 'publish_start');
+        $inputs["publish_end"] = filter_input(INPUT_POST, 'publish_end');
+        $inputs["content"] = filter_input(INPUT_POST, 'content');
+        $inputs["status"] = filter_input(INPUT_POST, 'status');
+        $inputs["recommend_single_id"] = $_POST['single_id'];
+        $piccolumn = $websiteService -> piccolumn_update( $inputs );
+        if( $piccolumn[0] === true ){
+            Yii::app()->session['success_msg'] = $piccolumn[1];
+        }else{
+            Yii::app()->session['error_msg'] = $piccolumn[1];
+        }
+        $this->redirect(array('website/piccolumn_list'));
+    }
+    public function doGetPiccolumnUpdate($id){
+        $websiteService = new WebsiteService();
+        $category_service = new CategoryService();
+        $category_data = $category_service->findCategoryMate();
+        $piccolumn_data = $websiteService->findPiccolumnById($id);
+        $recommend_single_id_data = $websiteService->findrecommend_single_id($piccolumn_data->recommend_single_id);
+        $this->render('piccolumn_update', array('piccolumn_data' => $piccolumn_data,'category_data'=>$category_data,'recommend_single_id_data'=>$recommend_single_id_data));        
+    }
+    public function Actionpiccolumn_delete(){
+        $piccolumn_id = $_POST['id'];
+        $websiteService = new WebsiteService();
+        $piccolumn_delete = $websiteService->piccolumn_delete($piccolumn_id);
+        if( $piccolumn_delete[0] === true ){
+            Yii::app()->session['success_msg'] = $piccolumn_delete[1];                
+        }else{
+            Yii::app()->session['error_msg'] = $piccolumn_delete[1];
+        }
+        $this->redirect(Yii::app()->createUrl('website/piccolumn_list'));
+    }
 }
 ?>

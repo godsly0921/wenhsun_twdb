@@ -26,6 +26,8 @@ define ('DATA_PATH', dirname(__FILE__). "/data/");
 define('WATERMARK', dirname(__FILE__).'/assets/image/watermark.png');
 define('HOMEBANNER', dirname(__FILE__).'/assets/image/banner/');
 define('HOMEBANNER_SHOW', '/assets/image/banner/');
+define('PICCOLUMN', dirname(__FILE__).'/assets/image/piccolumn/');
+define('PICCOLUMN_SHOW', '/assets/image/piccolumn/');
 define('HOMEAD', dirname(__FILE__).'/assets/AD/');
 define('PHOTOGRAPH_STORAGE_URL', 'image_storage/O/');
 define('DOMAIN', 'http://web.taiwanblacktea.com.tw/');
