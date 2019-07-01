@@ -9,7 +9,7 @@ class RequestLogin
         }
 
 
-       if (!isset(Yii::app()->session["pid"])) {
+        if (!isset(Yii::app()->session["pid"])) {
             return false;
         }
 
@@ -18,7 +18,7 @@ class RequestLogin
         $controllerAction = Yii::app()->controller->id . '/' . $action->id;
 
         foreach ($powers as $power) {
-            if ($controllerAction === $power['power_controller']) {
+            if (strtolower($controllerAction) === strtolower($power['power_controller'])) {
                 $isAllow = true;
             }
         }

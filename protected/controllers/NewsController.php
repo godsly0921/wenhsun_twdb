@@ -259,10 +259,10 @@ class NewsController extends Controller
         }
     }
 
-    public function actionDownload($id)
+    public function actionDownload()
     {
         try {
-
+            $id = isset($_GET['id'])?$_GET['id']:'';
             $this->layout = false;
 
             $service = new NewsService();
@@ -274,14 +274,14 @@ class NewsController extends Controller
                 return false;
             }
 
-            if (!file_exists(UPLOADS.$result->new_image)) {
+            if (!file_exists(ROOT_DIR.$result->new_image)) {
                 Yii::log("file not found", CLogger::LEVEL_ERROR);
                 echo "無文件可下載2";
                 return false;
             }
 
             $output = "";
-            $fd = fopen(UPLOADS.$result->new_image, "r");
+            $fd = fopen(ROOT_DIR.$result->new_image, "r");
             while (!(feof($fd))) {
                 $output .= fread($fd, 8192);
             }
