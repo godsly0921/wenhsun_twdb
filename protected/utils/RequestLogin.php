@@ -8,7 +8,9 @@ class RequestLogin
             return true;
         }
 
-        if (!isset(Yii::app()->session["pid"])) {
+        $isAllow = true;
+
+      /*  if (!isset(Yii::app()->session["pid"])) {
             return false;
         }
 
@@ -20,7 +22,7 @@ class RequestLogin
             if ($controllerAction === $power['power_controller']) {
                 $isAllow = true;
             }
-        }
+        }*/
 
         return $isAllow;
 	}

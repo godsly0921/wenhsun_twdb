@@ -270,24 +270,24 @@ class NewsController extends Controller
 
             if (!$result) {
                 Yii::log("id not found", CLogger::LEVEL_ERROR);
-                echo "無文件可下載";
+                echo "無文件可下載1";
                 return false;
             }
 
-            if (!file_exists($result->new_image)) {
+            if (!file_exists(UPLOADS.$result->new_image)) {
                 Yii::log("file not found", CLogger::LEVEL_ERROR);
-                echo "無文件可下載";
+                echo "無文件可下載2";
                 return false;
             }
 
             $output = "";
-            $fd = fopen($result->new_image, "r");
+            $fd = fopen(UPLOADS.$result->new_image, "r");
             while (!(feof($fd))) {
                 $output .= fread($fd, 8192);
             }
             fclose($fd);
 
-            header('Content-Disposition: attachment; filename=' . $result->new_image);
+            header('Content-Disposition: attachment; filename=' . basename($result->new_image));
             header("Pragma: no-cache");
             header("Expires: 0");
             header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
