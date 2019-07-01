@@ -259,12 +259,44 @@ class NewsController extends Controller
         }
     }
 
-    public function actiondownload( $fileName ){
-        
-        $newsSer = new NewsService();
-        $newsRes = $newsSer->findById($fileName);
-        $tmpUrl  = substr($newsRes->new_image,1);
-        $tmp = explode("/",$tmpUrl);
-        Yii::app()->getRequest()->sendFile( $tmp[2], file_get_contents( $tmpUrl ) );
+    public function actionDownload($id)
+    {
+        try {
+
+            $this->layout = false;
+
+            $service = new NewsService();
+            $result = $service->findById($id);
+
+            if (!$result) {
+                Yii::log("id not found", CLogger::LEVEL_ERROR);
+                echo "無文件可下載";
+                return false;
+            }
+
+            if (!file_exists($result->new_image)) {
+                Yii::log("file not found", CLogger::LEVEL_ERROR);
+                echo "無文件可下載";
+                return false;
+            }
+
+            $output = "";
+            $fd = fopen($result->new_image, "r");
+            while (!(feof($fd))) {
+                $output .= fread($fd, 8192);
+            }
+            fclose($fd);
+
+            header('Content-Disposition: attachment; filename=' . $result->new_image);
+            header("Pragma: no-cache");
+            header("Expires: 0");
+            header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+
+            echo $output;
+
+        } catch (Throwable $ex) {
+            Yii::log($ex->getMessage(), CLogger::LEVEL_ERROR);
+            $this->redirect('list');
+        }
     }
 }

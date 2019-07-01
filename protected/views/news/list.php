@@ -63,7 +63,7 @@
 
                             <div style="float:right">
                                 <?php if($value['new_image']!=""):?>
-                                <a href="<?php echo Yii::app()->createUrl('news/download')."/fileName/{$value['id']}";?>">
+                                <a href="<?php echo Yii::app()->createUrl('news/download')."?id={$value['id']}";?>">
                                 <?php
                                     $file_name = explode('/',$value['new_image']);
                                 ?>
