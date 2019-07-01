@@ -11,6 +11,7 @@
         <table id="specialcaseTable" width="100%" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid">
             <thead>
             <tr role="row">
+                <th>角色權重0=最大</th>
                 <th>角色權限名稱</th>
                 <th>操作</th>
             </tr>
@@ -19,6 +20,8 @@
                 <?php if($groups !== null && !empty($groups)): ?>
                     <?php foreach ($groups as $group): ?>
                         <tr>
+
+                            <td><?= $group->group_number ?></td>
                             <td><?= $group->group_name ?></td>
                             <td>
                                 <?php foreach ($session_jsons as $jsons):?>
@@ -60,7 +63,7 @@
             "paging": true,
             "responsive": true,
             "info": false,
-            "order": [[ 1, "asc" ]],
+            "order": [[ 0, "asc" ]],
             "columnDefs": [ { "targets": 2, "orderable": false } ],
             "oLanguage": {
                 "oPaginate": {"sFirst": "第一頁", "sPrevious": "上一頁","sNext": "下一頁","sLast": "最後一頁"},

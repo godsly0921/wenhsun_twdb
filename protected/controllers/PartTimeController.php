@@ -272,15 +272,32 @@ class PartTimeController extends Controller
                 //exit;
 
             }else{
+
+                /*
+                 *
+                 *
+                 *  //
+                        $employeeService = new EmployeeService();
+                        $login_result = $employeeService->findEmployeeById(Yii::app()->session['uid']);
+                        $model = $service->findPartTimeIDByID($id);
+                        $record_result = $employeeService->findEmployeeById($model->part_time_empolyee_id);
+                        if($login_result->role < $record_result->role){
+                            $res = $service->editPartTimeStatus($id,3);
+                            if ($res == true) {
+                                return json_encode("已成功取消排班");
+                            } else {
+                                return json_encode("取消排班失敗，你的權限不足");
+                            }
+                        }
+                 *
+                 */
                 $service = new ParttimeService();
                 if(Yii::app()->session['personal']){//一般使用者
                     if (isset(Yii::app()->session['uid'])) {//確定該排班是不是使用者自己的
                         $employeeService = new EmployeeService();
                         $result = $employeeService->findEmployeeById(Yii::app()->session['uid']);
                         $use_id = $result->id;
-
                         $now_time = date("Y-m-d H:i:s");
-
                         $model = $service->findPartTimeIDByUserID($use_id, $id);
 
                         if (!empty($model)) {//如果不是空的找出目前排班這筆資料
@@ -297,7 +314,22 @@ class PartTimeController extends Controller
                                 return json_encode("很抱歉！排班不可以在排班開始前24小時取消，所以您無法取消該筆排班請洽系統管理員");
                             }
                         } else {
-                            return json_encode("很抱歉！這筆排班紀錄不是您，所以您無法取消該筆排班請洽系統管理員");
+
+                            $employeeService = new EmployeeService();
+                            $login_result = $employeeService->findEmployeeById(Yii::app()->session['uid']);
+                            $model = $service->findPartTimeIDByID($id);
+                            $record_result = $employeeService->findEmployeeById($model['part_time_empolyee_id']);
+                            if($login_result->role < $record_result->role){
+                                $res = $service->editPartTimeStatus($id,3);
+                                if ($res == true) {
+                                    return json_encode("已成功取消排班");
+                                } else {
+                                    return json_encode("取消排班失敗 02");
+                                }
+                            }else{
+                                return json_encode("很抱歉！這筆排班紀錄不是您的且權限小於建立者，所以您無法取消該筆排班請洽系統管理員");
+                            }
+
                         }
                     }
                 }else{//系統管理員
@@ -305,7 +337,7 @@ class PartTimeController extends Controller
                     if ($res == true) {
                         return json_encode("已成功取消排班");
                     } else {
-                        return json_encode("取消排班失敗");
+                        return json_encode("取消排班失敗 01");
                     }
                 }
             }
