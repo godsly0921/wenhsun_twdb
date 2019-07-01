@@ -55,21 +55,22 @@ class PersonalCalendarController extends Controller
         }
         $service = new PersonalCalendarService();
 
-        $model = $service->findPersonalCalendarStatus();
+        $model = $service->findPersonalCalendarStatus($employee_id);
 
         $input_arrays = array();
 
         foreach ($model as $key => $value) {
-            if($value->builder_type){//1表示 員工 0表示系統管理員
+            if($value->builder_type == 1){//1表示 員工 0表示系統管理員
                 $service = new EmployeeService();
                 $employee = $service->findEmployeeById($value->builder);
                 $name = $employee['name'];
 
-            }else{
+            }elseif($value->builder_type == 0){
                 $service = new AccountService();
                 $members = $service->findAccountData($value->builder);
                 $name =$members['account_name'];
             }
+
             $input_arrays[] = array('start' => $value->start_time, 'end' => $value->end_time, 'title' => $value['content'].' '.' 計畫：'.$name, 'url' => Yii::app()->createUrl('personalcalendar/cancelPersonalCalendarByCalendar', ['id' => $value->id]));
 
         }

@@ -39,8 +39,8 @@
             header: {
                 left: 'prev,next today',
                 center: 'title',
-               // right: 'month,agendaWeek,agendaDay,listWeek'
-                right: 'month,agendaDay,listWeek'
+                right: 'month,agendaWeek,agendaDay,listWeek'
+                //right: 'month,agendaDay,listWeek'
             },
             handleWindowResize:true,
             defaultDate: '<?php echo date('Y-m-d');?>',

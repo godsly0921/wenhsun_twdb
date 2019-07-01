@@ -20,3 +20,6 @@ CREATE TABLE `personal_calendar` (
 ALTER TABLE `wenhsun`.`personal_calendar`
 CHANGE COLUMN `empolyee_id` `employee_id` VARCHAR(32) NOT NULL COMMENT '打工者ID' ;
 
+ALTER TABLE `wenhsun`.`personal_calendar`
+CHANGE COLUMN `builder` `builder` VARCHAR(32) NOT NULL COMMENT '建立者' ;
+
