@@ -22,8 +22,9 @@ class SiteController extends CController{
         $category_id = isset($_GET["category_id"]) && $_GET["category_id"] != ''?explode(",",$_GET["category_id"]):"";
         $filming_date = isset($_GET["filming_date"]) && $_GET["filming_date"] != ''?$_GET["filming_date"]:"";
         $object_name = isset($_GET["object_name"]) && $_GET["object_name"] != ''?explode(",",$_GET["object_name"]):"";
+        $single_id = isset($_GET["single_id"]) && $_GET["single_id"] != ''?explode(",",$_GET["single_id"]):"";
         $siteService = new SiteService();
-        $result = $siteService->findPhoto("", $keyword, $category_id, $filming_date, $object_name, $page, $limit);
+        $result = $siteService->findPhoto($single_id, $keyword, $category_id, $filming_date, $object_name ,$page, $limit);
         echo json_encode($result);
         exit();
     }
@@ -35,12 +36,14 @@ class SiteController extends CController{
         $category_id = isset($_GET["category_id"])?explode(",",$_GET["category_id"]):"";
         $filming_date = isset($_GET["filming_date"])?$_GET["filming_date"]:"";
         $object_name = isset($_GET["object_name"])?explode(",",$_GET["object_name"]):"";
+        $single_id = isset($_GET["single_id"]) && $_GET["single_id"] != ''?explode(",",$_GET["single_id"]):"";
+        $siteService = new SiteService();
         $siteService = new SiteService();
         $category_service = new CategoryService();
         $filming_date_range = $siteService->findPhotoFilmingRange();
         $distinct_object_name = $siteService->findPhotoObjectname();        
         $category_data = $category_service->findCategoryMate();
-        $total_result = $siteService->findPhotoCount("", $keyword, $category_id, $filming_date, $object_name);
+        $total_result = $siteService->findPhotoCount($single_id, $keyword, $category_id, $filming_date, $object_name);
         $total_result = ceil($total_result / $limit );
         $this->render('search',array( 'total_result' => $total_result, 'filming_date_range' => $filming_date_range, 'distinct_object_name' => $distinct_object_name, 'category_data' => $category_data ));
     }
@@ -61,6 +64,39 @@ class SiteController extends CController{
         $aboutService = new AboutService();
         $about = $aboutService->getAllAbout();
         $this->render('about', array('about' => $about));
+    }
+    public function ActionPiccolumn(){
+        $websiteService = new WebsiteService();
+        $banner_data = $websiteService->findAllBanner();
+        $piccolumn_date = $websiteService->findAllPicColumn();
+        //$recommend_single_id_data = $websiteService->findrecommend_single_id($piccolumn_date->recommend_single_id);
+        $this->render('piccolumn',['piccolumn_date'=>$piccolumn_date,'banner_data'=>$banner_data]);
+    }
+    public function ActionPiccolumnInfo($id){
+        $websiteService = new WebsiteService();
+        $banner_data = $websiteService->findAllBanner();
+        $piccolumn_data = $websiteService->findPiccolumnById($id);
+        $recommend_single_id_data = $websiteService->findrecommend_single_id($piccolumn_data->recommend_single_id);
+        $this->render('piccolumn_info',['piccolumn_data'=>$piccolumn_data,'banner_data'=>$banner_data,'recommend_single_id_data'=>$recommend_single_id_data]);
+    }
+
+    public function ActionNews() {
+        $pageCount = isset($_GET['pageCount']) ? filter_input(INPUT_GET, 'pageCount') : 1;
+        if (!is_numeric($pageCount)) {
+            $pageCount = 1;
+        }
+        $activityNewsService = new ActivityNewsService();
+        $newsAll = $activityNewsService->getAllAcitiveNews();
+        $count = count($newsAll);
+        $page = ceil($count / 10);
+        $news = $activityNewsService->findAllByPaging($pageCount);
+        $this->render('news', array('news' => $news, 'page' => $page, 'pageCount' => $pageCount));
+    }
+
+    public function ActionNews_detail($id) {
+        $activityNewsService = new ActivityNewsService();
+        $news = $activityNewsService->findById($id);
+        $this->render('news_detail', array('news' => $news));
     }
 }
 ?>

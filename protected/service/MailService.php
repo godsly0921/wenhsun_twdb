@@ -61,7 +61,7 @@ class MailService
             $mail->IsHTML(true);
             if ($email_type == 0) {
                 return true;//正常不寄信
-                $mail->Subject = '出勤通知:出勤正常';
+                $mail->Subject = '昨日出勤通知:出勤正常';
                 $mail->Body =
                     '<h2>親愛的' . $employee_name . '您好:<h2>
                  <p>提醒您，您昨天的出勤是正常。<br>詳細資訊如以下<br>'
@@ -69,7 +69,7 @@ class MailService
                     '文訊雜誌社人資系統敬啟<br><br>' .
                     '備註：此信箱為公告用信箱，請勿回信，若有疑問，請洽HR。謝謝。</p>';
             } else if ($email_type == 1) {
-                $mail->Subject = '出勤通知:出勤異常';
+                $mail->Subject = '昨日出勤通知:出勤異常';
                 $mail->Body =
                     '<h2>親愛的' . $employee_name . '您好:<h2>' .
                     '<p>提醒您，您昨天的出勤是異常。<br>詳細資訊如以下<br>'
@@ -78,7 +78,7 @@ class MailService
                     '文訊雜誌社人資系統敬啟<br>' .
                     '備註：此信箱為公告用信箱，請勿回信，若有疑問，請洽HR。謝謝。</p>';
             }else if ($email_type == 2) { // 每日早上 9:30 執行排程，9:30 前未打卡發送異常信
-                $mail->Subject = '出勤通知:出勤異常';
+                $mail->Subject = '今日出勤通知:出勤異常';
                 $mail->Body =
                     '<h2>親愛的' . $employee_name . '您好:<h2>' .
                     '<p>提醒您，您今天的出勤是異常。<br>詳細資訊如以下<br>'.
@@ -87,7 +87,7 @@ class MailService
                     '文訊雜誌社人資系統敬啟<br>' .
                     '備註：此信箱為公告用信箱，請勿回信，若有疑問，請洽HR。謝謝。</p>';
             }else if ($email_type == 3) { // 每日早上 9:30 執行排程，9:30 前的打卡明細給人事主管／會計
-                $mail->Subject = '出勤記錄明細';
+                $mail->Subject = '今日出勤記錄明細';
                 $mail->Body =
                     '<h2 style="color:black;">今日出勤記錄明細：</h2><br>'.
                     $message .

@@ -19,6 +19,12 @@ class WebsiteService
         return $all_ad;
     }
 
+    public function findAllPicColumn(){
+        $all_picColumn = array();
+        $all_picColumn = Piccolumn::model()->findAll(array('order'=>'update_time desc'));
+        return $all_picColumn;
+    }
+
     public function findAllAdInfo(){
         $all_ad = array();
         $all_ad = Yii::app()->db->createCommand()
@@ -225,10 +231,130 @@ class WebsiteService
             return array(false,$post->getErrors());
         }
     }
+    public function piccolumn_create( $input ){
+        $operationlogService = new OperationlogService();
+        $model = new Piccolumn();
+        $model->title = $input['title'];
+        $model->date_start = $input['date_start'];
+        $model->date_end = $input['date_end'];
+        $model->time_desc = $input['time_desc'];
+        $model->address = $input['address'];
+        $model->publish_start = $input['publish_start'];
+        $model->publish_end = $input['publish_end'];
+        $model->content = $input['content'];
+        $model->recommend_single_id = implode(",",$input['recommend_single_id']);
+        $model->status = $input['status'];
+        $upload_image = $input['pic'];
+        if($upload_image['name']!==""){
+            $uuid_name = date("YmdHis").uniqid();
+            $tmp = explode('.',$upload_image['name']);
+            $ext = end($tmp);
+            move_uploaded_file($upload_image['tmp_name'],PICCOLUMN.$uuid_name.'.'.$ext);
+            $image_show_path = PICCOLUMN_SHOW.$uuid_name.'.'.$ext;
+            $model->pic = $image_show_path;
+        }
+        $model->update_time = date('Y-m-d H:i:s');
+        $model->update_id = Yii::app()->session['uid'];
 
+        if (!$model->validate()) {
+            var_dump($model);exit();
+            return array(false,$model);  
+            //return $model;
+        }
+
+        if (!$model->hasErrors()) {
+            if( $model->save() ){
+                $motion = "建立圖片專欄";
+                $log = "建立 圖片專欄名稱 = " . $input['title'];
+                $operationlogService->create_operationlog( $motion, $log );
+                return array(true,'新增成功');         
+            }else{       
+                $motion = "建立圖片專欄";
+                $log = "建立 圖片專欄名稱 = " . $input['title'];
+                $operationlogService->create_operationlog( $motion, $log, 0 );
+                return array(false,$model->getErrors());
+            }
+        }
+        
+        return $model;
+    }
+
+    public function piccolumn_update( $input ){
+        $operationlogService = new OperationlogService();
+        $model = $this->findPiccolumnById($input['piccolumn_id']);
+        $model->title = $input['title'];
+        $model->date_start = $input['date_start'];
+        $model->date_end = $input['date_end'];
+        $model->time_desc = $input['time_desc'];
+        $model->address = $input['address'];
+        $model->publish_start = $input['publish_start'];
+        $model->publish_end = $input['publish_end'];
+        $model->content = $input['content'];
+        $model->recommend_single_id = implode(",",$input['recommend_single_id']);
+        $model->status = $input['status'];
+        $upload_image = $input['pic'];
+        if($upload_image['name']!==""){
+            $uuid_name = date("YmdHis").uniqid();
+            $tmp = explode('.',$upload_image['name']);
+            $ext = end($tmp);
+            move_uploaded_file($upload_image['tmp_name'],PICCOLUMN.$uuid_name.'.'.$ext);
+            $image_show_path = PICCOLUMN_SHOW.$uuid_name.'.'.$ext;
+            $model->pic = $image_show_path;
+        }
+        $model->update_time = date('Y-m-d H:i:s');
+        $model->update_id = Yii::app()->session['uid'];
+        if (!$model->validate()) {
+            var_dump($model);exit();
+            return $model;
+        }
+
+        if (!$model->hasErrors()) {
+            if( $model->save() ){
+                $motion = "更新圖片專欄";
+                $log = "更新 圖片專欄編號 = " . $input['piccolumn_id'] . "；圖片專欄名稱 = " . $model->title;
+                $operationlogService->create_operationlog( $motion, $log );
+                return array(true,'修改成功',$model);         
+            }else{      
+                $motion = "更新圖片專欄";
+                $log = "更新 圖片專欄編號 = " . $input['piccolumn_id'] . "；圖片專欄名稱 = " . $model->title;
+                $operationlogService->create_operationlog( $motion, $log, 0 ); 
+                return array(false,$model->getErrors());
+            }
+        }       
+        return $model;
+    }
+    public function piccolumn_delete($id){
+        $operationlogService = new OperationlogService();
+        $post = Piccolumn::model()->findByPk( $id );
+        if($post->delete()){
+            $motion = "刪除圖片專欄";
+            $log = "刪除 圖片專欄編號 = " . $id;
+            $operationlogService->create_operationlog( $motion, $log );
+            return array(true,'刪除成功');
+        }else{
+            $motion = "刪除圖片專欄";
+            $log = "刪除 圖片專欄編號 = " . $id;
+            $operationlogService->create_operationlog( $motion, $log, 0 );
+            return array(false,$post->getErrors());
+        }
+    }
+    public function findPiccolumnById($id)
+    {
+        $model = Piccolumn::model()->findByPk($id);
+        return $model;
+    }
+    public function findrecommend_single_id($id){
+        $model = Yii::app()->db->createCommand()
+        ->select('*')
+        ->from('single')
+        ->where('single_id in (' . $id . ')')
+        ->queryAll(); 
+        return $model;
+    }
     public function findAdById($id)
     {
         $model = Homead::model()->findByPk($id);
         return $model;
     }
+
 }

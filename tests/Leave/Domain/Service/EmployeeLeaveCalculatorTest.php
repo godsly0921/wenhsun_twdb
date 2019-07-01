@@ -51,4 +51,42 @@ class EmployeeLeaveCalculatorTest extends TestCase
             ]
         ];
     }
+
+    /**
+     * @dataProvider getEmployeeNearlyAnnualLeaveDataProvider
+     * @param string $onBoardDate
+     * @param DateTime $now
+     * @param string $expectedDate
+     */
+    public function testGetEmployeeNearlyAnnualLeaveStartDate(string $onBoardDate, DateTime $now, string $expectedDate): void
+    {
+        $employee = new Employee(new EmployeeId('EP001'), $onBoardDate);
+
+        $sut = new EmployeeLeaveCalculator();
+
+        $r = $sut->getEmployeeNearlyAnnualLeaveStartDate($employee, $now);
+
+        $this->assertEquals($expectedDate, $r);
+    }
+
+    public function getEmployeeNearlyAnnualLeaveDataProvider(): array
+    {
+        return [
+            '未滿1年' => [
+                '2019/01/01',
+                new DateTime('2019/12/31'),
+                '2019-01-01'
+            ],
+            '大於1年' => [
+                '2019/01/01',
+                new DateTime('2020/01/02'),
+                '2020-01-01'
+            ],
+            '大於2年' => [
+                '2019/01/01',
+                new DateTime('2021/01/02'),
+                '2021-01-01'
+            ],
+        ];
+    }
 }

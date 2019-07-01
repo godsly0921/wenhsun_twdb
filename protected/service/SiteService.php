@@ -65,7 +65,7 @@ class SiteService
     public function findPhoto($single_id, $keyword, $category_id, $filming_date, $object_name, $page, $limit){
         $filter = $option = $result = array();
         $mongo = new Mongo();
-        $filter = $this->storeFindPhotoFilter($single_id, $keyword, $category_id, $filming_date, $object_name);
+        $filter = $this->storeFindPhotoFilter($single_id, $keyword, $category_id, $filming_date, $object_name, $single_id);
         $option['projection'] = array('single_id'=>1,'people_info'=>1,'object_name'=>1,'filming_date'=>1,'filming_location'=>1,'keyword'=>1);
         $option['skip'] = ($page-1)*$limit;
         $option['limit'] = $limit;

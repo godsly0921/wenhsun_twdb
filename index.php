@@ -26,12 +26,16 @@ define ('DATA_PATH', dirname(__FILE__). "/data/");
 define('WATERMARK', dirname(__FILE__).'/assets/image/watermark.png');
 define('HOMEBANNER', dirname(__FILE__).'/assets/image/banner/');
 define('HOMEBANNER_SHOW', '/assets/image/banner/');
+define('PICCOLUMN', dirname(__FILE__).'/assets/image/piccolumn/');
+define('PICCOLUMN_SHOW', '/assets/image/piccolumn/');
 define('HOMEAD', dirname(__FILE__).'/assets/AD/');
 define('PHOTOGRAPH_STORAGE_URL', 'image_storage/O/');
 define('DOMAIN', 'http://web.taiwanblacktea.com.tw/');
 //define('DOMAIN', 'http://localhost:8080/wenhsun_hr/'); //測試環境
 define('ABOUT_IMAGE', '/assets/image/about/');
 define('ABOUT_IMAGE_UPLOAD', dirname(__FILE__) . '/assets/image/about/');
+define('NEWS_IMAGE', '/assets/image/news/');
+define('NEWS_IMAGE_UPLOAD', dirname(__FILE__) . '/assets/image/news/');
 //載入系統設定檔
 $config=dirname(__FILE__).'/protected/config/main.php';
 //Yii Debug models開啟
