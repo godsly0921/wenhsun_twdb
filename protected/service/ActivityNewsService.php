@@ -111,12 +111,27 @@ class ActivityNewsService
         $command = Yii::app()->db->createCommand()
         ->select('*')
         ->from('activity_news')
-        ->where("acitve = 'T'")
+        ->where("active = 'T'")
         ->order('create_at DESC')
         ->limit(10, $offset);
 
         $news = $command->queryAll();
 
-        return $news;
+        $result = array();
+        $count = 0;
+
+        foreach ($news as $content) {
+            foreach ($content as $key => $value) {
+                $result[$count][$key] = $value;
+                $result[$count]['count'] = $count;
+            }
+            $count++;
+        }
+
+        if (count($news) % 2 == 1) {
+            $result[] = array('title' => '', 'count' => count($news));
+        }
+
+        return $result;
     }
 }
