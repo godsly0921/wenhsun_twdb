@@ -79,5 +79,24 @@ class SiteController extends CController{
         $recommend_single_id_data = $websiteService->findrecommend_single_id($piccolumn_data->recommend_single_id);
         $this->render('piccolumn_info',['piccolumn_data'=>$piccolumn_data,'banner_data'=>$banner_data,'recommend_single_id_data'=>$recommend_single_id_data]);
     }
+
+    public function ActionNews() {
+        $pageCount = isset($_GET['pageCount']) ? filter_input(INPUT_GET, 'pageCount') : 1;
+        if (!is_numeric($pageCount)) {
+            $pageCount = 1;
+        }
+        $activityNewsService = new ActivityNewsService();
+        $newsAll = $activityNewsService->getAllAcitiveNews();
+        $count = count($newsAll);
+        $page = ceil($count / 10);
+        $news = $activityNewsService->findAllByPaging($pageCount);
+        $this->render('news', array('news' => $news, 'page' => $page, 'pageCount' => $pageCount));
+    }
+
+    public function ActionNews_detail($id) {
+        $activityNewsService = new ActivityNewsService();
+        $news = $activityNewsService->findById($id);
+        $this->render('news_detail', array('news' => $news));
+    }
 }
 ?>
