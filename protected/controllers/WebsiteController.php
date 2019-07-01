@@ -283,5 +283,86 @@ class WebsiteController extends Controller{
         }
         $this->redirect(Yii::app()->createUrl('website/piccolumn_list'));
     }
+
+    public function ActionActivity_news_list() {
+        $newsService = new ActivityNewsService();
+        $news = $newsService->findAll();
+        $this->render('activity_news_list', array('news' => $news));
+    }
+
+    public function ActionActivity_news_create() {
+        $_SERVER['REQUEST_METHOD'] === "POST" ? $this->doPostActivityNewsCreate() : $this->doGetActivityNewsCreate();
+    }
+
+    public function doGetActivityNewsCreate() {
+        $inputs = [];
+        $inputs['title'] = '';
+        $inputs['second_title'] = '';
+        $inputs['content'] = '';
+        $inputs['main_content'] = '';
+        $this->render('activity_news_create', array('news' => $inputs));
+    }
+
+    public function doPostActivityNewsCreate() {
+        $activityNewsService = new ActivityNewsService();
+        if(Yii::app()->request->isPostRequest) {
+            if (!CsrfProtector::comparePost()) {
+                $this->redirect('activity_news_list');
+            }
+            $inputs = [];
+            $inputs['title'] = filter_input(INPUT_POST, 'title');
+            $inputs['second_title'] = filter_input(INPUT_POST, 'second_title');
+            $inputs['content'] = filter_input(INPUT_POST, 'content');
+            $inputs['main_content'] = filter_input(INPUT_POST, 'main_content');
+            $inputs['image'] = $_FILES['image'];
+            $result = $activityNewsService->create($inputs);
+
+            if ($result[0]) {
+                Yii::app()->session['success_msg'] = '更新成功';
+            } else {
+                Yii::app()->session['error_msg'] = $result[1];
+            }
+        }
+
+        $this->render('activity_news_create', array('news' => $inputs));
+    }
+
+    public function ActionActivity_news_update($id=null) {
+        $_SERVER['REQUEST_METHOD'] === "POST" ? $this->doPostActivityNewsUpdate() : $this->doGetActivityNewsUpdate($id);
+    }
+
+    public function doGetActivityNewsUpdate($id) {
+        $activityNewsService = new ActivityNewsService();
+        $news = $activityNewsService->findById($id);
+
+        $this->render('activity_news_update', array('news' => $news));
+    }
+
+    public function doPostActivityNewsUpdate() {
+        $activityNewsService = new ActivityNewsService();
+        if(Yii::app()->request->isPostRequest) {
+            if (!CsrfProtector::comparePost()) {
+                $this->redirect('activity_news_list');
+            }
+            $inputs = [];
+            $inputs['id'] = filter_input(INPUT_POST, 'id');
+            $inputs['title'] = filter_input(INPUT_POST, 'title');
+            $inputs['second_title'] = filter_input(INPUT_POST, 'second_title');
+            $inputs['content'] = filter_input(INPUT_POST, 'content');
+            $inputs['main_content'] = filter_input(INPUT_POST, 'main_content');
+            $inputs['image'] = $_FILES['image'];
+            $inputs['active'] = filter_input(INPUT_POST, 'active');
+            $result = $activityNewsService->update($inputs);
+
+            if ($result[0]) {
+                Yii::app()->session['success_msg'] = '更新成功';
+            } else {
+                Yii::app()->session['error_msg'] = $result[1];
+            }
+        }
+
+        $news = $activityNewsService->findById($inputs['id']);
+        $this->render("activity_news_update" , array('news' => $news));
+    }
 }
 ?>

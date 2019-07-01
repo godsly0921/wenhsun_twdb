@@ -34,6 +34,8 @@ define('DOMAIN', 'http://web.taiwanblacktea.com.tw/');
 //define('DOMAIN', 'http://localhost:8080/wenhsun_hr/'); //測試環境
 define('ABOUT_IMAGE', '/assets/image/about/');
 define('ABOUT_IMAGE_UPLOAD', dirname(__FILE__) . '/assets/image/about/');
+define('NEWS_IMAGE', '/assets/image/news/');
+define('NEWS_IMAGE_UPLOAD', dirname(__FILE__) . '/assets/image/news/');
 //載入系統設定檔
 $config=dirname(__FILE__).'/protected/config/main.php';
 //Yii Debug models開啟
