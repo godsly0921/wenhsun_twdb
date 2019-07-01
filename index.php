@@ -11,6 +11,8 @@ header('Content-Type: text/html; charset=utf-8');
 $yii=dirname(__FILE__).'/framework/yii.php';
 //載入上傳圖片檔案路徑
 $image=dirname(__FILE__).'/assets/uploads/';
+$root_dir=dirname(__FILE__);
+define ('ROOT_DIR',$root_dir);
 define ('IMAGES_STORAGE_DIR',$image);
 define ('IMAGES_SHOW_DIR','/assets/uploads/');
 define ('mysql_bak',dirname(__FILE__).'/assets/site/mysql_bak/');
