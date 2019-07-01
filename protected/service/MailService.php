@@ -189,21 +189,21 @@ class MailService
 
             $mail->Subject = $inputs['new_title'];
 
-            if($inputs["new_image_old"]!=''){
+            if($inputs["new_image"]!=''){
                 $mail->Body =
                     '<h2>親愛的' . $inputs["name"]  . '您好:<h2>
                      <p>提醒您，有公告通知。<br>詳細資訊如以下。<br>'
-                    . $inputs["new_content"] . '<br><br>' .
+                    . nl2br($inputs["new_content"]) . '<br><br>' .
                     '請妥善處理，謝謝。<br><br>' .
                     '文訊雜誌社人資系統敬啟<br><br>' .
-                    '<a href="http://192.168.0.160/wenhsun_hr/'.$inputs["new_image_old"].'">請下載附件</a><br>'.
+                    '<a href="'.ROOT_HTTP.Yii::app()->createUrl('news/download').'?id='.$inputs['id'].'">請下載附件</a><br>'.
                     '備註：此信箱為公告用信箱，請勿回信，若有疑問，請洽HR。謝謝。</p>';
 
-            }elseif(empty($inputs["new_image_old"])) {
+            }elseif(empty($inputs["new_image"])) {
                 $mail->Body =
                     '<h2>親愛的' . $inputs["name"] . '您好:<h2>
                      <p>提醒您，有公告通知。<br>詳細資訊如以下。<br>'
-                    . $inputs["new_content"] . '<br><br>' .
+                    . nl2br($inputs["new_content"]) . '<br><br>' .
                     '請妥善處理，謝謝。<br><br>' .
                     '文訊雜誌社人資系統敬啟<br><br>' .
                     '備註：此信箱為公告用信箱，請勿回信，若有疑問，請洽HR。謝謝。</p>';

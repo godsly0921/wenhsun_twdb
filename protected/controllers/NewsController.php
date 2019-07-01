@@ -92,6 +92,7 @@ class NewsController extends Controller
 
     private function doGetSendmail($id)
     {
+
         $news = News::model()->findByPk($id);
         $roles = Group::model()->findAll();
 
@@ -122,12 +123,13 @@ class NewsController extends Controller
         $inputs["id"] = filter_input(INPUT_POST, "id");
         $inputs["new_title"] = filter_input(INPUT_POST, "new_title");
         $inputs["new_content"] = filter_input(INPUT_POST, "new_content");
-        $inputs["new_image_old"] = filter_input(INPUT_POST, "new_image_old");
+        $inputs["new_image"] = filter_input(INPUT_POST, "new_image");
 
         $emil_status = true;
         foreach($data as $key => $value){
             $inputs["name"] = $value['name'];
             $inputs["email"] = $value['email'];
+            $inputs["id"] = $inputs["id"];
 
             $service = new MailService();
             $type = $service->sendNewsMail($inputs);
@@ -138,7 +140,8 @@ class NewsController extends Controller
 
 
         if ($emil_status == false) {
-            Yii::app()->session['error_msg'] = '寄送失敗';
+
+            Yii::app()->session['error_msg']['0'] = '寄送失敗';
         } else {
             Yii::app()->session['success_msg'] = '寄送成功';
         }

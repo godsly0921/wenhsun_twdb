@@ -13,6 +13,7 @@ $yii=dirname(__FILE__).'/framework/yii.php';
 $image=dirname(__FILE__).'/assets/uploads/';
 $root_dir=dirname(__FILE__);
 define ('ROOT_DIR',$root_dir);
+define ('ROOT_HTTP','http://203.69.216.186/wenhsun_hr');
 define ('IMAGES_STORAGE_DIR',$image);
 define ('IMAGES_SHOW_DIR','/assets/uploads/');
 define ('mysql_bak',dirname(__FILE__).'/assets/site/mysql_bak/');
