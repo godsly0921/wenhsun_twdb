@@ -113,4 +113,10 @@ class Attendancerecord extends CActiveRecord
 	{
 		return parent::model($className);
 	}
+
+    public function scopes() {
+        return array(
+            'byDay' => array('order' => 'day DESC'),
+        );
+    }
 }

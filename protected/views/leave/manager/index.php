@@ -24,11 +24,15 @@
                     </div>
                 <?php endif; ?>
                 <div class="x_panel">
-                    <form id="form" method="post" action="<?php echo Yii::app()->createUrl('/leave/manager/hist'); ?>" data-parsley-validate class="form-horizontal form-label-left" novalidate>
+                    <form id="form" method="get" action="<?php echo Yii::app()->createUrl('/leave/manager/hist'); ?>" data-parsley-validate class="form-horizontal form-label-left" novalidate>
                         <div class="form-group">
-                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="employee_id">員工編號</label>
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="employee">員工</label>
                             <div class="col-md-6 col-sm-6 col-xs-12">
-                                <input type="text" id="employee_id" name="employee_id" required="required" class="form-control col-md-7 col-xs-12">
+                                <select class="form-control" id="employee_id" name="employee_id">
+                                    <?php foreach ($employees as $employee): ?>
+                                        <option value="<?= $employee->id ?>"><?= $employee->name ?>(<?= $employee->id ?>)</option>
+                                    <?php endforeach; ?>
+                                </select>
                             </div>
                         </div>
 
