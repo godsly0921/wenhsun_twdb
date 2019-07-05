@@ -56,7 +56,7 @@ class MailService
             
             $mail->addCC(isset($admin_email->addressee_1) ? $admin_email->addressee_1 : 'godsly0921@gmail.com');
             $mail->addCC(isset($admin_email->addressee_2) ? $admin_email->addressee_2 : 'godsly0921@gmail.com');
-            $mail->addCC(isset($admin_email->addressee_3) ? $admin_email->addressee_3 : 'godsly0921@gmail.com');
+            $mail->addCC(isset($admin_email->addressee_3) ? $admin_email->addressee_3 : 'yuyen103@gmail.com');
 
             $mail->IsHTML(true);
             if ($email_type == 0) {
