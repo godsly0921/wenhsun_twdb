@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use Wenhsun\Leave\Application\EmployeeLeaveService;
 use Employee as EmployeeORM;
 use Wenhsun\Leave\Domain\Model\Employee;
 use Wenhsun\Leave\Domain\Model\EmployeeId;
@@ -10,6 +9,13 @@ use Wenhsun\Leave\Domain\Service\EmployeeLeaveCalculator;
 
 class EmployeeController extends Controller
 {
+    private $leaveMap = [
+        '1' => '病假',
+        '2' => '事假',
+        '5' => '特休假',
+        '9' => '補休假',
+    ];
+
     protected function needLogin(): bool
     {
         return true;
@@ -17,41 +23,37 @@ class EmployeeController extends Controller
 
     public function actionIndex(): void
     {
-        $employeeOrmEnt = EmployeeORM::model()->findByPk(Yii::app()->session['uid']);
+        if (!empty($_GET['year'])) {
+            $year = $_GET['year'];
+        } else {
+            $yearDT = new DateTime();
+            $year = $yearDT->format('Y');
+        }
 
+        $employeeOrmEnt = EmployeeORM::model()->findByPk(Yii::app()->session['uid']);
         $employee = new Employee(new EmployeeId($employeeOrmEnt->id), $employeeOrmEnt->create_at);
 
         $employeeLeaveCalculator = new EmployeeLeaveCalculator();
-        $annualLeaveMinutes = $employeeLeaveCalculator->calcAnnualLeaveInRecentYear(new DateTime(), $employee);
+        $annualLeaveMinutes = $employeeLeaveCalculator->calcAnnualLeaveSummaryOnBoardDate(new DateTime(), $employee);
 
-
-        $annualStartDate = $employeeLeaveCalculator->getEmployeeNearlyAnnualLeaveStartDate(
-            $employee,
-            new DateTime()
+        $attendanceRecordServ = new AttendancerecordService();
+        $tomorrow = new DateTime();
+        $tomorrow->add(DateInterval::createFromDateString('1 day'));
+        $appliedAnnualLeave = $attendanceRecordServ->summaryMinutesByPeriodOfTimeAndLeaveType(
+            $employee->getEmployeeId()->value(),
+            $employee->getOnBoardDate() . ' 00:00:00',
+            $tomorrow->format('Y-m-d 00:00:00'),
+            '5'
         );
-
-        $annualEndDate = new DateTime($annualStartDate);
-        $annualEndDate->add(DateInterval::createFromDateString('1 year'));
-        $annualEndDate->add(DateInterval::createFromDateString('1 day'));
-        $annualEndDate = $annualEndDate->format('Y-m-d');
 
         $personalLeaveAnnualMinutes = $employeeLeaveCalculator->personalLeaveAnnualMinutes();
         $sickLeaveAnnualMinutes = $employeeLeaveCalculator->sickLeaveAnnualMinutes();
 
-        $commonLeaveStartDateTime = new DateTime();
-        $commonLeaveStartDate = $commonLeaveStartDateTime->format('Y') . '/01/01 00:00:00';
-        $commonLeaveEndDateTime = new DateTime();
+        $commonLeaveStartDateTime = new DateTime("{$year}/01/01 00:00:00");
+        $commonLeaveStartDate = $commonLeaveStartDateTime->format('Y/m/d H:i:s');
+        $commonLeaveEndDateTime = new DateTime("{$year}/01/01 00:00:00");
         $commonLeaveEndDateTime->add(DateInterval::createFromDateString('1 year'));
-        $commonLeaveEndDate = $commonLeaveEndDateTime->format('Y') . ' 00:00:00';
-
-        $attendanceRecordServ = new AttendancerecordService();
-
-        $applyedAnnualLeave = $attendanceRecordServ->summaryMinutesByPeriodOfTimeAndLeaveType(
-            $employee->getEmployeeId()->value(),
-            $annualStartDate . ' 00:00:00',
-            $annualEndDate . ' 00:00:00',
-            '5'
-        );
+        $commonLeaveEndDate = $commonLeaveEndDateTime->format('Y/m/d H:i:s');
 
         $personalLeavedMinutes = $attendanceRecordServ->summaryMinutesByPeriodOfTimeAndLeaveType(
             $employee->getEmployeeId()->value(),
@@ -74,14 +76,11 @@ class EmployeeController extends Controller
             '9'
         );
 
-        $employeeLeaveServ = new EmployeeLeaveService();
-        $annualLeaveUsedMinutes = $employeeLeaveServ->queryEmployeeLeaveSum(new DateTime(), new DateTime(), '');
-
-        $list = [
+        $sum = [
             [
                 'category' => '年假(特別休假)',
-                'leave_applied' => $applyedAnnualLeave / 60,
-                'leave_available' => ($annualLeaveMinutes->minutesValue() - $annualLeaveUsedMinutes->minutesValue()) / 60,
+                'leave_applied' => $appliedAnnualLeave / 60,
+                'leave_available' => $annualLeaveMinutes->minutesValue() / 60,
             ],
             [
                 'category' => '事假',
@@ -101,6 +100,21 @@ class EmployeeController extends Controller
 
         ];
 
-        $this->render('list', ['list' => $list]);
+        $serv = new AttendancerecordService();
+        $list = $serv->getEmployeeLeaveList($employee->getEmployeeId()->value(), $year);
+
+        if (!empty($list)) {
+            foreach ($list as $idx => $row) {
+                if (isset($this->leaveMap[$row['take']])) {
+                    $list[$idx]['take'] = $this->leaveMap[$row['take']];
+                }
+            }
+        }
+
+        $this->render('list', [
+            'list' => $list,
+            'sum' => $sum,
+            'year' => $year,
+        ]);
     }
 }
