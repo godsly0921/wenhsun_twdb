@@ -67,9 +67,9 @@ class PersonalCalendarService
     public function findPersonalCalendarIDByUserID($user_id,$id)
     {
         $result = PersonalCalendar::model()->find([
-            'condition' => 'builder =:builder and id =:id',
+            'condition' => 'employee_id =:employee_id and id =:id',
             'params' => [
-                ':builder' => $user_id,
+                ':employee_id' => $user_id,
                 ':id' => $id,
             ]
         ]);
@@ -320,6 +320,29 @@ class PersonalCalendarService
             'condition' => 'id=:id',
             'params' => [
                 ':id' => $id
+            ]
+        ]);
+        return $result;
+    }
+
+
+    public function findPersonalCalendarPrivate($employee_id)
+    {
+        $result = PersonalCalendar::model()->findAll([
+            'condition' => 'employee_id=:employee_id and status=:status and public=:public',
+            'params' => [
+                ':employee_id' => $employee_id, ':status' => 0, ':public' => 'PRIVATE'
+            ]
+        ]);
+        return $result;
+    }
+
+    public function findCalendarOpen()
+    {
+        $result = PersonalCalendar::model()->findAll([
+            'condition' => 'status=:status and public IN ("OPEN","ADMIN")',
+            'params' => [
+                ':status' => 0
             ]
         ]);
         return $result;

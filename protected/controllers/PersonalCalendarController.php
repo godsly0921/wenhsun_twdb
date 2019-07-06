@@ -18,6 +18,21 @@ class PersonalCalendarController extends Controller
 
     public function actionIndex()
     {
+
+        $public = 'N';
+        if (isset($_GET['public'])) {
+            $public = $_GET['public'];
+        }
+
+        // 文訊活動權限
+        $session_jsons = CJSON::decode(Yii::app()->session['power_session_jsons']);
+        $wenhsunActivity = false;
+        foreach($session_jsons as $value) {
+            if (in_array('wenhsun_activity', $value)) {
+                $wenhsunActivity = true;
+            }
+        }
+
         if( Yii::app()->session['personal'] == false){//如果不是員工帳號不能用
             $this->redirect(Yii::app()->createUrl('admin/login'));
         }
@@ -32,7 +47,7 @@ class PersonalCalendarController extends Controller
 
         }
 
-        $this->render('index', ['model' => $model, 'employee_id' => $choose_employee->id]);
+        $this->render('index', ['model' => $model, 'employee_id' => $choose_employee->id, 'wenhsunActivity' => $wenhsunActivity, 'public' => $public]);
     }
 
     public function actionGetevents()
@@ -55,14 +70,18 @@ class PersonalCalendarController extends Controller
         }
         $service = new PersonalCalendarService();
 
-        $model = $service->findPersonalCalendarStatus($employee_id);
+        if ($_GET['public'] == 'Y') {
+            $model = $service->findCalendarOpen();
+        } else {
+            $model = $service->findPersonalCalendarPrivate($employee_id);
+        }
 
         $input_arrays = array();
 
         foreach ($model as $key => $value) {
             if($value->builder_type == 1){//1表示 員工 0表示系統管理員
                 $service = new EmployeeService();
-                $employee = $service->findEmployeeById($value->builder);
+                $employee = $service->findEmployeeById($value->employee_id);
                 $name = $employee['name'];
 
             }elseif($value->builder_type == 0){
@@ -71,8 +90,7 @@ class PersonalCalendarController extends Controller
                 $name =$members['account_name'];
             }
 
-            $input_arrays[] = array('start' => $value->start_time, 'end' => $value->end_time, 'title' => $value['content'].' '.' 計畫：'.$name, 'url' => Yii::app()->createUrl('personalcalendar/cancelPersonalCalendarByCalendar', ['id' => $value->id]));
-
+            $input_arrays[] = array('start' => $value->start_time, 'end' => $value->end_time, 'title' => $value['content'] . ' ' . ' 計畫：' .$name, 'color' =>($value->public === 'ADMIN' ? '#92005a' : '#337ab7'), 'delete' => Yii::app()->createUrl('personalcalendar/cancelPersonalCalendarByCalendar', ['id' => $value->id]));
         }
 
 
@@ -88,7 +106,7 @@ class PersonalCalendarController extends Controller
             $start = date("Y-m-d", strtotime('+' . $i . ' days', strtotime(date('Y-m-d')))); //取得今天日期
             $end = date("Y-m-d", strtotime('+' . $i . ' days', strtotime(date('Y-m-d')))); //取得今天日期
 
-            array_push($input_arrays, array('start' => $start, 'end' => $end, 'title' => '可計畫日期', 'url' => Yii::app()->createUrl('personalcalendar/create', ['employee_id' => $employee_id, 'start' => $start, 'end' => $end]), 'color' => '#66DD00'));
+            array_push($input_arrays, array('start' => $start, 'end' => $end, 'title' => '可計畫日期', 'url' => "javascript:createCalendar('$start', '$end');", 'color' => '#66DD00'));
 
         }
 
@@ -120,8 +138,7 @@ class PersonalCalendarController extends Controller
             $this->redirect('index');
         }
 
-
-        if(!isset($_POST['employee_id']) || !isset($_POST['start_date']) || !isset($_POST['start_hour']) || !isset($_POST['start_minute']) || !isset($_POST['end_date']) || !isset($_POST['end_hour']) || !isset($_POST['end_minute']) ){
+        if(!isset($_POST['employee_id']) || !isset($_POST['start_date']) || !isset($_POST['start_hour']) || !isset($_POST['start_minute']) || !isset($_POST['end_date']) || !isset($_POST['end_hour']) || !isset($_POST['end_minute'])){
             Yii::app()->session['error_msg'] = '計畫時間請填寫完整';//
             $this->redirect('index');
         }
@@ -145,6 +162,13 @@ class PersonalCalendarController extends Controller
 
         $start_time = $inputs['start_date'] . " " . $inputs['start_hour'].":".$inputs['start_minute'].":00";
         $end_time = $inputs['end_date'] . " " . $inputs['end_hour'].":".$inputs['end_minute'].":00";
+
+        // 檢查時間
+        if ($start_time > $end_time) {
+            Yii::app()->session['error_msg'] = '開始時間不可大於結束時間';
+            $this->redirect('index');
+        }
+
         $inputs['start_date_time'] = $start_time;
         $inputs['end_date_time'] = $end_time;
 
@@ -161,6 +185,11 @@ class PersonalCalendarController extends Controller
         $service = new PersonalCalendarService();
         $model = $service->create($inputs);
 
+        $public = 'Y';
+        if ($inputs['public'] == 'PIRVATE') {
+            $public = 'N';
+        }
+
         if ($model->hasErrors()) {
             Yii::app()->session['error_msg'] = $model->getErrors();
             $this->redirect('create');
@@ -169,7 +198,7 @@ class PersonalCalendarController extends Controller
             foreach ($inputs as $key => $val) {
                 Yii::app()->session[$key] = "";
             }
-            $this->redirect(Yii::app()->createUrl('personalcalendar/index', ['employee_id' => $inputs["employee_id"]]));
+            $this->redirect(Yii::app()->createUrl('personalcalendar/index', ['employee_id' => $inputs["employee_id"], 'public' => $public]));
         }
     }
 
@@ -279,39 +308,21 @@ class PersonalCalendarController extends Controller
 
             }else{
                 $service = new PersonalCalendarService();
-                if(Yii::app()->session['personal']){//一般使用者
-                    if (isset(Yii::app()->session['uid'])) {//確定該計畫是不是使用者自己的
-                        $employeeService = new EmployeeService();
-                        $result = $employeeService->findEmployeeById(Yii::app()->session['uid']);
-                        $use_id = $result->id;
-
-                        $now_time = date("Y-m-d H:i:s");
-
+                if (Yii::app()->session['personal']) { //一般使用者
+                    if (isset(Yii::app()->session['uid'])) {
+                        $use_id = Yii::app()->session['uid'];
                         $model = $service->findPersonalCalendarIDByUserID($use_id, $id);
-
-                        if (!empty($model)) {//如果不是空的找出目前計畫這筆資料
-                            $before_start_time = date($model['start_time'], strtotime("-1 day"));//計畫開始時間前24H
-                            if ($now_time < $before_start_time) {//現在時間是否小於等於 計畫開始的時間-24H  判斷目前時間是否在計畫開始時間24小時以內
-                                $personalcalendarSv = new PersonalCalendarService();
-                                $res = $personalcalendarSv->editPersonalCalendarStatus($id, 3);
-                                if ($res == true) {
-                                    return json_encode("已成功取消計畫");
-                                } else {
-                                    return json_encode("取消計畫失敗");
-                                }
+                        if (!empty($model)) { //如果不是空的找出目前計畫這筆資料
+                            $personalcalendarSv = new PersonalCalendarService();
+                            $res = $personalcalendarSv->editPersonalCalendarStatus($id, 3);
+                            if ($res == true) {
+                                return json_encode("已成功取消計畫");
                             } else {
-                                return json_encode("很抱歉！計畫不可以在計畫開始前24小時取消，所以您無法取消該筆計畫請洽系統管理員");
+                                return json_encode("取消計畫失敗");
                             }
                         } else {
                             return json_encode("很抱歉！這筆計畫紀錄不是您，所以您無法取消該筆計畫請洽系統管理員");
                         }
-                    }
-                }else{//系統管理員
-                    $res = $service->editPersonalCalendarStatus($id,3);
-                    if ($res == true) {
-                        return json_encode("已成功取消計畫");
-                    } else {
-                        return json_encode("取消計畫失敗");
                     }
                 }
             }
@@ -333,7 +344,11 @@ class PersonalCalendarController extends Controller
         }
         $service = new PersonalCalendarService();
         $personalcalendar = $service->findPersonalCalendarById($id);
-        $this->redirect(Yii::app()->createUrl('personalcalendar/index?employee_id=' . $personalcalendar[0]['employee_id']));
+        $public = 'Y';
+        if ($personalcalendar[0]['public'] === 'PRIVATE') {
+            $public = 'N';
+        }
+        $this->redirect(Yii::app()->createUrl('personalcalendar/index', [ 'employee_id' => Yii::app()->session['uid'], 'public' => $public]));
     }
     // 取消計畫
     public function actioncancelPersonalCalendar(){
