@@ -17,7 +17,7 @@ class EmployeeController extends Controller
 
     public function actionIndex(): void
     {
-        $employeeOrmEnt = EmployeeORM::model()->findByPk($_SESSION['uid']);
+        $employeeOrmEnt = EmployeeORM::model()->findByPk(Yii::app()->session['uid']);
 
         $employee = new Employee(new EmployeeId($employeeOrmEnt->id), $employeeOrmEnt->create_at);
 
