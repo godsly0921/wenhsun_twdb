@@ -48,10 +48,11 @@
                         </div>
 
                         <div class="form-group">
-                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="start_date">請假日期</label>
-                            <div class="col-md-6 col-sm-6 col-xs-12">
-                                <input type="text" id="date" name="date" required="required"
-                                       class="form-control col-md-7 col-xs-12">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="date">請假日期</label>
+                            <div class="col-md-6 xdisplay_inputx form-group has-feedback">
+                                <input type="text" class="form-control has-feedback-left" id="leave_date" name="leave_date" aria-describedby="inputSuccess2Status">
+                                <span class="fa fa-calendar-o form-control-feedback left" aria-hidden="true"></span>
+                                <span id="inputSuccess2Status" class="sr-only">(success)</span>
                             </div>
                         </div>
 
@@ -92,4 +93,11 @@
         </div>
     </div>
 </div>
-
+<script>
+    $('#leave_date').daterangepicker({
+        singleDatePicker: true,
+        locale: {
+            format: 'YYYY/MM/DD'
+        }
+    });
+</script>

@@ -39,10 +39,10 @@ class EmployeeController extends Controller
         $sickLeaveAnnualMinutes = $employeeLeaveCalculator->sickLeaveAnnualMinutes();
 
         $commonLeaveStartDateTime = new DateTime();
-        $commonLeaveStartDate = $commonLeaveStartDateTime->format('Y-m-d') . ' 00:00:00';
+        $commonLeaveStartDate = $commonLeaveStartDateTime->format('Y') . '/01/01 00:00:00';
         $commonLeaveEndDateTime = new DateTime();
         $commonLeaveEndDateTime->add(DateInterval::createFromDateString('1 year'));
-        $commonLeaveEndDate = $commonLeaveEndDateTime->format('Y-m-d') . ' 00:00:00';
+        $commonLeaveEndDate = $commonLeaveEndDateTime->format('Y') . ' 00:00:00';
 
         $attendanceRecordServ = new AttendancerecordService();
 

@@ -51,9 +51,11 @@
                         </div>
 
                         <div class="form-group">
-                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="start_date">請假日期</label>
-                            <div class="col-md-6 col-sm-6 col-xs-12">
-                                <input type="text" id="date" name="date" required="required" value="<?=$attendanceRecord->day?>" class="form-control col-md-7 col-xs-12">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="date">請假日期</label>
+                            <div class="col-md-6 xdisplay_inputx form-group has-feedback">
+                                <input type="text" class="form-control has-feedback-left" id="leave_date" name="leave_date" aria-describedby="inputSuccess2Status" value="<?=$attendanceRecord->day?>">
+                                <span class="fa fa-calendar-o form-control-feedback left" aria-hidden="true"></span>
+                                <span id="inputSuccess2Status" class="sr-only">(success)</span>
                             </div>
                         </div>
 
@@ -86,6 +88,7 @@
                         <div class="form-group">
                             <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
                                 <button type="submit" class="btn btn-primary">修改</button>
+                                <a class="btn btn-default pull-right" href="<?= Yii::app()->createUrl("/leave/manager/hist?employee_id={$attendanceRecord->employee_id}&year={$year}");?>">返回</a>
                             </div>
                         </div>
                     </form>
@@ -94,5 +97,13 @@
         </div>
     </div>
 </div>
+<script>
+    $('#leave_date').daterangepicker({
+        singleDatePicker: true,
+        locale: {
+            format: 'YYYY/MM/DD'
+        }
+    });
+</script>
 
 

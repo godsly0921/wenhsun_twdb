@@ -89,4 +89,53 @@ class EmployeeLeaveCalculatorTest extends TestCase
             ],
         ];
     }
+
+    /**
+     * @dataProvider getTestCalcAnnualLeaveSummaryOnBoardDateCases
+     * @param string $onBoardDate
+     * @param DateTime $now
+     * @param string $expectedDate
+     */
+    public function testCalcAnnualLeaveSummaryOnBoardDate(string $onBoardDate, DateTime $now, int $expectedLeaveMinutes): void
+    {
+        $employee = new Employee(new EmployeeId('EP001'), $onBoardDate);
+
+        $sut = new EmployeeLeaveCalculator();
+
+        $r = $sut->calcAnnualLeaveSummaryOnBoardDate($now, $employee);
+
+        $this->assertEquals($expectedLeaveMinutes, $r->minutesValue());
+    }
+
+
+    public function getTestCalcAnnualLeaveSummaryOnBoardDateCases(): array
+    {
+        return [
+            '未滿半年' => [
+                '2019/01/01',
+                new DateTime('2019/05/30'),
+                0,
+            ],
+            '滿半年' => [
+                '2019/01/01',
+                new DateTime('2019/07/01'),
+                1440
+            ],
+            '滿1年' => [
+                '2019/01/01',
+                new DateTime('2020/01/01'),
+                4800,
+            ],
+            '滿25年' => [
+                '2019/01/01',
+                new DateTime('2044/01/01'),
+                239040
+            ],
+            '滿30年' => [
+                '2019/01/01',
+                new DateTime('2049/01/01'),
+                311040
+            ],
+        ];
+    }
 }
