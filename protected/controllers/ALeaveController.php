@@ -22,7 +22,7 @@ class ALeaveController extends Controller
     {
         $employeeOrmEnt = EmployeeORM::model()->findByPk($_SESSION['uid']);
 
-        $employee = new Employee(new EmployeeId($employeeOrmEnt->id), $employeeOrmEnt->create_at);
+        $employee = new Employee(new EmployeeId($employeeOrmEnt->id), $employeeOrmEnt->onboard_date);
 
         $employeeLeaveCalculator = new EmployeeLeaveCalculator();
         $annualLeaveMinutes = $employeeLeaveCalculator->calcAnnualLeaveInRecentYear(new DateTime(), $employee);

@@ -31,7 +31,7 @@ class EmployeeController extends Controller
         }
 
         $employeeOrmEnt = EmployeeORM::model()->findByPk(Yii::app()->session['uid']);
-        $employee = new Employee(new EmployeeId($employeeOrmEnt->id), $employeeOrmEnt->create_at);
+        $employee = new Employee(new EmployeeId($employeeOrmEnt->id), $employeeOrmEnt->onboard_date);
 
         $employeeLeaveCalculator = new EmployeeLeaveCalculator();
         $annualLeaveMinutes = $employeeLeaveCalculator->calcAnnualLeaveSummaryOnBoardDate(new DateTime(), $employee);
