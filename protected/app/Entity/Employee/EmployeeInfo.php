@@ -21,6 +21,7 @@ class EmployeeInfo
     public $birth;
     public $person_id;
     public $nationality;
+    public $onboard_date;
 
     public $country;
     public $dist;
@@ -67,6 +68,7 @@ class EmployeeInfo
     {
         $employeeModel = new EmployeeModel();
         $employeeModel->id = $this->employeeId->employeeId();
+        $employeeModel->onboard_date = $this->onboard_date;
         $employeeModel->user_name = $this->user_name;
         $employeeModel->password = $this->getPassword();
         $employeeModel->role = $this->role;

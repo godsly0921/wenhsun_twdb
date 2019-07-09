@@ -138,7 +138,7 @@ class ManagementController extends Controller
         }
 
         if (!empty($data->birth)) {
-            $data->birth = explode(" ", $data->birth)[0];
+            $data->birth = explode(' ', $data->birth)[0];
         }
 
         $extRepo = new EmployeeExtensionsRepo();
