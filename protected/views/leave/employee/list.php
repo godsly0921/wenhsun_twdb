@@ -53,7 +53,7 @@
                         <thead>
                         <tr>
                             <th>假別</th>
-                            <th>申請時間(小時)</th>
+                            <th>申請日期</th>
                             <th>申請時數(小時)</th>
                         </tr>
                         </thead>
@@ -61,7 +61,7 @@
                         <?php foreach($list as $row):?>
                             <tr role="row">
                                 <td><?=$row['take']?></td>
-                                <td><?=$row['leave_time']?></td>
+                                <td><?= $row['leave_time']?></td>
                                 <td><?=$row['leave_minutes'] / 60?></td>
                             </tr>
                         <?php endforeach;?>
