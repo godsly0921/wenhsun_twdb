@@ -1,0 +1,1 @@
+ALTER TABLE `attendance_record` CHANGE `leave_time` `leave_time` DATETIME NULL;
