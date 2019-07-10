@@ -147,6 +147,7 @@ class ManagerController extends Controller
 
             $leaveDate = $_POST['leave_date'];
 
+
             $now = Common::now();
             $attendanceRecord = new Attendancerecord();
             $attendanceRecord->employee_id = $_POST['employee_id'];

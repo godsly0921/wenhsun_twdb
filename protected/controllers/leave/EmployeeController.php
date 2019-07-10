@@ -31,6 +31,16 @@ class EmployeeController extends Controller
         }
 
         $employeeOrmEnt = EmployeeORM::model()->findByPk(Yii::app()->session['uid']);
+
+        if($employeeOrmEnt->onboard_date === NULL){
+            Yii::app()->session['page_msg']  =
+                '<SCRIPT type="text/javascript">
+                 alert("您的到職日尚未設定，請洽文訊人資，系統將幫你轉到公告頁。");
+                 </SCRIPT>';
+            $this->redirect('/news/list');
+            exit;
+        }
+
         $employee = new Employee(new EmployeeId($employeeOrmEnt->id), $employeeOrmEnt->onboard_date);
 
         $employeeLeaveCalculator = new EmployeeLeaveCalculator();

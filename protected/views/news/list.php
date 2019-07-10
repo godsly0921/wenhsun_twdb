@@ -1,3 +1,5 @@
+<?php echo (isset(Yii::app()->session['page_msg']) && Yii::app()->session['page_msg'] != '') ? Yii::app()->session['page_msg'] : ''; ?>
+<?php unset(Yii::app()->session['page_msg']); ?>
 <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->createUrl('/assets/site/css/newslist.css');?>">
 <ul class="nav nav-tabs">
     <li class="active"><a data-toggle="tab" href="#news">公布欄</a></li>
