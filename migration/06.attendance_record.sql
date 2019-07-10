@@ -22,7 +22,8 @@ CHANGE COLUMN `first_time` `first_time` VARCHAR(64) NULL DEFAULT NULL ,
 CHANGE COLUMN `last_time` `last_time` VARCHAR(64) NULL DEFAULT NULL ;
 
 ALTER TABLE `wenhsun`.`attendance_record`
-CHANGE COLUMN `leave_time` `leave_time` DATETIME NOT NULL DEFAULT '0' ;
+CHANGE COLUMN `leave_time` `leave_time` DATETIME NULL ;
+
 
 
 
