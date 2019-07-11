@@ -1001,9 +1001,9 @@ class AttendanceService
                             //第一筆打卡時間小於排班開始時間 最後一筆大於等於 排班結束
                             if (strtotime($first_time) <= $start_record && strtotime($last_time) >= $end_record) {
                                 $abnormal_type = 0;
-                                $abnormal .= '排班日 班表內，';
+                                $abnormal .= '排班日 正常，';
                             } else {
-                                $abnormal .= '排班日 班表外，';
+                                $abnormal .= '排班日 遲到或早退，';
                             }
 
 
@@ -1026,13 +1026,13 @@ class AttendanceService
                             if ($diff_time != 1) {//0 2~以上
                                 if ($diff_time != 0) {
                                     //假如第一筆時間大於9:30 //加註 遲到
-                                    if (strtotime($first_time) >= $this->getArriveLateTime($day) and $diff_time >= NINE_HOUR && $diff_time <= TEN_HOUR) {
+                                    if (strtotime($first_time) >= $start_record and $diff_time >= NINE_HOUR && $diff_time <= TEN_HOUR) {
                                         $abnormal_type = 0;
                                         $abnormal = '上班八小時';
 
                                     }
 
-                                    if (strtotime($first_time) >= $this->getArriveLateTime($day) and $diff_time < NINE_HOUR) {
+                                    if (strtotime($first_time) >= $start_record and $diff_time < NINE_HOUR) {
                                         $abnormal_type = 1;
                                         $abnormal .= '|遲到|';
                                     }

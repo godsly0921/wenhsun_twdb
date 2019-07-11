@@ -135,7 +135,7 @@ class MailService
             if ($emailType == 0) {
                 $mail->Subject = '用戶未設定，員工編號';
                 $mail->Body =
-                    '<h2>親愛的' . '管理員您好' . '您好:<h2>
+                    '<h2>親愛的' . '管理員' . '您好:<h2>
                      <p>提醒您，有異常狀況。<br>詳細資訊如以下<br>'
                     . $message . '<br><br>' .
                     '請善待妥善處理，謝謝。<br><br>' .
@@ -146,7 +146,7 @@ class MailService
             if ($emailType == 1) {
                 $mail->Subject = '意外異常';
                 $mail->Body =
-                    '<h2>親愛的' . '管理員您好' . '您好:<h2>
+                    '<h2>親愛的' . '管理員' . '您好:<h2>
                      <p>提醒您，有異常狀況。<br>詳細資訊如以下<br>'
                     . $message . '<br><br>' .
                     '請善待妥善處理，謝謝。<br><br>' .
