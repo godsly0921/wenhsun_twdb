@@ -25,15 +25,32 @@ class ManagerController extends Controller
     {
         $employees = EmployeeORM::model()->findAll();
 
-        $this->render('index', ['employees' => $employees]);
+        $userNameSearchWord = $this->buildUsernameSearchWord($employees);
+
+        $this->render('index', ['userNameSearchWord' => $userNameSearchWord]);
+    }
+
+    private function buildUsernameSearchWord($employees): string
+    {
+        $loginIds = [];
+        foreach ($employees as $employee) {
+            $loginIds[] = $employee->user_name;
+        }
+
+        $userNameSearchWord = implode('","', $loginIds);
+
+        return '"' . $userNameSearchWord . '"';
     }
 
     public function actionHist(): void
     {
-        $employeeId = $_GET['employee_id'];
+        $employeeUserName = $_GET['user_name'];
         $year = $_GET['year'];
 
-        $employeeOrmEnt = EmployeeORM::model()->findByPk($employeeId);
+        $employeeOrmEnt = EmployeeORM::model()->find(
+            'user_name=:user_name',
+            [':user_name' => $employeeUserName]
+        );
 
         if ($employeeOrmEnt === null) {
             Yii::app()->session[Controller::ERR_MSG_KEY] = '查無員工';
@@ -41,7 +58,7 @@ class ManagerController extends Controller
         }
 
         $serv = new AttendancerecordService();
-        $list = $serv->getEmployeeLeaveList($employeeId, $year);
+        $list = $serv->getEmployeeLeaveList($employeeOrmEnt->id, $year);
 
         if (!empty($list)) {
             foreach ($list as $idx => $row) {
@@ -121,7 +138,8 @@ class ManagerController extends Controller
         ];
 
         $this->render('hist', [
-            'employeeId' => $employeeId,
+            'employeeId' => $employeeOrmEnt->id,
+            'employeeUserName' => $employeeOrmEnt->user_name,
             'employeeName' => $employeeOrmEnt->name,
             'year' => $year,
             'list' => $list,
@@ -133,8 +151,10 @@ class ManagerController extends Controller
     {
         $employees = EmployeeORM::model()->findAll();
 
+        $userNameSearchWord = $this->buildUsernameSearchWord($employees);
+
         $this->render('new', [
-            'employees' => $employees,
+            'userNameSearchWord' => $userNameSearchWord,
             'leaveMap' => $this->leaveMap,
         ]);
     }
@@ -146,11 +166,21 @@ class ManagerController extends Controller
         try {
 
             $leaveDate = $_POST['leave_date'];
+            $employeeUserName = $_POST['user_name'];
 
+            $employeeOrmEnt = EmployeeORM::model()->find(
+                'user_name=:user_name',
+                [':user_name' => $employeeUserName]
+            );
+
+            if ($employeeOrmEnt === null) {
+                Yii::app()->session[Controller::ERR_MSG_KEY] = '查無員工';
+                $this->redirect('new');
+            }
 
             $now = Common::now();
             $attendanceRecord = new Attendancerecord();
-            $attendanceRecord->employee_id = $_POST['employee_id'];
+            $attendanceRecord->employee_id = $employeeOrmEnt->id;
             $attendanceRecord->create_at = $now;
             $attendanceRecord->update_at = $now;
             $attendanceRecord->day = $leaveDate;

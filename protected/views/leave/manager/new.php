@@ -25,14 +25,11 @@
                           data-parsley-validate class="form-horizontal form-label-left" novalidate>
 
                         <?php CsrfProtector::genHiddenField(); ?>
+
                         <div class="form-group">
-                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="employee">員工</label>
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="user_name">員工帳號</label>
                             <div class="col-md-6 col-sm-6 col-xs-12">
-                                <select class="form-control" id="employee_id" name="employee_id">
-                                    <?php foreach ($employees as $employee): ?>
-                                        <option value="<?= $employee->id ?>"><?= $employee->name ?>(<?= $employee->id ?>)</option>
-                                    <?php endforeach; ?>
-                                </select>
+                                <input type="text" id="user_name" name="user_name" required="required" class="form-control col-md-7 col-xs-12">
                             </div>
                         </div>
 
@@ -94,10 +91,18 @@
     </div>
 </div>
 <script>
-    $('#leave_date').daterangepicker({
-        singleDatePicker: true,
-        locale: {
-            format: 'YYYY/MM/DD'
-        }
-    });
+    $( function() {
+
+        $('#leave_date').daterangepicker({
+            singleDatePicker: true,
+            locale: {
+                format: 'YYYY/MM/DD'
+            }
+        });
+
+        let availableTags = [<?= $userNameSearchWord ?>];
+        $( "#user_name" ).autocomplete({
+            source: availableTags
+        });
+    } );
 </script>
