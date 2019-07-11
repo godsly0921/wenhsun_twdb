@@ -2,7 +2,7 @@
     <div>
         <div class="page-title">
             <div class="title_left">
-                <h3><?=$employeeName?>(<?=$employeeId?>) - 員工休假紀錄(<?=$year?>年)</h3>
+                <h3><?=$employeeName?>(<?=$employeeUserName?>) - 員工休假紀錄(<?=$year?>年)</h3>
             </div>
         </div>
         <div class="clearfix"></div>

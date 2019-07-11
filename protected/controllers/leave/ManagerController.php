@@ -25,15 +25,26 @@ class ManagerController extends Controller
     {
         $employees = EmployeeORM::model()->findAll();
 
-        $this->render('index', ['employees' => $employees]);
+        $loginIds = [];
+        foreach ($employees as $employee) {
+            $loginIds[] = $employee->user_name;
+        }
+
+        $userNameSearchWord = implode('","', $loginIds);
+        $userNameSearchWord = '"' . $userNameSearchWord . '"';
+
+        $this->render('index', ['userNameSearchWord' => $userNameSearchWord]);
     }
 
     public function actionHist(): void
     {
-        $employeeId = $_GET['employee_id'];
+        $employeeUserName = $_GET['user_name'];
         $year = $_GET['year'];
 
-        $employeeOrmEnt = EmployeeORM::model()->findByPk($employeeId);
+        $employeeOrmEnt = EmployeeORM::model()->find(
+            'user_name=:user_name',
+            [':user_name' => $employeeUserName]
+        );
 
         if ($employeeOrmEnt === null) {
             Yii::app()->session[Controller::ERR_MSG_KEY] = '查無員工';
@@ -41,7 +52,7 @@ class ManagerController extends Controller
         }
 
         $serv = new AttendancerecordService();
-        $list = $serv->getEmployeeLeaveList($employeeId, $year);
+        $list = $serv->getEmployeeLeaveList($employeeOrmEnt->id, $year);
 
         if (!empty($list)) {
             foreach ($list as $idx => $row) {
@@ -121,7 +132,8 @@ class ManagerController extends Controller
         ];
 
         $this->render('hist', [
-            'employeeId' => $employeeId,
+            'employeeId' => $employeeOrmEnt->id,
+            'employeeUserName' => $employeeOrmEnt->user_name,
             'employeeName' => $employeeOrmEnt->name,
             'year' => $year,
             'list' => $list,
