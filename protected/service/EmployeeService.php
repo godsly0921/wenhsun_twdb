@@ -36,6 +36,52 @@ class EmployeeService
         ])->queryAll();
     }
 
+    public function findEmployeeInRolesListObject($rolse)
+    {
+        $role = '';
+        $i = 0;
+        foreach ($rolse as $key => $value) {
+            if ($i == 0) {
+                $role .= $value;
+            } elseif ($i != 0 && $i > 0) {
+                $role .= ',' . $value;
+            }
+            $i++;
+        }
+
+        $criteria = new CDbCriteria();
+        $criteria->select = '*';
+        $criteria->condition = "enable = :enable AND role IN (:role)";
+        $criteria->params=(array(':enable'=>'Y',':role'=>$role));
+        $result = Employee::model() -> findAll($criteria);
+
+        return $result;
+    }
+
+    public function findEmployeeNotInRolesListObject($rolse)
+    {
+        $role = '';
+        $i = 0;
+        foreach ($rolse as $key => $value) {
+            if ($i == 0) {
+                $role .= $value;
+            } elseif ($i != 0 && $i > 0) {
+                $role .= ',' . $value;
+            }
+            $i++;
+        }
+
+        $criteria = new CDbCriteria();
+        $criteria->select = '*';
+        $criteria->condition = "enable = :enable AND role NOT IN (:role)";
+        $criteria->params=(array(':enable'=>'Y',':role'=>$role));
+        $result = Employee::model() -> findAll($criteria);
+
+        return $result;
+    }
+
+
+
 
     public static function findEmployeeNoPTList($role)
     {

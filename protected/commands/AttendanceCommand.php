@@ -11,17 +11,19 @@ class AttendanceCommand extends CConsoleCommand
         if(true){//false 表示測試
             $today = date("Y-m-d", strtotime('-1 day'));
         }else{
-            $today = '2019-05-03';//測試日期
+            $today = '2019-07-10';//測試日期
         }
 
         $res->getAttxendanceData($today);
         $res->getPartTimeData($today);
+        $res->getScheduleData($today);
+
         $today = date("Y-m-d");
         $isAttxendanceDay = $res->checkAttxendanceDay($today);
         if($isAttxendanceDay){
             $res->getAttxendanceAbnormal($today);
             $res->getAttxendanceReport($today);
-        }        
+        }
     }
 
 }

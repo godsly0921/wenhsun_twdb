@@ -136,6 +136,24 @@ class ScheduleService
         ]);
         return $result;
     }
+
+    public function findScheduleDayAllAndDevice($empolyee_id,$day)
+    {
+        $criteria = new CDbCriteria();
+        $criteria->select = '*';
+        $criteria->condition = 'status = :status and empolyee_id = :empolyee_id and start_time >= :start_time and end_time <= :end_time';
+        $criteria->params = array(':status' => 0,':empolyee_id' => $empolyee_id,':start_time' => $day. ' 00:00:00', ':end_time' => $day. ' 23:59:59');
+
+        $datas = Schedule::model()->findAll($criteria);
+
+        if (count($datas) == 0) {
+            $datas = false;
+        }
+
+        return $datas;
+
+    }
+
     public function schedule_create(array $inputs)
     {
         $model = new Schedule();
