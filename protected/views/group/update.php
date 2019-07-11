@@ -29,12 +29,12 @@
         <div class="panel-body">
 
             <input type="hidden" min="0" max="255" class="form-control" id="group_number" name="group_number" value="<?=$groups->group_number?>">
-            <!--<div class="form-group">
+            <div class="form-group">
                 <label for="group_number"  class="col-sm-2 control-label">角色權重:</label>
                 <div class="col-sm-1">
-                    <input type="number" min="0" max="255" class="form-control" id="group_number" name="group_number" value="<?/*=$groups->group_number*/?>">
+                    <input type="number" min="0" max="255" class="form-control" id="group_number" name="group_number" value="<?=$groups->group_number?>">
                 </div>
-            </div>-->
+            </div>
 
             <div class="form-group">
                 <label for="group_name" class="col-sm-2 control-label">角色名稱:</label>

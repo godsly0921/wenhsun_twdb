@@ -92,6 +92,7 @@ class NewsController extends Controller
 
     private function doGetSendmail($id)
     {
+
         $news = News::model()->findByPk($id);
         $roles = Group::model()->findAll();
 
@@ -122,12 +123,13 @@ class NewsController extends Controller
         $inputs["id"] = filter_input(INPUT_POST, "id");
         $inputs["new_title"] = filter_input(INPUT_POST, "new_title");
         $inputs["new_content"] = filter_input(INPUT_POST, "new_content");
-        $inputs["new_image_old"] = filter_input(INPUT_POST, "new_image_old");
+        $inputs["new_image"] = filter_input(INPUT_POST, "new_image");
 
         $emil_status = true;
         foreach($data as $key => $value){
             $inputs["name"] = $value['name'];
             $inputs["email"] = $value['email'];
+            $inputs["id"] = $inputs["id"];
 
             $service = new MailService();
             $type = $service->sendNewsMail($inputs);
@@ -138,7 +140,8 @@ class NewsController extends Controller
 
 
         if ($emil_status == false) {
-            Yii::app()->session['error_msg'] = '寄送失敗';
+
+            Yii::app()->session['error_msg']['0'] = '寄送失敗';
         } else {
             Yii::app()->session['success_msg'] = '寄送成功';
         }
@@ -259,12 +262,44 @@ class NewsController extends Controller
         }
     }
 
-    public function actiondownload( $fileName ){
-        
-        $newsSer = new NewsService();
-        $newsRes = $newsSer->findById($fileName);
-        $tmpUrl  = substr($newsRes->new_image,1);
-        $tmp = explode("/",$tmpUrl);
-        Yii::app()->getRequest()->sendFile( $tmp[2], file_get_contents( $tmpUrl ) );
+    public function actionDownload()
+    {
+        try {
+            $id = isset($_GET['id'])?$_GET['id']:'';
+            $this->layout = false;
+
+            $service = new NewsService();
+            $result = $service->findById($id);
+
+            if (!$result) {
+                Yii::log("id not found", CLogger::LEVEL_ERROR);
+                echo "無文件可下載1";
+                return false;
+            }
+
+            if (!file_exists(ROOT_DIR.$result->new_image)) {
+                Yii::log("file not found", CLogger::LEVEL_ERROR);
+                echo "無文件可下載2";
+                return false;
+            }
+
+            $output = "";
+            $fd = fopen(ROOT_DIR.$result->new_image, "r");
+            while (!(feof($fd))) {
+                $output .= fread($fd, 8192);
+            }
+            fclose($fd);
+
+            header('Content-Disposition: attachment; filename=' . basename($result->new_image));
+            header("Pragma: no-cache");
+            header("Expires: 0");
+            header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+
+            echo $output;
+
+        } catch (Throwable $ex) {
+            Yii::log($ex->getMessage(), CLogger::LEVEL_ERROR);
+            $this->redirect('list');
+        }
     }
 }

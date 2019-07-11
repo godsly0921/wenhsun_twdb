@@ -26,7 +26,7 @@
                 width:10%;
             }
             .group_date input{
-                width: 100%;
+                width: 70%;
                 position:relative;
             }
             .group_date label{
@@ -196,9 +196,9 @@
             <h1>保密合約書</h1>
             <p class="padding_left_35">
                 茲有
-                <input type="radio" checked name="confidentiality_type"><span>文訊</span>
-                <input type="radio" name="confidentiality_type"><span>基金會</span>
-                <input type="radio" name="confidentiality_type"><span>紀州庵</span>
+                <input type="radio" <?=$data->department == '文訊'?'checked':''?> name="confidentiality_type"><span>文訊</span>
+                <input type="radio" <?=$data->department == '基金會'?'checked':''?> name="confidentiality_type"><span>基金會</span>
+                <input type="radio" <?=$data->department == '紀州庵'?'checked':''?> name="confidentiality_type"><span>紀州庵</span>
                  ( 以下簡稱甲方 ) 因業務需要，委請 <input type="text" value="<?=$data->name?>" disabled> 君(以下簡稱乙方)於甲方公司所在地或其他指定地點提供服務，雙方同意遵守下列約定：
             </p>
 
@@ -222,31 +222,31 @@
 
             <p class="padding_left_2em">甲方：</p>
             <ul class="ul_radio">
-                <li><input type="radio" name="confidentiality_company" checked><span>文訊雜誌社</span></li>
-                <li><input type="radio" name="confidentiality_company"><span>財團法人台灣文學發展基金會</span></li>
-                <li><input type="radio" name="confidentiality_company"><span>財團法人台灣文學發展基金會市定古蹟紀州庵及新館營運管理處</span></li>
+                <li><input type="radio" name="confidentiality_boss_company" checked><span>文訊雜誌社</span></li>
+                <li><input type="radio" name="confidentiality_boss_company"><span>財團法人台灣文學發展基金會</span></li>
+                <li><input type="radio" name="confidentiality_boss_company"><span>財團法人台灣文學發展基金會市定古蹟紀州庵及新館營運管理處</span></li>
             </ul>
-            <p class="padding_left_2em">代表人：</p><span><?=$data->name?></span>
+            <p class="padding_left_2em">代表人：</p><span><?=$management_data[0]->name?></span>
             <div class="confidentiality_title">
-                <input type="radio" name="confidentiality_title" checked><span>社長</span>
-                <input type="radio" name="confidentiality_title"><span>董事長</span>
-                <input type="radio" name="confidentiality_title"><span>館長</span>
+                <input type="radio" checked name="confidentiality_boss_title"><span>社長</span>
+                <input type="radio" name="confidentiality_boss_title"><span>董事長</span>
+                <input type="radio" name="confidentiality_boss_title"><span>館長</span>
             </div>
-            <div><p class="padding_left_2em">乙方：</p><input type="text"></div>
+            <div><p class="padding_left_2em">乙方：</p><input type="text" value="<?=$data->name?>"disabled ></div>
             <div><p class="padding_left_2em">身份證字號：</p><input type="text" value="<?=$data->person_id?>" disabled></div>
             <div><p class="padding_left_2em">戶籍地址：</p><input type="text" class="long-input" value="<?=$data->country?><?=$data->dist?><?=$data->address?>" disabled></div>
             <p style="max-width: 100%">
                 <div class="year_of_tw">中華民國</div>
                 <div class="group_date year">
-                    <input type="text">
+                    <input type="text" value="<?=date("Y")-1911?>">
                     <label>年</label>
                 </div>
                 <div class="group_date month">
-                    <input type="text">
+                    <input type="text" value="<?=date("m")?>">
                     <label>月</label>
                 </div>
                 <div class="group_date day">
-                    <input type="text">
+                    <input type="text" value="<?=date("d")?>">
                     <label>日</label>
                 </div>
             </p>
@@ -257,9 +257,9 @@
             <h1>智慧財產權合約書</h1>
             <p class="padding_left_35">
                 茲有
-                <input type="radio" checked name="intellectual_type"><span>文訊</span>
-                <input type="radio" name="intellectual_type"><span>基金會</span>
-                <input type="radio" name="intellectual_type"><span>紀州庵</span>
+                <input type="radio" <?=$data->department == '文訊'?'checked':''?> name="right_intellectual_type"><span>文訊</span>
+                <input type="radio" <?=$data->department == '基金會'?'checked':''?> name="right_intellectual_type"><span>基金會</span>
+                <input type="radio" <?=$data->department == '紀州庵'?'checked':''?> name="right_intellectual_type"><span>紀州庵</span>
                 (以下簡稱甲方)僱(聘)用 <input type="text" value="<?=$data->name?>" disabled> 君(以下簡稱乙方)提供服務，自乙方受甲方聘僱日起，關於智慧財產權之歸屬及附屬事項，雙方約定如下：
             </p>
 
@@ -273,31 +273,31 @@
             <br/><br/>
             <p class="padding_left_2em">甲方：</p>
             <ul class="ul_radio">
-                <li><input type="radio" name="confidentiality_company" checked><span>文訊雜誌社</span></li>
-                <li><input type="radio" name="confidentiality_company"><span>財團法人台灣文學發展基金會</span></li>
-                <li><input type="radio" name="confidentiality_company"><span>財團法人台灣文學發展基金會市定古蹟紀州庵及新館營運管理處</span></li>
+                <li><input type="radio" name="right_confidentiality_company" checked><span>文訊雜誌社</span></li>
+                <li><input type="radio" name="right_confidentiality_company"><span>財團法人台灣文學發展基金會</span></li>
+                <li><input type="radio" name="right_confidentiality_company"><span>財團法人台灣文學發展基金會市定古蹟紀州庵及新館營運管理處</span></li>
             </ul>
-            <p class="padding_left_2em">代表人：</p><span><?=$data->name?></span>
+            <p class="padding_left_2em">代表人：</p><span><?=$management_data[0]->name?></span>
             <div class="confidentiality_title">
                 <input type="radio" name="confidentiality_title" checked><span>社長</span>
                 <input type="radio" name="confidentiality_title"><span>董事長</span>
                 <input type="radio" name="confidentiality_title"><span>館長</span>
             </div>
-            <div><p class="padding_left_2em">乙方：</p><input type="text"></div>
+            <div><p class="padding_left_2em">乙方：</p><input type="text" value="<?=$data->name?>"disabled></div>
             <div><p class="padding_left_2em">身份證字號：</p><input type="text" value="<?=$data->person_id?>" disabled></div>
             <div><p class="padding_left_2em">戶籍地址：</p><input type="text" class="long-input" value="<?=$data->country?><?=$data->dist?><?=$data->address?>" disabled></div>
             <p style="max-width: 100%">
                 <div class="year_of_tw">中華民國</div>
                 <div class="group_date year">
-                    <input type="text">
+                    <input type="text" value="<?=date("Y")-1911?>">
                     <label>年</label>
                 </div>
                 <div class="group_date month">
-                    <input type="text">
+                    <input type="text" value="<?=date("m")?>">
                     <label>月</label>
                 </div>
                 <div class="group_date day">
-                    <input type="text">
+                    <input type="text" value="<?=date("d")?>">
                     <label>日</label>
                 </div>
             </p>
@@ -309,9 +309,9 @@
             <h1>保密契約書<span class="small_label">「個人資料保護法」</span></h1>
             <p class="padding_left_35">
                 茲有
-                <input type="radio" checked name="private_type"><span>文訊</span>
-                <input type="radio" name="private_type"><span>基金會</span>
-                <input type="radio" name="private_type"><span>紀州庵</span>
+                <input type="radio" <?=$data->department == '文訊'?'checked':''?> name="private_type"><span>文訊</span>
+                <input type="radio" <?=$data->department == '基金會'?'checked':''?> name="private_type"><span>基金會</span>
+                <input type="radio" <?=$data->department == '紀州庵'?'checked':''?> name="private_type"><span>紀州庵</span>
                 (以下共稱甲方)因業務需要，委請 <input type="text" value="<?=$data->name?>" disabled> 君(以下簡稱乙方)於甲方公司所在地或甲方我指定之地點提供服務，乙方向甲方承諾遵守下列事項：
             </p>
             <ul class="first_level">
@@ -343,25 +343,25 @@
                 <li><input type="radio" name="confidentiality_company"><span>財團法人台灣文學發展基金會市定古蹟紀州庵及新館營運管理處</span></li>
             </ul>
             <p class="padding_left_2em">代表人：</p>
-            <input type="radio" name="confidentiality_title" checked><span>社長</span>
-            <input type="radio" name="confidentiality_title"><span>董事長</span>
-            <input type="radio" name="confidentiality_title"><span>館長</span>
-            <div><p class="padding_left_2em"></p><span><?=$data->name?></span></div>
-            <div><p class="padding_left_2em">乙方：</p><input type="text"></div>
+            <input type="radio" name="confidentiality_title_personal" checked><span>社長</span>
+            <input type="radio" name="confidentiality_title_personal"><span>董事長</span>
+            <input type="radio" name="confidentiality_title_personal"><span>館長</span>
+            <div><p class="padding_left_2em"></p><span><?=$management_data[0]->name?></span></div>
+            <div><p class="padding_left_2em">乙方：</p><input type="text" value="<?=$data->name?>"disabled></div>
             <div><p class="padding_left_2em">身份證字號：</p><input type="text" value="<?=$data->person_id?>" disabled></div>
             <div><p class="padding_left_2em">戶籍地址：</p><input type="text" class="long-input" value="<?=$data->country?><?=$data->dist?><?=$data->address?>" disabled></div>
             <p style="max-width: 100%">
                 <div class="year_of_tw">中華民國</div>
                 <div class="group_date year">
-                    <input type="text">
+                    <input type="text" value="<?=date("Y")-1911?>">
                     <label>年</label>
                 </div>
                 <div class="group_date month">
-                    <input type="text">
+                    <input type="text" value="<?=date("m")?>">
                     <label>月</label>
                 </div>
                 <div class="group_date day">
-                    <input type="text">
+                    <input type="text" value="<?=date("d")?>">
                     <label>日</label>
                 </div>
             </p>

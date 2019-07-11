@@ -138,7 +138,7 @@ class ManagementController extends Controller
         }
 
         if (!empty($data->birth)) {
-            $data->birth = explode(" ", $data->birth)[0];
+            $data->birth = explode(' ', $data->birth)[0];
         }
 
         $extRepo = new EmployeeExtensionsRepo();
@@ -309,7 +309,9 @@ class ManagementController extends Controller
         if (!$data) {
             $this->redirect('list');
         }
-
-        $this->renderPartial("contract", ['data' => $data]);
+        $employee_service = new EmployeeService();
+        // 抓出社長
+        $management_data = $employee_service->getEmployeeByRole(27);
+        $this->renderPartial("contract", ['data' => $data,'management_data' => $management_data]);
     }
 }

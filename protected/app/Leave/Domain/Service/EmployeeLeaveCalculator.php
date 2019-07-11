@@ -38,6 +38,49 @@ class EmployeeLeaveCalculator
         25 => 30,
     ];
 
+    public function calcAnnualLeaveSummaryOnBoardDate(DateTime $now, Employee $employee): Minute
+    {
+        $now->setTime(0, 0, 0);
+
+        $onBoardDate = new DateTime($employee->getOnBoardDate());
+        $onBoardDate->setTime(0,0,0);
+
+        $dDiff = $now->diff($onBoardDate);
+        $diffYear = $dDiff->format('%y');
+
+        if ($diffYear < 1 && $dDiff->format('%m') < 6) {
+            return new Minute(0);
+        }
+
+        if ($diffYear < 1 && $dDiff->format('%m') >= 6) {
+            return new Minute(3 * 8 * 60);
+        }
+
+        if (isset($this->leaveMap[$diffYear])) {
+            $yearCnt = $diffYear;
+            $leaveDays = 0;
+            while ($yearCnt >= 1) {
+                $leaveDays += $this->leaveMap[$yearCnt];
+                $yearCnt--;
+            }
+
+            return new Minute(($leaveDays + 3) * 8 * 60);
+
+        } else {
+            $diffOnBoardYears = $diffYear - count($this->leaveMap);
+            $extraLeaveDays = $diffOnBoardYears * 30;
+            $yearCnt = count($this->leaveMap);
+            $leaveDays = 0;
+            while ($yearCnt >= 1) {
+                $leaveDays += $this->leaveMap[$yearCnt];
+                $yearCnt--;
+            }
+
+            return new Minute(($leaveDays + $extraLeaveDays + 3) * 8 * 60);
+        }
+    }
+
+
     public function calcAnnualLeaveInRecentYear(DateTime $nowDate, Employee $employee): Minute
     {
         $nowDate->setTime(0, 0);

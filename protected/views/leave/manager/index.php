@@ -24,18 +24,18 @@
                     </div>
                 <?php endif; ?>
                 <div class="x_panel">
-                    <form id="form" method="post" action="<?php echo Yii::app()->createUrl('/leave/manager/hist'); ?>" data-parsley-validate class="form-horizontal form-label-left" novalidate>
+                    <form id="form" method="get" action="<?php echo Yii::app()->createUrl('/leave/manager/hist'); ?>" data-parsley-validate class="form-horizontal form-label-left" novalidate>
                         <div class="form-group">
-                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="employee_id">員工編號</label>
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="user_name">員工帳號</label>
                             <div class="col-md-6 col-sm-6 col-xs-12">
-                                <input type="text" id="employee_id" name="employee_id" required="required" class="form-control col-md-7 col-xs-12">
+                                <input type="text" id="user_name" name="user_name" required="required" class="form-control col-md-7 col-xs-12">
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="year">年度</label>
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="year">休假年度</label>
                             <div class="col-md-6 col-sm-6 col-xs-12">
-                                <input type="text" id="year" name="year" required="required" class="form-control col-md-7 col-xs-12">
+                                <input type="text" id="year" name="year" placeholder="輸入格式:西元年，例:2019" required="required" class="form-control col-md-7 col-xs-12">
                             </div>
                         </div>
 
@@ -52,4 +52,12 @@
         </div>
     </div>
 </div>
+<script>
+    $( function() {
+        let availableTags = [<?= $userNameSearchWord ?>];
+        $( "#user_name" ).autocomplete({
+            source: availableTags
+        });
+    } );
+</script>
 

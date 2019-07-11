@@ -9,13 +9,17 @@
     <link href="<?php echo Yii::app()->request->baseUrl; ?>/assets/gentelella/vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="<?php echo Yii::app()->request->baseUrl; ?>/assets/gentelella/vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
     <link href="<?php echo Yii::app()->request->baseUrl; ?>/assets/gentelella/vendors/nprogress/nprogress.css" rel="stylesheet">
+    <link href="<?php echo Yii::app()->request->baseUrl; ?>/assets/bootstrap-select/dist/css/bootstrap-select.css" rel="stylesheet">
+    <link href="<?php echo Yii::app()->request->baseUrl; ?>/assets/gentelella/vendors/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
     <link href="<?php echo Yii::app()->request->baseUrl; ?>/assets/gentelella/build/css/custom.min.css" rel="stylesheet">
+    <link href="<?php echo Yii::app()->request->baseUrl; ?>/assets/jquery-ui-1.12.1/jquery-ui.min.css" rel="stylesheet">
     <script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/gentelella/vendors/jquery/dist/jquery.min.js"></script>
     <script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/gentelella/vendors/parsley/parsley.min.js"></script>
     <script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/gentelella/build/js/i18n/zh_tw.js"></script>
     <script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/bootstrap-select/dist/js/bootstrap-select.js"></script>
-    <link href="<?php echo Yii::app()->request->baseUrl; ?>/assets/bootstrap-select/dist/css/bootstrap-select.css" rel="stylesheet">
-
+    <script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/gentelella/vendors/moment/moment.js"></script>
+    <script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/gentelella/vendors/bootstrap-daterangepicker/daterangepicker.js"></script>
+    <script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/jquery-ui-1.12.1/jquery-ui.min.js"></script>
 </head>
 <style>
     .lmask {

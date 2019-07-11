@@ -125,6 +125,16 @@
                                     </div>
                                 </div>
 
+                                <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12"
+                                           for="nationality">到職日</label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                        <input type="date" id="onboard_date" name="onboard_date"
+                                               value="<?= $data->onboard_date ?>"
+                                               class="form-control col-md-7 col-xs-12">
+                                    </div>
+                                </div>
+
                                 <div class="ln_solid"></div>
                                 <p>聯絡資訊</p>
 

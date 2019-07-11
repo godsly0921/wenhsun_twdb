@@ -67,9 +67,9 @@ class PersonalCalendarService
     public function findPersonalCalendarIDByUserID($user_id,$id)
     {
         $result = PersonalCalendar::model()->find([
-            'condition' => 'builder =:builder and id =:id',
+            'condition' => 'employee_id =:employee_id and id =:id',
             'params' => [
-                ':builder' => $user_id,
+                ':employee_id' => $user_id,
                 ':id' => $id,
             ]
         ]);
@@ -186,12 +186,14 @@ class PersonalCalendarService
         return $result;
     }
 
-    public function findPersonalCalendarStatus()
+    public function findPersonalCalendarStatus($employee_id)
     {
         $result = PersonalCalendar::model()->findAll([
-            'condition' => 'status=:status',
+            'condition' => 'status=:status and employee_id=:employee_id or public=:public',
             'params' => [
                 ':status' => 0,
+                ':employee_id' => $employee_id,
+                ':public' => 'OPEN',
             ]
         ]);
         return $result;
@@ -220,8 +222,8 @@ class PersonalCalendarService
         $model->employee_id = $inputs['employee_id'];
         $model->start_time = $inputs['start_date_time'];
         $model->end_time = $inputs['end_date_time'];
-        $model->builder = Yii::app()->session['uid'];//這邊只能讓使用者建立預約{管理者無法}
-        $model->builder_type = (int)(Yii::app()->session['personal'])?1:0;//這邊只能讓使用者建立預約{管理者無法}
+        $model->builder =  Yii::app()->session['uid'];//這邊只能讓使用者建立預約{管理者無法}
+        $model->builder_type = (int)(Yii::app()->session['personal']==true)?1:0;//這邊只能讓使用者建立預約{管理者無法}
         $model->status = 0;
         $model->create_time = date("Y-m-d H:i:s");
         $model->modify_time = date("Y-m-d H:i:s");
@@ -318,6 +320,29 @@ class PersonalCalendarService
             'condition' => 'id=:id',
             'params' => [
                 ':id' => $id
+            ]
+        ]);
+        return $result;
+    }
+
+
+    public function findPersonalCalendarPrivate($employee_id)
+    {
+        $result = PersonalCalendar::model()->findAll([
+            'condition' => 'employee_id=:employee_id and status=:status and public=:public',
+            'params' => [
+                ':employee_id' => $employee_id, ':status' => 0, ':public' => 'PRIVATE'
+            ]
+        ]);
+        return $result;
+    }
+
+    public function findCalendarOpen()
+    {
+        $result = PersonalCalendar::model()->findAll([
+            'condition' => 'status=:status and public IN ("OPEN","ADMIN")',
+            'params' => [
+                ':status' => 0
             ]
         ]);
         return $result;

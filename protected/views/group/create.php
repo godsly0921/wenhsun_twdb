@@ -20,7 +20,7 @@
     <div class="panel panel-default">
         <div class="panel-body">
 
-            <input type="hidden" class="form-control" id="group_number" name="group_number" placeholder="請輸入權重(數字)" value="0">
+            <input type="hidden" class="form-control" id="group_number" name="group_number" placeholder="請輸入權重(數字)" value="100">
 
             <div class="form-group">
                 <label for="group_name" class="col-sm-2 control-label">角色名稱:</label>

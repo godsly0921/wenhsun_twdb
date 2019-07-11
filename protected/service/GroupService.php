@@ -126,6 +126,19 @@ class GroupService
         return ($result == false) ? false : true;
     }
 
+    public function groupById($id)
+    {
+        $result = Group::model()->find([
+            'select' => 'group_number',
+            'condition'=>'id=:id',
+            'params'=> [
+                ':id' => $id,
+            ]
+        ]);
+
+        return ($result == false) ? 9999 : $result;
+    }
+
     public function update(array $inputs)
     {
         $group = Group::model()->findByPk($inputs["group_id"]);

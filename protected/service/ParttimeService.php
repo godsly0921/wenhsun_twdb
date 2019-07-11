@@ -76,6 +76,17 @@ class ParttimeService
         return $result;
     }
 
+    public function findPartTimeIDByID($id)
+    {
+        $result = PartTime::model()->find([
+            'condition' => 'id =:id',
+            'params' => [
+                ':id' => $id,
+            ]
+        ]);
+        return $result;
+    }
+
     public function findPartTimeDayAllForStation($station_id,$datetime)
     {
         $res = Yii::app()->db->createCommand()

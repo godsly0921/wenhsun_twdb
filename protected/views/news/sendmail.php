@@ -55,9 +55,8 @@
                     <?php if ($news->new_image !== ""):; ?>
                         <input class="form-control" name="new_image_old" type="text"
                                placeholder="<?php echo ($news->new_image !== "") ? $news->new_image : '' ?>" disabled=""
-                               value="<?php echo ($news->new_image !== "") ? $news->new_image : '' ?>"
-                               accept="application/pdf">
-                        <!--<input type="file" id="new_image" name="new_image" value="<?php /*echo ($news->new_image!=="")?$news->new_image:'' */ ?>" accept="application/pdf">-->
+                               value="<?php echo ($news->new_image !== "") ? $news->new_image : '' ?>">
+                      <input type="hidden" id="new_image" name="new_image" value="<?php echo ($news->new_image!=="")?$news->new_image:'' ?>">
                     <?php else:; ?>
                         <!--<input type="file" id="new_image" name="new_image" value="" accept="application/pdf">-->
                     <?php endif; ?>
