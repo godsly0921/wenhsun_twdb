@@ -40,7 +40,7 @@
                             <div class="col-md-6 col-sm-6 col-xs-12">
                                 <select class="form-control" id="leave_type" name="leave_type">
                                     <?php foreach ($leaveMap as $leaveCode => $leaveText): ?>
-                                        <?php if($attendanceRecord->take === $leaveCode):?>
+                                        <?php if((string)$attendanceRecord->take === (string)$leaveCode):?>
                                             <option value="<?= $leaveCode ?>" selected><?= $leaveText ?></option>
                                         <?php else:?>
                                             <option value="<?= $leaveCode ?>"><?= $leaveText ?></option>

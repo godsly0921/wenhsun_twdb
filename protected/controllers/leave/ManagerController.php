@@ -25,15 +25,21 @@ class ManagerController extends Controller
     {
         $employees = EmployeeORM::model()->findAll();
 
+        $userNameSearchWord = $this->buildUsernameSearchWord($employees);
+
+        $this->render('index', ['userNameSearchWord' => $userNameSearchWord]);
+    }
+
+    private function buildUsernameSearchWord($employees): string
+    {
         $loginIds = [];
         foreach ($employees as $employee) {
             $loginIds[] = $employee->user_name;
         }
 
         $userNameSearchWord = implode('","', $loginIds);
-        $userNameSearchWord = '"' . $userNameSearchWord . '"';
 
-        $this->render('index', ['userNameSearchWord' => $userNameSearchWord]);
+        return '"' . $userNameSearchWord . '"';
     }
 
     public function actionHist(): void
@@ -145,8 +151,10 @@ class ManagerController extends Controller
     {
         $employees = EmployeeORM::model()->findAll();
 
+        $userNameSearchWord = $this->buildUsernameSearchWord($employees);
+
         $this->render('new', [
-            'employees' => $employees,
+            'userNameSearchWord' => $userNameSearchWord,
             'leaveMap' => $this->leaveMap,
         ]);
     }
@@ -158,11 +166,21 @@ class ManagerController extends Controller
         try {
 
             $leaveDate = $_POST['leave_date'];
+            $employeeUserName = $_POST['user_name'];
 
+            $employeeOrmEnt = EmployeeORM::model()->find(
+                'user_name=:user_name',
+                [':user_name' => $employeeUserName]
+            );
+
+            if ($employeeOrmEnt === null) {
+                Yii::app()->session[Controller::ERR_MSG_KEY] = '查無員工';
+                $this->redirect('new');
+            }
 
             $now = Common::now();
             $attendanceRecord = new Attendancerecord();
-            $attendanceRecord->employee_id = $_POST['employee_id'];
+            $attendanceRecord->employee_id = $employeeOrmEnt->id;
             $attendanceRecord->create_at = $now;
             $attendanceRecord->update_at = $now;
             $attendanceRecord->day = $leaveDate;
