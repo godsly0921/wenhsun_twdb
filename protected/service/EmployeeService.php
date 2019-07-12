@@ -36,6 +36,28 @@ class EmployeeService
         ])->queryAll();
     }
 
+    public function findEmployeeInRolesListObject($rolse)
+    {
+        $criteria = new CDbCriteria();
+        $criteria->select = '*';
+        $criteria->addColumnCondition(array('enable'=>'Y'));
+        $criteria->addInCondition('role', $rolse);
+        $result = Employee::model() -> findAll($criteria);
+        return $result;
+    }
+
+    public function findEmployeeNotInRolesListObject($rolse)
+    {
+        $criteria = new CDbCriteria();
+        $criteria->select = '*';
+        $criteria->addColumnCondition(array('enable'=>'Y'));
+        $criteria->addNotInCondition('role', $rolse);
+        $result = Employee::model() -> findAll($criteria);
+        return $result;
+    }
+
+
+
 
     public static function findEmployeeNoPTList($role)
     {

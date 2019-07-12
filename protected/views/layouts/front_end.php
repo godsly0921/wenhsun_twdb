@@ -43,7 +43,7 @@
                     <a class="nav-link" href="#">我的下載</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">註冊/登入</a>
+                    <a class="nav-link" href="<?= Yii::app()->createUrl('site/login');?>">註冊/登入</a>
                 </li>
             </ul>
         </div>
