@@ -107,7 +107,7 @@ class SiteController extends CController{
          
         // 2) 使用者認證後，可取得 access_token 
         if (isset($_GET['code'])){
-            //$client->setRedirectUri("http://web.taiwanblacktea.com.tw/site/login");
+            $client->setRedirectUri("http://web.taiwanblacktea.com.tw/site/login");
             $result = $client->authenticate($_GET['code']);
          
             if (isset($result['error'])) 
