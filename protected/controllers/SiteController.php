@@ -114,14 +114,13 @@ class SiteController extends CController{
             {
                 die($result['error_description']);
             }
-         
-            $_SESSION['google']['access_token'] = $result;
+            Yii::app()->session['google']['access_token'] = $result;
             header("Location:http://web.taiwanblacktea.com.tw/site/login?action=profile");
         }         
         // 3) 使用 id_token 取得使用者資料。另有 setAccessToken()、getAccessToken() 可以設定與取得 token
         elseif (isset($_GET['action']) && $_GET['action'] == "profile")
         {
-            $profile = $client->verifyIdToken($_SESSION['google']['access_token']['id_token']);
+            $profile = $client->verifyIdToken(Yii::app()->session['google']['access_token']['id_token']);
             print_r($profile); //使用者個人資料
         }
         // 1) 前往 Google 登入網址，請求用戶授權
