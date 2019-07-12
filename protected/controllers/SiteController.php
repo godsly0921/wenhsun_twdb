@@ -121,7 +121,7 @@ class SiteController extends CController{
         elseif (isset($_GET['action']) && $_GET['action'] == "profile")
         {
             $profile = $client->verifyIdToken(Yii::app()->session['google']['id_token']);
-            print_r($profile); //使用者個人資料
+            echo json_encode($profile,true);//使用者個人資料
         }
         // 1) 前往 Google 登入網址，請求用戶授權
         else 
