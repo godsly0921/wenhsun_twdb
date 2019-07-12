@@ -49,5 +49,7 @@ defined('YII_TRACE_LEVEL') or define('YII_TRACE_LEVEL', 3);
 define('CK_PATH','/gjftamc/assets/');
 define('_PATH','/gjftamc/assets/');
 define('MONGO','mongodb://localhost:27017');
+define("GOOGLE_CLINT_ID", "425795626455-j4g8m5n8aenev94agt8bh4j11dv0sg1h.apps.googleusercontent.com");
+define("GOOGLE_CLINT_SECRET", "fglkDb5yLTSVwcl8QzVLbe_F");
 require_once($yii);
 Yii::createWebApplication($config)->run();
