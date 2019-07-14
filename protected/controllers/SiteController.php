@@ -142,5 +142,9 @@ class SiteController extends CController{
     public function ActionMy_favorite() {
         $this->render('my_favorite');
     }
+
+    public function ActionMy_record() {
+        $this->render('my_record');
+    }
 }
 ?>
