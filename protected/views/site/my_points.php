@@ -15,7 +15,7 @@
                         <a href="<?php echo Yii::app()->createUrl('site/my_points'); ?>" class="small">我的點數與下載</a>
                     </td>
                     <td>
-                        <a href="<?php echo Yii::app()->createUrl('site/my_reocrd'); ?>">購買記錄</a>
+                        <a href="<?php echo Yii::app()->createUrl('site/my_record'); ?>">購買記錄</a>
                     </td>
                     <td>
                         <a href="<?php echo Yii::app()->createUrl('site/my_favorite'); ?>">我的收藏</a>
@@ -114,7 +114,7 @@
         text-align: center;
         border-left: solid 2px;
         border-right: solid 2px;
-        border-color: #7d7d7d;
+        border-color: black;
         font-size: 55px;
     }
 
@@ -130,10 +130,6 @@
     td a.small {
         font-size: 16px;
         color: #dc5514;
-    }
-
-    table {
-        margin-bottom: 16px;
     }
 
     hr.plan {

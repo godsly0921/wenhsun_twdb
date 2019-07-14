@@ -52,7 +52,7 @@
         text-align: center;
         border-left: solid 2px;
         border-right: solid 2px;
-        border-color: #7d7d7d;
+        border-color: black;
         font-size: 55px;
     }
 
