@@ -138,5 +138,9 @@ class SiteController extends CController{
     public function ActionMy_points() {
         $this->render('my_points');
     }
+
+    public function ActionMy_favorite() {
+        $this->render('my_favorite');
+    }
 }
 ?>
