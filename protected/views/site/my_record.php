@@ -27,7 +27,7 @@
     <hr class="top">
     <div id="record1" style="padding-bottom: 30px">
         <p class="record-title">最近購買記錄</p>
-        <table class="col-sm-12">
+        <table class="record col-sm-12">
             <thead>
                 <tr class="header">
                     <th width="25%">產品編號</th>
@@ -44,9 +44,9 @@
             </tbody>
         </table>
     </div>
-    <div class="record2">
+    <div class="record2" style="padding-bottom: 50px">
         <p class="record-title">先前購買項目</p>
-        <table class="col-sm-12">
+        <table class="record col-sm-12">
             <thead>
                 <tr class="header">
                     <th width="25%">產品編號</th>
@@ -62,7 +62,7 @@
                 </tr>
             </tbody>
         </table>
-        <table class="col-sm-12">
+        <table class="record col-sm-12">
             <thead>
                 <tr class="header">
                     <th width="25%">產品編號</th>
@@ -116,6 +116,7 @@
 
     hr.top {
         border: 1px solid black;
+        margin-bottom: 50px;
     }
 
     .record-title {
@@ -136,7 +137,7 @@
         border-bottom: 1px solid #7d7d7d;
     }
 
-    table {
+    table.record {
         margin-bottom: 50px;
     }
 
