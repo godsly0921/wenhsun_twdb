@@ -134,5 +134,9 @@ class SiteController extends CController{
             header("Location:{$url}");
         }
     }
+
+    public function ActionMy_points() {
+        $this->render('my_points');
+    }
 }
 ?>
