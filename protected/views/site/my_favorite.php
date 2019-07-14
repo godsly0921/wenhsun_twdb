@@ -15,7 +15,7 @@
                         <a href="<?php echo Yii::app()->createUrl('site/my_points'); ?>" class="small">我的點數與下載</a>
                     </td>
                     <td>
-                        <a href="#">購買記錄</a>
+                        <a href="<?php echo Yii::app()->createUrl('site/my_record'); ?>">購買記錄</a>
                     </td>
                     <td>
                         <a href="<?php echo Yii::app()->createUrl('site/my_favorite'); ?>" class="active">我的收藏</a>

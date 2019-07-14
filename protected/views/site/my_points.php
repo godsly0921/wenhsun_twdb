@@ -15,10 +15,10 @@
                         <a href="<?php echo Yii::app()->createUrl('site/my_points'); ?>" class="small">我的點數與下載</a>
                     </td>
                     <td>
-                        <a href="#">購買記錄</a>
+                        <a href="<?php echo Yii::app()->createUrl('site/my_reocrd'); ?>">購買記錄</a>
                     </td>
                     <td>
-                        <a href="#">我的收藏</a>
+                        <a href="<?php echo Yii::app()->createUrl('site/my_favorite'); ?>">我的收藏</a>
                     </td>
                 </tr>
             </thead>
