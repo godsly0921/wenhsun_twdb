@@ -7,6 +7,8 @@
     <link href="https://fonts.googleapis.com/css?family=Noto+Sans+TC&amp;subset=chinese-traditional,japanese" rel="stylesheet" class="next-head">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
     <title>台灣文學照片資料庫</title>
+
+     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" crossorigin="anonymous">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/assets/css/layout.css">
     <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
@@ -42,9 +44,22 @@
                 <li class="nav-item">
                     <a class="nav-link" href="#">我的下載</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="<?= Yii::app()->createUrl('site/login');?>">註冊/登入</a>
-                </li>
+                <?php if (Yii::app() -> user -> isGuest) { ?>
+                  <li class="nav-item">
+                      <a class="nav-link" href="<?= Yii::app()->createUrl('site/login');?>">註冊/登入</a>
+                  </li>
+                <?php }else{?>
+                  <li class="nav-item dropdown">
+                      <a class="nav-link dropdown-toggle" href="#" id="memberDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><?=Yii::app()->session['name']?></a>
+                      <div class="dropdown-menu member_dropdown" aria-labelledby="memberDropdown">
+                        <a class="dropdown-item" href="#"><i class="fa fa-user-o mr-3"></i>會員專區</a>
+                        <a class="dropdown-item" href="#"><i class="fa fa-download mr-3"></i>購買紀錄</a>
+                        <a class="dropdown-item" href="#"><i class="fa fa-credit-card mr-3"></i>我的點數</a>
+                        <a class="dropdown-item" href="#"><i class="fa fa-heart-o mr-3"></i>我的收藏</a>
+                        <a class="dropdown-item" href="<?= Yii::app()->createUrl('site/logout');?>"><i class="fa fa-sign-out mr-3"></i>登出</a>
+                      </div>
+                  </li>
+                <?php }?>
             </ul>
         </div>
       </nav>

@@ -250,6 +250,52 @@ class MemberService
         return $datas;
     }
 
+    public function google_account_create(array $inputs){
+        $model = new Member();
+        $model->name = $inputs['name'];
+        $model->google_sub = $inputs['google_sub'];
+        $model->google_locale = $inputs['google_locale'];
+        $model->email = $inputs['email'];
+        $model->account = $inputs['email'];
+        $model->account_type = "3";
+        $model->create_date = date('Y-m-d H:i:s');
+        $model->update_date = date('Y-m-d H:i:s');
+        if (!$model->validate()) {
+            Yii::log(date("Y-m-d H:i:s").'Google account create validate false account'.$inputs['email'], CLogger::LEVEL_INFO);
+            return false;
+        }
+
+        if (!$model->hasErrors()) {
+            if( $model->save() ){
+                Yii::log(date("Y-m-d H:i:s").'Google account create true account'.$inputs['email'], CLogger::LEVEL_INFO);
+                return $model;      
+            }else{       
+                Yii::log(date("Y-m-d H:i:s").'Google account create false account'.$inputs['email'], CLogger::LEVEL_INFO);
+                return false;
+            }
+        }
+    }
+
+    public function google_account_update($member,array $inputs){
+        $model = Member::model()->findByPk($member->id);
+        if($model->google_sub ==""){
+            $model->google_sub = $inputs['google_sub'];
+            $model->google_locale = $inputs['google_locale'];
+            if (!$model->validate()) {
+                Yii::log(date("Y-m-d H:i:s").'Google account update validate false account'.$member->account, CLogger::LEVEL_INFO);
+                return false;
+            }
+
+            if (!$model->hasErrors()) {
+                $success = $model->update();
+                Yii::log(date("Y-m-d H:i:s").'Google account update true account'.$member->account, CLogger::LEVEL_INFO);
+                return $model;
+            } else {
+                Yii::log(date("Y-m-d H:i:s").'Google account update false account'.$member->account, CLogger::LEVEL_INFO);
+                return false;
+            }
+        }
+    }
 
     public function create(array $inputs)
     {

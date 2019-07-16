@@ -100,6 +100,34 @@ class SiteController extends CController{
     }
 
     public function ActionLogin(){
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->doLogin();
+        }else{
+            $this->render('login');
+        }  
+    }
+    public function doLogin(){
+        $input['account'] = filter_input(INPUT_POST, 'account');
+        $input['password'] = filter_input(INPUT_POST, 'password');
+        $useridentity = new UserIdentity($input['account'],$input['password']);
+        $is_login = $useridentity->authenticate(1);
+        if (!$is_login) {
+            $this->redirect(Yii::app()->createUrl('site/login'));
+        }else{
+            $duration = 3600 * 24 * 30; // 30 days
+            Yii::app()->user->login($useridentity, $duration);
+            $this->redirect(Yii::app()->createUrl('site'));
+        }
+    }
+    public function actionLogout() {   
+        Yii::app ()->user->logout ();
+        unset(Yii::app()->session['uid']);
+        unset(Yii::app()->session['pid']);
+        unset(Yii::app()->session['name']);
+        $this->redirect(Yii::app()->createUrl('site'));
+    }
+
+    public function ActionGoogleLogin(){
         // 0) 設定 client 端的 id, secret
         $client = new Google_Client;
         $client->setClientId(GOOGLE_CLINT_ID);
@@ -107,7 +135,7 @@ class SiteController extends CController{
          
         // 2) 使用者認證後，可取得 access_token 
         if (isset($_GET['code'])){
-            $client->setRedirectUri("http://web.taiwanblacktea.com.tw/site/login");
+            $client->setRedirectUri("http://web.taiwanblacktea.com.tw/site/googlelogin");
             $result = $client->authenticate($_GET['code']);
          
             if (isset($result['error'])) 
@@ -115,13 +143,34 @@ class SiteController extends CController{
                 die($result['error_description']);
             }
             Yii::app()->session['google'] = $result;
-            header("Location:http://web.taiwanblacktea.com.tw/site/login?action=profile");
+            header("Location:http://web.taiwanblacktea.com.tw/site/googlelogin?action=profile");
         }         
         // 3) 使用 id_token 取得使用者資料。另有 setAccessToken()、getAccessToken() 可以設定與取得 token
-        elseif (isset($_GET['action']) && $_GET['action'] == "profile")
-        {
+        elseif (isset($_GET['action']) && $_GET['action'] == "profile"){
             $profile = $client->verifyIdToken(Yii::app()->session['google']['id_token']);
-            echo json_encode($profile,true);//使用者個人資料
+            $memberService = new MemberService();
+            $member = $memberService->findByAccount($profile['email']);
+            if(!$member){//新的帳號
+                $model = $memberService->google_account_create($profile);
+            }else{//舊有帳號綁定google帳號
+                if($member[0]->google_sub ==""){
+                    $model = $memberService->google_account_update($member[0],$profile);
+                }else{
+                    $model = $member[0];
+                }
+            }
+            if($model){
+                $useridentity = new UserIdentity($model->account,"");
+                $is_login = $useridentity->authenticate(0);
+                Yii::app()->session['uid'] = $model->id;//會員帳號ID
+                Yii::app()->session['pid'] = $model->account;//會員帳號
+                Yii::app()->session['name'] = $model->name;//會員名稱
+                $duration = 3600 * 24 * 30; // 30 days
+                Yii::app()->user->login($useridentity, $duration);
+                $this->redirect(Yii::app()->createUrl('site'));
+            }else{
+                $this->redirect(Yii::app()->createUrl('site/login'));
+            }
         }
         // 1) 前往 Google 登入網址，請求用戶授權
         else 
@@ -129,7 +178,7 @@ class SiteController extends CController{
             $client->revokeToken();       
             // 添加授權範圍，參考 https://developers.google.com/identity/protocols/googlescopes
             $client->addScope(['https://www.googleapis.com/auth/userinfo.profile','https://www.googleapis.com/auth/userinfo.email']);
-            $client->setRedirectUri("http://web.taiwanblacktea.com.tw/site/login");
+            $client->setRedirectUri("http://web.taiwanblacktea.com.tw/site/googlelogin");
             $url = $client->createAuthUrl();
             header("Location:{$url}");
         }
