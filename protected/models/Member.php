@@ -47,7 +47,7 @@ class Member extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('account, name, email, account_type, active, create_date, update_date, update_by', 'required'),
+			array('account, name, email, account_type, active, create_date, update_date', 'required'),
 			array('create_by', 'numerical', 'integerOnly'=>true),
 			array('active_point, inactive_point', 'numerical'),
 			array('account', 'length', 'max'=>64),
