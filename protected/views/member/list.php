@@ -61,7 +61,17 @@
                                 <?= '否' ?>
                             <?php endif ?>
                         </td>
-                        <td><?= $value->account_type ?></td>
+                        <td>
+                            <?php if ($value->account_type == '1') : ?>
+                                <?= '後台建立' ?>
+                            <?php elseif ($value->active == '2') : ?>
+                                <?= '前台註冊' ?>
+                            <?php elseif ($value->active == '3') : ?>
+                                <?= 'Google 帳號' ?>
+                            <?php elseif ($value->active == '4') : ?>
+                                <?= 'FB 帳號' ?>
+                            <?php endif ?>    
+                        </td>
                         <td><?= $value->create_date ?></td>
                         <td><?= $value->update_date ?></td>
                         <td>

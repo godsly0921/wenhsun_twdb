@@ -46,7 +46,13 @@
             <div class="form-group">
                 <label for="name" class="col-sm-2 control-label">註冊來源:</label>
                 <div class="col-sm-6">
-                    <input type="text" class="form-control" id="account_type" name="account_type" value="後台建立" readonly>
+                    <input type="hidden" name="account_type" value="1">
+                    <select class="selectpicker" disabled>
+                        <option value="1" selected="selected">後台建立</option>
+                        <option value="2">前台註冊</option>
+                        <option value="3">Google 帳號</option>
+                        <option value="4">FB 帳號</option>
+                    </select>
                 </div>
             </div>
 
