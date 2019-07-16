@@ -257,6 +257,7 @@ class MemberService
         $model->google_locale = $inputs['locale'];
         $model->email = $inputs['email'];
         $model->account = $inputs['email'];
+        $model->active = "Y";
         $model->account_type = "3";
         $model->create_date = date('Y-m-d H:i:s');
         $model->update_date = date('Y-m-d H:i:s');
