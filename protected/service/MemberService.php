@@ -253,8 +253,8 @@ class MemberService
     public function google_account_create(array $inputs){
         $model = new Member();
         $model->name = $inputs['name'];
-        $model->google_sub = $inputs['google_sub'];
-        $model->google_locale = $inputs['google_locale'];
+        $model->google_sub = $inputs['sub'];
+        $model->google_locale = $inputs['locale'];
         $model->email = $inputs['email'];
         $model->account = $inputs['email'];
         $model->account_type = "3";
@@ -279,8 +279,8 @@ class MemberService
     public function google_account_update($member,array $inputs){
         $model = Member::model()->findByPk($member->id);
         if($model->google_sub ==""){
-            $model->google_sub = $inputs['google_sub'];
-            $model->google_locale = $inputs['google_locale'];
+            $model->google_sub = $inputs['sub'];
+            $model->google_locale = $inputs['locale'];
             if (!$model->validate()) {
                 Yii::log(date("Y-m-d H:i:s").'Google account update validate false account'.$member->account, CLogger::LEVEL_INFO);
                 return false;
