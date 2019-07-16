@@ -183,5 +183,17 @@ class SiteController extends CController{
             header("Location:{$url}");
         }
     }
+
+    public function ActionMy_points() {
+        $this->render('my_points');
+    }
+
+    public function ActionMy_favorite() {
+        $this->render('my_favorite');
+    }
+
+    public function ActionMy_record() {
+        $this->render('my_record');
+    }
 }
 ?>
