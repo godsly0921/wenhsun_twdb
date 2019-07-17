@@ -85,13 +85,14 @@
     #title {
         padding-top: 25px;
         padding-bottom: 16px;
+        color: #6b4c2e;
     }
 
     td.title {
         text-align: center;
         border-left: solid 2px;
         border-right: solid 2px;
-        border-color: black;
+        border-color: #6b4c2e;
         font-size: 55px;
     }
 
@@ -115,7 +116,7 @@
     }
 
     hr.top {
-        border: 1px solid black;
+        border: 1px solid #6b4c2e;
         margin-bottom: 50px;
     }
 
