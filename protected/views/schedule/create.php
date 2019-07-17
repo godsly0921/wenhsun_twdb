@@ -1,6 +1,6 @@
 <div class="row">
     <div class="title-wrap col-lg-12">
-        <h3 class="title-left">排班新增</h3>
+        <h3 class="title-left">紀州庵排班新增</h3>
     </div>
 </div>
 

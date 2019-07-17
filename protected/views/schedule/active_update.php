@@ -11,7 +11,7 @@
 </style>
 <div class="row">
     <div class="title-wrap col-lg-12">
-        <h3 class="title-left">大活動備註管理</h3>
+        <h3 class="title-left">紀州庵大活動備註管理</h3>
     </div>
 </div>
 <?php if(isset(Yii::app()->session['error_msg']) && Yii::app()->session['error_msg'] !== ''): ?>
@@ -34,7 +34,7 @@ unset( Yii::app()->session['error_msg'] );
 unset( Yii::app()->session['success_msg'] );
 ?>
 <div class="panel panel-default">
-    <div class="panel-heading">大活動備註管理</div>
+    <div class="panel-heading">紀州庵大活動備註管理</div>
     <div class="panel-body">
         <form name="group_form" class="form-horizontal" action="<?php echo Yii::app()->createUrl('schedule/active_update');?>/<?=$active->active_id?>" method="post" enctype="multipart/form-data">
             <?php CsrfProtector::genHiddenField(); ?>
