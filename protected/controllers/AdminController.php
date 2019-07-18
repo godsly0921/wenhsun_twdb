@@ -10,7 +10,7 @@ class AdminController extends CController
 
 	public $layout = "//layouts/admin";
     //223.136.185.9 alanpan 36.228.210.249 amber
-    private $ipFilters = '220.135.48.168,220.135.48.164,114.32.137.240,39.9.67.254,223.136.185.9,111.71.114.199,36.228.210.249,203.69.216.186,180.218.14.225';
+    private $ipFilters = '220.135.48.168,220.135.48.164,114.32.137.240,39.9.67.254,223.136.185.9,111.71.114.199,36.228.210.249,203.69.216.186,180.218.14.225,118.150.168.122';
 
     public function ipCheck(){
         $ip = Yii::app()->request->getUserHostAddress();
