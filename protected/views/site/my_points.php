@@ -88,17 +88,14 @@
             <div class="col-sm-1"></div>
             <div class="col-sm-2">
                 <img src="<?= Yii::app()->request->baseUrl . '/assets/image/demo1.png' ?>" class="download">
-                <button class="btn download">重新下載</button>
             </div>
             <div class="col-sm-2"></div>
             <div class="col-sm-2">
                 <img src="<?= Yii::app()->request->baseUrl . '/assets/image/demo2.png' ?>" class="download">
-                <button class="btn download">重新下載</button>
             </div>
             <div class="col-sm-2"></div>
             <div class="col-sm-2">
                 <img src="<?= Yii::app()->request->baseUrl . '/assets/image/demo3.png' ?>" class="download">
-                <button class="btn download">重新下載</button>
             </div>
         </div>
     </div>
@@ -108,13 +105,14 @@
     #title {
         padding-top: 25px;
         padding-bottom: 16px;
+        color: #6b4c2e;
     }
 
     td {
         text-align: center;
         border-left: solid 2px;
         border-right: solid 2px;
-        border-color: black;
+        border-color: #6b4c2e;
         font-size: 55px;
     }
 
@@ -133,18 +131,18 @@
     }
 
     hr.plan {
-        border: 1px solid black;
+        border: 1px solid #6b4c2e;
         margin-top: 30px;
         margin-bottom: 30px;
     }
 
     hr.top {
-        border: 1px solid black;
+        border: 1px solid #6b4c2e;
         margin-bottom: 66px;
     }
 
     hr.bottom {
-        border: 1px solid black;
+        border: 1px solid #6b4c2e;
         margin-top: 66px;
         margin-bottom: 66px;
     }

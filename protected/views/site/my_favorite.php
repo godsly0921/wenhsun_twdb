@@ -28,15 +28,15 @@
         <div class="row">
             <div class="col-sm-4 text-center">
                 <img src="<?= Yii::app()->request->baseUrl . '/assets/image/demo1.png' ?>" class="download">
-                <button class="btn download">重新下載</button>
+                <button class="btn download">立即下載</button>
             </div>
             <div class="col-sm-4 text-center">
                 <img src="<?= Yii::app()->request->baseUrl . '/assets/image/demo2.png' ?>" class="download">
-                <button class="btn download">重新下載</button>
+                <button class="btn download">立即下載</button>
             </div>
             <div class="col-sm-4 text-center">
                 <img src="<?= Yii::app()->request->baseUrl . '/assets/image/demo3.png' ?>" class="download">
-                <button class="btn download">重新下載</button>
+                <button class="btn download">立即下載</button>
             </div>
         </div>
     </div>
@@ -46,13 +46,14 @@
     #title {
         padding-top: 25px;
         padding-bottom: 16px;
+        color: #6b4c2e;
     }
 
     td {
         text-align: center;
         border-left: solid 2px;
         border-right: solid 2px;
-        border-color: black;
+        border-color: #6b4c2e;
         font-size: 55px;
     }
 
