@@ -586,7 +586,7 @@ class MemberController extends Controller
         $inputs['county'] = filter_input(INPUT_POST, 'county');
         $inputs['town'] = filter_input(INPUT_POST, 'town');
         $inputs['address'] = filter_input(INPUT_POST, 'address');
-
+        $inputs['active'] = "Y";
         $validator = new MemberValidator();
         if (!$validator->validateEmail($inputs['account'])) {
             Yii::app()->session['error_msg'] = array(array('請輸入正確的Email'));

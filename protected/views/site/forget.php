@@ -35,7 +35,7 @@
         color: #fff;
         border-radius: 30px;
     }
-    #account,#password{
+    #account,#email{
         border-color: #c8c5be;
         background-color: transparent;
     }
@@ -47,10 +47,9 @@
 </style>
 <div class="container">
     <div class="text-center">
-        <h3 class="login_title">會員登入</h3>
+        <h3 class="login_title">忘記密碼</h3>
     </div>
     <hr>
-    <a href="<?php echo Yii::app()->createUrl('site/register'); ?>" class="text-center register"><h6>還不是會員?立即註冊</h6></a>
     <div id="error_msg">
         <?php if (isset(Yii::app()->session['error_msg']) && Yii::app()->session['error_msg'] !== '') : ?>
             <div class="alert alert-danger">
@@ -66,7 +65,7 @@
             </p>
         <?php endif; ?>
     </div>
-    <form role="form" class="col-lg-8 mx-auto mt-5" action="<?php echo Yii::app()->createUrl('site/login'); ?>" method="post" accept-charset="utf-8">
+    <form role="form" class="col-lg-8 mx-auto mt-5" action="<?php echo Yii::app()->createUrl('site/forget'); ?>" method="post" accept-charset="utf-8">
         <div class="form-group row">
             <label for="account" class="col-sm-2 col-form-label">帳號</label>
             <div class="col-sm-8">
@@ -75,30 +74,16 @@
             <label class="col-sm-2 col-form-label" style="color:red;font-size: 14px;">必填 *</label>
         </div>
         <div class="form-group row">
-            <label for="password" class="col-sm-2 col-form-label">密碼</label>
+            <label for="password" class="col-sm-2 col-form-label">Email</label>
             <div class="col-sm-8">
-                <input type="password" class="form-control" id="password" name="password" placeholder="password" required>
+                <input type="email" class="form-control" id="email" name="email" value="" placeholder="email" required>
             </div>
             <label class="col-sm-2 col-form-label" style="color:red;font-size: 14px;">必填 *</label>
         </div>
-        <div class="form-group row">
-            <div class="col-sm-2"></div>
-            <a href="<?php echo Yii::app()->createUrl('site/forget'); ?>" class="col-sm-8 forget"><h6>忘記密碼?</h6></a>
-        </div>
         <div class="form-group col-lg-12 text-center">
-            <button type="submit" class="btn col-sm-8 col-md-6 col-xl-4 col-lg-4 login_button btn-lg">登入</button>
+            <button type="submit" class="btn col-sm-8 col-md-6 col-xl-4 col-lg-4 login_button btn-lg">忘記密碼</button>
         </div>
     </form>
-    <hr class="mt-5">
-    <div class="text-center">
-        <h3 class="login_title">其他帳號登入</h3>
-    </div>
-    <div class="col-sm-8 col-md-6 col-xl-4 col-lg-4 mx-auto text-center">
-        <a href="<?php echo Yii::app()->createUrl('site/fblogin'); ?>"><img class="w-100" src="<?php echo Yii::app()->createUrl('/'); ?>/assets/image/fb.jpg"></a>
-    </div>
-    <div class="col-sm-8 col-md-6 col-xl-4 col-lg-4 mx-auto text-center">
-        <a href="<?php echo Yii::app()->createUrl('site/googlelogin'); ?>"><img class="w-100" src="<?php echo Yii::app()->createUrl('/'); ?>/assets/image/google.jpg"></a>
-    </div>
 </div>
 <?php
 unset(Yii::app()->session['error_msg']);

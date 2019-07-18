@@ -161,7 +161,7 @@ class SiteController extends CController{
             }
             if($model){
                 $useridentity = new UserIdentity($model->account,"");
-                $is_login = $useridentity->authenticate(0);
+                $is_login = $useridentity->authenticate();
                 Yii::app()->session['uid'] = $model->id;//會員帳號ID
                 Yii::app()->session['pid'] = $model->account;//會員帳號
                 Yii::app()->session['name'] = $model->name;//會員名稱
@@ -183,7 +183,192 @@ class SiteController extends CController{
             header("Location:{$url}");
         }
     }
+    public function ActionVerification(){
+        $verification_code = isset($_GET['verification_code'])?$_GET['verification_code']:"";
+        if($verification_code){
+            $memberService = new MemberService();
+            $verification = $memberService->findByVerificationCode($verification_code); 
+            //var_dump($verification);exit();
+            if ($verification->hasErrors()) {
+                Yii::app()->session['error_msg'] = '帳號驗證失敗';
+                $this->redirect(Yii::app()->createUrl('site/register'));
+            } else {
+                Yii::app()->session['success_msg'] = '帳號驗證成功';
+                $this->redirect(Yii::app()->createUrl('site/login'));
+            }
+        }else{
+            Yii::app()->session['error_msg'] = "帳號驗證失敗";
+            $this->redirect(Yii::app()->createUrl('site/register'));
+        }
+    }
+    public function ActionRegister() {
+        if(Yii::app()->request->isPostRequest) {
+            $this->doPostRegister();
+        }else{
+            $this->doGetRegister();
+        }
+    }
+    public function doPostRegister(){
+        $memberService = new MemberService();
+        $member = $memberService->findByAccount(filter_input(INPUT_POST, 'account'));
+        if(!$member){//新的帳號
+            $inputs['account'] = filter_input(INPUT_POST, 'account');
+            $inputs['password'] = filter_input(INPUT_POST, 'password');
+            $inputs['password_confirm'] = filter_input(INPUT_POST, 'password_confirm');
+            $inputs['name'] = filter_input(INPUT_POST, 'name');
+            $inputs['gender'] = filter_input(INPUT_POST, 'gender');
+            $inputs['birthday'] = filter_input(INPUT_POST, 'birthday');
+            $inputs['phone'] = filter_input(INPUT_POST, 'phone');
+            $inputs['mobile'] = filter_input(INPUT_POST, 'mobile');
+            $inputs['member_type'] = 2;
+            $inputs['account_type'] = 1;
+            $inputs['active'] = "N";
+            $inputs['verification_code'] = substr(md5(uniqid(rand(), true)),0,20);
+            $inputs['nationality'] = filter_input(INPUT_POST, 'nationality');
+            $inputs['county'] = filter_input(INPUT_POST, 'county');
+            $inputs['town'] = filter_input(INPUT_POST, 'town');
+            $inputs['address'] = filter_input(INPUT_POST, 'address');
+            $service = new MemberService();
+            $model = $service->create($inputs);
+            if ($model->hasErrors()) {
+                foreach ($model->getErrors() as $error){
+                    Yii::log(date("Y-m-d H:i:s")."account=>".$inputs['account'].", register error：".$error[0],  CLogger::LEVEL_INFO);
+                }
+                Yii::app()->session['error_msg'] = '註冊失敗';
+                $this->render('register', ['data' => $inputs]);
+                return;
+            } else {
+                Yii::app()->session['success'] = '註冊成功';
+                $mail = new MailService();
+                $mail_type = $mail->sendRegisterMail($inputs);
+                if($mail_type){
+                    Yii::log(date("Y-m-d H:i:s").'Register sendRegisterMail success account => '.$inputs['account'], CLogger::LEVEL_INFO);
+                }else{
+                    Yii::log(date("Y-m-d H:i:s").'Register sendRegisterMail error account => '.$inputs['account'],  CLogger::LEVEL_INFO);
+                }
+                $this->redirect(Yii::app()->createUrl('site/login'));
+            }
+        }
+    }
+    public function doGetRegister(){
+        $inputs = array();
+        $inputs['account'] = '';
+        $inputs['name'] = '';
+        $inputs['gender'] = '';
+        $inputs['birthday'] = '';
+        $inputs['phone'] = '';
+        $inputs['mobile'] = '';
+        $inputs['nationality'] = 'TW';
+        $inputs['county'] = '';
+        $inputs['town'] = '';
+        $inputs['address'] = '';
+        $this->render('register', ['data' => $inputs]);
+    }
 
+    public function Actionforgetverification(){
+        $verification_code = isset($_GET['verification_code'])?$_GET['verification_code']:"";
+        if($verification_code){
+            $memberService = new MemberService();
+            $verification = $memberService->findByForgetVerificationCode($verification_code); 
+            //var_dump($verification);exit();
+            if ($verification->hasErrors()) {
+                Yii::app()->session['error_msg'] = '帳號驗證失敗';
+                $this->redirect(Yii::app()->createUrl('site/forget'));
+            } else {
+                Yii::app()->session['success_msg'] = '帳號驗證成功';
+                $this->redirect(Yii::app()->createUrl('site/login'));
+            }
+        }else{
+            Yii::app()->session['error_msg'] = "帳號驗證失敗";
+            $this->redirect(Yii::app()->createUrl('site/forget'));
+        }
+    }
+    public function ActionForget() {
+        if(Yii::app()->request->isPostRequest) {
+            $this->doPostForget();
+        }else{
+            $this->doGetForget();
+        }        
+    }
+    public function doGetForget(){
+        $this->render('forget');
+    }
+    public function doPostForget(){
+        $inputs['account'] = filter_input(INPUT_POST, 'account');
+        $inputs['email'] = filter_input(INPUT_POST, 'email');
+        $inputs['verification_code'] = substr(md5(uniqid(rand(), true)),0,20);
+        $memberService = new MemberService();
+        $forgetVerification = $memberService->forgetVerification($inputs);
+
+        if (!$forgetVerification->hasErrors() && $forgetVerification){
+            $mail = new MailService();
+            $mail_type = $mail->sendForgetPwdMail($inputs);
+            if($mail_type){
+                Yii::log(date("Y-m-d H:i:s").'forget sendForgetPwdMail success account => '.$inputs['account'], CLogger::LEVEL_INFO);
+            }else{
+                Yii::log(date("Y-m-d H:i:s").'forget sendForgetPwdMail error account => '.$inputs['account'],  CLogger::LEVEL_INFO);
+            }
+            $this->redirect(Yii::app()->createUrl('site/login'));
+        }else{
+            Yii::app()->session['error_msg'] = "帳號與 Email 不存在";
+            $this->redirect(Yii::app()->createUrl('site/forget'));
+        }
+    }
+    public function ActionMy_account() {
+        if(Yii::app()->request->isPostRequest) {
+            $this->doPostMyaccount();
+        }else{
+            $this->doGetMyaccount();
+        }        
+    }
+
+    public function doPostMyaccount(){
+        $inputs['id'] = Yii::app()->session['uid'];
+        $inputs['account'] = filter_input(INPUT_POST, 'account');
+        $inputs['password'] = filter_input(INPUT_POST, 'password');
+        $inputs['password_confirm'] = filter_input(INPUT_POST, 'password_confirm');
+        $inputs['name'] = filter_input(INPUT_POST, 'name');
+        $inputs['gender'] = filter_input(INPUT_POST, 'gender');
+        $inputs['birthday'] = filter_input(INPUT_POST, 'birthday');
+        $inputs['phone'] = filter_input(INPUT_POST, 'phone');
+        $inputs['mobile'] = filter_input(INPUT_POST, 'mobile');
+        $inputs['member_type'] = 2;
+        $inputs['account_type'] = 1;
+        $inputs['active'] = "N";
+        $inputs['verification_code'] = substr(md5(uniqid(rand(), true)),0,20);
+        $inputs['nationality'] = filter_input(INPUT_POST, 'nationality');
+        $inputs['county'] = filter_input(INPUT_POST, 'county');
+        $inputs['town'] = filter_input(INPUT_POST, 'town');
+        $inputs['address'] = filter_input(INPUT_POST, 'address');
+        $service = new MemberService();
+        $model = $service->update($inputs);
+        if ($model->hasErrors()) {
+            foreach ($model->getErrors() as $error){
+                Yii::log(date("Y-m-d H:i:s")."account=>".$inputs['account'].", register error：".$error[0],  CLogger::LEVEL_INFO);
+            }
+            Yii::app()->session['error_msg'] = '修改失敗';
+            $this->redirect(Yii::app()->createUrl('site/my_account',['data' => $inputs]));
+        } else {
+            Yii::app()->session['success'] = '修改成功';
+            $this->redirect(Yii::app()->createUrl('site/my_account',['data' => $inputs]));
+        }
+    }
+
+    public function doGetMyaccount(){
+        $member = Member::model()->findByPk(Yii::app()->session['uid']);
+        $inputs = array();
+        $inputs['account'] = $member->account;
+        $inputs['name'] = $member->name;
+        $inputs['gender'] = $member->gender;
+        $inputs['birthday'] = $member->birthday;
+        $inputs['phone'] = $member->phone;
+        $inputs['mobile'] = $member->mobile;
+        $inputs['nationality'] = $member->nationality;
+        $inputs['county'] = $member->county;
+        $inputs['town'] = $member->town;
+        $inputs['address'] = $member->address;
+        $this->render('my_account',['data' => $inputs]);
+    }
     public function ActionMy_points() {
         $this->render('my_points');
     }

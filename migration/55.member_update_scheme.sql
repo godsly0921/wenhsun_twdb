@@ -2,3 +2,4 @@ ALTER TABLE `member` CHANGE `id` `id` INT(11) NOT NULL AUTO_INCREMENT, CHANGE `p
 
 ALTER TABLE `member` ADD `google_sub` VARCHAR(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT 'google帳號id' AFTER `password`, ADD `google_locale` VARCHAR(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_estonian_ci NULL COMMENT 'google帳號語言' AFTER `google_sub`;
 ALTER TABLE `member` CHANGE `create_by` `create_by` INT(11) NULL DEFAULT '0', CHANGE `update_by` `update_by` VARCHAR(45) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL;
+ALTER TABLE `member` ADD `verification_code` VARCHAR(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL AFTER `active`;

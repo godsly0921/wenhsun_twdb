@@ -220,4 +220,82 @@ class MailService
         }
     }
 
+    public function sendForgetPwdMail($inputs){
+        try {
+            // 管理者信箱
+            $admin_email = $this->findAllEmail();
+
+            $mail = new PHPMailer();
+            $mail->IsSMTP();
+            $mail->SMTPAuth = true;
+            $mail->SMTPSecure = 'ssl';
+            $mail->Host = 'smtp.gmail.com';
+            $mail->Port = 465;
+            $mail->CharSet = 'utf-8';
+            $mail->Username = 'wenhsun0509@gmail.com';
+            $mail->Password = 'cute0921';
+            $mail->From = 'wenhsun0509@gmail.com';
+            $mail->FromName = '文訊雜誌社人資系統';
+            $mail->addAddress($inputs['account']);
+            $mail->IsHTML(true);
+
+            $mail->Subject = "台灣文學照片資料庫 - 忘記密碼驗證信";
+            $mail->Body =
+                '<h2>親愛的' . $inputs["account"] . '您好:<h2>
+                 <p>請按下方連結以驗證您的帳號：<br>'. 
+                '<a href="'.Yii::app()->createUrl('site/forgetverification') . '?verification_code='.$inputs["verification_code"].'">'.Yii::app()->createUrl('site/forgetverification') . '?verification_code='.$inputs["verification_code"].'</a><br><br>' .
+                '驗證通過請以此組臨時密碼登入：'.$inputs["verification_code"].'<br><br>' .
+                '並請盡速變更密碼<br><br>'.
+                '台灣文學照片資料庫敬啟<br><br>'.
+                '備註：此信箱為公告用信箱，請勿回信，若有疑問，請洽客服。謝謝。</p>';
+
+            if($mail->Send()){
+                return true;
+            }else{
+                return false;
+            }
+        } catch (Exception $e) {
+            Yii::log(date('Y-m-d H:i:s') . " Email 02 error write exception {$e->getTraceAsString()}", CLogger::LEVEL_INFO);
+            return false;
+        }
+    }
+
+    public function sendRegisterMail($inputs)
+    {
+        try {
+            // 管理者信箱
+            $admin_email = $this->findAllEmail();
+
+            $mail = new PHPMailer();
+            $mail->IsSMTP();
+            $mail->SMTPAuth = true;
+            $mail->SMTPSecure = 'ssl';
+            $mail->Host = 'smtp.gmail.com';
+            $mail->Port = 465;
+            $mail->CharSet = 'utf-8';
+            $mail->Username = 'wenhsun0509@gmail.com';
+            $mail->Password = 'cute0921';
+            $mail->From = 'wenhsun0509@gmail.com';
+            $mail->FromName = '文訊雜誌社人資系統';
+            $mail->addAddress($inputs['account']);
+            $mail->IsHTML(true);
+
+            $mail->Subject = "台灣文學照片資料庫 - 帳號驗證信";
+            $mail->Body =
+                '<h2>親愛的' . $inputs["name"] . '您好:<h2>
+                 <p>請按下方連結以驗證您註冊的帳號：<br>'. 
+                '<a href="'.Yii::app()->createUrl('site/verification') . '?verification_code='.$inputs["verification_code"].'">'.Yii::app()->createUrl('site/verification') . '?verification_code='.$inputs["verification_code"].'</a><br><br>' .
+                '台灣文學照片資料庫敬啟<br><br>' .
+                '備註：此信箱為公告用信箱，請勿回信，若有疑問，請洽客服。謝謝。</p>';
+
+            if($mail->Send()){
+                return true;
+            }else{
+                return false;
+            }
+        } catch (Exception $e) {
+            Yii::log(date('Y-m-d H:i:s') . " Email 02 error write exception {$e->getTraceAsString()}", CLogger::LEVEL_INFO);
+            return false;
+        }
+    }
 }

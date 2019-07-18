@@ -52,10 +52,10 @@
                   <li class="nav-item dropdown">
                       <a class="nav-link dropdown-toggle" href="#" id="memberDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><?=Yii::app()->session['name']?></a>
                       <div class="dropdown-menu member_dropdown" aria-labelledby="memberDropdown">
-                        <a class="dropdown-item" href="#"><i class="fa fa-user-o mr-3"></i>會員專區</a>
-                        <a class="dropdown-item" href="#"><i class="fa fa-download mr-3"></i>購買紀錄</a>
-                        <a class="dropdown-item" href="#"><i class="fa fa-credit-card mr-3"></i>我的點數</a>
-                        <a class="dropdown-item" href="#"><i class="fa fa-heart-o mr-3"></i>我的收藏</a>
+                        <a class="dropdown-item" href="<?= Yii::app()->createUrl('site/my_account');?>"><i class="fa fa-user-o mr-3"></i>會員專區</a>
+                        <a class="dropdown-item" href="<?= Yii::app()->createUrl('site/my_record');?>"><i class="fa fa-download mr-3"></i>購買紀錄</a>
+                        <a class="dropdown-item" href="<?= Yii::app()->createUrl('site/my_points');?>"><i class="fa fa-credit-card mr-3"></i>我的點數</a>
+                        <a class="dropdown-item" href="<?= Yii::app()->createUrl('site/my_favorite');?>"><i class="fa fa-heart-o mr-3"></i>我的收藏</a>
                         <a class="dropdown-item" href="<?= Yii::app()->createUrl('site/logout');?>"><i class="fa fa-sign-out mr-3"></i>登出</a>
                       </div>
                   </li>

@@ -18,6 +18,7 @@
  * @property string $member_type
  * @property string $account_type
  * @property string $active
+ * @property string $verification_code
  * @property string $nationality
  * @property string $county
  * @property string $town
@@ -59,13 +60,14 @@ class Member extends CActiveRecord
 			array('phone, mobile', 'length', 'max'=>16),
 			array('member_type', 'length', 'max'=>10),
 			array('account_type', 'length', 'max'=>12),
+			array('verification_code', 'length', 'max'=>20),
 			array('nationality', 'length', 'max'=>2),
 			array('county, town', 'length', 'max'=>36),
 			array('update_by', 'length', 'max'=>45),
 			array('birthday', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, account, password, google_sub, google_locale, name, email, gender, birthday, phone, mobile, member_type, account_type, active, nationality, county, town, address, active_point, inactive_point, create_date, update_date, create_by, update_by', 'safe', 'on'=>'search'),
+			array('id, account, password, google_sub, google_locale, name, email, gender, birthday, phone, mobile, member_type, account_type, active, verification_code, nationality, county, town, address, active_point, inactive_point, create_date, update_date, create_by, update_by', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -100,6 +102,7 @@ class Member extends CActiveRecord
 			'member_type' => '會員類型/VIP',
 			'account_type' => '會員來源',
 			'active' => 'Active',
+			'verification_code' => 'Verification Code',
 			'nationality' => '國籍',
 			'county' => '縣市',
 			'town' => '鄉鎮',
@@ -145,6 +148,7 @@ class Member extends CActiveRecord
 		$criteria->compare('member_type',$this->member_type,true);
 		$criteria->compare('account_type',$this->account_type,true);
 		$criteria->compare('active',$this->active,true);
+		$criteria->compare('verification_code',$this->verification_code,true);
 		$criteria->compare('nationality',$this->nationality,true);
 		$criteria->compare('county',$this->county,true);
 		$criteria->compare('town',$this->town,true);
