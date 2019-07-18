@@ -372,7 +372,7 @@ class MemberService
         $model->name = $inputs['name'];
         $model->email = $inputs['account'];
         $model->gender = $inputs['gender'];
-        $model->birthday = $inputs['birthday'];
+        $model->birthday = $inputs['birthday']?$inputs['birthday']?"0000-00-00";
         $model->phone = $inputs['phone'];
         $model->mobile = $inputs['mobile'];
         $model->member_type = $inputs['member_type'];
