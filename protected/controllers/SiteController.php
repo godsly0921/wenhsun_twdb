@@ -220,8 +220,8 @@ class SiteController extends CController{
             $inputs['birthday'] = filter_input(INPUT_POST, 'birthday');
             $inputs['phone'] = filter_input(INPUT_POST, 'phone');
             $inputs['mobile'] = filter_input(INPUT_POST, 'mobile');
-            $inputs['member_type'] = 2;
-            $inputs['account_type'] = 1;
+            $inputs['member_type'] = 1;
+            $inputs['account_type'] = 2;
             $inputs['active'] = "N";
             $inputs['verification_code'] = substr(md5(uniqid(rand(), true)),0,20);
             $inputs['nationality'] = filter_input(INPUT_POST, 'nationality');
