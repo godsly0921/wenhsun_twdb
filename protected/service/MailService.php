@@ -243,7 +243,7 @@ class MailService
             $mail->Body =
                 '<h2>親愛的' . $inputs["account"] . '您好:<h2>
                  <p>請按下方連結以驗證您的帳號：<br>'. 
-                '<a href="'.Yii::app()->createUrl('site/forgetverification') . '?verification_code='.$inputs["verification_code"].'">'.Yii::app()->createUrl('site/forgetverification') . '?verification_code='.$inputs["verification_code"].'</a><br><br>' .
+                '<a href="'.DOMAIN.Yii::app()->createUrl('site/forgetverification') . '?verification_code='.$inputs["verification_code"].'">'.DOMAIN.Yii::app()->createUrl('site/forgetverification') . '?verification_code='.$inputs["verification_code"].'</a><br><br>' .
                 '驗證通過請以此組臨時密碼登入：'.$inputs["verification_code"].'<br><br>' .
                 '並請盡速變更密碼<br><br>'.
                 '台灣文學照片資料庫敬啟<br><br>'.
@@ -284,7 +284,7 @@ class MailService
             $mail->Body =
                 '<h2>親愛的' . $inputs["name"] . '您好:<h2>
                  <p>請按下方連結以驗證您註冊的帳號：<br>'. 
-                '<a href="'.Yii::app()->createUrl('site/verification') . '?verification_code='.$inputs["verification_code"].'">'.Yii::app()->createUrl('site/verification') . '?verification_code='.$inputs["verification_code"].'</a><br><br>' .
+                '<a href="'.DOMAIN.Yii::app()->createUrl('site/verification') . '?verification_code='.$inputs["verification_code"].'">'.DOMAIN.Yii::app()->createUrl('site/verification') . '?verification_code='.$inputs["verification_code"].'</a><br><br>' .
                 '台灣文學照片資料庫敬啟<br><br>' .
                 '備註：此信箱為公告用信箱，請勿回信，若有疑問，請洽客服。謝謝。</p>';
 
