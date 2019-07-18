@@ -607,7 +607,8 @@ class MemberService
         }
 
         $model->name = $inputs['name'];
-        $model->password = md5($inputs['password']);
+        if(isset($inputs['password']))
+            $model->password = md5($inputs['password']);
         if(isset($inputs['email']))
             $model->email = $inputs['email'];
         $model->gender = $inputs['gender'];
