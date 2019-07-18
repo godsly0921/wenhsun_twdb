@@ -1,9 +1,9 @@
 <div class="row">
     <div class="title-wrap col-lg-12">
-        <h3 class="title-left">班表設定</h3>
+        <h3 class="title-left">紀州庵班表設定</h3>
        <!-- --><?php /*if ($canCreate === true): */?>
-            <a href="<?php echo Yii::app()->createUrl('schedule/shift_create'); ?>" class="btn btn-success btn-right">新增班別</a>
-            <a href="<?php echo Yii::app()->createUrl('schedule/active_create'); ?>" class="btn btn-success btn-right">新增大活動備註</a>
+            <a href="<?php echo Yii::app()->createUrl('schedule/shift_create'); ?>" class="btn btn-success btn-right">紀州庵新增班別</a>
+            <a href="<?php echo Yii::app()->createUrl('schedule/active_create'); ?>" class="btn btn-success btn-right">紀州庵新增大活動備註</a>
        <!-- --><?php /*endif;*/?>
     </div>
 </div>
@@ -28,7 +28,7 @@ unset( Yii::app()->session['error_msg'] );
 unset( Yii::app()->session['success_msg'] );
 ?>
 <div class="panel panel-default" style="width=100%; overflow-y:scroll;">
-    <div class="panel-heading">班別管理</div>
+    <div class="panel-heading">紀州庵班別管理</div>
     <div class="panel-body">
         <table id="specialcaseTable" width="100%" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid">
             <thead>

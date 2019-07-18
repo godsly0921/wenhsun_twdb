@@ -11,7 +11,7 @@
 </style>
 <div class="row">
     <div class="title-wrap col-lg-12">
-        <h3 class="title-left">班別管理</h3>
+        <h3 class="title-left">紀州庵班別管理</h3>
     </div>
 </div>
 <?php if(isset(Yii::app()->session['error_msg']) && Yii::app()->session['error_msg'] !== ''): ?>
@@ -34,7 +34,7 @@ unset( Yii::app()->session['error_msg'] );
 unset( Yii::app()->session['success_msg'] );
 ?>
 <div class="panel panel-default">
-    <div class="panel-heading">班別管理</div>
+    <div class="panel-heading">紀州庵班別管理</div>
     <div class="panel-body">
         <form name="group_form" class="form-horizontal" action="<?php echo Yii::app()->createUrl('schedule/shift_create');?>" method="post" enctype="multipart/form-data">
             <?php CsrfProtector::genHiddenField(); ?>
