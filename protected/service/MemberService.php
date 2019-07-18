@@ -298,6 +298,59 @@ class MemberService
         }
     }
 
+    public function findByForgetVerificationCode($verification_code){
+        $result = Member::model()->find([
+            'condition' => 'verification_code=:verification_code',
+            'params' => [
+                ':verification_code' => $verification_code,
+            ]
+        ]);
+        if($result){
+            $model = Member::model()->findByPk($result->id);
+            $model->password = md5($verification_code);
+            if (!$model->update()) {
+                $model->addError('update_fail', '忘記密碼變更失敗');
+                foreach ($model->getErrors() as $error){
+                    Yii::log(date("Y-m-d H:i:s")."account=>".$model->account.", forget password error：".$error[0],  CLogger::LEVEL_INFO);
+                }
+                return $model;
+            } else {
+                Yii::log(date("Y-m-d H:i:s")." forget password success account=>".$model->account,  CLogger::LEVEL_INFO);
+                return $model;
+            }
+        }else{
+            return array();
+        }
+    }
+    public function findByVerificationCode($verification_code){
+        $result = Member::model()->find([
+            'condition' => 'verification_code=:verification_code',
+            'params' => [
+                ':verification_code' => $verification_code,
+            ]
+        ]);
+        if($result){
+            $model = Member::model()->findByPk($result->id);
+            if($model->active == "N"){
+                $model->active = "Y";
+                if (!$model->update()) {
+                    $model->addError('update_fail', '帳號啟用失敗');
+                    foreach ($model->getErrors() as $error){
+                        Yii::log(date("Y-m-d H:i:s")."account=>".$model->account.", account active error：".$error[0],  CLogger::LEVEL_INFO);
+                    }
+                    return $model;
+                } else {
+                    Yii::log(date("Y-m-d H:i:s")." account active success account=>".$model->account,  CLogger::LEVEL_INFO);
+                    return $model;
+                }
+            }else{
+                return $model;
+            }           
+        }else{
+            return array();
+        }
+    }
+
     public function create(array $inputs)
     {
         $model = new Member();
@@ -332,7 +385,8 @@ class MemberService
         $model->inactive_point = 0;
         $model->create_by = Yii::app()->session['uid'];
         $model->update_by = Yii::app()->session['uid'];
-        $model->active = 'Y';
+        $model->active = $inputs['active'];
+        $model->verification_code = isset($inputs['verification_code'])?$inputs['verification_code']:"";
 
         $model->password = md5($inputs['password']);
         $model->create_date = date('Y-m-d H:i:s');
@@ -499,7 +553,31 @@ class MemberService
 
         return $result;
     }
-
+    public function forgetVerification($inputs){
+        $result = Member::model()->find([
+            'condition' => 'account=:account and email=:email',
+            'params' => [
+                ':account' => $inputs['account'],
+                ':email' => $inputs['email'],
+            ]
+        ]);
+        if($result){
+            $model = Member::model()->findByPk($result->id);
+            $model->verification_code = $inputs['verification_code'];
+            if (!$model->update()) {
+                $model->addError('update_fail', 'forget verification_code update error');
+                foreach ($model->getErrors() as $error){
+                    Yii::log(date("Y-m-d H:i:s")."account=>".$model->account.", forget verification_code update error：".$error[0],  CLogger::LEVEL_INFO);
+                }
+                return $model;
+            } else {
+                Yii::log(date("Y-m-d H:i:s")." forget verification_code update success account=>".$model->account,  CLogger::LEVEL_INFO);
+                return $model;
+            }         
+        }else{
+            return array();
+        }
+    }
     /**
      * @param $mem_id
      * @return CActiveRecord
@@ -529,7 +607,9 @@ class MemberService
         }
 
         $model->name = $inputs['name'];
-        $model->email = $inputs['email'];
+        $model->password = md5($inputs['password']);
+        if(isset($inputs['email']))
+            $model->email = $inputs['email'];
         $model->gender = $inputs['gender'];
         $model->birthday = $inputs['birthday'];
         $model->phone = $inputs['phone'];

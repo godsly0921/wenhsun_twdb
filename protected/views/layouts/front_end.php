@@ -8,12 +8,15 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
     <title>台灣文學照片資料庫</title>
 
-     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+     <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" crossorigin="anonymous"> -->
+    <link rel="stylesheet" href="<?php echo Yii::app()->request->baseUrl; ?>/assets/css/font-awesome.css">
+    <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous"> -->
+    <link rel="stylesheet" href="<?php echo Yii::app()->request->baseUrl; ?>/assets/css/bootstrap.css">
     <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/assets/css/layout.css">
     <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <!-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script> -->
+    <script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/bootstrap.js"></script>
   </head>
   <body>
     <!-- Header --- Start -->
@@ -52,10 +55,10 @@
                   <li class="nav-item dropdown">
                       <a class="nav-link dropdown-toggle" href="#" id="memberDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><?=Yii::app()->session['name']?></a>
                       <div class="dropdown-menu member_dropdown" aria-labelledby="memberDropdown">
-                        <a class="dropdown-item" href="#"><i class="fa fa-user-o mr-3"></i>會員專區</a>
-                        <a class="dropdown-item" href="#"><i class="fa fa-download mr-3"></i>購買紀錄</a>
-                        <a class="dropdown-item" href="#"><i class="fa fa-credit-card mr-3"></i>我的點數</a>
-                        <a class="dropdown-item" href="#"><i class="fa fa-heart-o mr-3"></i>我的收藏</a>
+                        <a class="dropdown-item" href="<?= Yii::app()->createUrl('site/my_account');?>"><i class="fa fa-user-o mr-3"></i>會員專區</a>
+                        <a class="dropdown-item" href="<?= Yii::app()->createUrl('site/my_record');?>"><i class="fa fa-download mr-3"></i>購買紀錄</a>
+                        <a class="dropdown-item" href="<?= Yii::app()->createUrl('site/my_points');?>"><i class="fa fa-credit-card mr-3"></i>我的點數</a>
+                        <a class="dropdown-item" href="<?= Yii::app()->createUrl('site/my_favorite');?>"><i class="fa fa-heart-o mr-3"></i>我的收藏</a>
                         <a class="dropdown-item" href="<?= Yii::app()->createUrl('site/logout');?>"><i class="fa fa-sign-out mr-3"></i>登出</a>
                       </div>
                   </li>
