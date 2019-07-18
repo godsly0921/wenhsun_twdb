@@ -26,19 +26,27 @@ class UserIdentity extends CUserIdentity
            	$this->errorCode=self::ERROR_USERNAME_INVALID;
            	return false;
         }else{
-    		if(md5($this->password) == $member->password){
-				$this->errorCode=self::ERROR_NONE;
-				Yii::log('login success');
-				Yii::app()->session['uid'] = $member->id;//會員帳號ID
-                Yii::app()->session['pid'] = $member->account;//會員帳號
-                Yii::app()->session['name'] = $member->name;//會員名稱
-				return true;
-			}else{
-				Yii::log('Set login::password is error');
-                Yii::app()->session['message'] = '密碼錯誤';
+        	if($member->active == "Y"){
+        		if(md5($this->password) == $member->password){
+					$this->errorCode=self::ERROR_NONE;
+					Yii::log('login success');
+					Yii::app()->session['uid'] = $member->id;//會員帳號ID
+	                Yii::app()->session['pid'] = $member->account;//會員帳號
+	                Yii::app()->session['name'] = $member->name;//會員名稱
+					return true;
+				}else{
+					Yii::log('Set login::password is error');
+	                Yii::app()->session['message'] = '密碼錯誤';
+					$this->errorCode=self::ERROR_USERNAME_INVALID;
+					return false;
+				}
+        	}else{
+        		Yii::log('Set login::password is error');
+                Yii::app()->session['message'] = '帳號尚未驗證';
 				$this->errorCode=self::ERROR_USERNAME_INVALID;
 				return false;
-			}
+        	}
+    		
         }
 	}
 }
