@@ -103,7 +103,15 @@ class SiteController extends CController{
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $this->doLogin();
         }else{
-            $this->render('login');
+            $fb = new Facebook\Facebook([
+                'app_id' => FB_APP_ID, // 把 {app_id} 換成你的應用程式編號
+                'app_secret' => FB_APP_SECRET, // 把 {app_secret} 換成你的應用程式密鑰
+                'default_graph_version' => FB_GRAPH_VERSION,
+            ]);              
+            $helper = $fb->getRedirectLoginHelper();              
+            $permissions = ['email'];
+            $fb_loginurl = $helper->getLoginUrl(Yii::app()->createUrl('site/fblogin'), $permissions);
+            $this->render('login',['fb_loginurl'=>$fb_loginurl]);
         }  
     }
     public function doLogin(){
@@ -125,6 +133,74 @@ class SiteController extends CController{
         unset(Yii::app()->session['pid']);
         unset(Yii::app()->session['name']);
         $this->redirect(Yii::app()->createUrl('site'));
+    }
+
+    public function Actionfblogin(){
+        $fb = new Facebook\Facebook([
+            'app_id' => FB_APP_ID, // 把 {app_id} 換成你的應用程式編號
+            'app_secret' => FB_APP_SECRET, // 把 {app_secret} 換成你的應用程式密鑰
+            'default_graph_version' => FB_GRAPH_VERSION,
+        ]);              
+        $helper = $fb->getRedirectLoginHelper();
+        try {
+            $accessToken = $helper->getAccessToken();
+        } catch(Facebook\Exceptions\FacebookResponseException $e) {
+            // When Graph returns an error
+            echo 'Graph returned an error: ' . $e->getMessage();
+            exit;
+        } catch(Facebook\Exceptions\FacebookSDKException $e) {
+            // When validation fails or other local issues
+            echo 'Facebook SDK returned an error: ' . $e->getMessage();
+            exit;
+        }
+        if (! isset($accessToken)) {
+            if ($helper->getError()) {
+                header('HTTP/1.0 401 Unauthorized');
+                echo "Error: " . $helper->getError() . "\n";
+                echo "Error Code: " . $helper->getErrorCode() . "\n";
+                echo "Error Reason: " . $helper->getErrorReason() . "\n";
+                echo "Error Description: " . $helper->getErrorDescription() . "\n";
+            } else {
+                header('HTTP/1.0 400 Bad Request');
+                echo 'Bad request';
+            }
+            exit;
+        }
+        // Logged in
+        echo '<h3>Access Token</h3>';
+          
+        // The OAuth 2.0 client handler helps us manage access tokens
+        $oAuth2Client = $fb->getOAuth2Client();
+          
+        // Get the access token metadata from /debug_token
+        $tokenMetadata = $oAuth2Client->debugToken($accessToken);
+        echo '<h3>Metadata</h3>';
+        var_dump($tokenMetadata);
+          
+        // Validation (these will throw FacebookSDKException's when they fail)
+        $tokenMetadata->validateAppId($app_id); // Replace {app-id} with your app id
+        // If you know the user ID this access token belongs to, you can validate it here
+        //$tokenMetadata->validateUserId('123');
+        $tokenMetadata->validateExpiration();
+          
+        if (! $accessToken->isLongLived()) {
+            // Exchanges a short-lived access token for a long-lived one
+            try {
+                $accessToken = $oAuth2Client->getLongLivedAccessToken($accessToken);
+            } catch (Facebook\Exceptions\FacebookSDKException $e) {
+                echo "<p>Error getting long-lived access token: " . $helper->getMessage() . "</p>\n\n";
+                exit;
+            }
+          
+            echo '<h3>Long-lived</h3>';
+            var_dump($accessToken->getValue());
+        }
+          
+        //$_SESSION['fb_access_token'] = (string) $accessToken;
+        $fb->setDefaultAccessToken($accessToken);
+        $response = $fb->get('/me?locale=en_US&fields=id,name,email');
+        $userNode = $response->getGraphUser();
+        var_dump($userNode);exit();
     }
 
     public function ActionGoogleLogin(){
