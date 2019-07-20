@@ -10,10 +10,19 @@ use Wenhsun\Leave\Domain\Service\EmployeeLeaveCalculator;
 class ManagerController extends Controller
 {
     private $leaveMap = [
-        '1' => '病假',
-        '2' => '事假',
-        '5' => '特休假',
-        '9' => '補休假',
+        Attendance::SICK_LEAVE => '普通傷病假',
+        Attendance::PERSONAL_LEAVE => '事假',
+        Attendance::PUBLIC_AFFAIRS_LEAVE => '公假',
+        Attendance::OCCUPATIONAL_SICKNESS_LEAVE => '公傷病假',
+        Attendance::ANNUAL_LEAVE => '特休假',
+        Attendance::MATERNITY_LEAVE => '分娩假含例假日',
+        Attendance::MARITAL_LEAVE => '婚假',
+        Attendance::FUNERAL_LEAVE => '喪假',
+        Attendance::COMPENSATORY_LEAVE => '補休假',
+        Attendance::MENSTRUAL_LEAVE => '生理假',
+        Attendance::PATERNITY_LEAVE => '陪產假',
+        Attendance::MISCARRIAGE_LEAVE => '流產假',
+        Attendance::PRENATAL_LEAVE => '產檢假',
     ];
 
     protected function needLogin(): bool
@@ -80,7 +89,7 @@ class ManagerController extends Controller
             $employee->getEmployeeId()->value(),
             $employee->getOnBoardDate() . ' 00:00:00',
             $tomorrow->format('Y-m-d 00:00:00'),
-            '5'
+            Attendance::ANNUAL_LEAVE
         );
 
         $personalLeaveAnnualMinutes = $employeeLeaveCalculator->personalLeaveAnnualMinutes();
@@ -92,49 +101,156 @@ class ManagerController extends Controller
         $commonLeaveEndDateTime->add(DateInterval::createFromDateString('1 year'));
         $commonLeaveEndDate = $commonLeaveEndDateTime->format('Y/m/d H:i:s');
 
-        $personalLeavedMinutes = $attendanceRecordServ->summaryMinutesByPeriodOfTimeAndLeaveType(
+        $sickLeavedMins = $attendanceRecordServ->summaryMinutesByPeriodOfTimeAndLeaveType(
             $employee->getEmployeeId()->value(),
             $commonLeaveStartDate,
             $commonLeaveEndDate,
-            '2'
+            Attendance::SICK_LEAVE
         );
 
-        $sickLeavedMinutes = $attendanceRecordServ->summaryMinutesByPeriodOfTimeAndLeaveType(
+        $personalLeavedMins = $attendanceRecordServ->summaryMinutesByPeriodOfTimeAndLeaveType(
             $employee->getEmployeeId()->value(),
             $commonLeaveStartDate,
             $commonLeaveEndDate,
-            '1'
+            Attendance::PERSONAL_LEAVE
         );
 
-        $compensatoryLeavedMinutes = $attendanceRecordServ->summaryMinutesByPeriodOfTimeAndLeaveType(
+        $publicAffairsLeaveMins = $attendanceRecordServ->summaryMinutesByPeriodOfTimeAndLeaveType(
             $employee->getEmployeeId()->value(),
             $commonLeaveStartDate,
             $commonLeaveEndDate,
-            '9'
+            Attendance::PUBLIC_AFFAIRS_LEAVE
+        );
+
+        $occupationalSicknessLeaveMins = $attendanceRecordServ->summaryMinutesByPeriodOfTimeAndLeaveType(
+            $employee->getEmployeeId()->value(),
+            $commonLeaveStartDate,
+            $commonLeaveEndDate,
+            Attendance::OCCUPATIONAL_SICKNESS_LEAVE
+        );
+
+        $maternityLeaveMins = $attendanceRecordServ->summaryMinutesByPeriodOfTimeAndLeaveType(
+            $employee->getEmployeeId()->value(),
+            $commonLeaveStartDate,
+            $commonLeaveEndDate,
+            Attendance::MATERNITY_LEAVE
+        );
+
+        $maritalLeaveMins = $attendanceRecordServ->summaryMinutesByPeriodOfTimeAndLeaveType(
+            $employee->getEmployeeId()->value(),
+            $commonLeaveStartDate,
+            $commonLeaveEndDate,
+            Attendance::MARITAL_LEAVE
+        );
+
+        $funeralLeaveMins = $attendanceRecordServ->summaryMinutesByPeriodOfTimeAndLeaveType(
+            $employee->getEmployeeId()->value(),
+            $commonLeaveStartDate,
+            $commonLeaveEndDate,
+            Attendance::FUNERAL_LEAVE
+        );
+
+        $compensatoryLeavedMins = $attendanceRecordServ->summaryMinutesByPeriodOfTimeAndLeaveType(
+            $employee->getEmployeeId()->value(),
+            $commonLeaveStartDate,
+            $commonLeaveEndDate,
+            Attendance::COMPENSATORY_LEAVE
+        );
+
+        $menstrualLeaveMins = $attendanceRecordServ->summaryMinutesByPeriodOfTimeAndLeaveType(
+            $employee->getEmployeeId()->value(),
+            $commonLeaveStartDate,
+            $commonLeaveEndDate,
+            Attendance::MENSTRUAL_LEAVE
+        );
+
+        $paternityLeaveMins = $attendanceRecordServ->summaryMinutesByPeriodOfTimeAndLeaveType(
+            $employee->getEmployeeId()->value(),
+            $commonLeaveStartDate,
+            $commonLeaveEndDate,
+            Attendance::PATERNITY_LEAVE
+        );
+
+        $miscarriageLeaveMins = $attendanceRecordServ->summaryMinutesByPeriodOfTimeAndLeaveType(
+            $employee->getEmployeeId()->value(),
+            $commonLeaveStartDate,
+            $commonLeaveEndDate,
+            Attendance::MISCARRIAGE_LEAVE
+        );
+
+        $prenatalLeaveMins = $attendanceRecordServ->summaryMinutesByPeriodOfTimeAndLeaveType(
+            $employee->getEmployeeId()->value(),
+            $commonLeaveStartDate,
+            $commonLeaveEndDate,
+            Attendance::PRENATAL_LEAVE
         );
 
         $summary = [
+            [
+                'category' => '普通傷病假',
+                'leave_applied' => $sickLeavedMins / 60,
+                'leave_available' => $sickLeaveAnnualMinutes / 60,
+            ],
+            [
+                'category' => '事假',
+                'leave_applied' => $personalLeavedMins / 60,
+                'leave_available' => $personalLeaveAnnualMinutes / 60,
+            ],
+            [
+                'category' => '公假',
+                'leave_applied' => $publicAffairsLeaveMins / 60,
+                'leave_available' => '-',
+            ],
+            [
+                'category' => '公傷病假',
+                'leave_applied' => $occupationalSicknessLeaveMins / 60,
+                'leave_available' => '-',
+            ],
             [
                 'category' => '年假(特別休假)',
                 'leave_applied' => $appliedAnnualLeave / 60,
                 'leave_available' => $annualLeaveMinutes->minutesValue() / 60,
             ],
             [
-                'category' => '事假',
-                'leave_applied' => $personalLeavedMinutes / 60,
-                'leave_available' => $personalLeaveAnnualMinutes / 60,
+                'category' => '分娩假含例假日',
+                'leave_applied' => $maternityLeaveMins / 60,
+                'leave_available' => '-',
             ],
             [
-                'category' => '病假',
-                'leave_applied' => $sickLeavedMinutes / 60,
-                'leave_available' => $sickLeaveAnnualMinutes / 60,
+                'category' => '婚假',
+                'leave_applied' => $maritalLeaveMins / 60,
+                'leave_available' => '-',
+            ],
+            [
+                'category' => '喪假',
+                'leave_applied' => $funeralLeaveMins / 60,
+                'leave_available' => '-',
             ],
             [
                 'category' => '補休假',
-                'leave_applied' => $compensatoryLeavedMinutes / 60,
+                'leave_applied' => $compensatoryLeavedMins / 60,
                 'leave_available' => '-',
             ],
-
+            [
+                'category' => '生理假',
+                'leave_applied' => $menstrualLeaveMins / 60,
+                'leave_available' => '-',
+            ],
+            [
+                'category' => '陪產假',
+                'leave_applied' => $paternityLeaveMins / 60,
+                'leave_available' => '-',
+            ],
+            [
+                'category' => '流產假',
+                'leave_applied' => $miscarriageLeaveMins / 60,
+                'leave_available' => '-',
+            ],
+            [
+                'category' => '產檢假',
+                'leave_applied' => $prenatalLeaveMins / 60,
+                'leave_available' => '-',
+            ],
         ];
 
         $this->render('hist', [
@@ -221,10 +337,13 @@ class ManagerController extends Controller
             $this->redirect('index');
         }
 
+        $employeeOrmEnt = EmployeeORM::model()->findByPk($attendanceRecord->employee_id);
+
         $year = new DateTime($attendanceRecord->leave_time);
 
         $this->render('edit', [
             'attendanceRecord' => $attendanceRecord,
+            'employee' => $employeeOrmEnt,
             'leaveMap' => $this->leaveMap,
             'year' => $year->format('Y'),
         ]);
