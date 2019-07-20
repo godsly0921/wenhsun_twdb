@@ -13,6 +13,20 @@
  */
 class Attendance extends CActiveRecord
 {
+    public const SICK_LEAVE = '1'; //普通傷病假
+    public const PERSONAL_LEAVE = '2'; //事假
+    public const PUBLIC_AFFAIRS_LEAVE = '3'; //公假
+    public const OCCUPATIONAL_SICKNESS_LEAVE = '4'; //公傷病假
+    public const ANNUAL_LEAVE = '5'; //特別休假
+    public const MATERNITY_LEAVE = '6'; //分娩假含例假日
+    public const MARITAL_LEAVE = '7'; //婚假
+    public const FUNERAL_LEAVE = '8'; //喪假
+    public const COMPENSATORY_LEAVE = '9'; //補休假
+    public const MENSTRUAL_LEAVE = '10'; //生理假
+    public const PATERNITY_LEAVE = '16'; //陪產假
+    public const MISCARRIAGE_LEAVE = '17'; //流產假
+    public const PRENATAL_LEAVE = '18'; //產檢假
+
 	/**
 	 * @return string the associated database table name
 	 */
