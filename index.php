@@ -51,5 +51,9 @@ define('_PATH','/gjftamc/assets/');
 define('MONGO','mongodb://localhost:27017');
 define("GOOGLE_CLINT_ID", "425795626455-j4g8m5n8aenev94agt8bh4j11dv0sg1h.apps.googleusercontent.com");
 define("GOOGLE_CLINT_SECRET", "fglkDb5yLTSVwcl8QzVLbe_F");
+
+define("FB_APP_ID", "411928326084757");
+define("FB_APP_SECRET", "ebd2032b93bb163fbdc4f6d4f42a9a54");
+define("FB_GRAPH_VERSION", "v2.2");
 require_once($yii);
 Yii::createWebApplication($config)->run();

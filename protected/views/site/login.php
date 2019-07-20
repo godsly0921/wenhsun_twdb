@@ -94,7 +94,7 @@
         <h3 class="login_title">其他帳號登入</h3>
     </div>
     <div class="col-sm-8 col-md-6 col-xl-4 col-lg-4 mx-auto text-center">
-        <a href="<?php echo Yii::app()->createUrl('site/fblogin'); ?>"><img class="w-100" src="<?php echo Yii::app()->createUrl('/'); ?>/assets/image/fb.jpg"></a>
+        <a href="<?php echo $fb_loginurl ?>"><img class="w-100" src="<?php echo Yii::app()->createUrl('/'); ?>/assets/image/fb.jpg"></a>
     </div>
     <div class="col-sm-8 col-md-6 col-xl-4 col-lg-4 mx-auto text-center">
         <a href="<?php echo Yii::app()->createUrl('site/googlelogin'); ?>"><img class="w-100" src="<?php echo Yii::app()->createUrl('/'); ?>/assets/image/google.jpg"></a>
