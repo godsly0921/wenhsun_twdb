@@ -170,16 +170,11 @@ class SiteController extends CController{
             exit;
         }
         // Logged in
-        echo '<h3>Access Token</h3>';
-          
         // The OAuth 2.0 client handler helps us manage access tokens
         $oAuth2Client = $fb->getOAuth2Client();
           
         // Get the access token metadata from /debug_token
-        $tokenMetadata = $oAuth2Client->debugToken($accessToken);
-        echo '<h3>Metadata</h3>';
-        var_dump($tokenMetadata);
-          
+        $tokenMetadata = $oAuth2Client->debugToken($accessToken);          
         // Validation (these will throw FacebookSDKException's when they fail)
         $tokenMetadata->validateAppId(FB_APP_ID); // Replace {app-id} with your app id
         // If you know the user ID this access token belongs to, you can validate it here
@@ -194,16 +189,38 @@ class SiteController extends CController{
                 echo "<p>Error getting long-lived access token: " . $helper->getMessage() . "</p>\n\n";
                 exit;
             }
-          
-            echo '<h3>Long-lived</h3>';
-            var_dump($accessToken->getValue());
         }
-          
-        //$_SESSION['fb_access_token'] = (string) $accessToken;
         $fb->setDefaultAccessToken($accessToken);
         $response = $fb->get('/me?locale=en_US&fields=id,name,email');
         $userNode = $response->getGraphUser();
-        var_dump($userNode);exit();
+        $inputs = array();
+        $inputs['email'] = $userNode->getField('email');
+        $inputs['fb_user_id'] = $userNode->getField('id');
+        $inputs['name'] = $userNode->getField('name');
+        $memberService = new MemberService();
+        $member = $memberService->findByAccount($inputs['email']);
+
+        if(!$member){//新的帳號
+            $model = $memberService->fb_account_create($profile);
+        }else{//舊有帳號綁定google帳號
+            if($member[0]->fb_user_id ==""){
+                $model = $memberService->google_account_update($member[0],$inputs);
+            }else{
+                $model = $member[0];
+            }
+        }
+        if($model){
+            $useridentity = new UserIdentity($model->account,"");
+            $is_login = $useridentity->authenticate();
+            Yii::app()->session['uid'] = $model->id;//會員帳號ID
+            Yii::app()->session['pid'] = $model->account;//會員帳號
+            Yii::app()->session['name'] = $model->name;//會員名稱
+            $duration = 3600 * 24 * 30; // 30 days
+            Yii::app()->user->login($useridentity, $duration);
+            $this->redirect(Yii::app()->createUrl('site'));
+        }else{
+            $this->redirect(Yii::app()->createUrl('site/login'));
+        }
     }
 
     public function ActionGoogleLogin(){

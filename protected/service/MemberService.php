@@ -250,6 +250,50 @@ class MemberService
         return $datas;
     }
 
+    public function fb_account_create(array $inputs){
+        $model = new Member();
+        $model->name = $inputs['name'];
+        $model->fb_user_id = $inputs['fb_user_id'];
+        $model->email = $inputs['email'];
+        $model->account = $inputs['email'];
+        $model->active = "Y";
+        $model->account_type = "4";
+        $model->create_date = date('Y-m-d H:i:s');
+        $model->update_date = date('Y-m-d H:i:s');
+        if (!$model->validate()) {
+            Yii::log(date("Y-m-d H:i:s").'FB account create validate false account'.$inputs['email'], CLogger::LEVEL_INFO);
+            return false;
+        }
+
+        if (!$model->hasErrors()) {
+            if( $model->save() ){
+                Yii::log(date("Y-m-d H:i:s").'FB account create true account'.$inputs['email'], CLogger::LEVEL_INFO);
+                return $model;      
+            }else{       
+                Yii::log(date("Y-m-d H:i:s").'FB account create false account'.$inputs['email'], CLogger::LEVEL_INFO);
+                return false;
+            }
+        }
+    }
+    public function fb_account_update($member,array $inputs){
+        $model = Member::model()->findByPk($member->id);
+        if($model->fb_user_id ==""){
+            $model->fb_user_id = $inputs['fb_user_id'];
+            if (!$model->validate()) {
+                Yii::log(date("Y-m-d H:i:s").'FB account update validate false account'.$member->account, CLogger::LEVEL_INFO);
+                return false;
+            }
+
+            if (!$model->hasErrors()) {
+                $success = $model->update();
+                Yii::log(date("Y-m-d H:i:s").'FB account update true account'.$member->account, CLogger::LEVEL_INFO);
+                return $model;
+            } else {
+                Yii::log(date("Y-m-d H:i:s").'FB account update false account'.$member->account, CLogger::LEVEL_INFO);
+                return false;
+            }
+        }
+    }
     public function google_account_create(array $inputs){
         $model = new Member();
         $model->name = $inputs['name'];
