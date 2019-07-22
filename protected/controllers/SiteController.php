@@ -274,7 +274,7 @@ class SiteController extends CController{
             $client->revokeToken();       
             // 添加授權範圍，參考 https://developers.google.com/identity/protocols/googlescopes
             $client->addScope(['https://www.googleapis.com/auth/userinfo.profile','https://www.googleapis.com/auth/userinfo.email']);
-            $client->setRedirectUri("http://web.taiwanblacktea.com.tw/site/googlelogin");
+            $client->setRedirectUri("https://web.taiwanblacktea.com.tw/site/googlelogin");
             $url = $client->createAuthUrl();
             header("Location:{$url}");
         }
