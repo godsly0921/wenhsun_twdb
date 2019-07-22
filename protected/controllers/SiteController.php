@@ -142,6 +142,9 @@ class SiteController extends CController{
             'default_graph_version' => FB_GRAPH_VERSION,
         ]);              
         $helper = $fb->getRedirectLoginHelper();
+        if (isset($_GET['state'])) { 
+            $helper->getPersistentDataHandler()->set('state', $_GET['state']); 
+        }
         try {
             $accessToken = $helper->getAccessToken();
         } catch(Facebook\Exceptions\FacebookResponseException $e) {
