@@ -181,7 +181,7 @@ class SiteController extends CController{
         var_dump($tokenMetadata);
           
         // Validation (these will throw FacebookSDKException's when they fail)
-        $tokenMetadata->validateAppId($app_id); // Replace {app-id} with your app id
+        $tokenMetadata->validateAppId(FB_APP_ID); // Replace {app-id} with your app id
         // If you know the user ID this access token belongs to, you can validate it here
         //$tokenMetadata->validateUserId('123');
         $tokenMetadata->validateExpiration();
