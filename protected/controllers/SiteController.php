@@ -344,6 +344,9 @@ class SiteController extends CController{
                 }
                 $this->redirect(Yii::app()->createUrl('site/login'));
             }
+        }else{
+            Yii::app()->session['error_msg'] = '帳號已存在';
+            $this->render('register');
         }
     }
     public function doGetRegister(){
