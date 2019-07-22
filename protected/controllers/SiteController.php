@@ -201,7 +201,7 @@ class SiteController extends CController{
         $member = $memberService->findByAccount($inputs['email']);
 
         if(!$member){//新的帳號
-            $model = $memberService->fb_account_create($profile);
+            $model = $memberService->fb_account_create($inputs);
         }else{//舊有帳號綁定google帳號
             if($member[0]->fb_user_id ==""){
                 $model = $memberService->google_account_update($member[0],$inputs);
