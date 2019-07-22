@@ -9,6 +9,7 @@
  * @property string $password
  * @property string $google_sub
  * @property string $google_locale
+ * @property string $fb_user_id
  * @property string $name
  * @property string $email
  * @property string $gender
@@ -53,7 +54,7 @@ class Member extends CActiveRecord
 			array('active_point, inactive_point', 'numerical'),
 			array('account', 'length', 'max'=>64),
 			array('password, email', 'length', 'max'=>128),
-			array('google_sub, address', 'length', 'max'=>256),
+			array('google_sub, fb_user_id, address', 'length', 'max'=>256),
 			array('google_locale', 'length', 'max'=>50),
 			array('name', 'length', 'max'=>32),
 			array('gender, active', 'length', 'max'=>1),
@@ -67,7 +68,7 @@ class Member extends CActiveRecord
 			array('birthday', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, account, password, google_sub, google_locale, name, email, gender, birthday, phone, mobile, member_type, account_type, active, verification_code, nationality, county, town, address, active_point, inactive_point, create_date, update_date, create_by, update_by', 'safe', 'on'=>'search'),
+			array('id, account, password, google_sub, google_locale, fb_user_id, name, email, gender, birthday, phone, mobile, member_type, account_type, active, verification_code, nationality, county, town, address, active_point, inactive_point, create_date, update_date, create_by, update_by', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -93,6 +94,7 @@ class Member extends CActiveRecord
 			'password' => '密碼',
 			'google_sub' => 'google帳號id',
 			'google_locale' => 'google帳號語言',
+			'fb_user_id' => 'fb帳號id',
 			'name' => '姓名',
 			'email' => 'Email',
 			'gender' => '性別',
@@ -100,7 +102,7 @@ class Member extends CActiveRecord
 			'phone' => '電話',
 			'mobile' => '手機',
 			'member_type' => '會員類型/VIP',
-			'account_type' => '會員來源',
+			'account_type' => '會員來源 (1:後台建立 2:前台註冊 3:google 帳號 4: fb 帳號 )',
 			'active' => 'Active',
 			'verification_code' => 'Verification Code',
 			'nationality' => '國籍',
@@ -139,6 +141,7 @@ class Member extends CActiveRecord
 		$criteria->compare('password',$this->password,true);
 		$criteria->compare('google_sub',$this->google_sub,true);
 		$criteria->compare('google_locale',$this->google_locale,true);
+		$criteria->compare('fb_user_id',$this->fb_user_id,true);
 		$criteria->compare('name',$this->name,true);
 		$criteria->compare('email',$this->email,true);
 		$criteria->compare('gender',$this->gender,true);
