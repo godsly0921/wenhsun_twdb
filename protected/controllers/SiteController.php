@@ -231,7 +231,7 @@ class SiteController extends CController{
          
         // 2) 使用者認證後，可取得 access_token 
         if (isset($_GET['code'])){
-            $client->setRedirectUri("http://web.taiwanblacktea.com.tw/site/googlelogin");
+            $client->setRedirectUri("https://web.taiwanblacktea.com.tw/site/googlelogin");
             $result = $client->authenticate($_GET['code']);
          
             if (isset($result['error'])) 
@@ -239,7 +239,7 @@ class SiteController extends CController{
                 die($result['error_description']);
             }
             Yii::app()->session['google'] = $result;
-            header("Location:http://web.taiwanblacktea.com.tw/site/googlelogin?action=profile");
+            header("Location:https://web.taiwanblacktea.com.tw/site/googlelogin?action=profile");
         }         
         // 3) 使用 id_token 取得使用者資料。另有 setAccessToken()、getAccessToken() 可以設定與取得 token
         elseif (isset($_GET['action']) && $_GET['action'] == "profile"){
