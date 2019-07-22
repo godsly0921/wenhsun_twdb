@@ -110,7 +110,7 @@ class SiteController extends CController{
             ]);              
             $helper = $fb->getRedirectLoginHelper();              
             $permissions = ['email'];
-            $fb_loginurl = $helper->getLoginUrl(Yii::app()->createUrl('site/fblogin'), $permissions);
+            $fb_loginurl = $helper->getLoginUrl(DOMAIN.'site/fblogin', $permissions);
             $this->render('login',['fb_loginurl'=>$fb_loginurl]);
         }  
     }
