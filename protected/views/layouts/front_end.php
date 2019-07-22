@@ -53,7 +53,8 @@
                   </li>
                 <?php }else{?>
                   <li class="nav-item dropdown">
-                      <a class="nav-link dropdown-toggle" href="#" id="memberDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><?=Yii::app()->session['name']?></a>
+                      <a class="nav-link dropdown-toggle" href="#" id="memberDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <?=Yii::app()->session['name']!=""?Yii::app()->session['name']:explode("@",Yii::app()->session['pid'])['0']?></a>
                       <div class="dropdown-menu member_dropdown" aria-labelledby="memberDropdown">
                         <a class="dropdown-item" href="<?= Yii::app()->createUrl('site/my_account');?>"><i class="fa fa-user-o mr-3"></i>會員專區</a>
                         <a class="dropdown-item" href="<?= Yii::app()->createUrl('site/my_record');?>"><i class="fa fa-download mr-3"></i>購買紀錄</a>
