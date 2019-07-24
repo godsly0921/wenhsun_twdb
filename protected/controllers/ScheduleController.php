@@ -372,31 +372,7 @@ class ScheduleController extends Controller
                                 return json_encode("很抱歉！排班不可以在排班開始前24小時取消，所以您無法取消該筆排班請洽系統管理員");
                             }
                         } else {
-                            $role = new GroupService();
-
-
-                            $employeeService = new EmployeeService();
-                            $login_result = $employeeService->findEmployeeById(Yii::app()->session['uid']);
-
-
-                            $model = $service->findPartTimeIDByID($id);
-                            $record_result = $employeeService->findEmployeeById($model['builder']);
-
-
-                            $login_result_role = $role->groupById($login_result->role);
-                            $record_result_role = $role->groupById($record_result->role);
-
-                            if($login_result_role->group_number <= $record_result_role->group_number){
-                                $res = $service->editPartTimeStatus($id,3);
-                                if ($res == true) {
-                                    return json_encode("已成功取消排班一");
-                                } else {
-                                    return json_encode("取消排班失敗一");
-                                }
-                            }else{
-                                return json_encode("很抱歉！這筆排班紀錄不是您的且權限大於建立者，所以您無法取消該筆排班請洽系統管理員".$login_result_role->group_number .'||'.$record_result_role->group_number);
-                            }
-
+                            return json_encode("很抱歉！這筆排班紀錄不是您的，所以您無法取消該筆排班請洽系統管理員");
                         }
                     }
                 }else{//系統管理員

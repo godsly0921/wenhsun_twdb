@@ -134,7 +134,7 @@ class SiteController extends CController{
         unset(Yii::app()->session['name']);
         $this->redirect(Yii::app()->createUrl('site'));
     }
-
+    //fb 註冊登入
     public function Actionfblogin(){
         $fb = new Facebook\Facebook([
             'app_id' => FB_APP_ID, // 把 {app_id} 換成你的應用程式編號
@@ -210,19 +210,24 @@ class SiteController extends CController{
             }
         }
         if($model){
-            $useridentity = new UserIdentity($model->account,"");
-            $is_login = $useridentity->authenticate();
-            Yii::app()->session['uid'] = $model->id;//會員帳號ID
-            Yii::app()->session['pid'] = $model->account;//會員帳號
-            Yii::app()->session['name'] = $model->name;//會員名稱
-            $duration = 3600 * 24 * 30; // 30 days
-            Yii::app()->user->login($useridentity, $duration);
-            $this->redirect(Yii::app()->createUrl('site'));
+            if($inputs['fb_user_id'] == $model->fb_user_id){
+                $useridentity = new UserIdentity($model->account,"");
+                $is_login = $useridentity->authenticate();
+                Yii::app()->session['uid'] = $model->id;//會員帳號ID
+                Yii::app()->session['pid'] = $model->account;//會員帳號
+                Yii::app()->session['name'] = $model->name;//會員名稱
+                $duration = 3600 * 24 * 30; // 30 days
+                Yii::app()->user->login($useridentity, $duration);
+                $this->redirect(Yii::app()->createUrl('site'));
+            }else{
+                $this->redirect(Yii::app()->createUrl('site/login'));
+            }
         }else{
             $this->redirect(Yii::app()->createUrl('site/login'));
         }
     }
 
+    //google 註冊登入
     public function ActionGoogleLogin(){
         // 0) 設定 client 端的 id, secret
         $client = new Google_Client;
@@ -256,14 +261,18 @@ class SiteController extends CController{
                 }
             }
             if($model){
-                $useridentity = new UserIdentity($model->account,"");
-                $is_login = $useridentity->authenticate();
-                Yii::app()->session['uid'] = $model->id;//會員帳號ID
-                Yii::app()->session['pid'] = $model->account;//會員帳號
-                Yii::app()->session['name'] = $model->name;//會員名稱
-                $duration = 3600 * 24 * 30; // 30 days
-                Yii::app()->user->login($useridentity, $duration);
-                $this->redirect(Yii::app()->createUrl('site'));
+                if($profile['sub'] == $model->google_sub){
+                    $useridentity = new UserIdentity($model->account,"");
+                    $is_login = $useridentity->authenticate();
+                    Yii::app()->session['uid'] = $model->id;//會員帳號ID
+                    Yii::app()->session['pid'] = $model->account;//會員帳號
+                    Yii::app()->session['name'] = $model->name;//會員名稱
+                    $duration = 3600 * 24 * 30; // 30 days
+                    Yii::app()->user->login($useridentity, $duration);
+                    $this->redirect(Yii::app()->createUrl('site'));
+                }else{
+                    $this->redirect(Yii::app()->createUrl('site/login'));
+                }
             }else{
                 $this->redirect(Yii::app()->createUrl('site/login'));
             }
@@ -279,6 +288,8 @@ class SiteController extends CController{
             header("Location:{$url}");
         }
     }
+
+    //前台註冊，驗證帳號, 驗證通過啟用帳號才能登入
     public function ActionVerification(){
         $verification_code = isset($_GET['verification_code'])?$_GET['verification_code']:"";
         if($verification_code){
@@ -297,6 +308,7 @@ class SiteController extends CController{
             $this->redirect(Yii::app()->createUrl('site/register'));
         }
     }
+    //前台註冊頁面
     public function ActionRegister() {
         if(Yii::app()->request->isPostRequest) {
             $this->doPostRegister();
@@ -304,6 +316,7 @@ class SiteController extends CController{
             $this->doGetRegister();
         }
     }
+    //前台註冊，寫入會員資料發送帳號驗證信
     public function doPostRegister(){
         $memberService = new MemberService();
         $member = $memberService->findByAccount(filter_input(INPUT_POST, 'account'));
@@ -349,6 +362,7 @@ class SiteController extends CController{
             $this->render('register');
         }
     }
+    //前台註冊頁面
     public function doGetRegister(){
         $inputs = array();
         $inputs['account'] = '';
@@ -363,7 +377,7 @@ class SiteController extends CController{
         $inputs['address'] = '';
         $this->render('register', ['data' => $inputs]);
     }
-
+    //前台忘記密碼，帳號驗證，驗證通過修改會員密碼為臨時密碼
     public function Actionforgetverification(){
         $verification_code = isset($_GET['verification_code'])?$_GET['verification_code']:"";
         if($verification_code){
@@ -382,6 +396,7 @@ class SiteController extends CController{
             $this->redirect(Yii::app()->createUrl('site/forget'));
         }
     }
+    //前台忘記密碼頁面
     public function ActionForget() {
         if(Yii::app()->request->isPostRequest) {
             $this->doPostForget();
@@ -389,9 +404,11 @@ class SiteController extends CController{
             $this->doGetForget();
         }        
     }
+    //前台忘記密碼頁面
     public function doGetForget(){
         $this->render('forget');
     }
+    //前台忘記密碼，產生臨時密碼並發送驗證信，驗證通過才會修改會員密碼
     public function doPostForget(){
         $inputs['account'] = filter_input(INPUT_POST, 'account');
         $inputs['email'] = filter_input(INPUT_POST, 'email');
@@ -413,6 +430,7 @@ class SiteController extends CController{
             $this->redirect(Yii::app()->createUrl('site/forget'));
         }
     }
+    //會員專區
     public function ActionMy_account() {
         if(Yii::app()->request->isPostRequest) {
             $this->doPostMyaccount();
@@ -421,6 +439,7 @@ class SiteController extends CController{
         }        
     }
 
+    //會員專區-會員資料修改
     public function doPostMyaccount(){
         $inputs['id'] = Yii::app()->session['uid'];
         $inputs['account'] = filter_input(INPUT_POST, 'account');
@@ -452,7 +471,7 @@ class SiteController extends CController{
             $this->redirect(Yii::app()->createUrl('site/my_account',['data' => $inputs]));
         }
     }
-
+    //會員專區-會員資料
     public function doGetMyaccount(){
         $member = Member::model()->findByPk(Yii::app()->session['uid']);
         $inputs = array();
@@ -468,14 +487,15 @@ class SiteController extends CController{
         $inputs['address'] = $member->address;
         $this->render('my_account',['data' => $inputs]);
     }
+    //會員專區-我的點數
     public function ActionMy_points() {
         $this->render('my_points');
     }
-
+    //會員專區-我的收藏
     public function ActionMy_favorite() {
         $this->render('my_favorite');
     }
-
+    //會員專區-購買紀錄
     public function ActionMy_record() {
         $this->render('my_record');
     }
