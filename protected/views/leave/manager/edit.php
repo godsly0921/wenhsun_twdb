@@ -40,7 +40,7 @@
                             <div class="col-md-6 col-sm-6 col-xs-12">
                                 <select class="form-control" id="leave_type" name="leave_type">
                                     <?php foreach ($leaveMap as $leaveCode => $leaveText): ?>
-                                        <?php if((string)$attendanceRecord->take === (string)$leaveCode):?>
+                                        <?php if($attendanceRecord->take == $leaveCode):?>
                                             <option value="<?= $leaveCode ?>" selected><?= $leaveText ?></option>
                                         <?php else:?>
                                             <option value="<?= $leaveCode ?>"><?= $leaveText ?></option>
@@ -87,7 +87,7 @@
 
                         <div class="form-group">
                             <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
-                                <button type="submit" class="btn btn-primary">修改</button>
+                                <button type="submit" class="btn btn-primary">核准送出</button>
                                 <a class="btn btn-default pull-right" href="<?= Yii::app()->createUrl("/leave/manager/hist?user_name={$employee->user_name}&year={$year}");?>">返回</a>
                             </div>
                         </div>

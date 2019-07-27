@@ -10,10 +10,24 @@ use Wenhsun\Leave\Domain\Service\EmployeeLeaveCalculator;
 class EmployeeController extends Controller
 {
     private $leaveMap = [
-        '1' => '病假',
+        '1' => '普通傷病假',
         '2' => '事假',
-        '5' => '特休假',
-        '9' => '補休假',
+        '3' => '公假',
+        '4' => '公傷病假',
+        '5' => '特別休假',
+        '6' => '分娩假含例假日',
+        '7' => '婚假',
+        '8' => '喪假',
+        '9' => '補休',
+        '10' => '生理假',
+        '11' => '加班',
+        '12' => '非請假(早退)',
+        '13' => '非請假(遲到加早退)',
+        '14' => '非請假(遲到)',
+        '15' => '非請假(忘記刷卡)',
+        '16' => '陪產假',
+        '17' => '流產假',
+        '18' => '產檢假',
     ];
 
     protected function needLogin(): bool
