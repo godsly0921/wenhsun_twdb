@@ -42,7 +42,7 @@
             </div>
 
             <div class="form-group">
-                <label for="new_image" class="col-sm-2 control-label">檔案(限2M以下):</label>
+                <label for="new_image" class="col-sm-2 control-label">檔案(限10M以下):</label>
                 <div class="col-sm-5">
                     <input type="file" id="new_image" name="new_image" placeholder="請上傳(pdf、png、xls、xlsx、doc、docx、jpeg)" value="" accept="image/png,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,image/jpeg,application/vnd.ms-excel">
                 </div>

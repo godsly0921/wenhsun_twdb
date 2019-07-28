@@ -166,10 +166,10 @@ use Wenhsun\Transform\MultiColumnTransformer;
             });
 
             $("#export_btn").on("click", function(){
-                if ($(".dataTables_empty").length === 1) {
-                    alert("無資料匯出");
-                    return false;
-                }
+                // if ($(".dataTables_empty").length === 1) {
+                //     alert("無資料匯出");
+                //     return false;
+                // }
                 $("#export_form").remove();
                 let exportForm = $("#search_form").clone().appendTo($("body")).hide();
                 exportForm.prop("action", "<?= Yii::app()->createUrl('/author/export');?>");

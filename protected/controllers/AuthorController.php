@@ -24,7 +24,6 @@ class AuthorController extends Controller
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['search_category'])) {
             $authors = $this->query($searchCategory, $searchOne, $searchTwo);
         }
-
 		$this->render(
 		    'list',
             [
@@ -61,14 +60,18 @@ class AuthorController extends Controller
         $searchCategory = $_POST['search_category'] ?? '';
         $searchOne = $_POST['search_one'] ?? '';
         $searchTwo = $_POST['search_two'] ?? '';
-
-        $fileName = "作家資料匯出_{$searchCategory}_{$searchOne}_{$searchTwo}";
-
+        if($searchCategory == "" && $searchOne == "" && $searchTwo == ""){
+            $fileName = "作家資料匯出";
+        }else{
+            $fileName = "作家資料匯出_{$searchCategory}_{$searchOne}_{$searchTwo}";
+        }
+        set_time_limit(0);
+        ini_set('memory_limit', '1024M');
         $multiTransfer = new MultiColumnTransformer();
 
         $authors = $this->query($searchCategory, $searchOne, $searchTwo);
-
         $rows = [];
+
         foreach ($authors as $index => $author) {
 
             $banks = AuthorBank::model()->findAll(
