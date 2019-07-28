@@ -11,7 +11,7 @@ class DepartmentQueryService
         return [
             "文訊",
             "基金會",
-            "紀州奄",
+            "紀州庵",
         ];
     }
 }
