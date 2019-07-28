@@ -9,20 +9,41 @@ use Wenhsun\Leave\Domain\Service\EmployeeLeaveCalculator;
 
 class ManagerController extends Controller
 {
+    // private $leaveMap = [
+    //     Attendance::SICK_LEAVE => '普通傷病假',
+    //     Attendance::PERSONAL_LEAVE => '事假',
+    //     Attendance::PUBLIC_AFFAIRS_LEAVE => '公假',
+    //     Attendance::OCCUPATIONAL_SICKNESS_LEAVE => '公傷病假',
+    //     Attendance::ANNUAL_LEAVE => '特休假',
+    //     Attendance::MATERNITY_LEAVE => '分娩假含例假日',
+    //     Attendance::MARITAL_LEAVE => '婚假',
+    //     Attendance::FUNERAL_LEAVE => '喪假',
+    //     Attendance::COMPENSATORY_LEAVE => '補休假',
+    //     Attendance::MENSTRUAL_LEAVE => '生理假',
+    //     Attendance::PATERNITY_LEAVE => '陪產假',
+    //     Attendance::MISCARRIAGE_LEAVE => '流產假',
+    //     Attendance::PRENATAL_LEAVE => '產檢假',
+    // ];
+
     private $leaveMap = [
-        Attendance::SICK_LEAVE => '普通傷病假',
-        Attendance::PERSONAL_LEAVE => '事假',
-        Attendance::PUBLIC_AFFAIRS_LEAVE => '公假',
-        Attendance::OCCUPATIONAL_SICKNESS_LEAVE => '公傷病假',
-        Attendance::ANNUAL_LEAVE => '特休假',
-        Attendance::MATERNITY_LEAVE => '分娩假含例假日',
-        Attendance::MARITAL_LEAVE => '婚假',
-        Attendance::FUNERAL_LEAVE => '喪假',
-        Attendance::COMPENSATORY_LEAVE => '補休假',
-        Attendance::MENSTRUAL_LEAVE => '生理假',
-        Attendance::PATERNITY_LEAVE => '陪產假',
-        Attendance::MISCARRIAGE_LEAVE => '流產假',
-        Attendance::PRENATAL_LEAVE => '產檢假',
+        '1' => '普通傷病假',
+        '2' => '事假',
+        '3' => '公假',
+        '4' => '公傷病假',
+        '5' => '特別休假',
+        '6' => '分娩假含例假日',
+        '7' => '婚假',
+        '8' => '喪假',
+        '9' => '補休',
+        '10' => '生理假',
+        '11' => '加班',
+        '12' => '非請假(早退)',
+        '13' => '非請假(遲到加早退)',
+        '14' => '非請假(遲到)',
+        '15' => '非請假(忘記刷卡)',
+        '16' => '陪產假',
+        '17' => '流產假',
+        '18' => '產檢假',
     ];
 
     protected function needLogin(): bool
@@ -67,12 +88,22 @@ class ManagerController extends Controller
         }
 
         $serv = new AttendancerecordService();
-        $list = $serv->getEmployeeLeaveList($employeeOrmEnt->id, $year);
+        //$list = $serv->getEmployeeLeaveList($employeeOrmEnt->id, $year);
+        $holidayList = $serv->getEmployeeLeaveListHoliday($employeeOrmEnt->id, $year);
+        $overtimeList = $serv->getEmployeeLeaveListOvertime($employeeOrmEnt->id, $year);
 
-        if (!empty($list)) {
-            foreach ($list as $idx => $row) {
+        if (!empty($holidayList)) {
+            foreach ($holidayList as $idx => $row) {
                 if (isset($this->leaveMap[$row['take']])) {
-                    $list[$idx]['take'] = $this->leaveMap[$row['take']];
+                    $holidayList[$idx]['take'] = $this->leaveMap[$row['take']];
+                }
+            }
+        }
+
+        if (!empty($overtimeList)) {
+            foreach ($overtimeList as $idx => $row) {
+                if (isset($this->leaveMap[$row['take']])) {
+                    $overtimeList[$idx]['take'] = $this->leaveMap[$row['take']];
                 }
             }
         }
@@ -258,7 +289,8 @@ class ManagerController extends Controller
             'employeeUserName' => $employeeOrmEnt->user_name,
             'employeeName' => $employeeOrmEnt->name,
             'year' => $year,
-            'list' => $list,
+            'holidayList' => $holidayList,
+            'overtimeList' => $overtimeList,
             'sum' => $summary,
         ]);
     }

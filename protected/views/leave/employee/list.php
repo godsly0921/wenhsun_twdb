@@ -4,9 +4,12 @@
             <div class="title_left">
                 <h3>休假檢視(<?=$year?>)</h3>
             </div>
-            <form id="form" method="get" action="<?php echo Yii::app()->createUrl('/leave/employee/index'); ?>"
+            <form id="form" method="get" action="<?php echo Yii::app()->createUrl('/leave/employee/index'); ?>">
                 <div class="title_right">
-                    <div class="col-lg-8"></div>
+                    <div class="col-lg-6"></div>
+                    <div class="col-lg-2">
+                        <a href="<?php echo Yii::app()->createUrl('/leave/manager/new'); ?>" class="btn btn-primary">新增假單</a>
+                    </div>
                     <div class="col-lg-4">
                         <div class="input-group">
                             <input type="text" class="form-control" id="year" name="year">
