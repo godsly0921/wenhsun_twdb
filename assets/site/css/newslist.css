@@ -80,10 +80,10 @@
         border:10px solid #987413;
     }
     .newsbox{
-        height: 300px;
+        height: 100%;
     }
     .newsleft{
-
+        top: 30px;
         height: 100%;
     }
     .newsright{
