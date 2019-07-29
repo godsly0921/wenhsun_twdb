@@ -11,7 +11,7 @@
                         <a href="<?php echo Yii::app()->createUrl('/leave/manager/new'); ?>" class="btn btn-primary">請假申請</a>
                     </div>
                     <div class="col-lg-2">
-                        <a href="<?php echo Yii::app()->createUrl('/leave/manager/new'); ?>" class="btn btn-primary">加班申請</a>
+                        <a href="<?php echo Yii::app()->createUrl('/leave/manager/overtime'); ?>" class="btn btn-primary">加班申請</a>
                     </div>
                     <div class="col-lg-4">
                         <div class="input-group">
@@ -51,8 +51,13 @@
                 </div>
             </div>
         </div>
-
-        <div class="row">
+        <br>
+        <div class="tab">
+            <button type="button" class="btn btn-default" onClick="tab('holiday');">請假記錄</button>
+            <button type="button" class="btn btn-default" onClick="tab('overtime');">加班記錄</button>
+        </div>
+        <br>
+        <div id="holiday" class="row">
             <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="x_panel">
                     <table id="datatable" class="table table-striped table-bordered">
@@ -62,23 +67,78 @@
                                 <th>假別</th>
                                 <th>事由</th>
                                 <th>請假日期</th>
-                                <th>時間起訖</th>
+                                <th>請假時間</th>
                                 <th>申請時數(小時)</th>
                                 <th>審核狀態</th>
                                 <th>操作</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <?php foreach ($list as $row) : ?>
+                            <?php foreach ($holidayList as $row) : ?>
                                 <tr role="row">
-                                    <td></td>
+                                    <td><?= substr($row['leave_time'], 0, 10) ?></td>
                                     <td><?= $row['take'] ?></td>
-                                    <td></td>
-                                    <td><?= $row['leave_time'] ?></td>
-                                    <td></td>
+                                    <td><?= $row['reason'] ?></td>
+                                    <td><?= date('Y-m-d',strtotime($row['leave_time'])) ?></td>
+                                    <td><?= substr($row['start_time'], 11, 8) ?> - <?= substr($row['end_time'], 11, 8) ?></td>
                                     <td><?= $row['leave_minutes'] / 60 ?></td>
-                                    <td></td>
-                                    <td></td>
+                                    <td>
+                                        <?php if ($row['status'] == 0) : ?>
+                                            未審核
+                                        <?php elseif ($rwo['status'] == 1) : ?>
+                                            已審核
+                                        <?php endif; ?>
+                                    </td>
+                                    <td>
+                                        <a href="#">
+                                            <i class="far fa-newspaper"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="overtime" class="row" style="display:none">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel">
+                    <table id="datatable" class="table table-striped table-bordered">
+                        <thead>
+                            <tr>
+                                <th>申請日期</th>
+                                <th>項目</th>
+                                <th>事由</th>
+                                <th>加班日期</th>
+                                <th>加班時間</th>
+                                <th>申請時數(小時)</th>
+                                <th>審核狀態</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($overtimeList as $row) : ?>
+                                <tr role="row">
+                                    <td><?= substr($row['leave_time'], 0, 10) ?></td>
+                                    <td><?= $row['take'] ?></td>
+                                    <td><?= $row['reason'] ?></td>
+                                    <td><?= date('Y-m-d',strtotime($row['leave_time'])) ?></td>
+                                    <td><?= substr($row['start_time'], 11, 8) ?> - <?= substr($row['end_time'], 11, 8) ?></td>
+                                    <td><?= $row['leave_minutes'] / 60 ?></td>
+                                    <td>
+                                        <?php if ($row['status'] == 0) : ?>
+                                            未審核
+                                        <?php elseif ($rwo['status'] == 1) : ?>
+                                            已審核
+                                        <?php endif; ?>
+                                    </td>
+                                    <td>
+                                        <a href="#">
+                                            <i class="far fa-newspaper"></i>
+                                        </a>
+                                    </td>
                                 </tr>
                             <?php endforeach; ?>
                         </tbody>
@@ -88,3 +148,15 @@
         </div>
     </div>
 </div>
+
+<script>
+function tab(tab) {
+    if (tab === "holiday") {
+        $("#holiday").show();
+        $("#overtime").hide();
+    } else if (tab === "overtime") {
+        $("#holiday").hide();
+        $("#overtime").show();
+    }
+}
+</script>

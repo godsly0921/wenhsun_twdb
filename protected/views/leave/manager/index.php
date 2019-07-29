@@ -17,9 +17,17 @@
                 <div class="x_panel">
                     <form id="form" method="get" action="<?php echo Yii::app()->createUrl('/leave/manager/hist'); ?>" data-parsley-validate class="form-horizontal form-label-left" novalidate>
                         <div class="form-group">
-                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="user_name">員工帳號</label>
-                            <div class="col-md-6 col-sm-6 col-xs-12">
-                                <input type="text" id="user_name" name="user_name" required="required" class="form-control col-md-7 col-xs-12">
+                            <div class="col-md-offset-1 col-md-2">
+                                <select name="type" id="type" class="form-control" onChange="checkType();">
+                                    <option value="1">員工帳號</option>
+                                    <option value="2">員工姓名</option>
+                                </select>
+                            </div>
+                            <div id="select1" class="col-md-6 col-sm-6 col-xs-12">
+                                <input type="text" id="user_name" name="user_name" class="form-control col-md-7 col-xs-12">
+                            </div>
+                            <div id="select2" class="col-md-6 col-sm-6 col-xs-12" style="display:none">
+                                <input type="text" id="name" name="name" class="form-control col-md-7 col-xs-12">
                             </div>
                         </div>
 
@@ -49,6 +57,23 @@
         $( "#user_name" ).autocomplete({
             source: availableTags
         });
+
+        let availableNameTags = [<?= $nameSearchWord ?>];
+        $("#name").autocomplete({
+            source: availableNameTags
+        });
     } );
+
+    function checkType() {
+        if ($("#type").val() == 1) {
+            $("#select1").show();
+            $("#select2").hide();
+            $("#name").val("");
+        } else {
+            $("#select1").hide();
+            $("#select2").show();
+            $("#account").val("");
+        }
+    }
 </script>
 

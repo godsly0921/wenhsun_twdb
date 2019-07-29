@@ -133,10 +133,19 @@ class EmployeeController extends Controller
         ];
 
         $serv = new AttendancerecordService();
-        $list = $serv->getEmployeeLeaveList($employee->getEmployeeId()->value(), $year);
+        $holidayList = $serv->getEmployeeLeaveListHoliday($employee->getEmployeeId()->value(), $year);
+        $overtimeList = $serv->getEmployeeLeaveListOvertime($employee->getEmployeeId()->value(), $year);
 
-        if (!empty($list)) {
-            foreach ($list as $idx => $row) {
+        if (!empty($holidayList)) {
+            foreach ($holidayList as $idx => $row) {
+                if (isset($this->leaveMap[$row['take']])) {
+                    $list[$idx]['take'] = $this->leaveMap[$row['take']];
+                }
+            }
+        }
+
+        if (!empty($overtimeList)) {
+            foreach ($overtimeList as $idx => $row) {
                 if (isset($this->leaveMap[$row['take']])) {
                     $list[$idx]['take'] = $this->leaveMap[$row['take']];
                 }
@@ -144,7 +153,8 @@ class EmployeeController extends Controller
         }
 
         $this->render('list', [
-            'list' => $list,
+            'holidayList' => $holidayList,
+            'overtimeList' => $overtimeList,
             'sum' => $sum,
             'year' => $year,
             'name' => $employeeOrmEnt->name . '(' . $employeeOrmEnt->user_name . ')'

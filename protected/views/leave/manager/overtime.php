@@ -2,7 +2,7 @@
     <div>
         <div class="page-title">
             <div class="title_left">
-                <h3>請假申請</h3>
+                <h3>加班申請</h3>
             </div>
         </div>
         <div class="row">
@@ -57,16 +57,14 @@
                         <div class="form-group">
                             <label class="control-label col-md-3 col-sm-3 col-xs-12">類別</label>
                             <div class="col-md-6 col-sm-6 col-xs-12">
-                                <select class="form-control" id="leave_type" name="leave_type">
-                                    <?php foreach ($leaveMap as $leaveCode => $leaveText): ?>
-                                        <option value="<?= $leaveCode ?>"><?= $leaveText ?></option>
-                                    <?php endforeach; ?>
+                                <select class="form-control" id="leave_type" name="leave_type" readonly>
+                                    <option value="11">加班</option>
                                 </select>
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="date">請假日期</label>
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="date">加班日期</label>
                             <div class="col-md-2 xdisplay_inputx form-group has-feedback">
                                 <input type="text" class="form-control has-feedback-left" id="leave_date" name="leave_date" aria-describedby="inputSuccess2Status">
                                 <span class="fa fa-calendar-o form-control-feedback left" aria-hidden="true"></span>
@@ -74,73 +72,41 @@
                             </div>
                             <div class="col-md-2">
                                 <select id="start_time" name="start_time" class="form-control">
-                                    <option value="08:00">08:00</option>
-                                    <option value="08:30">08:30</option>
-                                    <option value="09:00">09:00</option>
-                                    <option value="09:30">09:30</option>
-                                    <option value="10:00">10:00</option>
-                                    <option value="10:30">10:30</option>
-                                    <option value="11:00">11:00</option>
-                                    <option value="11:30">11:30</option>
-                                    <option value="12:00">12:00</option>
-                                    <option value="12:30">12:30</option>
-                                    <option value="13:00">13:00</option>
-                                    <option value="13:30">13:30</option>
-                                    <option value="14:00">14:00</option>
-                                    <option value="14:30">14:30</option>
-                                    <option value="15:00">15:00</option>
-                                    <option value="15:30">15:30</option>
-                                    <option value="16:00">16:00</option>
-                                    <option value="16:30">16:30</option>
                                     <option value="17:00">17:00</option>
                                     <option value="17:30">17:30</option>
                                     <option value="18:00">18:00</option>
+                                    <option value="18:00">18:30</option>
+                                    <option value="18:00">19:00</option>
+                                    <option value="18:00">19:30</option>
+                                    <option value="18:00">20:00</option>
+                                    <option value="18:00">20:30</option>
+                                    <option value="18:00">21:00</option>
+                                    <option value="18:00">21:30</option>
+                                    <option value="18:00">22:00</option>
+                                    <option value="18:00">22:30</option>
                                 </select>
                             </div>
                             <div class="col-md-2">
                                 <select id="end_time" name="end_time" class="form-control" onChange="checkTime();">
-                                    <option value="08:30">08:30</option>
-                                    <option value="09:00">09:00</option>
-                                    <option value="09:30">09:30</option>
-                                    <option value="10:00">10:00</option>
-                                    <option value="10:30">10:30</option>
-                                    <option value="11:00">11:00</option>
-                                    <option value="11:30">11:30</option>
-                                    <option value="12:00">12:00</option>
-                                    <option value="12:30">12:30</option>
-                                    <option value="13:00">13:00</option>
-                                    <option value="13:30">13:30</option>
-                                    <option value="14:00">14:00</option>
-                                    <option value="14:30">14:30</option>
-                                    <option value="15:00">15:00</option>
-                                    <option value="15:30">15:30</option>
-                                    <option value="16:00">16:00</option>
-                                    <option value="16:30">16:30</option>
-                                    <option value="17:00">17:00</option>
                                     <option value="17:30">17:30</option>
                                     <option value="18:00">18:00</option>
+                                    <option value="18:00">18:30</option>
+                                    <option value="18:00">19:00</option>
+                                    <option value="18:00">19:30</option>
+                                    <option value="18:00">20:00</option>
+                                    <option value="18:00">20:30</option>
+                                    <option value="18:00">21:00</option>
+                                    <option value="18:00">21:30</option>
+                                    <option value="18:00">22:00</option>
+                                    <option value="18:00">22:30</option>
                                 </select>
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label class="control-label col-md-3 col-sm-3 col-xs-12">請假時數</label>
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12">加班時數</label>
                             <div class="col-md-6 col-sm-6 col-xs-12">
                                 <input type="text" id="leave_minutes" name="leave_minutes" class="form-control col-md-7 col-xs-12" value="0.5小時" readonly>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="remark">工作交辦</label>
-                            <div class="col-md-6 col-sm-6 col-xs-12">
-                                <input type="text" id="remark" name="remark" class="form-control col-md-7 col-xs-12">
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="agent">*代理人</label>
-                            <div class="col-md-6 col-sm-6 col-xs-12">
-                                <input type="text" id="agent" name="agent" class="form-control col-md-7 col-xs-12" required>
                             </div>
                         </div>
 
@@ -181,10 +147,6 @@
 
         let availableNameTags = [<?= $nameSearchWord ?>];
 
-        $("#agent").autocomplete({
-            source: availableNameTags
-        });
-
         $("#manager").autocomplete({
             source: availableNameTags
         });
@@ -192,7 +154,7 @@
 
     function checkTime() {
         if ($("#start_time").val() >= $("#end_time").val()) {
-            alert("請確認請假時間是否正確");
+            alert("請確認加班時間是否正確");
         } else {
             var hour = parseInt($("#end_time").val().substr(0, 2)) - parseInt($("#start_time").val().substr(0, 2));
             var minute = parseInt($("#end_time").val().substr(3, 2)) - parseInt($("#start_time").val().substr(3, 2));

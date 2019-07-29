@@ -57,7 +57,9 @@ class ManagerController extends Controller
 
         $userNameSearchWord = $this->buildUsernameSearchWord($employees);
 
-        $this->render('index', ['userNameSearchWord' => $userNameSearchWord]);
+        $nameSearchWord = $this->buildNameSearchWord($employees);
+
+        $this->render('index', ['userNameSearchWord' => $userNameSearchWord, 'nameSearchWord' => $nameSearchWord]);
     }
 
     private function buildUsernameSearchWord($employees): string
@@ -72,25 +74,69 @@ class ManagerController extends Controller
         return '"' . $userNameSearchWord . '"';
     }
 
+    private function buildNameSearchWord($employees): string
+    {
+        $loginIds = [];
+        foreach ($employees as $employee) {
+            $loginIds[] = $employee->name;
+        }
+
+        $userNameSearchWord = implode('","', $loginIds);
+
+        return '"' . $userNameSearchWord . '"';
+    }
+
     public function actionHist(): void
     {
         $employeeUserName = $_GET['user_name'];
+        $name = $_GET['name'];
         $year = $_GET['year'];
 
-        $employeeOrmEnt = EmployeeORM::model()->find(
-            'user_name=:user_name',
-            [':user_name' => $employeeUserName]
-        );
-
-        if ($employeeOrmEnt === null) {
-            Yii::app()->session[Controller::ERR_MSG_KEY] = '查無員工';
-            $this->redirect('index');
-        }
-
         $serv = new AttendancerecordService();
-        //$list = $serv->getEmployeeLeaveList($employeeOrmEnt->id, $year);
-        $holidayList = $serv->getEmployeeLeaveListHoliday($employeeOrmEnt->id, $year);
-        $overtimeList = $serv->getEmployeeLeaveListOvertime($employeeOrmEnt->id, $year);
+
+        $id = '';
+        $empName = '';
+        $userName = '';
+
+        if ($_GET['type'] == 1) {
+            $employeeOrmEnt = EmployeeORM::model()->find(
+                'user_name=:user_name',
+                [':user_name' => $employeeUserName]
+            );
+
+            if ($employeeOrmEnt === null) {
+                Yii::app()->session[Controller::ERR_MSG_KEY] = '查無員工';
+                $this->redirect('index');
+            }
+
+            $holidayList = $serv->getEmployeeLeaveListHoliday($employeeOrmEnt->id, $year);
+            $overtimeList = $serv->getEmployeeLeaveListOvertime($employeeOrmEnt->id, $year);
+
+            $employee = new Employee(new EmployeeId($employeeOrmEnt->id), $employeeOrmEnt->onboard_date);
+
+            $id = $employeeOrmEnt->id;
+            $empName = $employeeOrmEnt->name;
+            $userName = $employeeOrmEnt->user_name;
+        } elseif ($_GET['type'] == 2) {
+            $emp = EmployeeORM::model()->find(
+                'name=:name',
+                [':name' => $name]
+            );
+
+            if ($emp === null) {
+                Yii::app()->session[Controller::ERR_MSG_KEY] = '查無員工';
+                $this->redirect('index');
+            }
+
+            $holidayList = $serv->getEmployeeLeaveListHoliday($emp->id, $year);
+            $overtimeList = $serv->getEmployeeLeaveListOvertime($emp->id, $year);
+
+            $employee = new Employee(new EmployeeId($emp->id), $emp->onboard_date);
+
+            $id = $emp->id;
+            $empName = $emp->name;
+            $userName = $emp->user_name;
+        }
 
         if (!empty($holidayList)) {
             foreach ($holidayList as $idx => $row) {
@@ -107,8 +153,6 @@ class ManagerController extends Controller
                 }
             }
         }
-
-        $employee = new Employee(new EmployeeId($employeeOrmEnt->id), $employeeOrmEnt->onboard_date);
 
         $employeeLeaveCalculator = new EmployeeLeaveCalculator();
         $annualLeaveMinutes = $employeeLeaveCalculator->calcAnnualLeaveSummaryOnBoardDate(new DateTime(), $employee);
@@ -285,9 +329,9 @@ class ManagerController extends Controller
         ];
 
         $this->render('hist', [
-            'employeeId' => $employeeOrmEnt->id,
-            'employeeUserName' => $employeeOrmEnt->user_name,
-            'employeeName' => $employeeOrmEnt->name,
+            'employeeId' => $id,
+            'employeeUserName' => $userName,
+            'employeeName' => $empName,
             'year' => $year,
             'holidayList' => $holidayList,
             'overtimeList' => $overtimeList,
@@ -298,12 +342,30 @@ class ManagerController extends Controller
     public function actionNew(): void
     {
         $employees = EmployeeORM::model()->findAll();
-
+        $employee = EmployeeORM::model()->findByPk(Yii::app()->session['uid']);
         $userNameSearchWord = $this->buildUsernameSearchWord($employees);
+        $nameSearchWord = $this->buildNameSearchWord($employees);
 
         $this->render('new', [
             'userNameSearchWord' => $userNameSearchWord,
             'leaveMap' => $this->leaveMap,
+            'emp' => $employee,
+            'nameSearchWord' => $nameSearchWord
+        ]);
+    }
+
+    public function actionOvertime(): void
+    {
+        $employees = EmployeeORM::model()->findAll();
+        $employee = EmployeeORM::model()->findByPk(Yii::app()->session['uid']);
+        $userNameSearchWord = $this->buildUsernameSearchWord($employees);
+        $nameSearchWord = $this->buildNameSearchWord($employees);
+
+        $this->render('overtime', [
+            'userNameSearchWord' => $userNameSearchWord,
+            'leaveMap' => $this->leaveMap,
+            'emp' => $employee,
+            'nameSearchWord' => $nameSearchWord
         ]);
     }
 
@@ -321,7 +383,19 @@ class ManagerController extends Controller
                 [':user_name' => $employeeUserName]
             );
 
-            if ($employeeOrmEnt === null) {
+            if (isset($_POST['agent'])) {
+                $agent = EmployeeORM::model()->find(
+                    'name = :name',
+                    [':name' => $_POST['agent']]
+                );
+            }
+
+            $manager = EmployeeORM::model()->find(
+                'name = :name',
+                [':name' => $_POST['manager']]
+            );
+
+            if ($employeeOrmEnt === null || (isset($_POST['agent']) && $agent === null) || $manager === null) {
                 Yii::app()->session[Controller::ERR_MSG_KEY] = '查無員工';
                 $this->redirect('new');
             }
@@ -332,15 +406,22 @@ class ManagerController extends Controller
             $attendanceRecord->create_at = $now;
             $attendanceRecord->update_at = $now;
             $attendanceRecord->day = $leaveDate;
-            $attendanceRecord->first_time = '1970-01-01 00:00:00';
-            $attendanceRecord->last_time = '1970-01-01 00:00:00';
+            $attendanceRecord->first_time = '0000-00-00 00:00:00';
+            $attendanceRecord->last_time = '0000-00-01 00:00:00';
             $attendanceRecord->abnormal_type = '0';
-            $attendanceRecord->abnormal = '請假';
+            $attendanceRecord->abnormal = $_POST['leave_type'] == 11 ? '加班' : '請假';
             $attendanceRecord->take = $_POST['leave_type'];
             $attendanceRecord->leave_time = $leaveDate;
-            $attendanceRecord->leave_minutes = $_POST['leave_minutes'];
+            $attendanceRecord->leave_minutes = (FLOAT) filter_input(INPUT_POST, 'leave_minutes') * 60;
             $attendanceRecord->reply_description = '';
             $attendanceRecord->reply_update_at = '1970-01-01 00:00:00';
+            $attendanceRecord->reason = filter_input(INPUT_POST, 'reason');
+            $attendanceRecord->remark = filter_input(INPUT_POST, 'remark');
+            $attendanceRecord->start_time = $leaveDate . ' ' . filter_input(INPUT_POST, 'start_time') . ':00';
+            $attendanceRecord->end_time = $leaveDate . ' ' . filter_input(INPUT_POST, 'end_time') . ':00';
+            $attendanceRecord->manager = $manager->id;
+            $attendanceRecord->agent = isset($_POST['agent']) ? $agent->id : '';
+            $attendanceRecord->status = 0;
             $attendanceRecord->save();
 
             if ($attendanceRecord->hasErrors()) {
@@ -373,11 +454,14 @@ class ManagerController extends Controller
 
         $year = new DateTime($attendanceRecord->leave_time);
 
+        $nameSearchWord = $this->buildNameSearchWord(EmployeeORM::model()->findAll());
+
         $this->render('edit', [
             'attendanceRecord' => $attendanceRecord,
             'employee' => $employeeOrmEnt,
             'leaveMap' => $this->leaveMap,
             'year' => $year->format('Y'),
+            'nameSearchWord' => $nameSearchWord
         ]);
     }
 
