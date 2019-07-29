@@ -147,6 +147,7 @@ class EmployeeController extends Controller
             'list' => $list,
             'sum' => $sum,
             'year' => $year,
+            'name' => $employeeOrmEnt->name . '(' . $employeeOrmEnt->user_name . ')'
         ]);
     }
 }
