@@ -69,6 +69,7 @@ class ReportController extends Controller
                         (float)$employee['pension'],
                         '',
                         0,
+                        0,
                         0
                     );
 
@@ -126,6 +127,7 @@ class ReportController extends Controller
             $employeeSalary->setMemo($_POST['memo']);
             $employeeSalary->setOtherPlus($_POST['other_plus']);
             $employeeSalary->setOtherMinus($_POST['other_minus']);
+            $employeeSalary->setLeaveSalary($_POST['leave_salary']);
 
             $serv->setEmployeeSalary($employeeSalary);
 
@@ -189,6 +191,7 @@ class ReportController extends Controller
                     $employee->getTrafficAllowance(),
                     $employee->getOvertimeWage(),
                     $employee->getProjectAllowance(),
+                    $employee->getLeaveSalary() * -1,
                     $employee->calcTaxableSalaryTotal(),
                     $employee->getTaxFreeOvertimeWage(),
                     $employee->getOtherPlus(),
@@ -226,6 +229,7 @@ class ReportController extends Controller
                     '交通津貼(+)',
                     '應稅加班費(+)',
                     '專案津貼(+)',
+                    '請假扣薪(-)',
                     '應稅薪資合計(+)',
                     '免稅加班費(+)',
                     '其他加項(+)',

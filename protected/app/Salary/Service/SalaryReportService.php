@@ -106,6 +106,7 @@ class SalaryReportService
                 $salaryReportModel->traffic_allowance = $employeeEnt->getTrafficAllowance();
                 $salaryReportModel->overtime_wage = $employeeEnt->getOvertimeWage();
                 $salaryReportModel->project_allowance = $employeeEnt->getProjectAllowance();
+                $salaryReportModel->leave_salary = $employeeEnt->getLeaveSalary();
                 $salaryReportModel->taxable_salary_total = $employeeEnt->calcTaxableSalaryTotal();
                 $salaryReportModel->tax_free_overtime_wage = $employeeEnt->getTaxFreeOvertimeWage();
                 $salaryReportModel->salary_total = $employeeEnt->calcSalaryTotal();
@@ -239,6 +240,10 @@ class SalaryReportService
                     <tr>
                         <td style='border: 1px solid black'>專案津貼</td>
                         <td style='border: 1px solid black'>{$employee->getProjectAllowance()}</td>
+                    </tr>
+                    <tr>
+                        <td style='border: 1px solid black'>請假扣薪</td>
+                        <td style='border: 1px solid black'>-{$employee->getLeaveSalary()}</td>
                     </tr>
                     <tr>
                         <td style='border: 1px solid black'>應稅薪資合計</td>

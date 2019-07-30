@@ -70,7 +70,8 @@ class ReportRepository
             $model->pension,
             $model->memo,
             $model->other_plus,
-            $model->other_minus
+            $model->other_minus,
+            $model->leave_salary
         );
     }
 
@@ -86,6 +87,7 @@ class ReportRepository
             $model->traffic_allowance = $ent->getTrafficAllowance();
             $model->overtime_wage = $ent->getOvertimeWage();
             $model->project_allowance = $ent->getProjectAllowance();
+            $model->leave_salary = $ent->getLeaveSalary();
             $model->taxable_salary_total = $ent->calcTaxableSalaryTotal();
             $model->tax_free_overtime_wage = $ent->getTaxFreeOvertimeWage();
             $model->memo = $ent->getMemo();
@@ -185,7 +187,8 @@ class ReportRepository
                 (float)$row['pension'],
                 $row['memo'],
                 (float)$row['other_plus'],
-                (float)$row['other_minus']
+                (float)$row['other_minus'],
+                (float)$row['leave_salary']
             );
 
             $salaryReportBatch->addEmployee($salaryReportEmployee);

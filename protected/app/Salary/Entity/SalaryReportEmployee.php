@@ -29,6 +29,17 @@ class SalaryReportEmployee
     private $memo;
     private $otherPlus;
     private $otherMinus;
+    private $leaveSalary;
+
+    public function getLeaveSalary()
+    {
+        return $this->leaveSalary;
+    }
+
+    public function setLeaveSalary($leaveSalary): void
+    {
+        $this->leaveSalary = $leaveSalary;
+    }
 
     public function getBatchMonth(): string
     {
@@ -152,7 +163,8 @@ class SalaryReportEmployee
         $pension,
         $memo,
         $otherPlus,
-        $otherMinus
+        $otherMinus,
+        $leaveSalary
     ) {
         $this->id = $id;
         $this->batchId = $batchId;
@@ -173,6 +185,7 @@ class SalaryReportEmployee
         $this->memo = $memo;
         $this->otherPlus = $otherPlus;
         $this->otherMinus = $otherMinus;
+        $this->leaveSalary = $leaveSalary;
     }
 
     /**
@@ -241,7 +254,7 @@ class SalaryReportEmployee
      */
     public function calcTaxableSalaryTotal()
     {
-        return $this->salary + $this->draftAllowance + $this->trafficAllowance + $this->overtimeWage + $this->projectAllowance;
+        return $this->salary + $this->draftAllowance + $this->trafficAllowance + $this->overtimeWage + $this->projectAllowance - $this->leaveSalary;
     }
 
     /**
