@@ -321,7 +321,7 @@ class AttendancerecordService{
         $yearEndDT->add(DateInterval::createFromDateString('1 year'));
         $endDateTime = $yearEndDT->format('Y-m-d') . ' 00:00:00';
 
-        return Yii::app()->db->createCommand(
+        $list = Yii::app()->db->createCommand(
             '
               SELECT * FROM attendance_record
               WHERE employee_id = :employee_id
@@ -335,6 +335,13 @@ class AttendancerecordService{
             ':start_time' => $startDateTime,
             ':end_time' => $endDateTime,
         ])->queryAll();
+
+        $listArr = array();
+        foreach ($list as $value) {
+           $listArr[$value['id']] = $value;
+        }
+
+        return $listArr;
     }
 
     public function getEmployeeLeaveListOvertime($employeeId, $year): array
@@ -344,7 +351,7 @@ class AttendancerecordService{
         $yearEndDT->add(DateInterval::createFromDateString('1 year'));
         $endDateTime = $yearEndDT->format('Y-m-d') . ' 00:00:00';
 
-        return Yii::app()->db->createCommand(
+        $list = Yii::app()->db->createCommand(
             '
               SELECT * FROM attendance_record
               WHERE employee_id = :employee_id
@@ -358,5 +365,12 @@ class AttendancerecordService{
             ':start_time' => $startDateTime,
             ':end_time' => $endDateTime,
         ])->queryAll();
+
+        $listArr = array();
+        foreach ($list as $value) {
+           $listArr[$value['id']] = $value;
+        }
+
+        return $listArr;
     }
 }

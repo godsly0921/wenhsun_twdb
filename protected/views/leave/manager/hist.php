@@ -58,7 +58,7 @@
                         </thead>
                         <tbody>
                             <?php foreach ($holidayList as $row) : ?>
-                                <tr role="row">
+                                <tr role="row" id="<?= $row['id'] ?>">
                                     <td><?= substr($row['create_at'], 0, 10) ?></td>
                                     <td><?= $row['take'] ?></td>
                                     <td><?= $row['reason'] ?></td>
@@ -72,7 +72,18 @@
                                             已審核
                                         <?php endif; ?>
                                     </td>
-                                    <td><a href="<?= Yii::app()->createUrl('/leave/manager/edit?id=' . $row['id']); ?>"><i class="fa fa-edit" style="font-size:18px"></i></a></td>
+                                    <td>
+                                        <a href="<?= Yii::app()->createUrl('/leave/manager/edit?id=' . $row['id']); ?>"><i class="fa fa-edit" style="font-size:18px"></i>
+                                        </a>
+                                        &nbsp;
+                                        <a href="<?= Yii::app()->createUrl('leave/employee/view?id=' . $row['id']) ?>">
+                                            <i class="fa fa-newspaper-o" style="font-size:18px"></i>
+                                        </a>
+                                        &nbsp;
+                                        <a href="javascript: void(0);" onclick="del(<?= $row['id'] ?>);">
+                                            <i class="fa fa-times" style="font-size:18px"></i>
+                                        </a>
+                                    </td>
                                 </tr>
                             <?php endforeach; ?>
                         </tbody>
@@ -99,7 +110,7 @@
                         </thead>
                         <tbody>
                             <?php foreach ($overtimeList as $row) : ?>
-                                <tr role="row">
+                                <tr role="row" id="<?= $row['id'] ?>">
                                     <td><?= substr($row['create_at'], 0, 10) ?></td>
                                     <td><?= $row['take'] ?></td>
                                     <td><?= $row['reason'] ?></td>
@@ -113,7 +124,19 @@
                                             已審核
                                         <?php endif; ?>
                                     </td>
-                                    <td><a href="<?= Yii::app()->createUrl('/leave/manager/edit?id=' . $row['id']); ?>"><i class="fa fa-edit" style="font-size:18px"></i></a></td>
+                                    <td>
+                                        <a href="<?= Yii::app()->createUrl('/leave/manager/edit?id=' . $row['id']); ?>">
+                                            <i class="fa fa-edit" style="font-size:18px"></i>
+                                        </a>
+                                        &nbsp;
+                                        <a href="<?= Yii::app()->createUrl('leave/employee/view?id=' . $row['id'])?>">
+                                            <i class="fa fa-newspaper-o" style="font-size:18px"></i>
+                                        </a>
+                                        &nbsp;
+                                        <a href="javascript: return false;" onclick="del(<?= $row['id'] ?>);">
+                                            <i class="fa fa-times" style="font-size:18px"></i>
+                                        </a>
+                                    </td>
                                 </tr>
                             <?php endforeach; ?>
                         </tbody>
@@ -132,5 +155,28 @@
             $("#holiday").hide();
             $("#overtime").show();
         }
+    }
+
+    function del($id) {
+        $.ajax({
+            url: "<?=Yii::app()->createUrl('/leave/manager/delete')?>",
+            type: "POST",
+            dataType: "json",
+            data: {
+                id: $id
+            },
+            success: function(response) {
+                if (response) {
+                    alert("刪除成功");
+                    $("#" + $id).remove();
+                } else {
+                    alert("刪除失敗");
+                }
+            },
+            error: function(xhr) {
+                console.log(xhr.responseText);
+                alert("刪除失敗");
+            }
+        });
     }
 </script>

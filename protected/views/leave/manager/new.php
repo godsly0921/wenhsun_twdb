@@ -22,7 +22,7 @@
                 <div class="x_panel">
                     <div class="clearfix"></div>
                     <form id="form" method="post" action="<?php echo Yii::app()->createUrl('/leave/manager/create'); ?>"
-                          data-parsley-validate class="form-horizontal form-label-left" novalidate>
+                          data-parsley-validate class="form-horizontal form-label-left" novalidate onsubmit="alert('完成申請後請至請假紀錄留意審核狀況，謝謝');">
 
                         <?php CsrfProtector::genHiddenField(); ?>
 
@@ -73,7 +73,7 @@
                                 <span id="inputSuccess2Status" class="sr-only">(success)</span>
                             </div>
                             <div class="col-md-2">
-                                <select id="start_time" name="start_time" class="form-control">
+                                <select id="start_time" name="start_time" class="form-control" onChange="checkTime();">
                                     <option value="08:00">08:00</option>
                                     <option value="08:30">08:30</option>
                                     <option value="09:00">09:00</option>
@@ -126,7 +126,8 @@
                         <div class="form-group">
                             <label class="control-label col-md-3 col-sm-3 col-xs-12">請假時數</label>
                             <div class="col-md-6 col-sm-6 col-xs-12">
-                                <input type="text" id="leave_minutes" name="leave_minutes" class="form-control col-md-7 col-xs-12" value="0.5小時" readonly>
+                                <input type="text" id="minutes" name="minutes" class="form-control col-md-7 col-xs-12" value="0.5小時" readonly>
+                                <input type="hidden" id="leave_minutes" name="leave_minutes" class="form-control col-md-7 col-xs-12" value="0.5">
                             </div>
                         </div>
 
@@ -150,8 +151,6 @@
                                 <input type="text" id="manager" name="manager" class="form-control col-md-7 col-xs-12" required>
                             </div>
                         </div>
-
-                        <div class="ln_solid"></div>
 
                         <div class="form-group">
                             <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
@@ -197,7 +196,8 @@
             var hour = parseInt($("#end_time").val().substr(0, 2)) - parseInt($("#start_time").val().substr(0, 2));
             var minute = parseInt($("#end_time").val().substr(3, 2)) - parseInt($("#start_time").val().substr(3, 2));
             var total = (hour * 60 + minute) / 60;
-            $("#leave_minutes").val(total.toString() + "小時");
+            $("#leave_minutes").val(total);
+            $("#minutes").val(total.toString() + "小時");
         }
     }
 </script>

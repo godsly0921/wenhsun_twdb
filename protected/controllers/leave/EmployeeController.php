@@ -139,7 +139,7 @@ class EmployeeController extends Controller
         if (!empty($holidayList)) {
             foreach ($holidayList as $idx => $row) {
                 if (isset($this->leaveMap[$row['take']])) {
-                    $list[$idx]['take'] = $this->leaveMap[$row['take']];
+                    $holidayList[$idx]['take'] = $this->leaveMap[$row['take']];
                 }
             }
         }
@@ -147,7 +147,7 @@ class EmployeeController extends Controller
         if (!empty($overtimeList)) {
             foreach ($overtimeList as $idx => $row) {
                 if (isset($this->leaveMap[$row['take']])) {
-                    $list[$idx]['take'] = $this->leaveMap[$row['take']];
+                    $overtimeList[$idx]['take'] = $this->leaveMap[$row['take']];
                 }
             }
         }
@@ -160,4 +160,23 @@ class EmployeeController extends Controller
             'name' => $employeeOrmEnt->name . '(' . $employeeOrmEnt->user_name . ')'
         ]);
     }
+
+    public function actionView() {
+        $attendanceRecord = Attendancerecord::model()->findByPk(filter_input(INPUT_GET, 'id'));
+        $attendanceRecord->take = $this->leaveMap[$attendanceRecord->take];
+        $employeeService = new EmployeeService();
+        $empArr = $employeeService->getEmployeeNameArray();
+        if ($attendanceRecord->agent != '') {
+            $attendanceRecord->agent = $empArr[$attendanceRecord->agent];
+        }
+        if ($attendanceRecord->manager != '') {
+            $attendanceRecord->manager = $empArr[$attendanceRecord->manager];
+        }
+
+        $this->render('view', [
+            'record' => $attendanceRecord,
+            'name' => $empArr[$attendanceRecord->employee_id]
+        ]);
+    }
+
 }

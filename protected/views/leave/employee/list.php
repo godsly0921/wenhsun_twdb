@@ -79,19 +79,19 @@
                                     <td><?= substr($row['leave_time'], 0, 10) ?></td>
                                     <td><?= $row['take'] ?></td>
                                     <td><?= $row['reason'] ?></td>
-                                    <td><?= date('Y-m-d',strtotime($row['leave_time'])) ?></td>
+                                    <td><?= date('Y-m-d', strtotime($row['leave_time'])) ?></td>
                                     <td><?= substr($row['start_time'], 11, 8) ?> - <?= substr($row['end_time'], 11, 8) ?></td>
                                     <td><?= $row['leave_minutes'] / 60 ?></td>
                                     <td>
                                         <?php if ($row['status'] == 0) : ?>
                                             未審核
-                                        <?php elseif ($rwo['status'] == 1) : ?>
+                                        <?php elseif ($row['status'] == 1) : ?>
                                             已審核
                                         <?php endif; ?>
                                     </td>
                                     <td>
-                                        <a href="#">
-                                            <i class="far fa-newspaper"></i>
+                                        <a href="<?= Yii::app()->createUrl('leave/employee/view?id=' . $row['id'])?>">
+                                            <i class="fa fa-newspaper-o" style="font-size:18px"></i>
                                         </a>
                                     </td>
                                 </tr>
@@ -124,19 +124,19 @@
                                     <td><?= substr($row['leave_time'], 0, 10) ?></td>
                                     <td><?= $row['take'] ?></td>
                                     <td><?= $row['reason'] ?></td>
-                                    <td><?= date('Y-m-d',strtotime($row['leave_time'])) ?></td>
+                                    <td><?= date('Y-m-d', strtotime($row['leave_time'])) ?></td>
                                     <td><?= substr($row['start_time'], 11, 8) ?> - <?= substr($row['end_time'], 11, 8) ?></td>
                                     <td><?= $row['leave_minutes'] / 60 ?></td>
                                     <td>
                                         <?php if ($row['status'] == 0) : ?>
                                             未審核
-                                        <?php elseif ($rwo['status'] == 1) : ?>
+                                        <?php elseif ($row['status'] == 1) : ?>
                                             已審核
                                         <?php endif; ?>
                                     </td>
                                     <td>
-                                        <a href="#">
-                                            <i class="far fa-newspaper"></i>
+                                        <a href="<?= Yii::app()->createUrl('leave/employee/view?id=' . $row['id'])?>">
+                                            <i class="fa fa-newspaper-o" style="font-size:18px"></i>
                                         </a>
                                     </td>
                                 </tr>
@@ -150,13 +150,13 @@
 </div>
 
 <script>
-function tab(tab) {
-    if (tab === "holiday") {
-        $("#holiday").show();
-        $("#overtime").hide();
-    } else if (tab === "overtime") {
-        $("#holiday").hide();
-        $("#overtime").show();
+    function tab(tab) {
+        if (tab === "holiday") {
+            $("#holiday").show();
+            $("#overtime").hide();
+        } else if (tab === "overtime") {
+            $("#holiday").hide();
+            $("#overtime").show();
+        }
     }
-}
 </script>

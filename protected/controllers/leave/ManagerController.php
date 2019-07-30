@@ -89,8 +89,9 @@ class ManagerController extends Controller
     public function actionHist(): void
     {
         $employeeUserName = $_GET['user_name'];
-        $name = $_GET['name'];
+        $name = isset($_GET['name']) ? $_GET['name'] : '';
         $year = $_GET['year'];
+        $type = isset($_GET['type']) ? $_GET['type'] : 1;
 
         $serv = new AttendancerecordService();
 
@@ -98,7 +99,7 @@ class ManagerController extends Controller
         $empName = '';
         $userName = '';
 
-        if ($_GET['type'] == 1) {
+        if ($type == 1) {
             $employeeOrmEnt = EmployeeORM::model()->find(
                 'user_name=:user_name',
                 [':user_name' => $employeeUserName]
@@ -117,7 +118,7 @@ class ManagerController extends Controller
             $id = $employeeOrmEnt->id;
             $empName = $employeeOrmEnt->name;
             $userName = $employeeOrmEnt->user_name;
-        } elseif ($_GET['type'] == 2) {
+        } elseif ($type == 2) {
             $emp = EmployeeORM::model()->find(
                 'name=:name',
                 [':name' => $name]
@@ -427,7 +428,11 @@ class ManagerController extends Controller
             if ($attendanceRecord->hasErrors()) {
                 Yii::log(serialize($attendanceRecord->getErrors()), CLogger::LEVEL_ERROR);
                 Yii::app()->session[Controller::ERR_MSG_KEY] = '新增失敗';
-                $this->redirect('new');
+                if ($_POST['leave_type'] == 11) {
+                    $this->redirect('overtime');
+                } else {
+                    $this->redirect('new');
+                }
             }
 
             Yii::app()->session[Controller::SUCCESS_MSG_KEY] = '新增成功';
@@ -436,7 +441,11 @@ class ManagerController extends Controller
         } catch (Throwable $ex) {
             Yii::log($ex->getMessage(), CLogger::LEVEL_ERROR);
             Yii::app()->session[Controller::ERR_MSG_KEY] = $ex->getMessage();
-            $this->redirect('new');
+            if ($_POST['leave_type'] == 11) {
+                $this->redirect('overtime');
+            } else {
+                $this->redirect('new');
+            }
         }
     }
 
@@ -448,6 +457,16 @@ class ManagerController extends Controller
 
         if (!$attendanceRecord) {
             $this->redirect('index');
+        }
+
+        if ($attendanceRecord->agent != '') {
+            $agent = EmployeeORM::model()->findByPk($attendanceRecord->agent);
+            $attendanceRecord->agent = $agent->name;
+        }
+
+        if ($attendanceRecord->manager != '') {
+            $manager = EmployeeORM::model()->findByPk($attendanceRecord->manager);
+            $attendanceRecord->manager = $manager->name;
         }
 
         $employeeOrmEnt = EmployeeORM::model()->findByPk($attendanceRecord->employee_id);
@@ -468,18 +487,42 @@ class ManagerController extends Controller
     public function actionUpdate(): void
     {
         $this->checkCSRF('index');
+        
+        if (isset($_POST['agent'])) {
+            $agent = EmployeeORM::model()->find(
+                'name = :name',
+                [':name' => $_POST['agent']]
+            );
+        }
+
+        $manager = EmployeeORM::model()->find(
+            'name = :name',
+            [':name' => $_POST['manager']]
+        );
+
+        if ((isset($_POST['agent']) && $agent === null) || $manager === null) {
+            Yii::app()->session[Controller::ERR_MSG_KEY] = '查無員工';
+            $this->redirect('new');
+        }
 
         try {
 
             $id = $_POST['id'];
 
             $attendanceRecord = Attendancerecord::model()->findByPk($id);
-
+            $now = Common::now();
+            $attendanceRecord->update_at = $now;
             $attendanceRecord->day = $_POST['leave_date'];
             $attendanceRecord->leave_time = $_POST['leave_date'];
             $attendanceRecord->take = $_POST['leave_type'];
-            $attendanceRecord->leave_minutes = $_POST['leave_minutes'];
-
+            $attendanceRecord->leave_minutes = (FLOAT) filter_input(INPUT_POST, 'leave_minutes') * 60;
+            $attendanceRecord->reason = filter_input(INPUT_POST, 'reason');
+            $attendanceRecord->remark = filter_input(INPUT_POST, 'remark');
+            $attendanceRecord->start_time = filter_input(INPUT_POST, 'leave_date') . ' ' . filter_input(INPUT_POST, 'start_time') . ':00';
+            $attendanceRecord->end_time = filter_input(INPUT_POST, 'leave_date') . ' ' . filter_input(INPUT_POST, 'end_time') . ':00';
+            $attendanceRecord->manager = $manager->id;
+            $attendanceRecord->agent = isset($_POST['agent']) ? $agent->id : '';
+            $attendanceRecord->status = 1;
             $attendanceRecord->update();
 
             Yii::app()->session[Controller::SUCCESS_MSG_KEY] = '修改成功';
@@ -490,5 +533,18 @@ class ManagerController extends Controller
             Yii::app()->session[Controller::ERR_MSG_KEY] = $ex->getMessage();
             $this->redirect('edit?id=' . $_POST['id']);
         }
+    }
+
+    public function actionDelete() {
+        $id = filter_input(INPUT_POST, 'id');
+
+        $model = Attendancerecord::model()->findByPk($id);
+
+        if ($model !== null) {
+            $result = $model->delete();
+        }
+
+        echo json_encode($result);
+        exit;
     }
 }
