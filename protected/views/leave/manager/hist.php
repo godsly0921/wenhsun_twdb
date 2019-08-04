@@ -129,7 +129,7 @@
                                             <i class="fa fa-edit" style="font-size:18px"></i>
                                         </a>
                                         &nbsp;
-                                        <a href="<?= Yii::app()->createUrl('leave/employee/view?id=' . $row['id'])?>">
+                                        <a href="<?= Yii::app()->createUrl('leave/employee/view?id=' . $row['id']) ?>">
                                             <i class="fa fa-newspaper-o" style="font-size:18px"></i>
                                         </a>
                                         &nbsp;
@@ -153,15 +153,49 @@
         if (tab === "holiday") {
             $("#holiday").show();
             $("#overtime").hide();
+            $("#datatable1").dataTable().fnDestroy();
+            $("#datatable1").DataTable({
+                "scrollX": true,
+                "lengthChange": false,
+                "oLanguage": {
+                    "oPaginate": {
+                        "sFirst": "第一頁",
+                        "sPrevious": "上一頁",
+                        "sNext": "下一頁",
+                        "sLast": "最後一頁"
+                    },
+                    "sEmptyTable": "無任何請假資料"
+                },
+                "order": [
+                    [0, 'desc']
+                ]
+            });
         } else if (tab === "overtime") {
             $("#holiday").hide();
             $("#overtime").show();
+            $("#datatable2").dataTable().fnDestroy();
+            $("#datatable2").DataTable({
+                "scrollX": true,
+                "lengthChange": false,
+                "oLanguage": {
+                    "oPaginate": {
+                        "sFirst": "第一頁",
+                        "sPrevious": "上一頁",
+                        "sNext": "下一頁",
+                        "sLast": "最後一頁"
+                    },
+                    "sEmptyTable": "無任何請假資料"
+                },
+                "order": [
+                    [0, 'desc']
+                ]
+            });
         }
     }
 
     function del($id) {
         $.ajax({
-            url: "<?=Yii::app()->createUrl('/leave/manager/delete')?>",
+            url: "<?= Yii::app()->createUrl('/leave/manager/delete') ?>",
             type: "POST",
             dataType: "json",
             data: {
@@ -194,7 +228,10 @@
                     "sLast": "最後一頁"
                 },
                 "sEmptyTable": "無任何請假資料"
-            }
+            },
+            "order": [
+                [0, 'desc']
+            ]
         });
 
         $("#datatable2").DataTable({
@@ -208,7 +245,10 @@
                     "sLast": "最後一頁"
                 },
                 "sEmptyTable": "無任何加班資料"
-            }
+            },
+            "order": [
+                [0, 'desc']
+            ]
         });
 
         $("#overtime").hide();

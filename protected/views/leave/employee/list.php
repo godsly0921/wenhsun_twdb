@@ -155,9 +155,43 @@
         if (tab === "holiday") {
             $("#holiday").show();
             $("#overtime").hide();
+            $("#datatable1").dataTable().fnDestroy();
+            $("#datatable1").DataTable({
+                "scrollX": true,
+                "lengthChange": false,
+                "oLanguage": {
+                    "oPaginate": {
+                        "sFirst": "第一頁",
+                        "sPrevious": "上一頁",
+                        "sNext": "下一頁",
+                        "sLast": "最後一頁"
+                    },
+                    "sEmptyTable": "無任何請假資料"
+                },
+                "order": [
+                    [0, 'desc']
+                ]
+            });
         } else if (tab === "overtime") {
             $("#holiday").hide();
             $("#overtime").show();
+            $("#datatable2").dataTable().fnDestroy();
+            $("#datatable2").DataTable({
+                "scrollX": true,
+                "lengthChange": false,
+                "oLanguage": {
+                    "oPaginate": {
+                        "sFirst": "第一頁",
+                        "sPrevious": "上一頁",
+                        "sNext": "下一頁",
+                        "sLast": "最後一頁"
+                    },
+                    "sEmptyTable": "無任何請假資料"
+                },
+                "order": [
+                    [0, 'desc']
+                ]
+            });
         }
     }
 
@@ -173,7 +207,10 @@
                     "sLast": "最後一頁"
                 },
                 "sEmptyTable": "無任何請假資料"
-            }
+            },
+            "order": [
+                [0, 'desc']
+            ]
         });
 
         $("#datatable2").DataTable({
@@ -187,7 +224,10 @@
                     "sLast": "最後一頁"
                 },
                 "sEmptyTable": "無任何加班資料"
-            }
+            },
+            "order": [
+                [0, 'desc']
+            ]
         });
 
         $("#overtime").hide();

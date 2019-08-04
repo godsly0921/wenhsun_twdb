@@ -63,16 +63,14 @@
                         </div>
 
                         <div class="form-group">
-                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="date">加班日期</label>
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="date">加班時間起</label>
                             <div class="col-md-2 xdisplay_inputx form-group has-feedback">
-                                <input type="text" class="form-control has-feedback-left" id="leave_date" name="leave_date" aria-describedby="inputSuccess2Status">
+                                <input type="text" class="form-control has-feedback-left" id="start_date" name="start_date" aria-describedby="inputSuccess2Status" onChange="changeDate();">
                                 <span class="fa fa-calendar-o form-control-feedback left" aria-hidden="true"></span>
                                 <span id="inputSuccess2Status" class="sr-only">(success)</span>
                             </div>
                             <div class="col-md-2">
                                 <select id="start_time" name="start_time" class="form-control" onChange="checkTime();">
-                                    <option value="17:00">17:00</option>
-                                    <option value="17:30">17:30</option>
                                     <option value="18:00">18:00</option>
                                     <option value="18:30">18:30</option>
                                     <option value="19:00">19:00</option>
@@ -87,10 +85,17 @@
                                     <option value="23:30">23:30</option>
                                 </select>
                             </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="date">加班時間訖</label>
+                            <div class="col-md-2 xdisplay_inputx form-group has-feedback">
+                                <input type="text" class="form-control has-feedback-left" id="end_date" name="end_date" aria-describedby="inputSuccess2Status" readonly>
+                                <span class="fa fa-calendar-o form-control-feedback left" aria-hidden="true"></span>
+                                <span id="inputSuccess2Status" class="sr-only">(success)</span>
+                            </div>
                             <div class="col-md-2">
                                 <select id="end_time" name="end_time" class="form-control" onChange="checkTime();">
-                                    <option value="17:30">17:30</option>
-                                    <option value="18:00">18:00</option>
                                     <option value="18:30">18:30</option>
                                     <option value="19:00">19:00</option>
                                     <option value="19:30">19:30</option>
@@ -106,6 +111,9 @@
                                 </select>
                             </div>
                         </div>
+
+                        <input type="hidden" id="days" name="days" value="1">
+                        <input type="hidden" id="last_hours" name="last_hours">
 
                         <div class="form-group">
                             <label class="control-label col-md-3 col-sm-3 col-xs-12">加班時數</label>
@@ -137,11 +145,10 @@
 </div>
 <script>
     $(function() {
-
-        $('#leave_date').daterangepicker({
+        $("#start_date").daterangepicker({
             singleDatePicker: true,
             locale: {
-                format: 'YYYY/MM/DD'
+                format: "YYYY/MM/DD"
             }
         });
 
@@ -155,23 +162,32 @@
         $("#manager").autocomplete({
             source: availableNameTags
         });
+
+        $("#end_date").val($("#start_date").val());
     });
 
     function checkTime() {
-        if ($("#start_time").val() < $("#end_time").val()) {
-            var hour = parseInt($("#end_time").val().substr(0, 2)) - parseInt($("#start_time").val().substr(0, 2));
-            var minute = parseInt($("#end_time").val().substr(3, 2)) - parseInt($("#start_time").val().substr(3, 2));
-            if (minute == 59) {
-                minute = 0;
-                hour++;
-            } else if (minute == 29) {
-                minute = 30;
-            }
-            var total = (hour * 60 + minute) / 60;
-            $("#leave_minutes").val(total);
-            $("#minutes").val(total.toString() + "小時");
-        } else {
+        var start = moment($("#start_date").val() + " " + $("#start_time").val());
+        var end = moment($("#end_date").val() + " " + $("#end_time").val());
+        var diff = 0;
+
+        $("#days").val(end.diff(start, 'days') + 1);
+
+        if (start >= end) {
             alert("請確認加班時間是否正確");
+        } else {
+            if ($("#end_time").val() === "23:59") {
+                diff = Math.round(end.diff(start, "hours", true) * 10) / 10;
+            } else {
+                diff = end.diff(start, "hours", true);
+            }
+
+            $("#leave_minutes").val(diff);
+            $("#minutes").val(diff + "小時");
         }
+    }
+
+    function changeDate() {
+        $("#end_date").val($("#start_date").val());
     }
 </script>

@@ -375,8 +375,6 @@ class ManagerController extends Controller
         $this->checkCSRF('index');
 
         try {
-
-            $leaveDate = $_POST['leave_date'];
             $employeeUserName = $_POST['user_name'];
 
             $employeeOrmEnt = EmployeeORM::model()->find(
@@ -398,32 +396,94 @@ class ManagerController extends Controller
 
             if ($employeeOrmEnt === null || (isset($_POST['agent']) && $agent === null) || $manager === null) {
                 Yii::app()->session[Controller::ERR_MSG_KEY] = '查無員工';
-                $this->redirect('new');
+                if ($_POST['leave_type'] == 11) {
+                    $this->redirect('overtime');
+                } else {
+                    $this->redirect('new');
+                }
             }
 
             $now = Common::now();
-            $attendanceRecord = new Attendancerecord();
-            $attendanceRecord->employee_id = $employeeOrmEnt->id;
-            $attendanceRecord->create_at = $now;
-            $attendanceRecord->update_at = $now;
-            $attendanceRecord->day = $leaveDate;
-            $attendanceRecord->first_time = '0000-00-00 00:00:00';
-            $attendanceRecord->last_time = '0000-00-01 00:00:00';
-            $attendanceRecord->abnormal_type = '0';
-            $attendanceRecord->abnormal = $_POST['leave_type'] == 11 ? '加班' : '請假';
-            $attendanceRecord->take = $_POST['leave_type'];
-            $attendanceRecord->leave_time = $leaveDate;
-            $attendanceRecord->leave_minutes = (FLOAT) filter_input(INPUT_POST, 'leave_minutes') * 60;
-            $attendanceRecord->reply_description = '';
-            $attendanceRecord->reply_update_at = '1970-01-01 00:00:00';
-            $attendanceRecord->reason = filter_input(INPUT_POST, 'reason');
-            $attendanceRecord->remark = filter_input(INPUT_POST, 'remark');
-            $attendanceRecord->start_time = $leaveDate . ' ' . filter_input(INPUT_POST, 'start_time') . ':00';
-            $attendanceRecord->end_time = $leaveDate . ' ' . filter_input(INPUT_POST, 'end_time') . ':00';
-            $attendanceRecord->manager = $manager->id;
-            $attendanceRecord->agent = isset($_POST['agent']) ? $agent->id : '';
-            $attendanceRecord->status = 0;
-            $attendanceRecord->save();
+            $days = filter_input(INPUT_POST, 'days');
+            if ($days == 1) {
+                $attendanceRecord = new Attendancerecord();
+                $attendanceRecord->employee_id = $employeeOrmEnt->id;
+                $attendanceRecord->create_at = $now;
+                $attendanceRecord->update_at = $now;
+                $attendanceRecord->day = filter_input(INPUT_POST, 'start_date');
+                $attendanceRecord->first_time = '0000-00-00 00:00:00';
+                $attendanceRecord->last_time = '0000-00-01 00:00:00';
+                $attendanceRecord->abnormal_type = '0';
+                $attendanceRecord->abnormal = $_POST['leave_type'] == 11 ? '加班' : '請假';
+                $attendanceRecord->take = $_POST['leave_type'];
+                $attendanceRecord->leave_time = filter_input(INPUT_POST, 'start_date');
+                $attendanceRecord->leave_minutes = (float) filter_input(INPUT_POST, 'leave_minutes') * 60;
+                $attendanceRecord->reply_description = '';
+                $attendanceRecord->reply_update_at = '0000-00-00 00:00:00';
+                $attendanceRecord->reason = filter_input(INPUT_POST, 'reason');
+                $attendanceRecord->remark = filter_input(INPUT_POST, 'remark');
+                $attendanceRecord->start_time = filter_input(INPUT_POST, 'start_date') . ' ' . filter_input(INPUT_POST, 'start_time') . ':00';
+                $attendanceRecord->end_time = filter_input(INPUT_POST, 'end_date') . ' ' . filter_input(INPUT_POST, 'end_time') . ':00';
+                $attendanceRecord->manager = $manager->id;
+                $attendanceRecord->agent = isset($_POST['agent']) ? $agent->id : '';
+                $attendanceRecord->status = 0;
+                $attendanceRecord->save();
+            } else {
+                $date = date(filter_input(INPUT_POST, 'start_date'));
+                for ($i = 1; $i < $days; $i++) {
+                    $attendanceRecord = new Attendancerecord();
+                    $attendanceRecord->employee_id = $employeeOrmEnt->id;
+                    $attendanceRecord->create_at = $now;
+                    $attendanceRecord->update_at = $now;
+                    $attendanceRecord->day = filter_input(INPUT_POST, 'start_date');
+                    $attendanceRecord->first_time = '0000-00-00 00:00:00';
+                    $attendanceRecord->last_time = '0000-00-01 00:00:00';
+                    $attendanceRecord->abnormal_type = '0';
+                    $attendanceRecord->abnormal = $_POST['leave_type'] == 11 ? '加班' : '請假';
+                    $attendanceRecord->take = $_POST['leave_type'];
+                    $attendanceRecord->leave_time = $date;
+                    $attendanceRecord->leave_minutes = 480;
+                    $attendanceRecord->reply_description = '';
+                    $attendanceRecord->reply_update_at = '0000-00-00 00:00:00';
+                    $attendanceRecord->reason = filter_input(INPUT_POST, 'reason');
+                    $attendanceRecord->remark = filter_input(INPUT_POST, 'remark');
+                    if ($i === 1) {
+                        $attendanceRecord->start_time = $date . ' ' . filter_input(INPUT_POST, 'start_time') . ':00';
+                    } else {
+                        $attendanceRecord->start_time = $date . ' ' . '09:00';
+                    }
+                    $attendanceRecord->end_time = $date . ' ' . '18:00';
+                    $attendanceRecord->manager = $manager->id;
+                    $attendanceRecord->agent = isset($_POST['agent']) ? $agent->id : '';
+                    $attendanceRecord->status = 0;
+                    $attendanceRecord->save();
+                    $date = date(date("Y-m-d", strtotime("+1 day",strtotime($date))));
+                }
+
+                $date = date($date, strtotime('+1 day'));
+                $attendanceRecord = new Attendancerecord();
+                $attendanceRecord->employee_id = $employeeOrmEnt->id;
+                $attendanceRecord->create_at = $now;
+                $attendanceRecord->update_at = $now;
+                $attendanceRecord->day = filter_input(INPUT_POST, 'start_date');
+                $attendanceRecord->first_time = '0000-00-00 00:00:00';
+                $attendanceRecord->last_time = '0000-00-01 00:00:00';
+                $attendanceRecord->abnormal_type = '0';
+                $attendanceRecord->abnormal = $_POST['leave_type'] == 11 ? '加班' : '請假';
+                $attendanceRecord->take = $_POST['leave_type'];
+                $attendanceRecord->leave_time = $date;
+                $attendanceRecord->leave_minutes = (float) filter_input(INPUT_POST, 'last_hours') * 60;
+                $attendanceRecord->reply_description = '';
+                $attendanceRecord->reply_update_at = '0000-00-00 00:00:00';
+                $attendanceRecord->reason = filter_input(INPUT_POST, 'reason');
+                $attendanceRecord->remark = filter_input(INPUT_POST, 'remark');
+                $attendanceRecord->start_time = filter_input(INPUT_POST, 'start_date') . ' ' . filter_input(INPUT_POST, 'start_time') . ':00';
+                $attendanceRecord->end_time = filter_input(INPUT_POST, 'end_date') . ' ' . filter_input(INPUT_POST, 'end_time') . ':00';
+                $attendanceRecord->manager = $manager->id;
+                $attendanceRecord->agent = isset($_POST['agent']) ? $agent->id : '';
+                $attendanceRecord->status = 0;
+                $attendanceRecord->save();
+            }
 
             if ($attendanceRecord->hasErrors()) {
                 Yii::log(serialize($attendanceRecord->getErrors()), CLogger::LEVEL_ERROR);
@@ -436,7 +496,11 @@ class ManagerController extends Controller
             }
 
             Yii::app()->session[Controller::SUCCESS_MSG_KEY] = '新增成功';
-            $this->redirect('new');
+            if ($_POST['leave_type'] == 11) {
+                $this->redirect('overtime');
+            } else {
+                $this->redirect('new');
+            }
 
         } catch (Throwable $ex) {
             Yii::log($ex->getMessage(), CLogger::LEVEL_ERROR);

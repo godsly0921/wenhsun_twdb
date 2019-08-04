@@ -157,7 +157,7 @@
                         <div class="form-group">
                             <label class="control-label col-md-3 col-sm-3 col-xs-12">申請時數</label>
                             <div class="col-md-6 col-sm-6 col-xs-12">
-                                <input type="text" id="minutes" name="minutes" class="form-control col-md-7 col-xs-12" value="<?= $attendanceRecord->leave_minutes / 60 . '小時'?>" readonly>
+                                <input type="text" id="minutes" name="minutes" class="form-control col-md-7 col-xs-12" value="<?= $attendanceRecord->leave_minutes / 60 . '小時' ?>" readonly>
                                 <input type="hidden" id="leave_minutes" name="leave_minutes" class="form-control col-md-7 col-xs-12" value="<?= $attendanceRecord->leave_minutes / 60 ?>">
                             </div>
                         </div>
@@ -216,20 +216,23 @@
     });
 
     function checkTime() {
-        if ($("#start_time").val() < $("#end_time").val()) {
-            var hour = parseInt($("#end_time").val().substr(0, 2)) - parseInt($("#start_time").val().substr(0, 2));
-            var minute = parseInt($("#end_time").val().substr(3, 2)) - parseInt($("#start_time").val().substr(3, 2));
-            if (minute == 59) {
-                minute = 0;
-                hour++;
-            } else if (minute == 29) {
-                minute = 30;
-            }
-            var total = (hour * 60 + minute) / 60;
-            $("#leave_minutes").val(total);
-            $("#minutes").val(total.toString() + "小時");
+        var start = moment($("#leave_date").val() + " " + $("#start_time").val());
+        var end = moment($("#leave_date").val() + " " + $("#end_time").val());
+        var diff = 0;
+
+        if (start >= end) {
+            alert("請確認時間起訖是否正確");
         } else {
-            alert("請確認加班時間是否正確");
+            if ($("#start_time").val() <= "12:00" && $("#end_time").val() >= "13:00") {
+                diff = end.diff(start, "hours", true) - 1;
+            } else if ($("#end_time").val() === "23:59") {
+                diff = Math.round(end.diff(start, "hours", true) * 10) / 10;
+            } else {
+                diff = end.diff(start, "hours", true);
+            }
+
+            $("#leave_minutes").val(diff);
+            $("#minutes").val(diff + "小時");
         }
     }
 </script>
