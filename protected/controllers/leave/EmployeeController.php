@@ -173,9 +173,12 @@ class EmployeeController extends Controller
             $attendanceRecord->manager = $empArr[$attendanceRecord->manager];
         }
 
+        $emp = EmployeeORM::model()->findByPk($attendanceRecord->employee_id);
+
         $this->render('view', [
             'record' => $attendanceRecord,
-            'name' => $empArr[$attendanceRecord->employee_id]
+            'name' => $empArr[$attendanceRecord->employee_id],
+            'account' => $emp->user_name
         ]);
     }
 

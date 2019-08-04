@@ -16,7 +16,7 @@
                         <div class="form-group">
                             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="user_name">員工帳號</label>
                             <div class="col-md-6 col-sm-6 col-xs-12">
-                                <input type="text" id="user_name" name="user_name" class="form-control col-md-7 col-xs-12" value="<?= $record->employee_id ?>" readonly>
+                                <input type="text" id="user_name" name="user_name" class="form-control col-md-7 col-xs-12" value="<?= $account ?>" readonly>
                             </div>
                         </div>
 
