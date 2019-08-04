@@ -11,7 +11,7 @@
             <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="x_panel">
                     <p>注意: 年假計算為到職至今可請時數</p>
-                    <table id="datatable" class="table table-striped table-bordered">
+                    <table id="table" class="table table-striped table-bordered">
                         <thead>
                             <tr>
                                 <th>假別</th>
@@ -43,7 +43,7 @@
         <div id="holiday" class="row">
             <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="x_panel">
-                    <table id="datatable" class="table table-striped table-bordered">
+                    <table id="datatable1" class="table table-striped table-bordered">
                         <thead>
                             <tr>
                                 <th>申請日期</th>
@@ -92,10 +92,10 @@
             </div>
         </div>
 
-        <div id="overtime" class="row" style="display:none">
+        <div id="overtime" class="row">
             <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="x_panel">
-                    <table id="datatable" class="table table-striped table-bordered">
+                    <table id="datatable2" class="table table-striped table-bordered">
                         <thead>
                             <tr>
                                 <th>申請日期</th>
@@ -146,6 +146,8 @@
         </div>
     </div>
 </div>
+<script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/admin/ext/js/jquery.dataTables.min.js"></script>
+<script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/admin/ext/js/dataTables.bootstrap.min.js"></script>
 <script>
     function tab(tab) {
         if (tab === "holiday") {
@@ -179,4 +181,36 @@
             }
         });
     }
+
+    $(document).ready(function() {
+        $("#datatable1").DataTable({
+            "scrollX": true,
+            "lengthChange": false,
+            "oLanguage": {
+                "oPaginate": {
+                    "sFirst": "第一頁",
+                    "sPrevious": "上一頁",
+                    "sNext": "下一頁",
+                    "sLast": "最後一頁"
+                },
+                "sEmptyTable": "無任何請假資料"
+            }
+        });
+
+        $("#datatable2").DataTable({
+            "scrollX": true,
+            "lengthChange": false,
+            "oLanguage": {
+                "oPaginate": {
+                    "sFirst": "第一頁",
+                    "sPrevious": "上一頁",
+                    "sNext": "下一頁",
+                    "sLast": "最後一頁"
+                },
+                "sEmptyTable": "無任何加班資料"
+            }
+        });
+
+        $("#overtime").hide();
+    });
 </script>
