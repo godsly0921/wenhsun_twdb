@@ -327,7 +327,7 @@ class AttendancerecordService{
               WHERE employee_id = :employee_id
               AND leave_time >= :start_time
               AND leave_time < :end_time
-              AND take != 9 AND take != 11
+              AND take != 11
               ORDER BY leave_time DESC
             '
         )->bindValues([
@@ -357,7 +357,7 @@ class AttendancerecordService{
               WHERE employee_id = :employee_id
               AND leave_time >= :start_time
               AND leave_time < :end_time
-              AND take IN (9, 11)
+              AND take = 11
               ORDER BY leave_time DESC
             '
         )->bindValues([
