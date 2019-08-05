@@ -564,7 +564,7 @@ class ManagerController extends Controller
             [':name' => $_POST['manager']]
         );
 
-        if ((isset($_POST['agent']) && $agent === null) || $manager === null) {
+        if (($_POST['agent'] != '' && $agent === null) || $manager === null) {
             Yii::app()->session[Controller::ERR_MSG_KEY] = '查無員工';
             $this->redirect('new');
         }
@@ -585,16 +585,24 @@ class ManagerController extends Controller
             $attendanceRecord->start_time = filter_input(INPUT_POST, 'leave_date') . ' ' . filter_input(INPUT_POST, 'start_time') . ':00';
             $attendanceRecord->end_time = filter_input(INPUT_POST, 'leave_date') . ' ' . filter_input(INPUT_POST, 'end_time') . ':00';
             $attendanceRecord->manager = $manager->id;
-            $attendanceRecord->agent = isset($_POST['agent']) ? $agent->id : '';
+            $attendanceRecord->agent = $_POST['agent'] == '' ? '' : $agent->id;
             $attendanceRecord->status = 1;
             $attendanceRecord->update();
 
-            Yii::app()->session[Controller::SUCCESS_MSG_KEY] = '修改成功';
+            $service = new AttendancerecordService();
+            $result = $service->sendApproveMail($id);
+
+            if ($result) {
+                Yii::app()->session[Controller::SUCCESS_MSG_KEY] = '修改成功';
+            } else {
+                Yii::app()->session[Controller::SUCCESS_MSG_KEY] = '修改成功但寄發通知信失敗';
+            }
             $this->redirect('edit?id=' . $_POST['id']);
 
         } catch (Throwable $ex) {
             Yii::log($ex->getMessage(), CLogger::LEVEL_ERROR);
             Yii::app()->session[Controller::ERR_MSG_KEY] = $ex->getMessage();
+            echo $ex->getMessage();
             $this->redirect('edit?id=' . $_POST['id']);
         }
     }
