@@ -313,7 +313,7 @@ class MailService
             $mail->Password = 'cute0921';
             $mail->From = 'wenhsun0509@gmail.com';
             $mail->FromName = '文訊雜誌社人資系統';
-            $mail->addAddress($inputs['email']);
+            $mail->addAddress($inputs['to']);
             $mail->addAddress($inputs['agent']);
             $mail->addAddress($inputs['manager']);
             $mail->addAddress('jenny@wenhsun.com.tw');
