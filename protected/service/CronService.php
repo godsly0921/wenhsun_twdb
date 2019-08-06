@@ -7,7 +7,7 @@ class CronService
         try {
             if(!empty($today)){
                 // ST server 會以每月做資料夾命名
-                $month_dir = date('Ym');
+                $month_dir = date('Ym',strtotime($today[0]));
                 // 找出路徑下所有檔案
                 $alldir = scandir("C:/ST/Record/$month_dir");
                 // 推算今天應該使用之檔名
@@ -16,9 +16,10 @@ class CronService
                 $std = date('Y-m-d',strtotime($today[0]))." 00:00:00";
                 $endd = date('Y-m-d',strtotime($today[0]))." 23:59:59";
 
-                /*var_dump( $std);
-                var_dump( $endd );
-                var_dump( $today_st );*/
+				//var_dump( $month_dir);
+                //var_dump( $std);
+                //var_dump( $endd );
+                //var_dump( $today_st );
                 //var_dump( 'N');
 
 
@@ -39,10 +40,11 @@ class CronService
 
             }
 
-          //  exit();
+           // exit();
 
             // 如果有檔案才做接下來的動作
             if (in_array($today_st, $alldir)) {
+				
 
                 // 取得所有當日,已寫入之資料
                 $criteria = new CDbCriteria;
@@ -159,6 +161,7 @@ class CronService
                             $tosave = false;
                         }
                     }
+					
 
                     if ($tosave === true) {
                         $post = new Record;
