@@ -314,7 +314,9 @@ class MailService
             $mail->From = 'wenhsun0509@gmail.com';
             $mail->FromName = '文訊雜誌社人資系統';
             $mail->addAddress($inputs['to']);
-            $mail->addAddress($inputs['agent']);
+            if ($inputs['agent'] != '') {
+                $mail->addAddress($inputs['agent']);
+            }
             $mail->addAddress($inputs['manager']);
             $mail->addAddress('jenny@wenhsun.com.tw');
             $mail->addAddress('pinkfloydbigman@gmail.com');
