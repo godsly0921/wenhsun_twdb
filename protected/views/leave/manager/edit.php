@@ -75,7 +75,7 @@
                         <div class="form-group">
                             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="date">請假日期</label>
                             <div class="col-md-2 xdisplay_inputx form-group has-feedback">
-                                <input type="text" class="form-control has-feedback-left" id="leave_date" name="leave_date" aria-describedby="inputSuccess2Status" value="<?= $attendanceRecord->leave_date ?>">
+                                <input type="text" class="form-control has-feedback-left" id="leave_date" name="leave_date" aria-describedby="inputSuccess2Status" value="<?= $attendanceRecord->leave_time ?>">
                                 <span class="fa fa-calendar-o form-control-feedback left" aria-hidden="true"></span>
                                 <span id="inputSuccess2Status" class="sr-only">(success)</span>
                             </div>
