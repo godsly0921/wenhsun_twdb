@@ -3,27 +3,32 @@
 //寫入每天早上9:30計算 昨天出勤狀況
 class AttendanceCommand extends CConsoleCommand
 {
-    public function run($day = null)
+    public function run($today = null)
     {
 
         $res = new AttendanceService();
 
-        if(true){//false 表示測試
-            $today = date("Y-m-d", strtotime('-1 day'));
+        if(empty($today)){
+            $today = date("Y-m-d", strtotime('-1 day'));//跑昨天
+            $send_mail = true;
         }else{
-            $today = '2019-07-11';//測試日期
+            $today = $today[0];//表示重跑
+            $send_mail = false;
         }
 
-        $res->getAttxendanceData($today);
-        $res->getPartTimeData($today);
-        $res->getScheduleData($today);
+        $res->getAttxendanceData($today,$send_mail);
+        $res->getPartTimeData($today,$send_mail);
+        $res->getScheduleData($today);//紀州庵本身不寄信
 
-        $today = date("Y-m-d");
-        $isAttxendanceDay = $res->checkAttxendanceDay($today);
-        if($isAttxendanceDay){
-            $res->getAttxendanceAbnormal($today);
-            $res->getAttxendanceReport($today);
+        if($send_mail){
+            $today = date("Y-m-d");//跑今天
+            $isAttxendanceDay = $res->checkAttxendanceDay($today);
+            if($isAttxendanceDay){
+                $res->getAttxendanceAbnormal($today);
+                $res->getAttxendanceReport($today);
+            }
         }
+
     }
 
 }

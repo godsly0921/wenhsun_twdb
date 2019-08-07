@@ -6,6 +6,7 @@ class CronService
     {
         try {
             if(!empty($today)){
+                //重跑資料跑這段code
                 // ST server 會以每月做資料夾命名
                 $month_dir = date('Ym');
                 // 找出路徑下所有檔案
@@ -15,12 +16,6 @@ class CronService
                 $today_st = date('Ymd',strtotime($today[0])) . ".st";
                 $std = date('Y-m-d',strtotime($today[0]))." 00:00:00";
                 $endd = date('Y-m-d',strtotime($today[0]))." 23:59:59";
-
-                /*var_dump( $std);
-                var_dump( $endd );
-                var_dump( $today_st );*/
-                //var_dump( 'N');
-
 
             }else{
                 // ST server 會以每月做資料夾命名
@@ -32,14 +27,7 @@ class CronService
                 $std = date("Y-m-d 00:00:00");
                 $endd = date("Y-m-d 23:59:59");
 
-               /*  var_dump( $std);
-               // var_dump( $endd );
-               // var_dump( $today_st );*/
-                //var_dump( 'Y');
-
             }
-
-          //  exit();
 
             // 如果有檔案才做接下來的動作
             if (in_array($today_st, $alldir)) {
