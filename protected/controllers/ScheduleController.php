@@ -283,10 +283,14 @@ class ScheduleController extends Controller
         $empolyee_id = $_GET['empolyee_id'];
         $start = $_GET['start'];
         $end = $_GET['end'];
-        $employees = EmployeeService::findEmployeelist();
+        $employee_service = new EmployeeService();
+        // 抓出所有紀州庵PT
+        $employees = $employee_service->findEmployeeInRolesListObject([37,39]);
+        //$employees = EmployeeService::findEmployeelist();
         $scheduleService = new scheduleService();
         $shift = $scheduleService->findAllScheduleShift();
         $shift_data = array();
+        setcookie("calendar_defaultDate",$start, time()+3600*24);
         foreach ($shift as $key => $value) {
             if($value['in_out'] == '0') $in_out = "不分內外場";
             if($value['in_out'] == '1') $in_out = "內場";

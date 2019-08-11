@@ -937,7 +937,6 @@ class AttendanceService
 
     }
 
-
     public function getScheduleData($day)
     {
         try {
@@ -945,7 +944,7 @@ class AttendanceService
             $employee_service = new EmployeeService();
 
             // 抓出所有紀州庵員工與管理員
-            $data = $employee_service->findEmployeeInRolesListObject([37,38]);
+            $data = $employee_service->findEmployeeInRolesListObject([38,40,43,44,45]);
 
             foreach ($data as $key => $value) {
                 if (!empty($value->door_card_num) || $value->door_card_num == "0000000000") { // 如果有員工有設定卡號的使用者就去抓
@@ -959,6 +958,166 @@ class AttendanceService
                     $last_time = 0;
                     $abnormal_type = 0;//0正常 1異常
                     $abnormal = '';
+                    $abnormal_title = '';
+                    count($record);
+                    $employee_id = $value->id;
+                    $employee_email = $value->email;
+                    $employee_name = $value->name;
+
+
+                    if (!empty($record)) {
+                        //---------------整理預計要寫入的參數資料
+
+                        $i = 1;
+                        $total = count($record);
+                        foreach ($record as $k => $v) {
+                            if ($i == 1 && $total != 1) {//第一筆
+                                $first_time = $v->flashDate;
+                            }
+                            if ($i == $total) {//最後一筆
+                                $last_time = $v->flashDate;
+                            }
+                            if ($i == 1 && $i == $total) {//最後一筆
+                                $first_time = $v->flashDate;
+                                $last_time = $v->flashDate;
+                            }
+                            $i++;
+                        }
+
+                        //避免奇怪的錯誤發生 在轉換一次
+                        if (strtotime($first_time) > strtotime($last_time)) {
+                            $first_tmp = $first_time;
+                            $last_tmp = $last_time;
+                            $first_time = $last_tmp;
+                            $last_time = $first_tmp;
+
+                        }
+                    } else {
+                        $first_time = '0000-00-00 00:00:00';
+                        $last_time = '0000-00-00 00:00:01';
+                    }
+
+                    $diff_time = strtotime($last_time) - strtotime($first_time);//這個員工一整天上班時間
+
+                    $abnormal_title= '紀州庵正職人員 | '; 
+
+
+                    //兼職員工依排班時間，若不足，算早退，若超過8小時，不用算異常
+                    //第一筆打卡時間小於排班開始時間 最後一筆大於等於 排班結束
+
+                    if ($this->get_chinese_weekday($day) != "星期一"){
+                        if ($diff_time >= NINE_HOUR) {
+                            $abnormal_type = 0;
+                            $abnormal = '出勤日，上班八小時';
+                        } elseif ($diff_time < NINE_HOUR && $diff_time >= TWO_SECOND) {
+                            $abnormal_type = 1;//異常需填寫異常單
+                            $abnormal = '出勤日，上班時數小於八小時';
+                        } elseif ($diff_time == ZERO_SECOND) {
+                            $abnormal_type = 1;
+                            $abnormal = '出勤日，僅有一筆打卡紀錄';
+                        }elseif ($diff_time == ONE_SECOND) {
+                            $abnormal_type = 1;
+                            $abnormal = '出勤日，缺席';
+                        }
+                    }else{
+                        $abnormal_type = 1;
+                        $abnormal = '休假日，出勤';
+                    }
+                   
+
+
+                    if ($diff_time != 1) {//0 2~以上
+                        if ($diff_time != 0) {
+                            //假如第一筆時間大於9:30 //加註 遲到
+                            if ($diff_time >= NINE_HOUR) {
+                                $abnormal_type = 0;
+                                $abnormal = '出勤日，上班八小時';
+
+                            }
+
+                            //假如第一筆時間小於18:30 //加註 早退
+                            if ($diff_time < NINE_HOUR) {
+                                $abnormal_type = 1;
+                                $abnormal = '出勤日，，上班時數小於八小時';
+                            }
+                        }
+
+                    }
+                    $abnormal = $abnormal_title . $abnormal;
+                    /*
+
+                    if($diff_time != ONE_SECOND) {//0 2~以上
+                        if ($diff_time != ZERO_SECOND) {
+                            if (strtotime($first_time) >= $this->getArriveLateTime($day)) {
+                                $abnormal .= '|遲到|';
+                                //$abnormal_type = 1;
+
+                            }
+                            if(strtotime($last_time) < $end_record){
+                                $abnormal .= '|早退|';
+                                //$abnormal_type = 1;
+                            }
+                        }
+                    }*/
+
+                    if ($diff_time == ONE_SECOND) {
+                        $diff_time = 0;
+                    }
+                    $abnormal .= ' 總時數：' . $this->get_second_to_his($diff_time);
+                    $attendance_record_service = new AttendancerecordService();
+                    $model = $attendance_record_service->create($employee_id, $day, $first_time, $last_time, $abnormal_type, $abnormal);
+                  /*  $mail = new MailService();
+                    $mail_type = $mail->sendMail($abnormal_type,$employee_email,$abnormal,$model->id,$employee_name);
+                    if($mail_type){
+                        Yii::log(date("Y-m-d H:i:s").'Attendance PT Record RECORD ID'.$model->id, CLogger::LEVEL_INFO);
+                    }else{
+                        Yii::log(date("Y-m-d H:i:s").'Attendance PT RECORD ID'.$model->id, CLogger::LEVEL_INFO);
+                    }*/
+
+
+
+
+                } else {
+
+                    $msg = date("Y-m-d H:i:s") . $value->id . "紀州庵員工卡號設定異常";
+                    Yii::log($msg, CLogger::LEVEL_INFO);
+                    $mail = new MailService();
+                    $mail->sendAdminMail(0, $msg);
+                    continue;
+
+                }
+
+            }
+        } catch (Exception $e) {
+            $msg = Yii::log("紀州庵 attxendance data write exception {$e->getTraceAsString()}", CLogger::LEVEL_INFO);
+            $mail = new MailService();
+            $mail->sendAdminMail(0, $msg);
+        }
+
+    }
+
+    public function getScheduleData_PT($day)
+    {
+        try {
+
+            $employee_service = new EmployeeService();
+
+            // 抓出所有紀州庵員工與管理員
+            $data = $employee_service->findEmployeeInRolesListObject([37,39]);
+
+            foreach ($data as $key => $value) {
+                if (!empty($value->door_card_num) || $value->door_card_num == "0000000000") { // 如果有員工有設定卡號的使用者就去抓
+
+                    $start_date = $day . ' 00:00:00';
+                    $end_date = $day . ' 23:59:59';
+
+                    $model = new RecordService;
+                    $record = $model->get_by_card($value->door_card_num, $start_date, $end_date);//找出所有的刷卡紀錄
+                    $first_time = 0;
+                    $last_time = 0;
+                    $abnormal_type = 0;//0正常 1異常
+                    $abnormal = '';
+                    $abnormal_title = '';
                     count($record);
                     $employee_id = $value->id;
                     $employee_email = $value->email;
@@ -1007,31 +1166,26 @@ class AttendanceService
                             $end_record = strtotime($v->end_time);
                             $diff_time = strtotime($last_time) - strtotime($first_time);//這個員工一整天上班時間
 
-                            $abnormal .= '紀州庵排班編號：' . $v->id . ' | ';
+                            $abnormal_title .= '紀州庵兼職排班編號：' . $v->id . ' | ';
 
 
                             //兼職員工依排班時間，若不足，算早退，若超過8小時，不用算異常
                             //第一筆打卡時間小於排班開始時間 最後一筆大於等於 排班結束
                             if (strtotime($first_time) <= $start_record && strtotime($last_time) >= $end_record) {
                                 $abnormal_type = 0;
-                                $abnormal .= '排班日 正常，';
+                                $abnormal = '排班日，正常，';
                             } else {
-                                $abnormal .= '排班日 遲到或早退，';
+                                $abnormal_type = 1;
+                                $abnormal = '排班日，異常，遲到或早退，';
                             }
 
 
-                            if ($diff_time >= NINE_HOUR && $diff_time <= TEN_HOUR) {
-                                $abnormal_type = 0;
-                                $abnormal .= '上班八小時';
-                            } elseif ($diff_time > NINE_HOUR && $diff_time > OVER_TEN_HOUR) {
+                            if ($diff_time == ONE_SECOND) {
                                 $abnormal_type = 1;
-                                $abnormal .= '上班時數超過十小時';
-                            } elseif ($diff_time == ONE_SECOND) {
-                                $abnormal_type = 1;
-                                $abnormal .= '缺席';
+                                $abnormal = '排班日，異常，缺席';
                             } elseif ($diff_time == ZERO_SECOND) {
                                 $abnormal_type = 1;
-                                $abnormal .= '僅一筆刷卡紀錄';
+                                $abnormal = '排班日，異常，僅一筆刷卡紀錄';
 
                             }
 
@@ -1039,34 +1193,20 @@ class AttendanceService
                             if ($diff_time != 1) {//0 2~以上
                                 if ($diff_time != 0) {
                                     //假如第一筆時間大於9:30 //加註 遲到
-                                    if (strtotime($first_time) >= $start_record and $diff_time >= NINE_HOUR && $diff_time <= TEN_HOUR) {
-                                        $abnormal_type = 0;
-                                        $abnormal = '上班八小時';
-
-                                    }
-
-                                    if (strtotime($first_time) >= $start_record and $diff_time < NINE_HOUR) {
+                                    if (strtotime($first_time) >= $start_record) {
                                         $abnormal_type = 1;
-                                        $abnormal .= '|遲到|';
+                                        $abnormal = '排班日，異常，遲到';
                                     }
 
-
-                                    //假如最後一筆時間排班時間 //加註早退
-                                    //兼職員工依排班時間，若不足，算早退，若超過8小時，不用算異常
-                                    if (strtotime($last_time) < $end_record and $diff_time >= NINE_HOUR && $diff_time <= TEN_HOUR) {
-                                        $abnormal_type = 0;
-                                        $abnormal = '上班八小時';
-                                    }
-
-                                    if (strtotime($last_time) < $end_record and $diff_time < NINE_HOUR) {
+                                    if (strtotime($last_time) < $end_record) {
                                         $abnormal_type = 1;
-                                        $abnormal .= '|早退|';
+                                        $abnormal = '排班日，異常，早退';
                                     }
 
                                 }
 
                             }
-
+                            $abnormal = $abnormal_title . $abnormal;
                             /*
 
                             if($diff_time != ONE_SECOND) {//0 2~以上
@@ -1101,40 +1241,39 @@ class AttendanceService
                         }
                     } else {
 
-                        $abnormal .= '紀州庵排班編號：' . '無' . ' | ';
+                        $abnormal_title = '紀州庵排班編號：' . '無' . ' | ';
+                        if (!empty($record)) {
+                            $diff_time = strtotime($last_time) - strtotime($first_time);//這個員工一整天上班時間
+                             if ($diff_time >= NINE_HOUR && $diff_time <= TEN_HOUR) {
+                                $abnormal_type = 1;
+                                $abnormal = '非排班日，出勤';
+                            } elseif ($diff_time > NINE_HOUR && $diff_time > OVER_TEN_HOUR) {
+                                $abnormal_type = 1;
+                                $abnormal = '非排班日，出勤';
+                            } elseif ($diff_time < NINE_HOUR && $diff_time > 2) {
+                                $abnormal_type = 1;
+                                $abnormal = '非排班日，出勤';
+                            } elseif ($diff_time == ONE_SECOND) {
+                                $abnormal_type = 1;
+                                $abnormal = '非排班日，出勤';
+                            } elseif ($diff_time == ZERO_SECOND) {
+                                $abnormal_type = 1;
+                                $abnormal = '非排班日，出勤';
+                            } else {
+                                $abnormal_type = 1;
+                                $abnormal = '非排班日，出勤';
+                            }
+                            $abnormal = $abnormal_title . $abnormal;
 
-                        $diff_time = strtotime($last_time) - strtotime($first_time);//這個員工一整天上班時間
+                            if ($diff_time == ONE_SECOND) {
+                                $diff_time = 0;
+                            }
 
+                            $abnormal .= ' 總時數：' . $this->get_second_to_his($diff_time);
 
-                        if ($diff_time >= NINE_HOUR && $diff_time <= TEN_HOUR) {
-                            $abnormal_type = 1;
-                            $abnormal .= '非排班日 異常，上班時數超過八小時';
-                        } elseif ($diff_time > NINE_HOUR && $diff_time > OVER_TEN_HOUR) {
-                            $abnormal_type = 1;
-                            $abnormal .= '非排班日 異常，上班時數超過十小時';
-                        } elseif ($diff_time < NINE_HOUR && $diff_time > 2) {
-                            $abnormal_type = 1;
-                            $abnormal .= '非排班日 異常，上班時數小於上班八小時';
-                        } elseif ($diff_time == ONE_SECOND) {
-                            $abnormal_type = 0;
-                            $abnormal .= '非排班日 正常';
-                        } elseif ($diff_time == ZERO_SECOND) {
-                            $abnormal_type = 1;
-                            $abnormal .= '非排班日 異常，僅一筆刷卡紀錄';
-                        } else {
-                            $abnormal_type = 0;
-                            $abnormal .= '非排班日 正常';
+                            $attendance_record_service = new AttendancerecordService();
+                            $attendance_record_service->create($employee_id, $day, $first_time, $last_time, $abnormal_type, $abnormal);
                         }
-
-
-                        if ($diff_time == ONE_SECOND) {
-                            $diff_time = 0;
-                        }
-                        $abnormal .= ' 總時數：' . $this->get_second_to_his($diff_time);
-
-                        $attendance_record_service = new AttendancerecordService();
-                        $attendance_record_service->create($employee_id, $day, $first_time, $last_time, $abnormal_type, $abnormal);
-
                         //紀州庵不寄信
                         /* $mail = new MailService();
                         $mail_type = $mail->sendMail($abnormal_type, $employee_email, $abnormal, $model->id, $employee_name);

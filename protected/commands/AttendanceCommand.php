@@ -15,10 +15,10 @@ class AttendanceCommand extends CConsoleCommand
             $today = $today[0];//表示重跑
             $send_mail = false;
         }
-
         $res->getAttxendanceData($today,$send_mail);
         $res->getPartTimeData($today,$send_mail);
-        $res->getScheduleData($today);//紀州庵本身不寄信
+        $res->getScheduleData($today);//紀州庵本身不寄信(正職)
+        $res->getScheduleData_PT($today);//紀州庵本身不寄信(兼職)
 
         if($send_mail){
             $today = date("Y-m-d");//跑今天

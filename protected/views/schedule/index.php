@@ -44,7 +44,7 @@
                 right: 'month,agendaDay,listWeek'
             },
             handleWindowResize:true,
-            defaultDate: '<?php echo date('Y-m-d');?>',
+            defaultDate: '<?= !isset($_COOKIE["calendar_defaultDate"])? date('Y-m-d'):$_COOKIE["calendar_defaultDate"];?>',
             navLinks: true, // can click day/week names to navigate views
             weekNumbers: true,
             weekends: true,
