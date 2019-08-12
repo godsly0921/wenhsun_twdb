@@ -265,12 +265,12 @@ class ManagerController extends Controller
             [
                 'category' => '普通傷病假',
                 'leave_applied' => $sickLeavedMins / 60,
-                'leave_available' => $sickLeaveAnnualMinutes / 60,
+                'leave_available' => $sickLeaveAnnualMinutes / 60 - $sickLeavedMins / 60,
             ],
             [
                 'category' => '事假',
                 'leave_applied' => $personalLeavedMins / 60,
-                'leave_available' => $personalLeaveAnnualMinutes / 60,
+                'leave_available' => $personalLeaveAnnualMinutes / 60 - $personalLeavedMins / 60,
             ],
             [
                 'category' => '公假',
@@ -285,7 +285,7 @@ class ManagerController extends Controller
             [
                 'category' => '年假(特別休假)',
                 'leave_applied' => $appliedAnnualLeave / 60,
-                'leave_available' => $annualLeaveMinutes->minutesValue() / 60,
+                'leave_available' => $annualLeaveMinutes->minutesValue() / 60 - $appliedAnnualLeave / 60,
             ],
             [
                 'category' => '分娩假含例假日',
@@ -493,9 +493,17 @@ class ManagerController extends Controller
                 } else {
                     $this->redirect('new');
                 }
+            } else {
+                $service = new AttendancerecordService();
+                $result = $service->sendApproveMail($attendanceRecord->id);
             }
 
-            Yii::app()->session[Controller::SUCCESS_MSG_KEY] = '新增成功';
+            if ($result) {
+                Yii::app()->session[Controller::SUCCESS_MSG_KEY] = '新增成功';
+            } else {
+                Yii::app()->session[Controller::SUCCESS_MSG_KEY] = '新增成功但寄發通知信失敗';
+            }
+
             if ($_POST['leave_type'] == 11) {
                 $this->redirect('overtime');
             } else {
@@ -589,14 +597,7 @@ class ManagerController extends Controller
             $attendanceRecord->status = 1;
             $attendanceRecord->update();
 
-            $service = new AttendancerecordService();
-            $result = $service->sendApproveMail($id);
-
-            if ($result) {
-                Yii::app()->session[Controller::SUCCESS_MSG_KEY] = '修改成功';
-            } else {
-                Yii::app()->session[Controller::SUCCESS_MSG_KEY] = '修改成功但寄發通知信失敗';
-            }
+            Yii::app()->session[Controller::SUCCESS_MSG_KEY] = '修改成功';
             $this->redirect('edit?id=' . $_POST['id']);
 
         } catch (Throwable $ex) {

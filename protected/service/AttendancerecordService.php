@@ -522,12 +522,12 @@ class AttendancerecordService{
                 [
                     'category' => '普通傷病假',
                     'leave_applied' => $sickLeavedMins / 60,
-                    'leave_available' => $sickLeaveAnnualMinutes / 60,
+                    'leave_available' => $sickLeaveAnnualMinutes / 60 - $sickLeavedMins / 60,
                 ],
                 [
                     'category' => '事假',
                     'leave_applied' => $personalLeavedMins / 60,
-                    'leave_available' => $personalLeaveAnnualMinutes / 60,
+                    'leave_available' => $personalLeaveAnnualMinutes / 60 - $personalLeavedMins / 60,
                 ],
                 [
                     'category' => '公假',
@@ -542,7 +542,7 @@ class AttendancerecordService{
                 [
                     'category' => '年假(特別休假)',
                     'leave_applied' => $appliedAnnualLeave / 60,
-                    'leave_available' => $annualLeaveMinutes->minutesValue() / 60,
+                    'leave_available' => $annualLeaveMinutes->minutesValue() / 60 - $appliedAnnualLeave / 60,
                 ],
                 [
                     'category' => '分娩假含例假日',
@@ -610,7 +610,7 @@ class AttendancerecordService{
                                     <td style='border: 1px solid black; padding: 10px;'>" . substr($leave->leave_time, 0, 10) . "</td>
                                     <td style='border: 1px solid black; padding: 10px;'>" . substr($leave->start_time, 11, 8) . " - " . substr($leave->end_time, 11, 8) . "</td>
                                     <td style='border: 1px solid black; padding: 10px;'>" . (float) $leave->leave_minutes / 60 . "</td>
-                                    <td style='border: 1px solid black; padding: 10px;'>" . ($leave->status === 0 ? "未審核" : "已審核") . "</td>
+                                    <td style='border: 1px solid black; padding: 10px;'>" . ($leave->status == 0 ? "未審核" : "已審核") . "</td>
                                 </tr>
                             </tbody>
                          </table>";
@@ -640,7 +640,7 @@ class AttendancerecordService{
                                     <td style='border: 1px solid black; padding: 10px;'>" . substr($leave->start_time, 11, 8) . " - " . substr($leave->end_time, 11, 8) . "</td>
                                     <td style='border: 1px solid black; padding: 10px;'>" . (float) $leave->leave_minutes / 60 . "</td>
                                     <td style='border: 1px solid black; padding: 10px;'>" . $leave->remark . "</td>
-                                    <td style='border: 1px solid black; padding: 10px;'>" . ($leave->status === 0 ? "未審核" : "已審核") . "</td>
+                                    <td style='border: 1px solid black; padding: 10px;'>" . ($leave->status == 0 ? "未審核" : "已審核") . "</td>
                                 </tr>
                             </tbody>
                          </table>
