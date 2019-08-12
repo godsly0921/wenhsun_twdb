@@ -1354,21 +1354,21 @@ class AttendanceService
     }
 
     function getAttxendanceAndCheckPT($start_date,$end_date,$pt_start_date,$pt_end_date){
-        
+        //37,38,39,40,43,44,45
         //檢查 pt 當天有沒有排班，有班的才列
         $checkPTtime = $apartments2 = Yii::app()->db->createCommand()
         ->select("e.name,e.id as employee_id,e.email,e.user_name,e.door_card_num,r.flashDate,r.memol,r.id")
         ->from('employee e')
         ->rightjoin('part_time pt',"e.id=pt.part_time_empolyee_id and pt.start_time BETWEEN '".$pt_start_date."' and '".$pt_end_date."'")
         ->leftjoin('record r', "SUBSTRING(e.door_card_num,1,5) = r.start_five and SUBSTRING(e.door_card_num,6)=r.end_five and r.flashDate BETWEEN '".$start_date."' and '".$end_date."'")
-        ->where('e.role=7 and e.role!=37 and e.role!=38')
+        ->where('e.role=7 and e.role!=37 and e.role!=38 and e.role!=39 and e.role!=40 and e.role!=43 and e.role!=44 and e.role!=45')
         ->getText();
 
         $data = Yii::app()->db->createCommand()
         ->select('e.name,e.id as employee_id,e.email,e.user_name,e.door_card_num,r.flashDate,r.memol,r.id')
         ->from('employee e')
         ->leftjoin('record r', "SUBSTRING(e.door_card_num,1,5) = r.start_five and SUBSTRING(e.door_card_num,6)=r.end_five and r.flashDate BETWEEN '".$start_date."' and '".$end_date."'")
-        ->where('e.role!=7 and e.role!=37 and e.role!=38')
+        ->where('e.role!=7 and e.role!=37 and e.role!=38 and e.role!=39 and e.role!=40 and e.role!=43 and e.role!=44 and e.role!=45')
         ->union($checkPTtime)
         ->queryAll();
         return $data;
