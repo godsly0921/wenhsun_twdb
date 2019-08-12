@@ -91,7 +91,7 @@ class AttendanceService
             $employee_service = new EmployeeService();
 
             // 抓出所有不是PT的員工
-            $data = $employee_service->findEmployeeNotInRolesListObject([7,37,38]);
+            $data = $employee_service->findEmployeeNotInRolesListObject([7,37,38,39,40,43,44,45]);
 
 
             foreach ($data as $key => $value) {
