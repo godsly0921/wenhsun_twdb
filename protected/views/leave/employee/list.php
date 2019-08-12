@@ -121,7 +121,7 @@
                         <tbody>
                             <?php foreach ($overtimeList as $row) : ?>
                                 <tr role="row">
-                                    <td><?= substr($row['leave_time'], 0, 10) ?></td>
+                                    <td><?= substr($row['create_at'], 0, 10) ?></td>
                                     <td><?= $row['take'] ?></td>
                                     <td><?= $row['reason'] ?></td>
                                     <td><?= date('Y-m-d', strtotime($row['leave_time'])) ?></td>

@@ -405,32 +405,11 @@ class ManagerController extends Controller
 
             $now = Common::now();
             $days = filter_input(INPUT_POST, 'days');
-            if ($days == 1) {
-                $attendanceRecord = new Attendancerecord();
-                $attendanceRecord->employee_id = $employeeOrmEnt->id;
-                $attendanceRecord->create_at = $now;
-                $attendanceRecord->update_at = $now;
-                $attendanceRecord->day = filter_input(INPUT_POST, 'start_date');
-                $attendanceRecord->first_time = '0000-00-00 00:00:00';
-                $attendanceRecord->last_time = '0000-00-01 00:00:00';
-                $attendanceRecord->abnormal_type = '0';
-                $attendanceRecord->abnormal = $_POST['leave_type'] == 11 ? '加班' : '請假';
-                $attendanceRecord->take = $_POST['leave_type'];
-                $attendanceRecord->leave_time = filter_input(INPUT_POST, 'start_date');
-                $attendanceRecord->leave_minutes = (float) filter_input(INPUT_POST, 'leave_minutes') * 60;
-                $attendanceRecord->reply_description = '';
-                $attendanceRecord->reply_update_at = '0000-00-00 00:00:00';
-                $attendanceRecord->reason = filter_input(INPUT_POST, 'reason');
-                $attendanceRecord->remark = filter_input(INPUT_POST, 'remark');
-                $attendanceRecord->start_time = filter_input(INPUT_POST, 'start_date') . ' ' . filter_input(INPUT_POST, 'start_time') . ':00';
-                $attendanceRecord->end_time = filter_input(INPUT_POST, 'end_date') . ' ' . filter_input(INPUT_POST, 'end_time') . ':00';
-                $attendanceRecord->manager = $manager->id;
-                $attendanceRecord->agent = isset($_POST['agent']) ? $agent->id : '';
-                $attendanceRecord->status = 0;
-                $attendanceRecord->save();
-            } else {
-                $date = date(filter_input(INPUT_POST, 'start_date'));
-                for ($i = 1; $i < $days; $i++) {
+            $start_time = filter_input(INPUT_POST, 'start_date') . ' ' . filter_input(INPUT_POST, 'start_time') . ':00';
+            $end_time = filter_input(INPUT_POST, 'end_date') . ' ' . filter_input(INPUT_POST, 'end_time') . ':00';
+
+            if ($_POST['leave_type'] == 11) {
+                if ($days == 1) {
                     $attendanceRecord = new Attendancerecord();
                     $attendanceRecord->employee_id = $employeeOrmEnt->id;
                     $attendanceRecord->create_at = $now;
@@ -439,50 +418,154 @@ class ManagerController extends Controller
                     $attendanceRecord->first_time = '0000-00-00 00:00:00';
                     $attendanceRecord->last_time = '0000-00-01 00:00:00';
                     $attendanceRecord->abnormal_type = '0';
-                    $attendanceRecord->abnormal = $_POST['leave_type'] == 11 ? '加班' : '請假';
+                    $attendanceRecord->abnormal = '加班';
                     $attendanceRecord->take = $_POST['leave_type'];
-                    $attendanceRecord->leave_time = $date;
-                    $attendanceRecord->leave_minutes = 480;
+                    $attendanceRecord->leave_time = filter_input(INPUT_POST, 'start_date');
+                    $attendanceRecord->leave_minutes = (float) filter_input(INPUT_POST, 'leave_minutes') * 60;
                     $attendanceRecord->reply_description = '';
                     $attendanceRecord->reply_update_at = '0000-00-00 00:00:00';
                     $attendanceRecord->reason = filter_input(INPUT_POST, 'reason');
                     $attendanceRecord->remark = filter_input(INPUT_POST, 'remark');
-                    if ($i === 1) {
-                        $attendanceRecord->start_time = $date . ' ' . filter_input(INPUT_POST, 'start_time') . ':00';
-                    } else {
-                        $attendanceRecord->start_time = $date . ' ' . '09:00';
-                    }
-                    $attendanceRecord->end_time = $date . ' ' . '18:00';
+                    $attendanceRecord->start_time = $start_time;
+                    $attendanceRecord->end_time = $end_time;
                     $attendanceRecord->manager = $manager->id;
                     $attendanceRecord->agent = isset($_POST['agent']) ? $agent->id : '';
                     $attendanceRecord->status = 0;
                     $attendanceRecord->save();
-                    $date = date(date("Y-m-d", strtotime("+1 day",strtotime($date))));
-                }
+                } else {
+                    // 第一天
+                    $date = date(filter_input(INPUT_POST, 'start_date'));
+                    $attendanceRecord = new Attendancerecord();
+                    $attendanceRecord->employee_id = $employeeOrmEnt->id;
+                    $attendanceRecord->create_at = $now;
+                    $attendanceRecord->update_at = $now;
+                    $attendanceRecord->day = filter_input(INPUT_POST, 'start_date');
+                    $attendanceRecord->first_time = '0000-00-00 00:00:00';
+                    $attendanceRecord->last_time = '0000-00-01 00:00:00';
+                    $attendanceRecord->abnormal_type = '0';
+                    $attendanceRecord->abnormal = '加班';
+                    $attendanceRecord->take = $_POST['leave_type'];
+                    $attendanceRecord->leave_time = $date;
+                    $attendanceRecord->leave_minutes = (float) filter_input(INPUT_POST, 'first_hours') * 60;
+                    $attendanceRecord->reply_description = '';
+                    $attendanceRecord->reply_update_at = '0000-00-00 00:00:00';
+                    $attendanceRecord->reason = filter_input(INPUT_POST, 'reason');
+                    $attendanceRecord->remark = filter_input(INPUT_POST, 'remark');
+                    $attendanceRecord->start_time = $start_time;
+                    $attendanceRecord->end_time = filter_input(INPUT_POST, 'start_date') . ' ' . '23:59';
+                    $attendanceRecord->manager = $manager->id;
+                    $attendanceRecord->agent = isset($_POST['agent']) ? $agent->id : '';
+                    $attendanceRecord->status = 0;
+                    $attendanceRecord->save();
 
-                $date = date($date, strtotime('+1 day'));
-                $attendanceRecord = new Attendancerecord();
-                $attendanceRecord->employee_id = $employeeOrmEnt->id;
-                $attendanceRecord->create_at = $now;
-                $attendanceRecord->update_at = $now;
-                $attendanceRecord->day = filter_input(INPUT_POST, 'start_date');
-                $attendanceRecord->first_time = '0000-00-00 00:00:00';
-                $attendanceRecord->last_time = '0000-00-01 00:00:00';
-                $attendanceRecord->abnormal_type = '0';
-                $attendanceRecord->abnormal = $_POST['leave_type'] == 11 ? '加班' : '請假';
-                $attendanceRecord->take = $_POST['leave_type'];
-                $attendanceRecord->leave_time = $date;
-                $attendanceRecord->leave_minutes = (float) filter_input(INPUT_POST, 'last_hours') * 60;
-                $attendanceRecord->reply_description = '';
-                $attendanceRecord->reply_update_at = '0000-00-00 00:00:00';
-                $attendanceRecord->reason = filter_input(INPUT_POST, 'reason');
-                $attendanceRecord->remark = filter_input(INPUT_POST, 'remark');
-                $attendanceRecord->start_time = filter_input(INPUT_POST, 'start_date') . ' ' . filter_input(INPUT_POST, 'start_time') . ':00';
-                $attendanceRecord->end_time = filter_input(INPUT_POST, 'end_date') . ' ' . filter_input(INPUT_POST, 'end_time') . ':00';
-                $attendanceRecord->manager = $manager->id;
-                $attendanceRecord->agent = isset($_POST['agent']) ? $agent->id : '';
-                $attendanceRecord->status = 0;
-                $attendanceRecord->save();
+                    // 跨日
+                    $attendanceRecord = new Attendancerecord();
+                    $attendanceRecord->employee_id = $employeeOrmEnt->id;
+                    $attendanceRecord->create_at = $now;
+                    $attendanceRecord->update_at = $now;
+                    $attendanceRecord->day = filter_input(INPUT_POST, 'start_date');
+                    $attendanceRecord->first_time = '0000-00-00 00:00:00';
+                    $attendanceRecord->last_time = '0000-00-01 00:00:00';
+                    $attendanceRecord->abnormal_type = '0';
+                    $attendanceRecord->abnormal = '加班';
+                    $attendanceRecord->take = $_POST['leave_type'];
+                    $attendanceRecord->leave_time = filter_input(INPUT_POST, 'end_date');
+                    $attendanceRecord->leave_minutes = (float) filter_input(INPUT_POST, 'last_hours') * 60;
+                    $attendanceRecord->reply_description = '';
+                    $attendanceRecord->reply_update_at = '0000-00-00 00:00:00';
+                    $attendanceRecord->reason = filter_input(INPUT_POST, 'reason');
+                    $attendanceRecord->remark = filter_input(INPUT_POST, 'remark');
+                    $attendanceRecord->start_time = filter_input(INPUT_POST, 'start_date') . ' ' . '00:00';
+                    $attendanceRecord->end_time = $end_time;
+                    $attendanceRecord->manager = $manager->id;
+                    $attendanceRecord->agent = isset($_POST['agent']) ? $agent->id : '';
+                    $attendanceRecord->status = 0;
+                    $attendanceRecord->save();
+                }
+            } else {
+                if ($days == 1) {
+                    $attendanceRecord = new Attendancerecord();
+                    $attendanceRecord->employee_id = $employeeOrmEnt->id;
+                    $attendanceRecord->create_at = $now;
+                    $attendanceRecord->update_at = $now;
+                    $attendanceRecord->day = filter_input(INPUT_POST, 'start_date');
+                    $attendanceRecord->first_time = '0000-00-00 00:00:00';
+                    $attendanceRecord->last_time = '0000-00-01 00:00:00';
+                    $attendanceRecord->abnormal_type = '0';
+                    $attendanceRecord->abnormal = '請假';
+                    $attendanceRecord->take = $_POST['leave_type'];
+                    $attendanceRecord->leave_time = filter_input(INPUT_POST, 'start_date');
+                    $attendanceRecord->leave_minutes = (float) filter_input(INPUT_POST, 'leave_minutes') * 60;
+                    $attendanceRecord->reply_description = '';
+                    $attendanceRecord->reply_update_at = '0000-00-00 00:00:00';
+                    $attendanceRecord->reason = filter_input(INPUT_POST, 'reason');
+                    $attendanceRecord->remark = filter_input(INPUT_POST, 'remark');
+                    $attendanceRecord->start_time = $start_time;
+                    $attendanceRecord->end_time = $end_time;
+                    $attendanceRecord->manager = $manager->id;
+                    $attendanceRecord->agent = isset($_POST['agent']) ? $agent->id : '';
+                    $attendanceRecord->status = 0;
+                    $attendanceRecord->save();
+                } else {
+                    $date = date(filter_input(INPUT_POST, 'start_date'));
+                    for ($i = 1; $i < $days; $i++) {
+                        $attendanceRecord = new Attendancerecord();
+                        $attendanceRecord->employee_id = $employeeOrmEnt->id;
+                        $attendanceRecord->create_at = $now;
+                        $attendanceRecord->update_at = $now;
+                        $attendanceRecord->day = filter_input(INPUT_POST, 'start_date');
+                        $attendanceRecord->first_time = '0000-00-00 00:00:00';
+                        $attendanceRecord->last_time = '0000-00-01 00:00:00';
+                        $attendanceRecord->abnormal_type = '0';
+                        $attendanceRecord->abnormal = '請假';
+                        $attendanceRecord->take = $_POST['leave_type'];
+                        $attendanceRecord->leave_time = $date;
+                        if ($i === 1) {
+                            $attendanceRecord->leave_minutes = (float) filter_input(INPUT_POST, 'first_hours') * 60;
+                         } else {
+                            $attendanceRecord->leave_minutes = 480;
+                        }
+                        $attendanceRecord->reply_description = '';
+                        $attendanceRecord->reply_update_at = '0000-00-00 00:00:00';
+                        $attendanceRecord->reason = filter_input(INPUT_POST, 'reason');
+                        $attendanceRecord->remark = filter_input(INPUT_POST, 'remark');
+                        if ($i === 1) {
+                            $attendanceRecord->start_time = $date . ' ' . filter_input(INPUT_POST, 'start_time') . ':00';
+                        } else {
+                            $attendanceRecord->start_time = $date . ' ' . '09:00';
+                        }
+                        $attendanceRecord->end_time = $date . ' ' . '18:00';
+                        $attendanceRecord->manager = $manager->id;
+                        $attendanceRecord->agent = isset($_POST['agent']) ? $agent->id : '';
+                        $attendanceRecord->status = 0;
+                        $attendanceRecord->save();
+                        $date = date(date("Y-m-d", strtotime("+1 day", strtotime($date))));
+                    }
+
+                    $date = date($date, strtotime('+1 day'));
+                    $attendanceRecord = new Attendancerecord();
+                    $attendanceRecord->employee_id = $employeeOrmEnt->id;
+                    $attendanceRecord->create_at = $now;
+                    $attendanceRecord->update_at = $now;
+                    $attendanceRecord->day = filter_input(INPUT_POST, 'start_date');
+                    $attendanceRecord->first_time = '0000-00-00 00:00:00';
+                    $attendanceRecord->last_time = '0000-00-01 00:00:00';
+                    $attendanceRecord->abnormal_type = '0';
+                    $attendanceRecord->abnormal = '請假';
+                    $attendanceRecord->take = $_POST['leave_type'];
+                    $attendanceRecord->leave_time = $date;
+                    $attendanceRecord->leave_minutes = (float) filter_input(INPUT_POST, 'last_hours') * 60;
+                    $attendanceRecord->reply_description = '';
+                    $attendanceRecord->reply_update_at = '0000-00-00 00:00:00';
+                    $attendanceRecord->reason = filter_input(INPUT_POST, 'reason');
+                    $attendanceRecord->remark = filter_input(INPUT_POST, 'remark');
+                    $attendanceRecord->start_time = filter_input(INPUT_POST, 'end_date') . ' ' . '09:00';
+                    $attendanceRecord->end_time = $end_time;
+                    $attendanceRecord->manager = $manager->id;
+                    $attendanceRecord->agent = isset($_POST['agent']) ? $agent->id : '';
+                    $attendanceRecord->status = 0;
+                    $attendanceRecord->save();
+                }
             }
 
             if ($attendanceRecord->hasErrors()) {
@@ -495,7 +578,7 @@ class ManagerController extends Controller
                 }
             } else {
                 $service = new AttendancerecordService();
-                $result = $service->sendApproveMail($attendanceRecord->id);
+                $result = $service->sendApproveMail($start_time, $end_time, (float) filter_input(INPUT_POST, 'leave_minutes'), $attendanceRecord->id);
             }
 
             if ($result) {

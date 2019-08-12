@@ -402,7 +402,7 @@ class AttendancerecordService{
         '18' => '產檢假',
     ];
 
-    public function sendApproveMail($id)
+    public function sendApproveMail($start_time, $end_time, $leave_hours, $id)
     {
         try {
             $leave = Attendancerecord::model()->findByPk($id);
@@ -608,8 +608,8 @@ class AttendancerecordService{
                                     <td style='border: 1px solid black; padding: 10px;'>" . substr($leave->create_at, 0, 10) . "</td>
                                     <td style='border: 1px solid black; padding: 10px;'>" . $leave->reason . "</td>
                                     <td style='border: 1px solid black; padding: 10px;'>" . substr($leave->leave_time, 0, 10) . "</td>
-                                    <td style='border: 1px solid black; padding: 10px;'>" . substr($leave->start_time, 11, 8) . " - " . substr($leave->end_time, 11, 8) . "</td>
-                                    <td style='border: 1px solid black; padding: 10px;'>" . (float) $leave->leave_minutes / 60 . "</td>
+                                    <td style='border: 1px solid black; padding: 10px;'>" . $start_time . " - " . $end_time . "</td>
+                                    <td style='border: 1px solid black; padding: 10px;'>" . $leave_hours . "</td>
                                     <td style='border: 1px solid black; padding: 10px;'>" . ($leave->status == 0 ? "未審核" : "已審核") . "</td>
                                 </tr>
                             </tbody>
@@ -637,8 +637,8 @@ class AttendancerecordService{
                                     <td style='border: 1px solid black; padding: 10px;'>" . $this->leaveMap[$leave->take] . "</td>
                                     <td style='border: 1px solid black; padding: 10px;'>" . $leave->reason . "</td>
                                     <td style='border: 1px solid black; padding: 10px;'>" . substr($leave->leave_time, 0, 10) . "</td>
-                                    <td style='border: 1px solid black; padding: 10px;'>" . substr($leave->start_time, 11, 8) . " - " . substr($leave->end_time, 11, 8) . "</td>
-                                    <td style='border: 1px solid black; padding: 10px;'>" . (float) $leave->leave_minutes / 60 . "</td>
+                                    <td style='border: 1px solid black; padding: 10px;'>" . $start_time . " - " . $end_time . "</td>
+                                    <td style='border: 1px solid black; padding: 10px;'>" . $leave_hours . "</td>
                                     <td style='border: 1px solid black; padding: 10px;'>" . $leave->remark . "</td>
                                     <td style='border: 1px solid black; padding: 10px;'>" . ($leave->status == 0 ? "未審核" : "已審核") . "</td>
                                 </tr>
