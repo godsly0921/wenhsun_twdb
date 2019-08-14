@@ -181,4 +181,15 @@ class EmployeeService
 
         return $employeeModel['email'];
     }
+
+    public function getEmployeeNameArray() {
+        $result = Employee::model()->findAll();
+        $emp = array();
+
+        foreach($result as $value) {
+            $emp[$value->id] = $value->name;
+        }
+
+        return $emp;
+    }
 }

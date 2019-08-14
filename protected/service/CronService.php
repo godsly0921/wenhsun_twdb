@@ -2,21 +2,36 @@
 
 class CronService
 {
-    public function today_record()
+    public function today_record($today)
     {
         try {
-            // ST server 會以每月做資料夾命名
-            $month_dir = date('Ym');
+            if(!empty($today)){
+                //重跑資料跑這段code
+                // ST server 會以每月做資料夾命名
+                $month_dir = date('Ym',strtotime($today[0]));
+                // 找出路徑下所有檔案
+                $alldir = scandir("C:/ST/Record/$month_dir");
+                // 推算今天應該使用之檔名
 
-            // 找出路徑下所有檔案
-            $alldir = scandir("C:/ST/Record/$month_dir");
+                $today_st = date('Ymd',strtotime($today[0])) . ".st";
+                $std = date('Y-m-d',strtotime($today[0]))." 00:00:00";
+                $endd = date('Y-m-d',strtotime($today[0]))." 23:59:59";
 
-            // 推算今天應該使用之檔名
-            $today_st = date('Ymd') . ".st";
-            $std = date("Y-m-d 00:00:00");
-            $endd = date("Y-m-d 23:59:59");
+            }else{
+                // ST server 會以每月做資料夾命名
+                $month_dir = date('Ym');
+                // 找出路徑下所有檔案
+                $alldir = scandir("C:/ST/Record/$month_dir");
+                // 推算今天應該使用之檔名
+                $today_st = date('Ymd') . ".st";
+                $std = date("Y-m-d 00:00:00");
+                $endd = date("Y-m-d 23:59:59");
+
+            }
+            
             // 如果有檔案才做接下來的動作
             if (in_array($today_st, $alldir)) {
+				
 
                 // 取得所有當日,已寫入之資料
                 $criteria = new CDbCriteria;
@@ -133,6 +148,7 @@ class CronService
                             $tosave = false;
                         }
                     }
+					
 
                     if ($tosave === true) {
                         $post = new Record;

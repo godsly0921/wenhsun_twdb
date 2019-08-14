@@ -1,0 +1,18 @@
+ALTER TABLE `wenhsun`.`attendance_record`
+ADD COLUMN `status` CHAR(1) NOT NULL DEFAULT 0 AFTER `update_at`;
+
+ALTER TABLE `wenhsun`.`attendance_record`
+ADD COLUMN `start_time` DATETIME NOT NULL AFTER `status`,
+    ADD COLUMN `end_time` DATETIME NOT NULL AFTER `start_time`;
+
+ALTER TABLE `wenhsun`.`attendance_record`
+ADD COLUMN `reason` VARCHAR(255) NOT NULL AFTER `end_time`;
+
+ALTER TABLE `wenhsun`.`attendance_record`
+ADD COLUMN `remark` VARCHAR(255) NOT NULL AFTER `reason`;
+
+ALTER TABLE `wenhsun`.`attendance_record`
+ADD COLUMN `agent` VARCHAR(12) NOT NULL AFTER `remark`,
+    ADD COLUMN `manager` VARCHAR(12) NOT NULL AFTER `agent`;
+
+ALTER TABLE `attendance_record` CHANGE `start_time` `start_time` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00', CHANGE `end_time` `end_time` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00', CHANGE `reason` `reason` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL, CHANGE `remark` `remark` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL, CHANGE `agent` `agent` VARCHAR(12) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL, CHANGE `manager` `manager` VARCHAR(12) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL;

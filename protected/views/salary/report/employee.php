@@ -97,6 +97,13 @@
                             </div>
 
                             <div class="form-group">
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="leave_salary">請假扣薪(-)</label>
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    <input type="text" id="leave_salary" name="leave_salary" value="<?=$data->getLeaveSalary()?>" required="required" class="form-control col-md-7 col-xs-12">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
                                 <label class="control-label col-md-3 col-sm-3 col-xs-12 red" for="taxable_salary_total">應稅薪資合計(+)</label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
                                     <input type="text" id="taxable_salary_total" name="taxable_salary_total" value="<?=$data->calcTaxableSalaryTotal()?>" disabled class="form-control col-md-7 col-xs-12">

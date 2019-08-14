@@ -205,7 +205,7 @@ class ScheduleService
 
         $schedule           = Schedule::model()->findByPk( $id );
         $schedule->status   = $status;
-        $schedule->canceler = $_SESSION['uid'];
+        $schedule->canceler = Yii::app()->session['uid'];
         $schedule->canceler_type= Yii::app()->session['personal']?0:1;
         if( $schedule->save() ){
             

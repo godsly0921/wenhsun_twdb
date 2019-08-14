@@ -1,4 +1,11 @@
 <?php
+
+use Employee as EmployeeORM;
+use Wenhsun\Leave\Domain\Model\Employee;
+use Wenhsun\Leave\Domain\Model\EmployeeId;
+use Wenhsun\Leave\Domain\Service\EmployeeLeaveCalculator;
+use PHPUnit\Framework\Exception;
+
 class AttendancerecordService{
 
     // 新增一筆紀錄
@@ -53,6 +60,9 @@ class AttendancerecordService{
         $model->abnormal_type = 2;//員工回覆後 自動改為正常
         $model->reply_description    = $inputs['reply_description'];
         $model->reply_update_at = date('Y-m-d H:i:s');
+        $model->leave_minutes = $inputs['leave_minutes'];
+        $model->first_time = '0000-00-00 00:00:00';
+        $model->last_time = '0000-00-00 00:00:01';
 
         if ($model->validate()) {
             $model->update();
@@ -309,5 +319,402 @@ class AttendancerecordService{
             ':start_time' => $startDateTime,
             ':end_time' => $endDateTime,
         ])->queryAll();
+    }
+
+    public function getEmployeeLeaveListHoliday($employeeId, $year): array
+    {
+        $startDateTime = "{$year}-01-01 00:00:00";
+        $yearEndDT = new DateTime($startDateTime);
+        $yearEndDT->add(DateInterval::createFromDateString('1 year'));
+        $endDateTime = $yearEndDT->format('Y-m-d') . ' 00:00:00';
+
+        $list = Yii::app()->db->createCommand(
+            '
+              SELECT * FROM attendance_record
+              WHERE employee_id = :employee_id
+              AND leave_time >= :start_time
+              AND leave_time < :end_time
+              AND take != 11
+              ORDER BY leave_time DESC
+            '
+        )->bindValues([
+            ':employee_id' => $employeeId,
+            ':start_time' => $startDateTime,
+            ':end_time' => $endDateTime,
+        ])->queryAll();
+
+        $listArr = array();
+        foreach ($list as $value) {
+           $listArr[$value['id']] = $value;
+        }
+
+        return $listArr;
+    }
+
+    public function getEmployeeLeaveListOvertime($employeeId, $year): array
+    {
+        $startDateTime = "{$year}-01-01 00:00:00";
+        $yearEndDT = new DateTime($startDateTime);
+        $yearEndDT->add(DateInterval::createFromDateString('1 year'));
+        $endDateTime = $yearEndDT->format('Y-m-d') . ' 00:00:00';
+
+        $list = Yii::app()->db->createCommand(
+            '
+              SELECT * FROM attendance_record
+              WHERE employee_id = :employee_id
+              AND leave_time >= :start_time
+              AND leave_time < :end_time
+              AND take = 11
+              ORDER BY leave_time DESC
+            '
+        )->bindValues([
+            ':employee_id' => $employeeId,
+            ':start_time' => $startDateTime,
+            ':end_time' => $endDateTime,
+        ])->queryAll();
+
+        $listArr = array();
+        foreach ($list as $value) {
+           $listArr[$value['id']] = $value;
+        }
+
+        return $listArr;
+    }
+
+    private $leaveMap = [
+        '1' => '普通傷病假',
+        '2' => '事假',
+        '3' => '公假',
+        '4' => '公傷病假',
+        '5' => '特別休假',
+        '6' => '分娩假含例假日',
+        '7' => '婚假',
+        '8' => '喪假',
+        '9' => '補休',
+        '10' => '生理假',
+        '11' => '加班',
+        '12' => '非請假(早退)',
+        '13' => '非請假(遲到加早退)',
+        '14' => '非請假(遲到)',
+        '15' => '非請假(忘記刷卡)',
+        '16' => '陪產假',
+        '17' => '流產假',
+        '18' => '產檢假',
+    ];
+
+    public function sendApproveMail($start_time, $end_time, $leave_hours, $id)
+    {
+        try {
+            $leave = Attendancerecord::model()->findByPk($id);
+            $emp = EmployeeORM::model()->findByPk($leave->employee_id);
+            $employee = new Employee(new EmployeeId($emp->id), $emp->onboard_date);
+            $year = date('Y', strtotime($leave->leave_time));
+            $agent = EmployeeORM::model()->findByPk($leave->agent);
+            $manager = EmployeeORM::model()->findByPk($leave->manager);
+
+            $employeeLeaveCalculator = new EmployeeLeaveCalculator();
+            $annualLeaveMinutes = $employeeLeaveCalculator->calcAnnualLeaveSummaryOnBoardDate(new DateTime(), $employee);
+
+            $attendanceRecordServ = new AttendancerecordService();
+            $tomorrow = new DateTime();
+            $tomorrow->add(DateInterval::createFromDateString('1 day'));
+            $appliedAnnualLeave = $attendanceRecordServ->summaryMinutesByPeriodOfTimeAndLeaveType(
+                $employee->getEmployeeId()->value(),
+                $employee->getOnBoardDate() . ' 00:00:00',
+                $tomorrow->format('Y-m-d 00:00:00'),
+                Attendance::ANNUAL_LEAVE
+            );
+
+            $personalLeaveAnnualMinutes = $employeeLeaveCalculator->personalLeaveAnnualMinutes();
+            $sickLeaveAnnualMinutes = $employeeLeaveCalculator->sickLeaveAnnualMinutes();
+
+            $commonLeaveStartDateTime = new DateTime("{$year}/01/01 00:00:00");
+            $commonLeaveStartDate = $commonLeaveStartDateTime->format('Y/m/d H:i:s');
+            $commonLeaveEndDateTime = new DateTime("{$year}/01/01 00:00:00");
+            $commonLeaveEndDateTime->add(DateInterval::createFromDateString('1 year'));
+            $commonLeaveEndDate = $commonLeaveEndDateTime->format('Y/m/d H:i:s');
+
+            $sickLeavedMins = $attendanceRecordServ->summaryMinutesByPeriodOfTimeAndLeaveType(
+                $employee->getEmployeeId()->value(),
+                $commonLeaveStartDate,
+                $commonLeaveEndDate,
+                Attendance::SICK_LEAVE
+            );
+
+            $personalLeavedMins = $attendanceRecordServ->summaryMinutesByPeriodOfTimeAndLeaveType(
+                $employee->getEmployeeId()->value(),
+                $commonLeaveStartDate,
+                $commonLeaveEndDate,
+                Attendance::PERSONAL_LEAVE
+            );
+
+            $publicAffairsLeaveMins = $attendanceRecordServ->summaryMinutesByPeriodOfTimeAndLeaveType(
+                $employee->getEmployeeId()->value(),
+                $commonLeaveStartDate,
+                $commonLeaveEndDate,
+                Attendance::PUBLIC_AFFAIRS_LEAVE
+            );
+
+            $occupationalSicknessLeaveMins = $attendanceRecordServ->summaryMinutesByPeriodOfTimeAndLeaveType(
+                $employee->getEmployeeId()->value(),
+                $commonLeaveStartDate,
+                $commonLeaveEndDate,
+                Attendance::OCCUPATIONAL_SICKNESS_LEAVE
+            );
+
+            $maternityLeaveMins = $attendanceRecordServ->summaryMinutesByPeriodOfTimeAndLeaveType(
+                $employee->getEmployeeId()->value(),
+                $commonLeaveStartDate,
+                $commonLeaveEndDate,
+                Attendance::MATERNITY_LEAVE
+            );
+
+            $maritalLeaveMins = $attendanceRecordServ->summaryMinutesByPeriodOfTimeAndLeaveType(
+                $employee->getEmployeeId()->value(),
+                $commonLeaveStartDate,
+                $commonLeaveEndDate,
+                Attendance::MARITAL_LEAVE
+            );
+
+            $funeralLeaveMins = $attendanceRecordServ->summaryMinutesByPeriodOfTimeAndLeaveType(
+                $employee->getEmployeeId()->value(),
+                $commonLeaveStartDate,
+                $commonLeaveEndDate,
+                Attendance::FUNERAL_LEAVE
+            );
+
+            $compensatoryLeavedMins = $attendanceRecordServ->summaryMinutesByPeriodOfTimeAndLeaveType(
+                $employee->getEmployeeId()->value(),
+                $commonLeaveStartDate,
+                $commonLeaveEndDate,
+                Attendance::COMPENSATORY_LEAVE
+            );
+
+            $menstrualLeaveMins = $attendanceRecordServ->summaryMinutesByPeriodOfTimeAndLeaveType(
+                $employee->getEmployeeId()->value(),
+                $commonLeaveStartDate,
+                $commonLeaveEndDate,
+                Attendance::MENSTRUAL_LEAVE
+            );
+
+            $paternityLeaveMins = $attendanceRecordServ->summaryMinutesByPeriodOfTimeAndLeaveType(
+                $employee->getEmployeeId()->value(),
+                $commonLeaveStartDate,
+                $commonLeaveEndDate,
+                Attendance::PATERNITY_LEAVE
+            );
+
+            $miscarriageLeaveMins = $attendanceRecordServ->summaryMinutesByPeriodOfTimeAndLeaveType(
+                $employee->getEmployeeId()->value(),
+                $commonLeaveStartDate,
+                $commonLeaveEndDate,
+                Attendance::MISCARRIAGE_LEAVE
+            );
+
+            $prenatalLeaveMins = $attendanceRecordServ->summaryMinutesByPeriodOfTimeAndLeaveType(
+                $employee->getEmployeeId()->value(),
+                $commonLeaveStartDate,
+                $commonLeaveEndDate,
+                Attendance::PRENATAL_LEAVE
+            );
+
+            $summary = [
+                [
+                    'category' => '普通傷病假',
+                    'leave_applied' => $sickLeavedMins / 60,
+                    'leave_available' => $sickLeaveAnnualMinutes / 60 - $sickLeavedMins / 60,
+                ],
+                [
+                    'category' => '事假',
+                    'leave_applied' => $personalLeavedMins / 60,
+                    'leave_available' => $personalLeaveAnnualMinutes / 60 - $personalLeavedMins / 60,
+                ],
+                [
+                    'category' => '公假',
+                    'leave_applied' => $publicAffairsLeaveMins / 60,
+                    'leave_available' => '-',
+                ],
+                [
+                    'category' => '公傷病假',
+                    'leave_applied' => $occupationalSicknessLeaveMins / 60,
+                    'leave_available' => '-',
+                ],
+                [
+                    'category' => '年假(特別休假)',
+                    'leave_applied' => $appliedAnnualLeave / 60,
+                    'leave_available' => $annualLeaveMinutes->minutesValue() / 60 - $appliedAnnualLeave / 60,
+                ],
+                [
+                    'category' => '分娩假含例假日',
+                    'leave_applied' => $maternityLeaveMins / 60,
+                    'leave_available' => '-',
+                ],
+                [
+                    'category' => '婚假',
+                    'leave_applied' => $maritalLeaveMins / 60,
+                    'leave_available' => '-',
+                ],
+                [
+                    'category' => '喪假',
+                    'leave_applied' => $funeralLeaveMins / 60,
+                    'leave_available' => '-',
+                ],
+                [
+                    'category' => '補休假',
+                    'leave_applied' => $compensatoryLeavedMins / 60,
+                    'leave_available' => '-',
+                ],
+                [
+                    'category' => '生理假',
+                    'leave_applied' => $menstrualLeaveMins / 60,
+                    'leave_available' => '-',
+                ],
+                [
+                    'category' => '陪產假',
+                    'leave_applied' => $paternityLeaveMins / 60,
+                    'leave_available' => '-',
+                ],
+                [
+                    'category' => '流產假',
+                    'leave_applied' => $miscarriageLeaveMins / 60,
+                    'leave_available' => '-',
+                ],
+                [
+                    'category' => '產檢假',
+                    'leave_applied' => $prenatalLeaveMins / 60,
+                    'leave_available' => '-',
+                ],
+            ];
+
+            $service = new AttendancerecordService();
+
+            if ($leave->take == 11) {
+                $subject = $emp->name . '(' . $emp->user_name . ') - 加班申請';
+
+                $body = "<h2>" . $subject . "</h2><br>" .
+                    "<table style='border: 1px solid black; border-style: collapse;'>
+                            <thead>
+                                <tr style='border: 1px solid black; padding: 10px;'>
+                                    <th style='border: 1px solid black; padding: 10px;'>申請日期</th>
+                                    <th style='border: 1px solid black; padding: 10px;'>事由</th>
+                                    <th style='border: 1px solid black; padding: 10px;'>請假日期</th>
+                                    <th style='border: 1px solid black; padding: 10px;'>時間</th>
+                                    <th style='border: 1px solid black; padding: 10px;'>申請時數</th>
+                                    <th style='border: 1px solid black; padding: 10px;'>審核狀態</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr style='border: 1px solid black; padding: 10px;'>
+                                    <td style='border: 1px solid black; padding: 10px;'>" . substr($leave->create_at, 0, 10) . "</td>
+                                    <td style='border: 1px solid black; padding: 10px;'>" . $leave->reason . "</td>
+                                    <td style='border: 1px solid black; padding: 10px;'>" . substr($leave->leave_time, 0, 10) . "</td>
+                                    <td style='border: 1px solid black; padding: 10px;'>" . $start_time . " - " . $end_time . "</td>
+                                    <td style='border: 1px solid black; padding: 10px;'>" . $leave_hours . "</td>
+                                    <td style='border: 1px solid black; padding: 10px;'>" . ($leave->status == 0 ? "未審核" : "已審核") . "</td>
+                                </tr>
+                            </tbody>
+                         </table>";
+            } else {
+                $subject = $emp->name . '(' . $emp->user_name . ') - 請假申請';
+
+                $body = "<h2>" . $subject . "</h2><br>" .
+                    "<table style='border: 1px solid black; border-style: collapse;'>
+                            <thead>
+                                <tr style='border: 1px solid black; padding: 10px;'>
+                                    <th style='border: 1px solid black; padding: 10px;'>申請日期</th>
+                                    <th style='border: 1px solid black; padding: 10px;'>假別</th>
+                                    <th style='border: 1px solid black; padding: 10px;'>事由</th>
+                                    <th style='border: 1px solid black; padding: 10px;'>請假日期</th>
+                                    <th style='border: 1px solid black; padding: 10px;'>時間</th>
+                                    <th style='border: 1px solid black; padding: 10px;'>申請時數</th>
+                                    <th style='border: 1px solid black; padding: 10px;'>工作交辦</th>
+                                    <th style='border: 1px solid black; padding: 10px;'>審核狀態</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr style='border: 1px solid black; padding: 10px;'>
+                                    <td style='border: 1px solid black; padding: 10px;'>" . substr($leave->create_at, 0, 10) . "</td>
+                                    <td style='border: 1px solid black; padding: 10px;'>" . $this->leaveMap[$leave->take] . "</td>
+                                    <td style='border: 1px solid black; padding: 10px;'>" . $leave->reason . "</td>
+                                    <td style='border: 1px solid black; padding: 10px;'>" . substr($leave->leave_time, 0, 10) . "</td>
+                                    <td style='border: 1px solid black; padding: 10px;'>" . $start_time . " - " . $end_time . "</td>
+                                    <td style='border: 1px solid black; padding: 10px;'>" . $leave_hours . "</td>
+                                    <td style='border: 1px solid black; padding: 10px;'>" . $leave->remark . "</td>
+                                    <td style='border: 1px solid black; padding: 10px;'>" . ($leave->status == 0 ? "未審核" : "已審核") . "</td>
+                                </tr>
+                            </tbody>
+                         </table>
+                         <br>
+                         <br>
+                         <table style='border: 1px solid black; border-style: collapse;'>
+                            <thead>
+                                <tr style='border: 1px solid black; padding: 10px;'>
+                                    <th style='border: 1px solid black; padding: 10px;'>假別</th>
+                                    <th style='border: 1px solid black; padding: 10px;'>已請時數(小時)</th>
+                                    <th style='border: 1px solid black; padding: 10px;'>可請時數(小時)</th>
+                                </tr>
+                            </thead>
+                            <tbody>";
+
+                foreach ($summary as $row) {
+                    $body .= "<tr style='border: 1px solid black; padding: 10px;'>";
+                    $body .= "<td style='border: 1px solid black; padding: 10px;'>" . $row['category'] . "</td>";
+                    $body .= "<td style='border: 1px solid black; padding: 10px;'>" . $row['leave_applied'] . "</td>";
+                    $body .= "<td style='border: 1px solid black; padding: 10px;'>" . $row['leave_available'] . "</td>";
+                    $body .= "</tr>";
+                }
+
+                $body .= "</tbody></table><br><br>";
+                $body .= "<table style='border: 1px solid black; border-style: collapse;'>
+                              <thead>
+                                  <tr style='border: 1px solid black; padding: 10px;'>
+                                      <th style='border: 1px solid black; padding: 10px;'>申請日期</th>
+                                      <th style='border: 1px solid black; padding: 10px;'>假別</th>
+                                      <th style='border: 1px solid black; padding: 10px;'>事由</th>
+                                      <th style='border: 1px solid black; padding: 10px;'>請假日期</th>
+                                      <th style='border: 1px solid black; padding: 10px;'>時間</th>
+                                      <th style='border: 1px solid black; padding: 10px;'>申請時數</th>
+                                      <th style='border: 1px solid black; padding: 10px;'>工作交辦</th>
+                                      <th style='border: 1px solid black; padding: 10px;'>審核狀態</th>
+                                  </tr>
+                              </thead>
+                         <tbody>";
+
+                $holidayList = $service->getEmployeeLeaveListHoliday($emp->id, $year);
+
+                $body .= "</tbody>";
+
+                foreach ($holidayList as $row) {
+                    $body .= "<tr style='border: 1px solid black; padding: 10px;'>";
+                    $body .= "<td style='border: 1px solid black; padding: 10px;'>" . substr($row['create_at'], 0, 10) . "</td>";
+                    $body .= "<td style='border: 1px solid black; padding: 10px;'>" . $this->leaveMap[$row['take']] . "</td>";
+                    $body .= "<td style='border: 1px solid black; padding: 10px;'>" . $row['reason'] . "</td>";
+                    $body .= "<td style='border: 1px solid black; padding: 10px;'>" . substr($row['leave_time'], 0, 10) . "</td>";
+                    $body .= "<td style='border: 1px solid black; padding: 10px;'>" . substr($row['start_time'], 11, 8) . " - " . substr($row['end_time'], 11, 8) . "</td>";
+                    $body .= "<td style='border: 1px solid black; padding: 10px;'>" . (float) $row['leave_minutes'] / 60 . "</td>";
+                    $body .= "<td style='border: 1px solid black; padding: 10px;'>" . $row['remark'] . "</td>";
+                    $body .= "<td style='border: 1px solid black; padding: 10px;'>" . ($row['status'] === 0 ? "未審核" : "已審核") . "</td>";
+                    $body .= "</tr>";
+                }
+
+                $body .= "</tbody></table>";
+            }
+
+            $inputs = array();
+            $inputs['subject'] = $subject;
+            $inputs['body'] = $body;
+            $inputs['to'] = $emp->email;
+            $inputs['agent'] = $agent == null ? '' : $agent->email;
+            $inputs['manager'] = $manager->email;
+
+            $mailService = new MailService();
+            $mailService->sendApproveMail($inputs);
+
+            return true;
+        } catch (Exception $e) {
+            Yii::log($e->getMessage(), CLogger::LEVEL_ERROR);
+            Yii::app()->session[Controller::ERR_MSG_KEY] = $e->getMessage();
+            return false;
+        }
     }
 }

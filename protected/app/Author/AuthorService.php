@@ -15,7 +15,17 @@ class AuthorService
         $countTotal = Yii::app()->db->createCommand('SELECT count(*) as search_count FROM author')->queryAll();
 
         if ($countTotal[0]['search_count'] > self::RESULT_LIMIT) {
-            return [];
+            $return_data = array();
+            $page = ceil($countTotal[0]['search_count']/self::RESULT_LIMIT);
+            for ($i=0; $i < $page; $i++) { 
+                $data = Yii::app()->db->createCommand('SELECT * FROM author limit '.(self::RESULT_LIMIT*$i).','.self::RESULT_LIMIT)->queryAll();
+                if($i != 0){
+                    $return_data = array_merge($return_data, $data);
+                }else{
+                    $return_data = $data;
+                }
+            }
+            return $return_data;
         }
 
         return Yii::app()->db->createCommand('SELECT * FROM author')->queryAll();

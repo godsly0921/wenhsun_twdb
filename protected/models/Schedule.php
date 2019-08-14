@@ -15,7 +15,7 @@
  * @property string $remark
  * @property string $builder
  * @property integer $builder_type
- * @property integer $canceler
+ * @property string $canceler
  * @property string $create_time
  * @property string $modify_time
  * @property integer $tobill
@@ -40,9 +40,10 @@ class Schedule extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('empolyee_id, store_id, in_out, class, start_time, end_time, status, builder, builder_type, create_time, modify_time', 'required'),
-			array('store_id, in_out, status, builder_type, canceler, tobill, canceler_type', 'numerical', 'integerOnly'=>true),
+			array('store_id, in_out, status, builder_type, tobill, canceler_type', 'numerical', 'integerOnly'=>true),
 			array('empolyee_id, builder', 'length', 'max'=>32),
 			array('class', 'length', 'max'=>2),
+			array('canceler', 'length', 'max'=>12),
 			array('remark', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
@@ -115,7 +116,7 @@ class Schedule extends CActiveRecord
 		$criteria->compare('remark',$this->remark,true);
 		$criteria->compare('builder',$this->builder,true);
 		$criteria->compare('builder_type',$this->builder_type);
-		$criteria->compare('canceler',$this->canceler);
+		$criteria->compare('canceler',$this->canceler,true);
 		$criteria->compare('create_time',$this->create_time,true);
 		$criteria->compare('modify_time',$this->modify_time,true);
 		$criteria->compare('tobill',$this->tobill);

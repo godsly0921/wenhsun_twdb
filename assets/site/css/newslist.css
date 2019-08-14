@@ -8,10 +8,10 @@
         border:5px solid #987413;        
     }
     .newsbox{
-        height: 300px;
+        height: 100%;
     }
     .newsleft{
-
+        top: 30px;
         height: 100%;
     }
     .newsright{
@@ -80,10 +80,10 @@
         border:10px solid #987413;
     }
     .newsbox{
-        height: 300px;
+        height: 100%;
     }
     .newsleft{
-
+        top: 30px;
         height: 100%;
     }
     .newsright{
@@ -149,6 +149,7 @@
       position: absolute;*/
       left:1px;
       bottom: 1px;
+      margin-top: 20px;
       color:white;
       float:left;
     }
@@ -156,7 +157,8 @@
         color: white;
         border:1px solid white;
         position: absolute;
-        right: 100px;
+        margin-bottom: 15px;
+        right: 10px;
         bottom: 4px;
         transition-duration: 0.7s;
     }

@@ -44,7 +44,7 @@
                 right: 'month,agendaDay,listWeek'
             },
             handleWindowResize:true,
-            defaultDate: '<?php echo date('Y-m-d');?>',
+            defaultDate: '<?= !isset($_COOKIE["calendar_defaultDate"])? date('Y-m-d'):$_COOKIE["calendar_defaultDate"];?>',
             navLinks: true, // can click day/week names to navigate views
             weekNumbers: true,
             weekends: true,
@@ -109,7 +109,7 @@
 
 <div class="row">
     <div class="title-wrap col-lg-12">
-        <h3 class="title-left">紀州庵兼差排班表</h3>
+        <h3 class="title-left">紀州庵排班表</h3>
     </div>
 </div>
 

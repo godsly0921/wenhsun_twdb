@@ -298,4 +298,42 @@ class MailService
             return false;
         }
     }
+
+    public function sendApproveMail($inputs)
+    {
+        try {
+            $mail = new PHPMailer();
+            $mail->IsSMTP();
+            $mail->SMTPAuth = true;
+            $mail->SMTPSecure = 'ssl';
+            $mail->Host = 'smtp.gmail.com';
+            $mail->Port = 465;
+            $mail->CharSet = 'utf-8';
+            $mail->Username = 'wenhsun0509@gmail.com';
+            $mail->Password = 'cute0921';
+            $mail->From = 'wenhsun0509@gmail.com';
+            $mail->FromName = '文訊雜誌社人資系統';
+            $mail->addAddress($inputs['to']);
+            if ($inputs['agent'] != '') {
+                $mail->addAddress($inputs['agent']);
+            }
+            $mail->addAddress($inputs['manager']);
+            $mail->addAddress('jenny@wenhsun.com.tw');
+            $mail->addAddress('pinkfloydbigman@gmail.com');
+            // $mail->addAddress('fdp.wenhsun@gmail.com');
+            $mail->IsHTML(true);
+
+            $mail->Subject = $inputs['subject'];
+            $mail->Body = $inputs['body'];
+
+            if ($mail->Send()) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (Exception $e) {
+            Yii::log(date('Y-m-d H:i:s') . " Email 02 error write exception {$e->getTraceAsString()}", CLogger::LEVEL_INFO);
+            return false;
+        }
+    }
 }

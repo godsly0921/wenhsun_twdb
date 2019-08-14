@@ -41,7 +41,7 @@ class NewsService
         $upload_image = $inputs['new_image'];
 
         if($upload_image['error']== 1){
-            $news->addError('save_fail', '上傳失敗，檔案超過2MB');
+            $news->addError('save_fail', '上傳失敗，檔案超過10MB');
             return $news;
         }
 
@@ -90,6 +90,10 @@ class NewsService
         $news->sort =  $inputs['sort'];
 
         $upload_image = $inputs['new_image'];
+        if($upload_image['error']== 1){
+            $news->addError('save_fail', '上傳失敗，檔案超過10MB');
+            return $news;
+        }
         if($upload_image['name']!==""){
             $uuid_name = date("YmdHis").uniqid();
             $tmp = explode('.',$upload_image['name']);

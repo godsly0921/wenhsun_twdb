@@ -10,10 +10,24 @@ use Wenhsun\Leave\Domain\Service\EmployeeLeaveCalculator;
 class EmployeeController extends Controller
 {
     private $leaveMap = [
-        '1' => '病假',
+        '1' => '普通傷病假',
         '2' => '事假',
-        '5' => '特休假',
-        '9' => '補休假',
+        '3' => '公假',
+        '4' => '公傷病假',
+        '5' => '特別休假',
+        '6' => '分娩假含例假日',
+        '7' => '婚假',
+        '8' => '喪假',
+        '9' => '補休',
+        '10' => '生理假',
+        '11' => '加班',
+        '12' => '非請假(早退)',
+        '13' => '非請假(遲到加早退)',
+        '14' => '非請假(遲到)',
+        '15' => '非請假(忘記刷卡)',
+        '16' => '陪產假',
+        '17' => '流產假',
+        '18' => '產檢假',
     ];
 
     protected function needLogin(): bool
@@ -119,20 +133,53 @@ class EmployeeController extends Controller
         ];
 
         $serv = new AttendancerecordService();
-        $list = $serv->getEmployeeLeaveList($employee->getEmployeeId()->value(), $year);
+        $holidayList = $serv->getEmployeeLeaveListHoliday($employee->getEmployeeId()->value(), $year);
+        $overtimeList = $serv->getEmployeeLeaveListOvertime($employee->getEmployeeId()->value(), $year);
 
-        if (!empty($list)) {
-            foreach ($list as $idx => $row) {
+        if (!empty($holidayList)) {
+            foreach ($holidayList as $idx => $row) {
                 if (isset($this->leaveMap[$row['take']])) {
-                    $list[$idx]['take'] = $this->leaveMap[$row['take']];
+                    $holidayList[$idx]['take'] = $this->leaveMap[$row['take']];
+                }
+            }
+        }
+
+        if (!empty($overtimeList)) {
+            foreach ($overtimeList as $idx => $row) {
+                if (isset($this->leaveMap[$row['take']])) {
+                    $overtimeList[$idx]['take'] = $this->leaveMap[$row['take']];
                 }
             }
         }
 
         $this->render('list', [
-            'list' => $list,
+            'holidayList' => $holidayList,
+            'overtimeList' => $overtimeList,
             'sum' => $sum,
             'year' => $year,
+            'name' => $employeeOrmEnt->name . '(' . $employeeOrmEnt->user_name . ')'
         ]);
     }
+
+    public function actionView() {
+        $attendanceRecord = Attendancerecord::model()->findByPk(filter_input(INPUT_GET, 'id'));
+        $attendanceRecord->take = $this->leaveMap[$attendanceRecord->take];
+        $employeeService = new EmployeeService();
+        $empArr = $employeeService->getEmployeeNameArray();
+        if ($attendanceRecord->agent != '') {
+            $attendanceRecord->agent = $empArr[$attendanceRecord->agent];
+        }
+        if ($attendanceRecord->manager != '') {
+            $attendanceRecord->manager = $empArr[$attendanceRecord->manager];
+        }
+
+        $emp = EmployeeORM::model()->findByPk($attendanceRecord->employee_id);
+
+        $this->render('view', [
+            'record' => $attendanceRecord,
+            'name' => $empArr[$attendanceRecord->employee_id],
+            'account' => $emp->user_name
+        ]);
+    }
+
 }
