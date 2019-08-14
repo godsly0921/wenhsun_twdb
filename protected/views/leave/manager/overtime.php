@@ -85,15 +85,6 @@
                                     <option value="23:30">23:30</option>
                                 </select>
                             </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="date">加班時間訖</label>
-                            <div class="col-md-2 xdisplay_inputx form-group has-feedback">
-                                <input type="text" class="form-control has-feedback-left" id="end_date" name="end_date" aria-describedby="inputSuccess2Status" readonly>
-                                <span class="fa fa-calendar-o form-control-feedback left" aria-hidden="true"></span>
-                                <span id="inputSuccess2Status" class="sr-only">(success)</span>
-                            </div>
                             <div class="col-md-2">
                                 <select id="end_time" name="end_time" class="form-control" onChange="checkTime();">
                                     <option value="18:30">18:30</option>
@@ -108,12 +99,25 @@
                                     <option value="23:00">23:00</option>
                                     <option value="23:30">23:30</option>
                                     <option value="23:59">23:59</option>
+                                    <option value="00:30">00:30</option>
+                                    <option value="01:00">01:00</option>
+                                    <option value="01:30">01:30</option>
+                                    <option value="02:00">02:00</option>
+                                    <option value="02:30">02:30</option>
+                                    <option value="03:00">03:00</option>
+                                    <option value="03:30">03:30</option>
+                                    <option value="04:00">04:00</option>
+                                    <option value="04:30">04:30</option>
+                                    <option value="05:00">05:00</option>
                                 </select>
                             </div>
                         </div>
 
+                        <input type="hidden" class="form-control has-feedback-left" id="end_date" name="end_date" aria-describedby="inputSuccess2Status" readonly>
+
                         <input type="hidden" id="days" name="days" value="1">
-                        <input type="hidden" id="last_hours" name="last_hours">
+                        <input type="hidden" id="first_hours" name="first_hours" value="0.5">
+                        <input type="hidden" id="last_hours" name="last_hours" value="0.5">
 
                         <div class="form-group">
                             <label class="control-label col-md-3 col-sm-3 col-xs-12">加班時數</label>
@@ -167,19 +171,31 @@
     });
 
     function checkTime() {
-        var start = moment($("#start_date").val() + " " + $("#start_time").val());
-        var end = moment($("#end_date").val() + " " + $("#end_time").val());
+        var start = moment($("#start_date").val() + " " + $("#start_time").val(), "YYYY/MM/DD HH:mm");
+        var end = moment($("#end_date").val() + " " + $("#end_time").val(), "YYYY/MM/DD HH:mm");
         var diff = 0;
 
-        $("#days").val(end.diff(start, 'days') + 1);
+        if (end.format("H") <= 5) {
+            end.add(1, 'days');
+            $("#end_date").val(end.format("YYYY/MM/DD"));
+            $("#days").val(2);
+        }
 
         if (start >= end) {
             alert("請確認加班時間是否正確");
         } else {
-            if ($("#end_time").val() === "23:59") {
-                diff = Math.round(end.diff(start, "hours", true) * 10) / 10;
+            if ($("#start_date").val() === $("#end_date").val()) {
+                if ($("#end_time").val() === "23:59") {
+                    diff = Math.round(end.diff(start, "hours", true) * 10) / 10;
+                } else {
+                    diff = end.diff(start, "hours", true);
+                }
             } else {
-                diff = end.diff(start, "hours", true);
+                var firstDay = moment($("#start_date").val() + " " + "23:59", "YYYY/MM/DD HH:mm");
+                diff = Math.round(firstDay.diff(start, "hours", true) * 10) / 10;
+                $("#first_hours").val(diff);
+                var lastDay = moment(end.format("YYYY/MM/DD") + " " + "00:00", "YYYY/MM/DD HH:mm");
+                diff += end.diff(lastDay, "hours", true);
             }
 
             $("#leave_minutes").val(diff);

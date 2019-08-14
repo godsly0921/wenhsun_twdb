@@ -128,7 +128,8 @@
                         </div>
 
                         <input type="hidden" id="days" name="days" value="1">
-                        <input type="hidden" id="last_hours" name="last_hours">
+                        <input type="hidden" id="first_hours" name="first_hours" value="0.5">
+                        <input type="hidden" id="last_hours" name="last_hours" value="0.5">
 
                         <div class="form-group">
                             <label class="control-label col-md-3 col-sm-3 col-xs-12">請假時數</label>
@@ -209,8 +210,8 @@
             $("#end_date").val($("#start_date").val());
         }
 
-        var start = moment($("#start_date").val() + " " + $("#start_time").val());
-        var end = moment($("#end_date").val() + " " + $("#end_time").val());
+        var start = moment($("#start_date").val() + " " + $("#start_time").val(), "YYYY/MM/DD HH:mm");
+        var end = moment($("#end_date").val() + " " + $("#end_time").val(), "YYYY/MM/DD HH:mm");
         var diff = 0;
 
         $("#days").val(end.diff(start, 'days') + 1);
@@ -224,11 +225,22 @@
                 } else {
                     diff = end.diff(start, "hours", true);
                 }
+                $("#first_hours").val(diff);
             } else {
                 for (var i = 1; i <= end.diff(start, "days"); i++) {
-                    diff += 8;
+                    if (i == 1) {
+                        var firstDay = moment($("#start_date").val() + " " + "18:00", "YYYY/MM/DD HH:mm");
+                        if ($("#start_time").val() <= "12:00" && $("#end_time").val() >= "13:00") {
+                            diff = firstDay.diff(start, "hours", true) - 1;
+                        } else {
+                            diff = firstDay.diff(start, "hours", true);
+                        }
+                        $("#first_hours").val(diff);
+                    } else {
+                        diff += 8;
+                    }
                 }
-                var lastDay = moment($("#end_date").val() + " " + "09:00");
+                var lastDay = moment($("#end_date").val() + " " + "09:00", "YYYY/MM/DD HH:mm");
                 if ($("#end_time").val() !== "18:00") {
                     if ($("#end_time").val() >= "13:00") {
                         diff += end.diff(lastDay, "hours", true) - 1;
