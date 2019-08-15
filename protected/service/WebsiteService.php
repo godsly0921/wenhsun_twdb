@@ -30,7 +30,7 @@ class WebsiteService
         $all_ad = Yii::app()->db->createCommand()
         ->select('*')
         ->from('home_ad ad')
-        ->leftjoin('single s', 'ad.single_id = s.single_id')
+        ->join('single s', 'ad.single_id = s.single_id')
         ->order('ad.sort asc')
         ->queryAll();
         return $all_ad;
