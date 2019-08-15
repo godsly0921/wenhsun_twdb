@@ -23,9 +23,9 @@
             </thead>
             <tbody> 
             <?php foreach($photograph_data as $key => $value){ ?>
-                <tr class="gradeC" role="row">
+                <tr class="" role="row">
                     <td>
-                        <img src="<?=DOMAIN?>image_storage/P/<?=$value['single_id']?>.jpg">
+                        <img src="<?php echo Yii::app()->createUrl('/'); ?>/image_storage/P/<?=$value['single_id']?>.jpg">
                         <br>
                         <center>圖片編號：<?=$value['single_id']?></center>
                     </td>
@@ -35,7 +35,7 @@
                     <td><?=round($value['percent'],2)?> %</td>
                     <td><?=$value['create_time']?></td>                    
                     <td>
-                        <a class="oprate-right" href="<?php echo Yii::app()->createUrl('photograph/update/') ?>/<?=$value['single_id']?>">
+                        <a class="oprate-right" href='<?php echo Yii::app()->createUrl('photograph/update/') ?>/<?=$value['single_id']?>'>
                             <i class="fa fa-pencil-square-o fa-lg"></i>
                         </a>
                         <a
@@ -53,13 +53,15 @@
 <script src="<?php echo Yii::app()->request->baseUrl;?>/assets/admin/ext/js/dataTables.bootstrap.min.js"></script>
 <script>
     $(document).ready(function() {
-        $('#specialcaseTable').DataTable( {
+        var table = $('#specialcaseTable').DataTable( {
             "scrollX": true,
+            "stateSave" : true,
             "lengthChange": false,
             "oLanguage": {
                 "oPaginate": {"sFirst": "第一頁", "sPrevious": "上一頁", "sNext": "下一頁", "sLast": "最後一頁"},
                 "sEmptyTable": "無任何聯繫資料"
-            }
+            },
+            "order": [[ 1, "desc" ]],
         } );
     } );
 </script>

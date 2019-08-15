@@ -191,20 +191,22 @@
 	    			<div class="col-lg-1">依時代</div>
 	    			<div class="col-lg-11"><input id="filming_date" type="text"></div>
 	    		</div>
-	    		<div class="row my-4">
-	    			<div class="col-lg-1">依作品</div>
-		    		<div class="col-lg-11">
-		    			<?php foreach ($distinct_object_name as $key => $value) {?>
-		    				<div class="d-inline-block">
-			    				<div class="tiffany_checkbox">
-		                            <input type="checkbox" class="object_name" name="object_name" value="<?=$value['distinct_object_name']?>" <?=isset($_GET["object_name"]) && in_array($value['distinct_object_name'],explode(",",$_GET["object_name"]))?"checked":""?> onchange="adv_checkbox(this)">
-		                            <span class="checkmark"></span>		                            
+	    		<?php if($distinct_object_name){?>
+		    		<div class="row my-4">
+		    			<div class="col-lg-1">依作品</div>
+			    		<div class="col-lg-11">
+			    			<?php foreach ($distinct_object_name as $key => $value) {?>
+			    				<div class="d-inline-block">
+				    				<div class="tiffany_checkbox">
+			                            <input type="checkbox" class="object_name" name="object_name" value="<?=$value['distinct_object_name']?>" <?=isset($_GET["object_name"]) && in_array($value['distinct_object_name'],explode(",",$_GET["object_name"]))?"checked":""?> onchange="adv_checkbox(this)">
+			                            <span class="checkmark"></span>		                            
+			                        </div>
+			                        <div class="d-inline-block mx-2"><?=$value['distinct_object_name']?></div>
 		                        </div>
-		                        <div class="d-inline-block mx-2"><?=$value['distinct_object_name']?></div>
-	                        </div>
-		    			<?php }?>		    			
-		    		</div>
-		    	</div>
+			    			<?php }?>		    			
+			    		</div>
+			    	</div>
+		    	<?php }?>
 	    		<div class="row my-4">
 	    			<div class="col-lg-1">依類別</div>
 	    			<div class="col-lg-11">
@@ -280,7 +282,7 @@
 	}
 
 	function create_image(value){
-		$html = '<div onclick="open_image_info(this,\''+value.single_id+'\')"><img src="<?=DOMAIN.PHOTOGRAPH_STORAGE_URL?>'+value.single_id+'.jpg"><div>';
+		$html = '<div onclick="open_image_info(this,\''+value.single_id+'\')"><img src="<?= Yii::app()->createUrl('/'). "/" .PHOTOGRAPH_STORAGE_URL?>'+value.single_id+'.jpg"><div>';
         $('#image_result').append($html);
 	}
 

@@ -130,6 +130,12 @@
                             </div>
                         </div>
                         <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12">圖片作者</label>
+                            <div class="col-md-9 col-sm-9 col-xs-12">
+                                <input id="author" type="text" class="tags form-control" name="author" value="<?=$photograph_data['photograph_info']['author']?>" />
+                            </div>
+                        </div>
+                        <div class="form-group">
                             <label class="control-label col-md-3 col-sm-3 col-xs-12">關鍵字</label>
                             <div class="col-md-9 col-sm-9 col-xs-12">
                                 <input id="keywords" type="text" class="tags form-control" name="keyword" value="<?=$photograph_data['photograph_info']['keyword']?>" />
@@ -252,6 +258,9 @@
             $('#keywords').tagsInput({
                 width: 'auto'
             }); 
+            $('#author').tagsInput({
+                width: 'auto'
+            }); 
         }
         $('#filming_date').daterangepicker({
             singleDatePicker: true,
@@ -300,7 +309,7 @@
                 success:function(data){
                     result = JSON.parse(data)
                     if(result.status == true){
-                        location.reload();
+                        window.location = '<?= Yii::app()->createUrl('photograph/list'); ?>';
                     }else{
                         alert('更新失敗');
                     }
