@@ -16,7 +16,11 @@ class SiteService
         // 關鍵字搜尋
         if( $keyword != '' ){
             $explode_keyword = explode(',', $keyword);
-            $store_filter['keyword'] = array( '$all' => $explode_keyword ); 
+            //$store_filter['keyword'] = array( '$all' => $explode_keyword ); 
+            $store_filter['$or'] = array(
+                array('keyword'=>array( '$in' => $explode_keyword )),
+                array('author'=>array( '$in' => $explode_keyword ))
+            );
         }
         // 分類搜尋
         if( $category_id != '' ){
@@ -98,7 +102,7 @@ class SiteService
         ->from('single')
         ->where('copyright=:copyright and publish=:publish', array(':copyright'=>1,':publish'=>1))
         ->queryAll();
-        if($filming_date_range){
+        if($filming_date_range && $filming_date_range[0]['min_filming_date'] != NULL && $filming_date_range[0]['max_filming_date'] != NULL){
             if(($filming_date_range[0]['min_filming_date']%10)!=0){
                 $min_year = $filming_date_range[0]['min_filming_date']-($filming_date_range[0]['min_filming_date']%10);
             }else{
@@ -110,6 +114,9 @@ class SiteService
             }else{
                 $max_year = $filming_date_range[0]['max_filming_date'];
             }
+        }else{
+            $min_year = 1911;
+            $max_year = date('Y');
         }
         $filming_date_range = array();
         if($min_year != $max_year){

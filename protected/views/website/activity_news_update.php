@@ -71,6 +71,7 @@ unset( Yii::app()->session['success_msg'] );
                         <input type="file" class="form-control-file" id="image" name="image" value=""onchange="checkImage(this)">
                     <?php endif; ?>
                 </div>
+                <div class="col-sm-4"><span style="color:red;">975*500</span></div>
             </div>
             <div class="form-group">
                 <label class="col-sm-2 control-label">上下架:</label>

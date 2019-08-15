@@ -10,7 +10,7 @@
  * @property integer $dpi
  * @property string $color
  * @property integer $direction
- * @property integer $author_id
+ * @property string $author
  * @property integer $photo_source
  * @property string $category_id
  * @property string $filming_date
@@ -50,15 +50,15 @@ class Single extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('photo_name, ext, create_time, create_account_id', 'required'),
-			array('dpi, direction, author_id, photo_source, store_status, index_limit, original_limit, photo_limit, publish, copyright, create_account_id', 'numerical', 'integerOnly'=>true),
+			array('dpi, direction, photo_source, store_status, index_limit, original_limit, photo_limit, publish, copyright, create_account_id', 'numerical', 'integerOnly'=>true),
 			array('photo_name, category_id, filming_location, filming_name, object_name', 'length', 'max'=>100),
 			array('ext', 'length', 'max'=>6),
 			array('color', 'length', 'max'=>12),
-			array('people_info', 'length', 'max'=>256),
+			array('author, people_info', 'length', 'max'=>256),
 			array('filming_date, keyword, description, memo1, memo2', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('single_id, photo_name, ext, dpi, color, direction, author_id, photo_source, category_id, filming_date, filming_location, filming_name, store_status, people_info, object_name, keyword, index_limit, original_limit, photo_limit, description, publish, copyright, memo1, memo2, create_time, create_account_id', 'safe', 'on'=>'search'),
+			array('single_id, photo_name, ext, dpi, color, direction, author, photo_source, category_id, filming_date, filming_location, filming_name, store_status, people_info, object_name, keyword, index_limit, original_limit, photo_limit, description, publish, copyright, memo1, memo2, create_time, create_account_id', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -85,7 +85,7 @@ class Single extends CActiveRecord
 			'dpi' => '解析度',
 			'color' => '色彩',
 			'direction' => '圖片方向( 垂直V=1，水平H=2，正方S=3 )',
-			'author_id' => '作者編號',
+			'author' => '作者名稱',
 			'photo_source' => '入藏來源',
 			'category_id' => '照片類型( 編號 )',
 			'filming_date' => '拍攝日期',
@@ -132,7 +132,7 @@ class Single extends CActiveRecord
 		$criteria->compare('dpi',$this->dpi);
 		$criteria->compare('color',$this->color,true);
 		$criteria->compare('direction',$this->direction);
-		$criteria->compare('author_id',$this->author_id);
+		$criteria->compare('author',$this->author,true);
 		$criteria->compare('photo_source',$this->photo_source);
 		$criteria->compare('category_id',$this->category_id,true);
 		$criteria->compare('filming_date',$this->filming_date,true);

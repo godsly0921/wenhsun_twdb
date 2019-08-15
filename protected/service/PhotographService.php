@@ -2,7 +2,7 @@
 class PhotographService{
     //找出所有的圖片 - 圖片列表
 	public function findAllPhotograph(){
-        $sql = "SELECT *,((select count(*) from image_queue where s.single_id=single_id and queue_status=1)/(select count(*) from image_queue where s.single_id=single_id))*100 as percent FROM `single` s";
+        $sql = "SELECT *,((select count(*) from image_queue where s.single_id=single_id and queue_status=1)/(select count(*) from image_queue where s.single_id=single_id))*100 as percent FROM `single` s order by single_id desc";
         $model = Yii::app()->db->createCommand($sql)->queryAll();
         if(count($model)!=0){
             return $model;
@@ -47,13 +47,14 @@ class PhotographService{
                     $txt = $category_value['parent_name'] . ' => ' . $category_value['child_name'];
                     array_push($category, $txt);
                 }
-                $data['image'] = DOMAIN . 'image_storage/S/' . $value['single_id'] . '.jpg';
+                $data['image'] = Yii::app()->createUrl('/') . '/image_storage/S/' . $value['single_id'] . '.jpg';
                 $data['photograph_info'] = array(
                     'object_name' => $value['object_name'],
                     'photo_name' => $value['photo_name'],
                     'single_id' => $value['single_id'],
                     'description' => $value['description'],
                     'people_info' => $value['people_info'],
+                    'author' => $value['author'],
                     'filming_date' => $value['filming_date'],
                     'filming_location' => $value['filming_location'],
                     'filming_name' => $value['filming_name'],
@@ -167,6 +168,7 @@ class PhotographService{
     	}
     	if($single->save()){
             $update_find = array('single_id'=>$single_id);
+            $input['author'] = explode(',', $single->author);
             $input['keyword'] = explode(',', $single->keyword);
             $input['category_id'] = explode(',', $single->category_id);
             $update_input = array('$set' => $input);
@@ -188,6 +190,7 @@ class PhotographService{
         $operationlogService = new OperationlogService();       
         Single::model()->updateAll($input, 'single_id in('.$single_id.')');
         $update_find = array('single_id'=> array('$in'=>explode(',',$single_id)));
+        $input['author'] = explode(',', $input['author']);
         $input['category_id'] = explode(',', $input['category_id']);
         $input['keyword'] = explode(',', $input['keyword']);
         $update_input = array('$set' => $input);

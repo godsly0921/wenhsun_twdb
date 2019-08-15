@@ -104,6 +104,13 @@
                       </div>
                     </div>
                     <div class="form-group">
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="single_cal2">作者名稱
+                      </label>
+                      <div class="col-md-9 col-sm-9 col-xs-12">
+                        <input id="author" type="text" class="tags form-control" name="author" value="" />
+                      </div>
+                    </div>
+                    <div class="form-group">
                       <label class="control-label col-md-3 col-sm-3 col-xs-12" for="single_cal2">攝影日期
                       </label>
                       <div class="col-md-9 col-sm-9 col-xs-12">
@@ -300,6 +307,9 @@ $(document).ready(function () {
   var update_single_ids = '';
   if(typeof $.fn.tagsInput !== 'undefined'){        
     $('#keywords').tagsInput({
+      width: 'auto'
+    }); 
+    $('#author').tagsInput({
       width: 'auto'
     }); 
   }

@@ -1,0 +1,1 @@
+ALTER TABLE `single` CHANGE `author_id` `author` VARCHAR(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '作者名稱';

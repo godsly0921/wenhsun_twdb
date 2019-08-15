@@ -16,6 +16,7 @@ class SiteController extends CController{
     }
 
     public function ActionFindPhoto(){
+
         $limit = self::PERPAGE;
         $keyword = isset($_GET["keyword"])?$_GET["keyword"]:"";
         $page = isset($_GET["page"])?$_GET["page"]:"";
