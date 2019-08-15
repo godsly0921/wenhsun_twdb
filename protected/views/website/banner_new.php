@@ -61,6 +61,7 @@ unset( Yii::app()->session['success_msg'] );
                 <div class="col-sm-5">
                     <input type="file" class="form-control-file" id="image" name="image" placeholder="請上傳輪播圖片" value="" required onchange="checkImage(this)">
                 </div>
+                <div class="col-sm-4"><span style="color:red;">圖片長寬需為1170*400</span></div>
             </div>
             <div class="form-group">
                 <div class="col-sm-offset-2 col-sm-10">

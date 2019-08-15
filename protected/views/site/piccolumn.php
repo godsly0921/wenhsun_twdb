@@ -39,7 +39,7 @@
 		foreach ($piccolumn_date as $key => $value) {?>
 			<div class="row my-4">
 				<div class="col-lg-4 text-center">
-					<img src="<?php echo Yii::app()->createUrl('/'); ?><?=$value['pic']?>">
+					<img src="<?php echo Yii::app()->createUrl('/'); ?><?=$value['pic']?>" class="w-100">
 				</div>
 				<div class="col-lg-8">
 					<div><h4 class="title_color"><?=$value['title']?></h4></div>

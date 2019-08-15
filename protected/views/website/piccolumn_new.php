@@ -35,8 +35,9 @@ unset( Yii::app()->session['success_msg'] );
             <div class="form-group row">
                 <label class="col-sm-2 control-label">標題小圖:</label>
                 <div class="col-sm-10">
-                    <input type="file" class="form-control-file" id="pic" name="pic" required value="">
+                    <input type="file" class="form-control-file" id="pic" name="pic" onchange="checkImage(this)" required value="">
                 </div>
+                <div class="col-sm-4"><span style="color:red;">圖片長寬需為900*500</span></div>
             </div>
         	<div class="form-group row">
                 <label class="col-sm-2 control-label">標題:</label>
@@ -188,7 +189,22 @@ unset( Yii::app()->session['success_msg'] );
 <script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/gentelella/vendors/bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
 <script type="text/javascript">
 	var search_result = select_single = '';
-
+    function checkImage(image){
+        var file = image.files[0];
+        var _URL = window.URL || window.webkitURL;
+        var maxwidth = 900;
+        var maxheight = 500;
+        img = new Image();
+        img.src = _URL.createObjectURL(file);
+        img.onload = function() {
+           imgwidth = this.width;
+           imgheight = this.height;
+           if(imgwidth != maxwidth && imgheight != maxheight){
+            alert('圖片長寬不符合規定\n圖片尺寸必需是 => ' + maxwidth + ' X ' + maxheight);
+            $('#image').val('');
+           }
+        }
+    }
 	function init_datatable(){
 		search_result = $('#search_single_result').DataTable( {
             "lengthChange": false,

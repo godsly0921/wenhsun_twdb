@@ -38,11 +38,13 @@ unset( Yii::app()->session['success_msg'] );
                     <?php if ($piccolumn_data->pic !== ''):;?>
                         <input class="form-control" id="pic" name="pic_old" type="text" value="<?php echo ($piccolumn_data->pic !== NULL) ? $piccolumn_data->pic : '' ?>" readonly>
                         <br>
+                        <div><span style="color:red;">圖片長寬需為900*500</span></div>
                         <input type="file" class="form-control-file" id="pic" name="pic" value="<?php echo ($piccolumn_data->pic !== NULL)?$piccolumn_data->pic:'' ?>">
                         <br>
                         <img id="image_pic" src="<?=Yii::app()->createUrl('/') . $piccolumn_data->pic?>" max-width="100%" max-height=100%></td>
                     <?php else:; ?>
                         <input type="file" class="form-control-file" id="pic" name="pic" value="">
+                        <div><span style="color:red;">圖片長寬需為900*500</span></div>
                     <?php endif; ?>
                 </div>
             </div>

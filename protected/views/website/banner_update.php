@@ -66,6 +66,7 @@ unset( Yii::app()->session['success_msg'] );
                         <input type="file" class="form-control-file" id="image" name="image" value="" required onchange="checkImage(this)">
                     <?php endif; ?>
                 </div>
+                <div class="col-sm-4"><span style="color:red;">圖片長寬需為1170*400</span></div>
             </div>
             <div class="form-group">
                 <div class="col-sm-offset-2 col-sm-10">
