@@ -302,6 +302,7 @@ class PhotographService{
                 if(file_exists($filename))
                     unlink($filename);
             }
+            Imagequeue::model()->deleteAllByAttributes(array( 'single_id'=>$single_id,"queue_status"=>0 ));
             Singlesize::model()->deleteAllByAttributes(array( 'single_id'=>$single_id ));
             $mongo = new Mongo();
             $delete_find = array('single_id'=>$single_id);
