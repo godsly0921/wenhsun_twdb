@@ -112,7 +112,7 @@
                       <label class="control-label col-md-3 col-sm-3 col-xs-12" for="filming_date">攝影年份
                       </label>
                       <div class="col-md-9 col-sm-9 col-xs-12">
-                        <input type="text" class="form-control has-feedback-left" id="filming_date" name="filming_date" placeholder="攝影日期" aria-describedby="inputSuccess2Status2">
+                        <input type="text" class="form-control has-feedback-left" id="filming_date" name="filming_date" placeholder="攝影年份" aria-describedby="inputSuccess2Status2">
                         <span class="fa fa-calendar-o form-control-feedback left" aria-hidden="true"></span>
                         <span id="inputSuccess2Status2" class="sr-only">(success)</span>
                       </div>
