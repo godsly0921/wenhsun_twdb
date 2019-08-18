@@ -169,7 +169,6 @@ class MailService
         try {
             // 管理者信箱
             $admin_email = $this->findAllEmail();
-
             $mail = new PHPMailer();
             $mail->IsSMTP();
             $mail->SMTPAuth = true;
@@ -196,7 +195,7 @@ class MailService
                     . nl2br($inputs["new_content"]) . '<br><br>' .
                     '請妥善處理，謝謝。<br><br>' .
                     '文訊雜誌社人資系統敬啟<br><br>' .
-                    '<a href="'.ROOT_HTTP.Yii::app()->createUrl('news/download').'?id='.$inputs['id'].'">請下載附件</a><br>'.
+                    '<a href="'.Yii::app()->createUrl('news/download').'?id='.$inputs['id'].'">請下載附件</a><br>'.
                     '備註：此信箱為公告用信箱，請勿回信，若有疑問，請洽HR。謝謝。</p>';
 
             }elseif(empty($inputs["new_image"])) {
