@@ -500,5 +500,13 @@ class SiteController extends CController{
     public function ActionMy_record() {
         $this->render('my_record');
     }
+
+    public function ActionPrivacy(){
+        $this->render('privacy');
+    }
+
+    public function ActionMember_rule(){
+        $this->render('member_rule');
+    }
 }
 ?>
