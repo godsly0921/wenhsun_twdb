@@ -51,7 +51,7 @@
                         <div class="form-group">
                             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="date">日期</label>
                             <div class="col-md-3 col-sm-3 col-xs-6">
-                                <input type="text" id="leave_time" name="leave_time" class="form-control col-md-7 col-xs-12" value="<?= $record->day ?>" readonly>
+                                <input type="text" id="leave_time" name="leave_time" class="form-control col-md-7 col-xs-12" value="<?= substr($record->start_time, 0, 10) ?>" readonly>
                             </div>
                             <div class="col-md-3 col-sm-3 col-xs-6">
                                 <input type="text" id="time" name="time" class="form-control col-md-7 col-xs-12" value="<?= substr($record->start_time, 11, 5) . ' - ' . substr($record->end_time, 11, 5) ?>" readonly>
