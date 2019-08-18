@@ -1,7 +1,5 @@
-<!-- bootstrap-daterangepicker -->
-<link href="<?php echo Yii::app()->request->baseUrl; ?>/assets/gentelella/vendors/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
-<!-- bootstrap-datetimepicker -->
-<link href="<?php echo Yii::app()->request->baseUrl; ?>/assets/gentelella/vendors/bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.css" rel="stylesheet">
+<!-- bootstrap-datepicker -->
+<link href="<?php echo Yii::app()->request->baseUrl; ?>/assets/css/bootstrap-datepicker.css" rel="stylesheet"/>
 <!-- Switchery -->
 <link href="<?php echo Yii::app()->request->baseUrl; ?>/assets/gentelella/vendors/switchery/dist/switchery.min.css" rel="stylesheet">
 <style type="text/css">
@@ -241,11 +239,8 @@
         </div>
     </div>
 </div>
-<!-- bootstrap-daterangepicker -->
-<script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/gentelella/vendors/moment/min/moment.min.js"></script>
-<script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/gentelella/vendors/bootstrap-daterangepicker/daterangepicker.js"></script>
-<!-- bootstrap-datetimepicker -->    
-<script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/gentelella/vendors/bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
+<!-- bootstrap-datepicker -->
+<script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/bootstrap-datepicker.js"></script>
 <!-- jQuery Tags Input -->
 <script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/gentelella/vendors/jquery.tagsinput/src/jquery.tagsinput.js"></script>
 <script src="<?php echo Yii::app()->request->baseUrl;?>/assets/admin/ext/js/jquery.dataTables.min.js"></script>
@@ -254,6 +249,7 @@
 <script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/gentelella/vendors/switchery/dist/switchery.min.js"></script>
 <script>
     $(document).ready(function() {
+
         if(typeof $.fn.tagsInput !== 'undefined'){        
             $('#keywords').tagsInput({
                 width: 'auto'
@@ -262,12 +258,10 @@
                 width: 'auto'
             }); 
         }
-        $('#filming_date').daterangepicker({
-            singleDatePicker: true,
-            singleClasses: "picker_2",
-            locale: {
-                format: 'YYYY-MM-DD'
-            }
+        $("#filming_date").datepicker({
+            format: "yyyy",
+            viewMode: "years", 
+            minViewMode: "years"
         });
         $('#single_size_price_button').click(function(){
             var single_size_price = $("#single_size_price").serialize();

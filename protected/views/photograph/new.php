@@ -2,10 +2,8 @@
 <link href="<?php echo Yii::app()->request->baseUrl; ?>/assets/gentelella/vendors/jQuery-Smart-Wizard/styles/smart_wizard.css" rel="stylesheet">
 <!-- bootstrap-fileinput.css -->
 <link href="<?php echo Yii::app()->request->baseUrl; ?>/assets/bootstrap_fileinput/css/fileinput.min.css" rel="stylesheet">
-<!-- bootstrap-daterangepicker -->
-<link href="<?php echo Yii::app()->request->baseUrl; ?>/assets/gentelella/vendors/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
-<!-- bootstrap-datetimepicker -->
-<link href="<?php echo Yii::app()->request->baseUrl; ?>/assets/gentelella/vendors/bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.css" rel="stylesheet">
+<!-- bootstrap-datepicker -->
+<link href="<?php echo Yii::app()->request->baseUrl; ?>/assets/css/bootstrap-datepicker.css" rel="stylesheet"/>
 <!-- bootstrap-progressbar -->
 <link href="<?php echo Yii::app()->request->baseUrl; ?>/assets/gentelella/vendors/bootstrap-progressbar/css/bootstrap-progressbar-3.3.4.min.css" rel="stylesheet">
 <!-- page content -->
@@ -104,17 +102,17 @@
                       </div>
                     </div>
                     <div class="form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="single_cal2">作者名稱
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="author">作者名稱
                       </label>
                       <div class="col-md-9 col-sm-9 col-xs-12">
                         <input id="author" type="text" class="tags form-control" name="author" value="" />
                       </div>
                     </div>
                     <div class="form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="single_cal2">攝影日期
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="filming_date">攝影日期
                       </label>
                       <div class="col-md-9 col-sm-9 col-xs-12">
-                        <input type="text" class="form-control has-feedback-left" id="single_cal2" name="filming_date" placeholder="攝影日期" aria-describedby="inputSuccess2Status2">
+                        <input type="text" class="form-control has-feedback-left" id="filming_date" name="filming_date" placeholder="攝影日期" aria-describedby="inputSuccess2Status2">
                         <span class="fa fa-calendar-o form-control-feedback left" aria-hidden="true"></span>
                         <span id="inputSuccess2Status2" class="sr-only">(success)</span>
                       </div>
@@ -285,11 +283,8 @@
 <!-- /page content -->
 <!-- jQuery Smart Wizard -->
 <script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/gentelella/vendors/jQuery-Smart-Wizard/js/jquery.smartWizard.js"></script>
-<!-- bootstrap-daterangepicker -->
-<script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/gentelella/vendors/moment/min/moment.min.js"></script>
-<script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/gentelella/vendors/bootstrap-daterangepicker/daterangepicker.js"></script>
-<!-- bootstrap-datetimepicker -->    
-<script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/gentelella/vendors/bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
+<!-- bootstrap-datepicker -->
+<script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/bootstrap-datepicker.js"></script>
 <!-- jQuery Tags Input -->
 <script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/gentelella/vendors/jquery.tagsinput/src/jquery.tagsinput.js"></script>
 <!-- bootstrap-fileinput.js -->
@@ -301,6 +296,11 @@
 <script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/gentelella/vendors/bootstrap-progressbar/bootstrap-progressbar.min.js"></script>
 <script>
 $(document).ready(function () {
+  $("#filming_date").datepicker({
+    format: "yyyy",
+    viewMode: "years", 
+    minViewMode: "years"
+  });
   var fileupload_count = 0;
   var finishupload_count =0;
   var upload_single_id = [];
