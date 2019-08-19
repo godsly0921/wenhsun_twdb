@@ -82,7 +82,7 @@ class WebsiteController extends Controller{
 
     public function ActionAd_list(){
         $websiteService = new WebsiteService();
-        $ad_data = $websiteService->findAllAd();
+        $ad_data = $websiteService->findAllAdInfo();
         $this->render('ad_list',['ad_data'=>$ad_data]);
     }
 
