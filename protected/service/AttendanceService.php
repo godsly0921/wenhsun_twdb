@@ -1019,31 +1019,43 @@ class AttendanceService
                             $abnormal_type = 1;
                             $abnormal = '出勤日，缺席';
                         }
+                        if ($diff_time != 1) {//0 2~以上
+                            if ($diff_time != 0) {
+                                //假如第一筆時間大於9:30 //加註 遲到
+                                if ($diff_time >= NINE_HOUR) {
+                                    $abnormal_type = 0;
+                                    $abnormal = '出勤日，上班八小時';
+
+                                }
+
+                                //假如第一筆時間小於18:30 //加註 早退
+                                if ($diff_time < NINE_HOUR) {
+                                    $abnormal_type = 1;
+                                    $abnormal = '出勤日，，上班時數小於八小時';
+                                }
+                            }
+
+                        }
+                        $abnormal = $abnormal_title . $abnormal;
+                        if ($diff_time == ONE_SECOND) {
+                            $diff_time = 0;
+                        }
+                        $abnormal .= ' 總時數：' . $this->get_second_to_his($diff_time);
+                        $attendance_record_service = new AttendancerecordService();
+                        $model = $attendance_record_service->create($employee_id, $day, $first_time, $last_time, $abnormal_type, $abnormal);
                     }else{
-                        $abnormal_type = 1;
-                        $abnormal = '休假日，出勤';
+                        if (!empty($record)) {
+                            $abnormal_type = 1;
+                            $abnormal = '休假日，出勤';
+                            $abnormal .= ' 總時數：' . $this->get_second_to_his($diff_time);
+                            $attendance_record_service = new AttendancerecordService();
+                            $model = $attendance_record_service->create($employee_id, $day, $first_time, $last_time, $abnormal_type, $abnormal);
+                        }
                     }
                    
 
 
-                    if ($diff_time != 1) {//0 2~以上
-                        if ($diff_time != 0) {
-                            //假如第一筆時間大於9:30 //加註 遲到
-                            if ($diff_time >= NINE_HOUR) {
-                                $abnormal_type = 0;
-                                $abnormal = '出勤日，上班八小時';
-
-                            }
-
-                            //假如第一筆時間小於18:30 //加註 早退
-                            if ($diff_time < NINE_HOUR) {
-                                $abnormal_type = 1;
-                                $abnormal = '出勤日，，上班時數小於八小時';
-                            }
-                        }
-
-                    }
-                    $abnormal = $abnormal_title . $abnormal;
+                    
                     /*
 
                     if($diff_time != ONE_SECOND) {//0 2~以上
@@ -1060,12 +1072,7 @@ class AttendanceService
                         }
                     }*/
 
-                    if ($diff_time == ONE_SECOND) {
-                        $diff_time = 0;
-                    }
-                    $abnormal .= ' 總時數：' . $this->get_second_to_his($diff_time);
-                    $attendance_record_service = new AttendancerecordService();
-                    $model = $attendance_record_service->create($employee_id, $day, $first_time, $last_time, $abnormal_type, $abnormal);
+                    
                   /*  $mail = new MailService();
                     $mail_type = $mail->sendMail($abnormal_type,$employee_email,$abnormal,$model->id,$employee_name);
                     if($mail_type){

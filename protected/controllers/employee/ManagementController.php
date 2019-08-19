@@ -28,7 +28,11 @@ class ManagementController extends Controller
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             $this->redirect('index');
         }
-
+        $roles = Group::model()->findAll();
+        $roles_map = array();
+        foreach ($roles as $key => $value) {
+            $roles_map[$value['id']] = $value['group_name'];
+        }
         $list = EmployeeModel::model()->byUsernameAsc()->findAll();
 
         if (empty($list)) {
@@ -46,6 +50,8 @@ class ManagementController extends Controller
                 $data->ext_num,
                 $data->seat_num,
                 $data->department,
+                $data->onboard_date,
+                isset($roles_map[$data->role])?$roles_map[$data->role]:"",
                 $data->position,
                 str_replace('-', '/', $data->birth),
                 $data->person_id,
@@ -70,6 +76,8 @@ class ManagementController extends Controller
                 '分機',
                 '座位',
                 '部門',
+                '到職日',
+                '角色',
                 '職務',
                 '生日',
                 '身分證字號',

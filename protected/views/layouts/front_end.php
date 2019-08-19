@@ -80,9 +80,13 @@
           </div>
           <div class="col-lg-3">
             <div class="row">
-              <div class="col-lg-4">隱私條款</div>
+              <div class="col-lg-4">
+                <a href="<?= Yii::app()->createUrl('site/privacy'); ?>">隱私條款</a>
+              </div>
               <div class="col-lg-4">合作洽談</div>
-              <div class="col-lg-4">服務條款</div>
+              <div class="col-lg-4">
+                <a href="<?= Yii::app()->createUrl('site/member_rule'); ?>">服務條款</a>
+              </div>
             </div>
           </div>
           <div class="col-lg-5 footer_right">
@@ -99,3 +103,11 @@
     <!-- Footer --- End -->
   </body>
 </html>
+<style>
+    footer a {
+      color: white;
+    }
+    footer a:hover {
+      color: #3F2211;
+    }
+</style>

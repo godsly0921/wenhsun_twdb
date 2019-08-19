@@ -61,8 +61,8 @@ class AttendancerecordService{
         $model->reply_description    = $inputs['reply_description'];
         $model->reply_update_at = date('Y-m-d H:i:s');
         $model->leave_minutes = $inputs['leave_minutes'];
-        $model->first_time = '0000-00-00 00:00:00';
-        $model->last_time = '0000-00-00 00:00:01';
+        //$model->first_time = '0000-00-00 00:00:00';
+        //$model->last_time = '0000-00-00 00:00:01';
 
         if ($model->validate()) {
             $model->update();
