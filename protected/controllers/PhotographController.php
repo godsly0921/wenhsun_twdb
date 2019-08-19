@@ -118,6 +118,7 @@ class PhotographController extends Controller{
             parse_str($_POST['single_data'], $single_data);
             $single_data['category_id'] = implode(',', $single_data['category_id']);
             $single_data['keyword'] = $_POST['keywords_data'];
+            $single_data['filming_date'] = $single_data['filming_date']==''?NULL:$single_data['filming_date'];
             $photographService->updateAllSingle($_POST['update_single_ids'], $single_data);
             foreach ($single_size_price['twd'] as $key => $value) {
                 $single_size = array();
