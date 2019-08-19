@@ -275,7 +275,7 @@
                 success:function(data){
                    result = JSON.parse(data)
                     if(result.status == true){
-                        location.reload();
+                        window.location = '<?= Yii::app()->createUrl('photograph/list'); ?>';
                     }else{
                         alert('更新失敗');
                     }
