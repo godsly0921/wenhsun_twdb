@@ -247,6 +247,13 @@
                     <div class="col-sm-6 point">適合於書刊、雜誌印刷出版、廣告海報或大圖輸出、展覽</div>
                 </div>
             </div>
+            <div class="strip1">
+                <div class="col-sm-12 row text-center padding-radio">
+                    <div class="col-sm-12 point">
+                        *商業用途、或需大批檔案下載、600dpi以上檔案者，需與文訊進一步確認用途等相關事宜，價格則由本公司依媒體、數量、地域、網路流量等做報價，並保留是否接受訂單之最後權利。
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
