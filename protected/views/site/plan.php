@@ -162,14 +162,14 @@
                             <div class="col-sm-2">
                                 <p class="discount text-center">85% off</p>
                             </div>
-                            <div class="col-sm-6">
+                            <div class="col-sm-7">
                                 <div class="radio">
                                     <label>
                                         <input type="radio" name="radio2" checked>&nbsp;&nbsp;自由載60天﹙S、M 尺寸，10張﹚
                                     </label>
                                 </div>
                             </div>
-                            <div class="col-sm-3">
+                            <div class="col-sm-2">
                                 <p class="point">3000 元</p>
                             </div>
                         </div>
@@ -180,14 +180,14 @@
                             <div class="col-sm-2">
                                 <p class="discount text-center">最省方案</p>
                             </div>
-                            <div class="col-sm-6">
+                            <div class="col-sm-7">
                                 <div class="radio">
                                     <label>
                                         <input type="radio" name="radio2">&nbsp;&nbsp;自由載180天﹙S、M 尺寸，30張﹚
                                     </label>
                                 </div>
                             </div>
-                            <div class="col-sm-3">
+                            <div class="col-sm-2">
                                 <p class="point">6000 元</p>
                             </div>
                         </div>
