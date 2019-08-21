@@ -29,7 +29,7 @@
                 </p>
             </div>
             <div class="col-sm-4 text-center">
-                <img src="<?= Yii::app()->request->baseUrl . '/assets/image/plan1.png' ?>" class="img-circle">
+                <img src="<?= Yii::app()->request->baseUrl . '/assets/image/plan3.png' ?>" class="img-circle">
                 <br>
                 <p class="user">企業、活動</p>
                 <p class="description">
