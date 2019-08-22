@@ -29,7 +29,7 @@
                 </p>
             </div>
             <div class="col-sm-4 text-center">
-                <img src="<?= Yii::app()->request->baseUrl . '/assets/image/plan1.png' ?>" class="img-circle">
+                <img src="<?= Yii::app()->request->baseUrl . '/assets/image/plan3.png' ?>" class="img-circle">
                 <br>
                 <p class="user">企業、活動</p>
                 <p class="description">
@@ -162,14 +162,14 @@
                             <div class="col-sm-2">
                                 <p class="discount text-center">85% off</p>
                             </div>
-                            <div class="col-sm-6">
+                            <div class="col-sm-7">
                                 <div class="radio">
                                     <label>
                                         <input type="radio" name="radio2" checked>&nbsp;&nbsp;自由載60天﹙S、M 尺寸，10張﹚
                                     </label>
                                 </div>
                             </div>
-                            <div class="col-sm-3">
+                            <div class="col-sm-2">
                                 <p class="point">3000 元</p>
                             </div>
                         </div>
@@ -180,14 +180,14 @@
                             <div class="col-sm-2">
                                 <p class="discount text-center">最省方案</p>
                             </div>
-                            <div class="col-sm-6">
+                            <div class="col-sm-7">
                                 <div class="radio">
                                     <label>
                                         <input type="radio" name="radio2">&nbsp;&nbsp;自由載180天﹙S、M 尺寸，30張﹚
                                     </label>
                                 </div>
                             </div>
-                            <div class="col-sm-3">
+                            <div class="col-sm-2">
                                 <p class="point">6000 元</p>
                             </div>
                         </div>
@@ -245,6 +245,13 @@
                     <div class="col-sm-2 wording">300dpi</div>
                     <div class="col-sm-2 wording">JPG、TIFF</div>
                     <div class="col-sm-6 point">適合於書刊、雜誌印刷出版、廣告海報或大圖輸出、展覽</div>
+                </div>
+            </div>
+            <div class="strip1">
+                <div class="col-sm-12 row text-center padding-radio">
+                    <div class="col-sm-12 point">
+                        *商業用途、或需大批檔案下載、600dpi以上檔案者，需與文訊進一步確認用途等相關事宜，價格則由本公司依媒體、數量、地域、網路流量等做報價，並保留是否接受訂單之最後權利。
+                    </div>
                 </div>
             </div>
         </div>

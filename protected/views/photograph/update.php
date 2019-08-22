@@ -120,7 +120,7 @@
                         <div class="form-group">
                             <label class="control-label col-md-3 col-sm-3 col-xs-12">圖片分類</label>
                             <div class="col-md-9 col-sm-9 col-xs-12">
-                                <select class="select2_multiple form-control" name="category_id[]" multiple="multiple" required>
+                                <select class="select2_multiple form-control" id="category_id" name="category_id[]" multiple="multiple" required>
                                   <?php foreach ($category_data as $key => $value) { ?>
                                     <option value="<?=$value['category_id']?>" <?=in_array($value['category_id'], $photograph_data['photograph_info']['category_id'])?'selected':''?>><?=$value['parents_name']?>_<?=$value['child_name']?></option>
                                   <?php }?>
@@ -283,6 +283,11 @@
             });
         });
         $('#single_data_button').click(function(){
+            var category_id = $('#category_id').val();
+            if(!category_id){
+                alert('分類項目為必填');
+                return;
+            }
             var copyright = publish = 0;
             if ($('#copyright').is(':checked')) {
                 copyright = 1;
