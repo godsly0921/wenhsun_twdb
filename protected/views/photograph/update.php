@@ -284,7 +284,10 @@
         });
         $('#single_data_button').click(function(){
             var category_id = $('#category_id').val();
-            if(!category_id) alert('分類項目為必填');
+            if(!category_id){
+                alert('分類項目為必填');
+                return;
+            }
             var copyright = publish = 0;
             if ($('#copyright').is(':checked')) {
                 copyright = 1;
