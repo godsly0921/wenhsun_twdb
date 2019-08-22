@@ -508,5 +508,9 @@ class SiteController extends CController{
     public function ActionMember_rule(){
         $this->render('member_rule');
     }
+
+    public function ActionPlan(){
+        $this->render('plan');
+    }
 }
 ?>

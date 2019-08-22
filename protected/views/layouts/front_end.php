@@ -45,7 +45,7 @@
                     <a class="nav-link" href="<?= Yii::app()->createUrl('site/search');?>/測試/1?filming_date=2000-2020">圖片檢索</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">我的下載</a>
+                    <a class="nav-link" href="<?= Yii::app()->createUrl('site/plan');?>">方案選擇</a>
                 </li>
                 <?php if (Yii::app() -> user -> isGuest) { ?>
                   <li class="nav-item">
