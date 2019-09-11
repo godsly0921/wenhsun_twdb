@@ -8,6 +8,7 @@
         <h3 class="title-left">圖片專欄管理</h3>
     </div>
 </div>
+
 <?php if(isset(Yii::app()->session['error_msg']) && Yii::app()->session['error_msg'] !== ''): ?>
     <div class="alert alert-danger">
         <ul>
@@ -225,7 +226,7 @@ unset( Yii::app()->session['success_msg'] );
     function unselect_image(a){
         select_single.row($(a).parents('tr')).remove().draw();
         search_result.row.add([
-            '<input type="checkbox" value="' +$(a).parents('tr').children('td:eq(1)').text()+ '" onclick="select_image(this)"><input type="hidden" value="' +$(a).parents('tr').children('td:eq(1)').text()+ '" name="single_id[]">',
+            '<input type="checkbox" value="' +$(a).parents('tr').children('td:eq(1)').text()+ '" onclick="select_image(this)"><input type="hidden" value="' +$(a).parents('tr').children('td:eq(1)').text()+ '" name="un_single_id[]">',
             '<img width="200" src="<?=DOMAIN.PHOTOGRAPH_STORAGE_URL?>' +$(a).parents('tr').children('td:eq(1)').text()+ '.jpg"/><br><center>' +$(a).parents('tr').children('td:eq(1)').text()+ '</center>',
             $(a).parents('tr').children('td:eq(2)').text(),
             $(a).parents('tr').children('td:eq(3)').text(),

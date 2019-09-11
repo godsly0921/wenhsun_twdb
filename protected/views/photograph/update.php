@@ -52,22 +52,25 @@
                         </div>
                         <div class="form-group">
                             <label class="control-label col-md-3 col-sm-3 col-xs-12">圖片年份</label>
-                            <div class="col-md-9 col-sm-9 col-xs-12">
+                            <div class="col-md-6 col-sm-6 col-xs-12">
                                 <input type="text" class="form-control  has-feedback-left" id="filming_date" name="filming_date" placeholder="圖片年份" value="<?=$photograph_data['photograph_info']['filming_date']?>" aria-describedby="inputSuccess2Status2">
                                 <span class="fa fa-calendar-o form-control-feedback left" aria-hidden="true"></span>
                                 <span id="inputSuccess2Status2" class="sr-only">(success)</span>
                             </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label col-md-3 col-sm-3 col-xs-12">圖片場景</label>
-                            <div class="col-md-9 col-sm-9 col-xs-12">
-                                <input type="text" class="form-control" placeholder="圖片場景" name="filming_location" value="<?=$photograph_data['photograph_info']['filming_location']?>">
+                            <div class="col-md-3 col-sm-3 col-xs-12">
+                                <input type="text" class="tags form-control" placeholder="攝影年份文字" name="filming_date_text" value="<?=$photograph_data['photograph_info']['filming_date_text']?>" />
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="control-label col-md-3 col-sm-3 col-xs-12">場景名稱</label>
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12">拍攝地點</label>
                             <div class="col-md-9 col-sm-9 col-xs-12">
-                                <input type="text" class="form-control" placeholder="場景名稱" name="filming_name" value="<?=$photograph_data['photograph_info']['filming_name']?>">
+                                <input type="text" class="form-control" placeholder="拍攝地點" name="filming_location" value="<?=$photograph_data['photograph_info']['filming_location']?>">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12">攝影名稱</label>
+                            <div class="col-md-9 col-sm-9 col-xs-12">
+                                <input type="text" class="form-control" placeholder="攝影名稱" name="filming_name" value="<?=$photograph_data['photograph_info']['filming_name']?>">
                             </div>
                         </div>
                         <div class="form-group">

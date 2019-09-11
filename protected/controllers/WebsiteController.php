@@ -262,7 +262,7 @@ class WebsiteController extends Controller{
         }else{
             Yii::app()->session['error_msg'] = $piccolumn[1];
         }
-        $this->redirect(array('website/piccolumn_list'));
+        $this->redirect(array('website/piccolumn_update/'.$id));
     }
     public function doGetPiccolumnUpdate($id){
         $websiteService = new WebsiteService();
@@ -315,6 +315,7 @@ class WebsiteController extends Controller{
             $inputs['content'] = filter_input(INPUT_POST, 'content');
             $inputs['main_content'] = filter_input(INPUT_POST, 'main_content');
             $inputs['image'] = $_FILES['image'];
+            $inputs['active'] = filter_input(INPUT_POST, 'active');
             $result = $activityNewsService->create($inputs);
 
             if ($result[0]) {

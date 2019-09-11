@@ -56,6 +56,7 @@ class PhotographService{
                     'people_info' => $value['people_info'],
                     'author' => $value['author'],
                     'filming_date' => $value['filming_date'],
+                    'filming_date_text' => $value['filming_date_text'],
                     'filming_location' => $value['filming_location'],
                     'filming_name' => $value['filming_name'],
                     'category_id' => explode(',', $value['category_id']),

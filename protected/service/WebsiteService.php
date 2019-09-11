@@ -9,7 +9,7 @@ class WebsiteService
 {
     public function findAllBanner(){
         $all_banner = array();
-        $all_banner = Homebanner::model()->findAll();
+        $all_banner = Homebanner::model()->findAll(array('order'=>'sort asc'));
         return $all_banner;
     }
 
@@ -242,7 +242,10 @@ class WebsiteService
         $model->publish_start = $input['publish_start'];
         $model->publish_end = $input['publish_end'];
         $model->content = $input['content'];
-        $model->recommend_single_id = implode(",",$input['recommend_single_id']);
+        if($input['recommend_single_id'])
+            $model->recommend_single_id = implode(",",$input['recommend_single_id']);
+        else
+            $model->recommend_single_id = "";
         $model->status = $input['status'];
         $upload_image = $input['pic'];
         if($upload_image['name']!==""){
@@ -255,9 +258,11 @@ class WebsiteService
         }
         $model->update_time = date('Y-m-d H:i:s');
         $model->update_id = Yii::app()->session['uid'];
-
+        if($model->content == ""){
+            $model->addError('content', '內文不可為空');
+            return array(false,$model->getErrors()); 
+        }
         if (!$model->validate()) {
-            var_dump($model);exit();
             return array(false,$model);  
             //return $model;
         }
@@ -290,7 +295,10 @@ class WebsiteService
         $model->publish_start = $input['publish_start'];
         $model->publish_end = $input['publish_end'];
         $model->content = $input['content'];
-        $model->recommend_single_id = implode(",",$input['recommend_single_id']);
+        if($input['recommend_single_id'])
+            $model->recommend_single_id = implode(",",$input['recommend_single_id']);
+        else
+            $model->recommend_single_id = "";
         $model->status = $input['status'];
         $upload_image = $input['pic'];
         if($upload_image['name']!==""){
@@ -303,8 +311,11 @@ class WebsiteService
         }
         $model->update_time = date('Y-m-d H:i:s');
         $model->update_id = Yii::app()->session['uid'];
+        if($model->content == ""){
+            $model->addError('content', '內文不可為空');
+            return array(false,$model->getErrors()); 
+        }
         if (!$model->validate()) {
-            var_dump($model);exit();
             return $model;
         }
 
@@ -344,11 +355,13 @@ class WebsiteService
         return $model;
     }
     public function findrecommend_single_id($id){
-        $model = Yii::app()->db->createCommand()
-        ->select('*')
-        ->from('single')
-        ->where('single_id in (' . $id . ')')
-        ->queryAll(); 
+        $model = array();
+        if($id)
+            $model = Yii::app()->db->createCommand()
+            ->select('*')
+            ->from('single')
+            ->where('single_id in (' . $id . ')')
+            ->queryAll(); 
         return $model;
     }
     public function findAdById($id)

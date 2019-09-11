@@ -29,6 +29,7 @@ unset( Yii::app()->session['success_msg'] );
 <div class="panel panel-default">
     <div class="panel-heading">首頁輪播圖管理</div>
     <div class="panel-body">
+        <a href="<?php echo Yii::app()->createUrl('website/banner_list');?>">返回列表頁</a>
         <form name="group_form" class="form-horizontal" action="<?php echo Yii::app()->createUrl('website/banner_update');?>/<?=$banner->home_banner_id?>" method="post" enctype="multipart/form-data">
             <?php CsrfProtector::genHiddenField(); ?>
             <div class="form-group">
