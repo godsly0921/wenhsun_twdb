@@ -381,15 +381,16 @@
 		if($('#download_method').attr('data-download_method')==1){
 			if(<?=$member_point?> > parseInt($('input[name=size_type]:checked').attr('data-sale_point'))){
 				ajax_download_image();
+			}else{
+				$('#not_enough_modal').modal('show');
 			}
 		}else if($('#download_method').attr('data-download_method')==2){
 			if(<?=$member_plan?> > 0){
 				ajax_download_image();
+			}else{
+				$('#not_enough_modal').modal('show');
 			}
-		}else{
-			$('#not_enough_modal').modal('show');
-		}
-		
+		}		
 	}
 
 	$(document).ready( function() {
