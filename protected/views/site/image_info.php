@@ -206,7 +206,7 @@
 			<?php foreach ($photograph_data['size'] as $key => $value) {?>
 				<div class="d-inline-block">
 					<div class="tiffany_checkbox mt_45">                   
-	                    <input type="radio" class="size_type" name="size_type" value="<?=$value['size_type']?>" data-w_h="<?=$value['w_h']?>" data-print_w_h="<?=$value['print_w_h']?>" data-dpi="<?=$value['dpi']?>" data-ext="<?=$value['ext']?>" <?=$key==0?"checked":""?> onchange="size_type(this)">
+	                    <input type="radio" class="size_type" name="size_type" value="<?=$value['size_type']?>" data-w_h="<?=$value['w_h']?>" data-print_w_h="<?=$value['print_w_h']?>" data-dpi="<?=$value['dpi']?>" data-ext="<?=$value['ext']?>"  data-sale_point="<?=$value['sale_point']?>" <?=$key==0?"checked":""?> onchange="size_type(this)">
 		                <label class="d-inline-block py-0 px-4 mb-0 mr-2"><?=$value['size_type']?></label>	                
 	                </div>
 	            </div>
@@ -215,7 +215,7 @@
             <div id="size_info" class="my-2 mt_45"><?=$photograph_data['size'][0]['w_h']?> px | <?=$photograph_data['size'][0]['print_w_h']?> cm | <?=$photograph_data['size'][0]['dpi']?> dpi | <?=$photograph_data['size'][0]['ext']?></div>
             <div class="row mt_45">
             	<div class="col-lg-12">
-		            <span class="info_color brown_text_underline mr-5">圖像授權協議概要</span>
+		            <!-- <span class="info_color brown_text_underline mr-5">圖像授權協議概要</span> -->
 		            <span class="info_color brown_text_underline tip" data-placement="right" data-tip="size_type_info">尺寸指南</span>
 	        	</div>
 	            <!-- Tips content -->
@@ -228,7 +228,7 @@
 				<!-- Tips content -->
 	        </div>
 	        <div class="my-4 mt_45">
-	        	<span id="download_cost"> 3 個下載點數從您的</span>
+	        	<span id="download_cost"> <span id="sale_point"><?=(int)$photograph_data['size'][0]['sale_point']?>個下載點數從您的</span>
 	        	<div class="dropdown d-inline-block">
 				  	<button class="btn btn-outline-secondary dropdown-toggle" type="button" id="download_method" data-toggle="dropdown" data-download_method="1" aria-haspopup="true" aria-expanded="false">
 				    點數方案
@@ -239,9 +239,18 @@
 					</div>
 				</div>
 	        </div>
-	        <div class="mt_45">
-	        	<button type="button" class="btn btn-download mr-2">我要下載 <i class="fa fa-download"></i></button>
-	        	<button type="button" class="btn btn-favorite mx-2"><i class="fa fa-star"></i> 加入收藏</button>
+	        <div class="mt_45 d-inline-block">
+	        	<form id="download_image_form" action="<?= Yii::app()->createUrl('site/download_image');?>" method="post" target="my_iframe" class="d-inline-block">
+	        		<input type="hidden" name="single_id" value="<?=$photograph_data['photograph_info']['single_id']?>">
+	        		<input type="hidden" name="size_type" id="size_type" value="<?=$photograph_data['size'][0]['size_type']?>">
+	        		<input type="hidden" name="download_method" id="download_image_method" value="1">
+		        	<button type="button" onclick="download_image()" class="btn btn-download mr-2">我要下載 <i class="fa fa-download"></i></button>
+		        </form>
+		        <form action="<?= Yii::app()->createUrl('site/add_favorite');?>" method="post" target="my_iframe" class="d-inline-block">
+	        		<input type="hidden" name="single_id" value="<?=$photograph_data['photograph_info']['single_id']?>">
+		        	<button type="submit" class="btn btn-favorite mx-2"><i class="fa fa-star"></i> 加入收藏</button>
+		        </form>
+	        	
 	        </div>
 	        
 		</div>
@@ -313,20 +322,88 @@
 		</div>
 	</div>
 </div>
-
+<!-- Modal -->
+<div class="modal fade" id="not_enough_modal" tabindex="-1" role="dialog" aria-labelledby="not_enough_modal" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="not_enough_modal_title">餘額不足</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        餘額不足，要現在增加點數或方案嗎?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">我再想想</button>
+        <a href="<?= Yii::app()->createUrl('site/plan');?>" target="_parent"><button type="button" class="btn btn-danger">立即購買</button></a>
+      </div>
+    </div>
+  </div>
+</div>
 <script type="text/javascript">
 	function size_type(a){
 		var w_h = $(a).attr('data-w_h');
 		var print_w_h = $(a).attr('data-print_w_h');
 		var dpi = $(a).attr('data-dpi');
 		var ext = $(a).attr('data-ext');
+		$('#size_type').val($(a).val());
 		$("#size_info").text(w_h + " px | " + print_w_h + " cm | " + dpi + " dpi | " + ext );
+		if($('#download_method').attr('data-download_method')==1){
+			$('#sale_point').text(parseInt($(a).attr('data-sale_point'))+"個下載點數從您的");
+		}else{
+			$('#sale_point').text("1個下載額度從您的");
+		}
+		
 	}
+	function ajax_download_image(){
+		$.ajax({  
+	        url: "<?php echo Yii::app()->createUrl('site/download_image')?>",  
+	        type: "post",  
+	        dataType: "json",  
+	        data: {
+	        	single_id: "<?=$photograph_data['photograph_info']['single_id']?>",
+	        	size_type: $('#size_type').val(),
+	        	download_method: $('#download_image_method').val(),
+	        }, 
+	        success: function(data) {
+	            if(!data.status){
+	            	alert(data.error_msg);
+	            }
+	            if(data.status){
+	            	window.open("<?php echo Yii::app()->createUrl('site/GetImage')?>?single_id=<?=$photograph_data['photograph_info']['single_id']?>"+"&size_type="+$('#size_type').val()+"&ext="+data.ext);
+	            }
+	        }  
+	    });
+	}
+	function download_image(){
+		if($('#download_method').attr('data-download_method')==1){
+			if(<?=$member_point?> > parseInt($('input[name=size_type]:checked').attr('data-sale_point'))){
+				ajax_download_image();
+			}
+		}else if($('#download_method').attr('data-download_method')==2){
+			if(<?=$member_plan?> > 0){
+				ajax_download_image();
+			}
+		}else{
+			$('#not_enough_modal').modal('show');
+		}
+		
+	}
+
 	$(document).ready( function() {
 		$('.dropdown-menu button').on('click', function(){    
 		    $('#download_method').html($(this).html());
 		    var download_method = $(this).data('download_method');
 		    $('#download_method').attr('data-download_method',download_method);
+		    $('#download_image_method').val(download_method);
+		    if(download_method == 1){
+		    	$('#sale_point').text(parseInt($('input[name=size_type]:checked').attr('data-sale_point'))+" 個下載點數從您的");
+		    }else{
+		    	$('#sale_point').text("1 個下載額度從您的");
+		    }
+		    
 		})
 		// Tooltips
 		$('.tip').each(function () {

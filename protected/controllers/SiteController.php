@@ -57,8 +57,161 @@ class SiteController extends CController{
         $category_data = $category_service->findCategoryMate();
         $photograph_data['photograph_info']['keyword'] = explode(",", $photograph_data['photograph_info']['keyword']);
         $same_category = $siteService->findSameCategory($photograph_data['photograph_info']['category_id'],$id);
+        $member_point = $member_plan = 0;
+        if (!Yii::app() -> user -> isGuest){
+            $memberService = new MemberService();
+            $memberplanService = new MemberplanService();
+            $member = $memberService->findByMemId(Yii::app()->session['uid']);
+            $memberplan = $memberplanService->findByMemberPlanEnable(Yii::app()->session['uid']);
+            $member_point = $member->active_point;
+            if($memberplan) $member_plan = $memberplan[0]['remain_amount'];
+        }
+        $this->render('image_info',array('photograph_data'=>$photograph_data,'category_service'=>$category_service,'same_category'=>$same_category,'member_point'=>$member_point,'member_plan'=>$member_plan));
+    }
 
-        $this->render('image_info',array('photograph_data'=>$photograph_data,'category_service'=>$category_service,'same_category'=>$same_category));
+    public function ActionDownload_image(){
+        if (Yii::app() -> user -> isGuest){
+            $this->redirect(Yii::app()->createUrl('site/login'));
+        }
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $single_id = $_POST['single_id'];
+            $size_type = $_POST['size_type'];
+            $download_method = $_POST['download_method'];
+            $photographService = new PhotographService();
+            $single_data = $photographService->findSinglesize($single_id, $size_type);
+            if($download_method == 1){  
+                $this->doPointDownloadImage($single_id, $size_type, $single_data);
+            }
+            if($download_method == 2){
+                $this->doPlanDownloadImage($single_id, $size_type, $single_data);
+            }
+        }
+    }
+
+    public function doPointDownloadImage($single_id, $size_type, $single_data){
+        $memberService = new MemberService();
+        $orderService = new OrderService();
+        $imgdownloadService = new ImgdownloadService();
+        $total_cost = $imgdownloadService->findMemberDownloadPoint();
+        
+        if(!$total_cost){
+            $total_cost = 0;
+        }else{
+            if(isset($total_cost[0]['total_cost']))
+                $total_cost = $total_cost[0]['total_cost'];
+            else
+                $total_cost = 0;
+        } 
+        $order_point = $orderService->findMemberOrderPoint();
+        $order_point_data = array();
+        $order_total_point = 0;
+        if($order_point){
+            foreach ($order_point as $key => $value) {
+                $order_total_point += $value['pic_point'];
+                $order_point_data[$value['orders_item_id']] = $order_total_point;
+            }
+        }
+        $member = $memberService->findByMemId(Yii::app()->session['uid']);
+        $member_point = $member->active_point;
+        $sale_point = $single_data[0]['sale_point'];
+        if(($order_total_point-$total_cost-$sale_point) > 0){
+            $img_download_orders_item_id = 0;
+            foreach ($order_point_data as $key => $value) {
+                if($value-$total_cost>0){
+                    $img_download_orders_item_id = $key;
+                    break;
+                }
+            }
+            $date = date('Ymd');
+            $cnt = $imgdownloadService->findAuthorizationNo();
+            $authorization_no_Count = count($cnt) + 1;                        
+            $authorization_no = $date;
+            if (count($cnt) == 0) {
+                $authorization_no .= str_pad(($authorization_no_Count), 4, '0', STR_PAD_LEFT);
+            } else {
+                $latestAuthorization_no = substr($cnt[0]->authorization_no, -4);
+                $orderCount = (int) $latestAuthorization_no + 1;
+                $authorization_no .= str_pad(($orderCount), 4, '0', STR_PAD_LEFT);
+            }
+            $img_download_data = array(
+                "member_plan_id" => "",
+                "orders_item_id" => $img_download_orders_item_id,
+                "download_method" => 1,
+                "single_id" => $single_id,
+                "size_type" => $size_type,
+                "cost" => (float)$single_data[0]['sale_point'],
+                "authorization_no" => $authorization_no
+            );
+            //var_dump($img_download_data);exit();
+            $img_download_create = $imgdownloadService->create($img_download_data);
+            if($img_download_create[0]){
+                echo json_encode(array('status'=>true,'error_msg'=>"",'ext'=>$single_data[0]['ext']));exit();
+            }
+        }else{
+            echo json_encode(array('status'=>false,'error_msg'=>"點數餘額不足"));
+            exit();
+        }
+    }
+    public function doPlanDownloadImage($single_id, $size_type, $single_data){
+        $memberplanService = new MemberplanService();
+        $imgdownloadService = new ImgdownloadService();
+        $memberplan = $memberplanService->findByMemberPlanEnable(Yii::app()->session['uid']);
+        if( $memberplan && $memberplan[0]['remain_amount']>0){
+            $member_plan_id = $memberplan[0]['member_plan_id'];
+            $order_item_id = $memberplan[0]['order_item_id'];
+            $date = date('Ymd');
+            $cnt = $imgdownloadService->findAuthorizationNo();
+            $authorization_no_Count = count($cnt) + 1;                        
+            $authorization_no = $date;
+            if (count($cnt) == 0) {
+                $authorization_no .= str_pad(($authorization_no_Count), 4, '0', STR_PAD_LEFT);
+            } else {
+                $latestAuthorization_no = substr($cnt[0]->authorization_no, -4);
+                $orderCount = (int) $latestAuthorization_no + 1;
+                $authorization_no .= str_pad(($orderCount), 4, '0', STR_PAD_LEFT);
+            }
+            $img_download_data = array(
+                "member_plan_id" => $member_plan_id,
+                "orders_item_id" => $order_item_id,
+                "download_method" => 2,
+                "single_id" => $single_id,
+                "size_type" => $size_type,
+                "cost" => 1,
+                "authorization_no" => $authorization_no
+            );
+            $img_download_create = $imgdownloadService->create($img_download_data);
+            if($img_download_create[0]){
+                echo json_encode(array('status'=>true,'error_msg'=>"",'ext'=>$single_data[0]['ext']));exit();
+            }
+        }else{
+            echo json_encode(array('status'=>false,'error_msg'=>"方案餘額不足"));
+            exit();
+        }
+    }
+    public function ActionGetimage(){
+        $size_type = isset($_GET['size_type']) ? $_GET['size_type'] : "";
+        $single_id =isset($_GET['single_id']) ? $_GET['single_id'] : "";
+        $ext = isset($_GET['ext']) ? $_GET['ext'] : "";
+        if($size_type != "" && $single_id != "" && $ext != ""){
+            $photographService = new PhotographService();
+            $single_data = $photographService->findSinglesize($single_id, $size_type);
+            $download_name=Yii::app()->createUrl('/'). "/image_storage/".$size_type."/".$single_id.".".$ext;
+            $filename = PHOTOGRAPH_STORAGE_DIR . $size_type . "/" . $single_id . "." . $ext;       
+            if(isset($filename)){
+                header("Content-Length: ". filesize($filename));
+                header('Pragma: no-cache');
+                header('Expires: 0');
+                header('Cache-Control: no-store, no-cache,must-revalidate, post-check=0, pre-check=0');
+                header('Content-Type: application/octet-stream');
+                header('Content-Disposition: attachment; filename="'.basename($download_name).'"');
+                header('Content-Transfer-Encoding: binary');
+                readfile($filename);
+                exit();
+            }
+        }else{
+            exit();
+        }
+        
     }
 
     public function ActionAbout(){

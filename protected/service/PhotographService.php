@@ -91,6 +91,12 @@ class PhotographService{
         return $data;
     }
 
+    public function findSinglesize($single_id, $size_type){
+        $data = array();
+        $sql = "SELECT ss.* FROM `single` s JOIN single_size ss on s.single_id=ss.single_id where s.publish=1 and s.copyright=1 and s.single_id=" . $single_id . " and ss.size_type='" . $size_type . "'";
+        $data = Yii::app()->db->createCommand($sql)->queryAll();
+        return $data;
+    }
     //搜尋圖片原始檔名
     public function existPhotoNameExist($photo_name){
         $result = Single::model()->find(array(

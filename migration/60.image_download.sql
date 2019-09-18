@@ -1,0 +1,1 @@
+ALTER TABLE `img_download` ADD `member_id` INT(12) NOT NULL COMMENT '會員編號' AFTER `img_download_id`;

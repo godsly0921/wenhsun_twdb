@@ -14,6 +14,7 @@
  * @property integer $photo_source
  * @property string $category_id
  * @property string $filming_date
+ * @property string $filming_date_text
  * @property string $filming_location
  * @property string $filming_name
  * @property integer $store_status
@@ -51,14 +52,15 @@ class Single extends CActiveRecord
 		return array(
 			array('photo_name, ext, create_time, create_account_id', 'required'),
 			array('dpi, direction, photo_source, store_status, index_limit, original_limit, photo_limit, publish, copyright, create_account_id', 'numerical', 'integerOnly'=>true),
-			array('photo_name, category_id, filming_location, filming_name, object_name', 'length', 'max'=>100),
+			array('photo_name, category_id, filming_date_text, filming_location, filming_name, object_name', 'length', 'max'=>100),
 			array('ext', 'length', 'max'=>6),
 			array('color', 'length', 'max'=>12),
 			array('author, people_info', 'length', 'max'=>256),
-			array('filming_date, keyword, description, memo1, memo2', 'safe'),
+			array('filming_date', 'length', 'max'=>4),
+			array('keyword, description, memo1, memo2', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('single_id, photo_name, ext, dpi, color, direction, author, photo_source, category_id, filming_date, filming_location, filming_name, store_status, people_info, object_name, keyword, index_limit, original_limit, photo_limit, description, publish, copyright, memo1, memo2, create_time, create_account_id', 'safe', 'on'=>'search'),
+			array('single_id, photo_name, ext, dpi, color, direction, author, photo_source, category_id, filming_date, filming_date_text, filming_location, filming_name, store_status, people_info, object_name, keyword, index_limit, original_limit, photo_limit, description, publish, copyright, memo1, memo2, create_time, create_account_id', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -89,6 +91,7 @@ class Single extends CActiveRecord
 			'photo_source' => '入藏來源',
 			'category_id' => '照片類型( 編號 )',
 			'filming_date' => '拍攝日期',
+			'filming_date_text' => '攝影年份文字說明',
 			'filming_location' => '拍攝地點',
 			'filming_name' => '攝影名稱',
 			'store_status' => '保存狀況(1：良好；2：輕度破損；3：嚴重破損)',
@@ -136,6 +139,7 @@ class Single extends CActiveRecord
 		$criteria->compare('photo_source',$this->photo_source);
 		$criteria->compare('category_id',$this->category_id,true);
 		$criteria->compare('filming_date',$this->filming_date,true);
+		$criteria->compare('filming_date_text',$this->filming_date_text,true);
 		$criteria->compare('filming_location',$this->filming_location,true);
 		$criteria->compare('filming_name',$this->filming_name,true);
 		$criteria->compare('store_status',$this->store_status);

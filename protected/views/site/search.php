@@ -282,7 +282,7 @@
 	}
 
 	function create_image(value){
-		$html = '<div onclick="open_image_info(this,\''+value.single_id+'\')"><img src="<?= Yii::app()->createUrl('/'). "/" .PHOTOGRAPH_STORAGE_URL?>'+value.single_id+'.jpg"><div>';
+		$html = '<div onclick="open_image_info(this,\''+value.single_id+'\')" style="cursor:pointer;"><img src="<?= Yii::app()->createUrl('/'). "/" .PHOTOGRAPH_STORAGE_URL?>'+value.single_id+'.jpg"><div>';
         $('#image_result').append($html);
 	}
 

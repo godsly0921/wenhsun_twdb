@@ -213,6 +213,11 @@ class OrderService
         return $model;
     }
 
+    public function findMemberOrderPoint(){
+        $sql = "SELECT oi.*,p.pic_point FROM `orders` o JOIN orders_item oi on o.order_id=oi.order_id JOIN product p on oi.product_id=p.product_id where member_id=" . Yii::app()->session['uid'] . " and oi.order_category=1 order by o.order_id asc";
+        $data = Yii::app()->db->createCommand($sql)->queryAll();
+        return $data;
+    }
     public function findById($id)
     {
         $model = Product::model()->findByPk($id);
