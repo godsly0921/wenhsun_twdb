@@ -1017,6 +1017,7 @@ class MemberService
         $member_address_book->address = $inputs['address'];
         $member_address_book->invoice_number = $inputs['invoice_number'];
         $member_address_book->invoice_title = $inputs['invoice_title'];
+        $member_address_book->invoice_category = $inputs['invoice_category'];
         if ($member_address_book->save()){
             return true;
         }else{
