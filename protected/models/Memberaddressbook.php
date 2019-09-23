@@ -36,7 +36,7 @@ class Memberaddressbook extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('member_id, name, mobile, codezip, invoice_category', 'required'),
+			array('member_id, mobile, invoice_category', 'required'),
 			array('member_id, codezip, invoice_category, invoice_number', 'numerical', 'integerOnly'=>true),
 			array('name, mobile', 'length', 'max'=>50),
 			array('email, country, invoice_title', 'length', 'max'=>100),

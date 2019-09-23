@@ -1036,6 +1036,7 @@ class MemberService
             $member_address_book->address = $inputs['address'];
             $member_address_book->invoice_number = $inputs['invoice_number'];
             $member_address_book->invoice_title = $inputs['invoice_title'];
+            $member_address_book->invoice_category = $inputs['invoice_category'];
             if($member_address_book->save()){
                 Yii::log("member_address_book update success member => {$member_id}", CLogger::LEVEL_INFO);
                 return true;
