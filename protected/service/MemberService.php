@@ -997,4 +997,61 @@ class MemberService
 
         return $permissionArr;
     }
+    public function findMemberAddressBook($member_id){
+        return Memberaddressbook::model()->find([
+            'condition' => 'member_id=:member_id',
+            'params' => [
+                ':member_id' => $member_id,
+            ]
+        ]);
+    }
+
+    public function create_member_address_book($inputs){
+        $member_address_book = new Memberaddressbook;
+        $member_address_book->member_id = $inputs['member_id'];
+        $member_address_book->mobile = $inputs['mobile'];
+        $member_address_book->nationality = $inputs['nationality'];
+        $member_address_book->country = $inputs['county'];
+        $member_address_book->town = $inputs['town'];
+        $member_address_book->codezip = $inputs['zipcode'];
+        $member_address_book->address = $inputs['address'];
+        $member_address_book->invoice_number = $inputs['invoice_number'];
+        $member_address_book->invoice_title = $inputs['invoice_title'];
+        if ($member_address_book->save()){
+            return true;
+        }else{
+            return false;
+        }
+    }
+    public function updateMemberAddressBook($member_id,$inputs){
+        $member_address_book = Memberaddressbook::model()->findByAttributes([
+            'member_id' => $member_id
+        ]);
+        if($member_address_book){
+            $member_address_book->mobile = $inputs['mobile'];
+            $member_address_book->nationality = $inputs['nationality'];
+            $member_address_book->country = $inputs['county'];
+            $member_address_book->town = $inputs['town'];
+            $member_address_book->codezip = $inputs['zipcode'];
+            $member_address_book->address = $inputs['address'];
+            $member_address_book->invoice_number = $inputs['invoice_number'];
+            $member_address_book->invoice_title = $inputs['invoice_title'];
+            if($member_address_book->save()){
+                Yii::log("member_address_book update success member => {$member_id}", CLogger::LEVEL_INFO);
+                return true;
+            }else{
+                Yii::log("member_address_book update fail member => {$member_id}", CLogger::LEVEL_INFO);
+                return false;
+            }
+        }else{
+            $create = $this->create_member_address_book($inputs);
+            if($create){
+                Yii::log("member_address_book create success member => {$member_id}", CLogger::LEVEL_INFO);
+                return true;
+            }else{
+                Yii::log("member_address_book create fail member => {$member_id}", CLogger::LEVEL_INFO);
+                return false;
+            }
+        }
+    }
 }

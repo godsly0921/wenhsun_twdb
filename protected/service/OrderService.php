@@ -213,11 +213,211 @@ class OrderService
         return $model;
     }
 
+    public function findOrderNo(){
+        $date = date('Ymd');
+        $cnt = Orders::model()->findAllBySql("select * from orders where order_id like 'P" . $date . "%' order by order_id desc");
+        return $cnt;
+    }
+    public function chanage_pay_status($order_id){
+        $transaction = Yii::app()->db->beginTransaction();
+        try {
+            $order = Orders::model()->findByPk($order_id);
+            $order->order_status = 2;
+            $order->receive_date = date("Y-m-d H:i:s");
+            if($order->save()){
+                Yii::log(date('Y-m-d H:i:s') . " order_id => " . $order_id. " order_status update success", CLogger::LEVEL_INFO);
+            }else{
+                Yii::log(date('Y-m-d H:i:s') . " order_id => " . $order_id. " order_status update fail", CLogger::LEVEL_INFO);
+                throw new Exception(date('Y-m-d H:i:s') . " order_id => " . $order_id. "訂單狀態更新失敗");
+                return array(false,"0|");
+            }
+            $transaction->commit();
+            return array(true,"order_status update success");
+        }catch (Exception $e) {
+            $transaction->rollback();
+            Yii::log(date('Y-m-d H:i:s') . " order open fail. Message =>" . $e->getMessage(), CLogger::LEVEL_INFO);
+            return array(false,"訂單狀態更新失敗,請稍後再試");
+        }   
+    }
+    public function open_order_plan($order_id){
+        $datetime_now = date('Y-m-d H:i:s');
+        $transaction = Yii::app()->db->beginTransaction();
+        try {
+            $order = Orders::model()->findByPk($order_id);
+            $order_item = Ordersitem::model()->findByAttributes([
+                'order_id' => $order_id
+            ]);
+            $productService = new ProductService();
+            $product_data = $productService->findById($order_item->product_id);
+            if($order_item->order_category == 1){
+                $member = Member::model()->findByPk($order->member_id);
+                $member->active_point = $member->active_point + $product_data->pic_point;
+                if($member->save()){
+                    Yii::log(date('Y-m-d H:i:s') . " order_id => " . $order_id. " member point add success", CLogger::LEVEL_INFO);
+                }else{
+                    Yii::log(date('Y-m-d H:i:s') . " order_id => " . $order_id. " member point add fail", CLogger::LEVEL_INFO);
+                    throw new Exception(date('Y-m-d H:i:s') . " order_id => " . $order_id. "會員點數更新失敗");
+                    return array(false,"0|");
+                }
+            }
+            if($order_item->order_category == 2 || $order_item->order_category == 3 || $order_item->order_category == 4 ){
+                if( $order_item->order_category == 2 ) $period = 1;
+                if( $order_item->order_category == 3 ) $period = 3;
+                if( $order_item->order_category == 4 ) $period = 12;
+                for ($i=1; $i <= $period; $i++) { 
+                    if($i ==1)
+                        $date_start = date('Y-m-d H:i:s',strtotime('+0 day'));
+                    else
+                        $date_start = $date_end;
+                    $date_end = date('Y-m-d H:i:s',strtotime('+30 day',strtotime($date_start)));
+                    $member_plan = new Memberplan();
+                    $member_plan->member_id = $order->member_id;
+                    $member_plan->order_item_id = $order_item->orders_item_id;
+                    $member_plan->date_start = $date_start;
+                    $member_plan->date_end = $date_end;
+                    $member_plan->amount = $product_data->pic_number;
+                    $member_plan->remain_amount = $product_data->pic_number;
+                    $member_plan->status = 1;
+                    if($member_plan->save()){
+                        Yii::log(date('Y-m-d H:i:s') . " order_id => " . $order_id. " member plan add success", CLogger::LEVEL_INFO);
+                    }else{
+                        var_dump($member_plan);exit();
+                        Yii::log(date('Y-m-d H:i:s') . " order_id => " . $order_id. " member plan add fail", CLogger::LEVEL_INFO);
+                        throw new Exception(date('Y-m-d H:i:s') . " order_id => " . $order_id. "會員方案更新失敗");
+                        return array(false,"0|");
+                    }
+                }
+
+            }
+            $order_item->order_detail_status = 1;
+            if($order_item->save()){
+                Yii::log(date('Y-m-d H:i:s') . " order_id => " . $order_id. " order item update success", CLogger::LEVEL_INFO);
+            }else{
+                var_dump($order_item);exit();
+                Yii::log(date('Y-m-d H:i:s') . " order_id => " . $order_id. " order item update fail", CLogger::LEVEL_INFO);
+                throw new Exception(date('Y-m-d H:i:s') . " order_id => " . $order_id. "訂單詳細狀態更新失敗");
+                return array(false,"0|");
+            }
+            $order->order_status = 3;
+            $order->receive_date = date("Y-m-d H:i:s");
+            if($order->save()){
+                Yii::log(date('Y-m-d H:i:s') . " order_id => " . $order_id. " order_status update success", CLogger::LEVEL_INFO);
+            }else{
+                Yii::log(date('Y-m-d H:i:s') . " order_id => " . $order_id. " order_status update fail", CLogger::LEVEL_INFO);
+                throw new Exception(date('Y-m-d H:i:s') . " order_id => " . $order_id. "訂單狀態更新失敗");
+                return array(false,"0|");
+            }
+            $transaction->commit();
+            return array(true,"訂單開通成功");
+        }catch (Exception $e) {
+            $transaction->rollback();
+            Yii::log(date('Y-m-d H:i:s') . " order open fail. Message =>" . $e->getMessage(), CLogger::LEVEL_INFO);
+            return array(false,"訂單開通失誤,請稍後再試");
+        } 
+    }
+    public function create_order($inputs){
+        $datetime_now = date('Y-m-d H:i:s');
+        $transaction = Yii::app()->db->beginTransaction();
+        try {
+            $date = date('Ymd');
+            $cnt = $this->findOrderNo();
+            $order_no_Count = count($cnt) + 1;                        
+            $order_no = "P" . $date;
+            if (count($cnt) == 0) {
+                $order_no .= str_pad(($order_no_Count), 4, '0', STR_PAD_LEFT);
+            } else {
+                $latestAuthorization_no = substr($cnt[0]->order_id, -4);
+                $orderCount = (int) $latestAuthorization_no + 1;
+                $order_no .= str_pad(($orderCount), 4, '0', STR_PAD_LEFT);
+            }
+            $order_data = array();
+            $order_data['order_id'] = $order_no;
+            $order_data['product_id'] = $inputs['product_id'];
+            $order_data['member_id'] = Yii::app()->session['member_id'];
+            $order_data['order_datetime'] = $datetime_now;
+            $order_data['order_status'] = 1;
+            //$order_data['name'] = $inputs['name'];
+            $order_data['mobile'] = $inputs['mobile'];
+            //$order_data['email'] = $inputs['email'];
+            $order_data['nationality'] = $inputs['nationality'];
+            $order_data['country'] = $inputs['county'];
+            $order_data['town'] = $inputs['town'];
+            $order_data['codezip'] = $inputs['zipcode'];
+            $order_data['address'] = $inputs['address'];
+            $order_data['invoice_category'] = $inputs['invoice_category'];
+            $order_data['invoice_number'] = $inputs['invoice_number'];
+            $order_data['invoice_title'] = $inputs['invoice_title'];
+            $order_data['cost_total'] = $inputs['cost_total'];
+            $order_data['order_category'] = $inputs['order_category'];
+            $order_data['order_detail_status'] = $inputs['order_detail_status'];
+            $order_data['product_name'] = $inputs['product_name'];
+            $order = new Orders();
+            $order->order_id = $order_data['order_id'];
+            $order->member_id = $order_data['member_id'];
+            $order->order_datetime = $order_data['order_datetime'];
+            $order->order_status = $order_data['order_status'];
+            //$order->name = $order_data['name'];
+            $order->mobile = $order_data['mobile'];
+            //$order->email = $order_data['email'];
+            $order->nationality = $order_data['nationality'];
+            $order->country = $order_data['country'];
+            $order->town = $order_data['town'];
+            $order->codezip = $order_data['codezip'];
+            $order->address = $order_data['address'];
+            $order->invoice_category = $order_data['invoice_category'];
+            $order->invoice_number = $order_data['invoice_number'];
+            $order->invoice_title = $order_data['invoice_title'];
+            if (!$order->save() ) {
+                Yii::log(date('Y-m-d H:i:s') . " order create fail", CLogger::LEVEL_INFO);
+                throw new Exception(date('Y-m-d H:i:s') . " order create fail");
+            }
+            
+            $Ordersitem = new Ordersitem();
+            $Ordersitem->product_id = $order_data['product_id'];
+            $Ordersitem->order_id = $order_data['order_id'];
+            $Ordersitem->cost_total = $order_data['cost_total'];
+            $Ordersitem->order_category = $order_data['order_category'];
+            $Ordersitem->order_detail_status = $order_data['order_detail_status'];
+            if (!$Ordersitem->save() ) {
+                Yii::log(date('Y-m-d H:i:s') . " Ordersitem create fail", CLogger::LEVEL_INFO);
+                throw new Exception(date('Y-m-d H:i:s') . " Ordersitem create fail");
+            }
+            $transaction->commit();
+            Yii::app()->session['order'] = $order_data;
+            return array(true,"訂單記錄新增成功");
+        }catch (Exception $e) {
+            $transaction->rollback();
+            Yii::log(date('Y-m-d H:i:s') . " orders create fail and Ordersitem create fail. Message =>" . $e->getMessage(), CLogger::LEVEL_INFO);
+            return array(false,"訂單記錄新增失誤,請稍後再試");
+        } 
+    }
+
     public function findMemberOrderPoint(){
-        $sql = "SELECT oi.*,p.pic_point FROM `orders` o JOIN orders_item oi on o.order_id=oi.order_id JOIN product p on oi.product_id=p.product_id where member_id=" . Yii::app()->session['uid'] . " and oi.order_category=1 order by o.order_id asc";
+        $sql = "SELECT oi.*,p.pic_point FROM `orders` o JOIN orders_item oi on o.order_id=oi.order_id JOIN product p on oi.product_id=p.product_id where member_id=" . Yii::app()->session['member_id'] . " and oi.order_category=1 order by o.order_id asc";
         $data = Yii::app()->db->createCommand($sql)->queryAll();
         return $data;
     }
+    public function findMemberOrderData($member_id,$status){
+        $sql = "SELECT * FROM `orders` o JOIN orders_item oi on o.order_id=oi.order_id JOIN product p on oi.product_id=p.product_id where member_id=" . Yii::app()->session['member_id'] . " and o.order_status=" . $status . " order by o.order_id asc";
+        $data = Yii::app()->db->createCommand($sql)->queryAll();
+        $result = array();
+        foreach ($data as $key => $value) {
+            if( $value['product_type'] == 1 ){
+                $product_name = $value['product_name'] . $this::$product_type[$value['product_type']] . ' ( ' . $value['pic_point'] . ' 點 )';
+            }else{
+                $product_name = $value['product_name'] .$this::$product_type[$value['product_type']] . ' ( ' . $value['pic_number'] . ' 張 )';
+            }
+            $result[] = array(
+                "order_id" => $value['order_id'],
+                "product_id" => $value['product_id'],
+                "product_name" => $product_name,
+                "product_type" => $value['product_type'],
+                "cost_total" => $value['cost_total'],
+            );
+        }
+        return $result;
+    }
+
     public function findById($id)
     {
         $model = Product::model()->findByPk($id);

@@ -30,9 +30,9 @@ class UserIdentity extends CUserIdentity
         		if(md5($this->password) == $member->password){
 					$this->errorCode=self::ERROR_NONE;
 					Yii::log('login success');
-					Yii::app()->session['uid'] = $member->id;//會員帳號ID
-	                Yii::app()->session['pid'] = $member->account;//會員帳號
-	                Yii::app()->session['name'] = $member->name;//會員名稱
+					Yii::app()->session['member_id'] = $member->id;//會員帳號ID
+	                Yii::app()->session['member_account'] = $member->account;//會員帳號
+	                Yii::app()->session['member_name'] = $member->name;//會員名稱
 					return true;
 				}else{
 					Yii::log('Set login::password is error');

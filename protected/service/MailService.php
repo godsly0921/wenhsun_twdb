@@ -297,6 +297,36 @@ class MailService
             return false;
         }
     }
+    public function sendImageMail($to,$toname,$msg,$title){
+        try {
+            $mail = new PHPMailer();
+            $mail->IsSMTP();
+            $mail->SMTPAuth = true;
+            $mail->SMTPSecure = 'ssl';
+            $mail->Host = 'smtp.gmail.com';
+            $mail->Port = 465;
+            $mail->CharSet = 'utf-8';
+            $mail->Username = 'wenhsun0509@gmail.com';
+            $mail->Password = 'cute0921';
+            $mail->From = 'wenhsun0509@gmail.com';
+            $mail->FromName = '文訊雜誌社人資系統';
+            $mail->addAddress($to);
+            // $mail->addAddress('fdp.wenhsun@gmail.com');
+            $mail->IsHTML(true);
+
+            $mail->Subject = $title;
+            $mail->Body = $msg;
+
+            if ($mail->Send()) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (Exception $e) {
+            Yii::log(date('Y-m-d H:i:s') . " sendImageMail error write exception {$e->getTraceAsString()}", CLogger::LEVEL_INFO);
+            return false;
+        }
+    }
 
     public function sendApproveMail($inputs)
     {

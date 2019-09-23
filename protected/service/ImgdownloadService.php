@@ -6,7 +6,7 @@ class ImgdownloadService
         $transaction = Yii::app()->db->beginTransaction();
         try {
             $post=new Imgdownload;
-            $post->member_id = Yii::app()->session['uid'];
+            $post->member_id = Yii::app()->session['member_id'];
             $post->orders_item_id = $data['orders_item_id'];
             $post->download_method  = $data['download_method'];
             $post->single_id = $data['single_id'];
@@ -30,7 +30,7 @@ class ImgdownloadService
                 }
             }
             if($data['download_method'] == 1){ //點數下載
-                $member = Member::model()->findByPk(Yii::app()->session['uid']);
+                $member = Member::model()->findByPk(Yii::app()->session['member_id']);
                 $member->active_point = $member->active_point - $data['cost'];
                 if (!$member->update() ) {
                     Yii::log(date('Y-m-d H:i:s') . " member update fail", CLogger::LEVEL_INFO);
@@ -49,7 +49,7 @@ class ImgdownloadService
         } 
     }
     public static function findMemberDownloadPoint(){
-        $total_cost = Imgdownload::model()->findAllBySql("select sum(cost) as total_cost from img_download where member_id = " . Yii::app()->session['uid'] . " and download_method=1");
+        $total_cost = Imgdownload::model()->findAllBySql("select sum(cost) as total_cost from img_download where member_id = " . Yii::app()->session['member_id'] . " and download_method=1");
         return $total_cost;
     }
 
@@ -57,5 +57,15 @@ class ImgdownloadService
         $date = date('Ymd');
         $cnt = Imgdownload::model()->findAllBySql("select * from img_download where authorization_no like '" . $date . "%' order by authorization_no desc");
         return $cnt;
+    }
+    public static function findMemberDownloadImage($member_id){
+        $result = Imgdownload::model()->findAll(array(
+            'condition'=>'member_id=:member_id',
+            'params'=>array(
+                ':member_id' => $member_id,
+            ),
+            'group' => 'single_id'
+        ));
+        return $result;
     }
 }

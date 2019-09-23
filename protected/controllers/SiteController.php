@@ -3,6 +3,15 @@ class SiteController extends CController{
     // layout
     public $layout = "//layouts/front_end";
     private const PERPAGE = 5;
+    private $ECPAY_HashKey     = "8FgzpAJbBEHPB1lq";
+    private $ECPAY_HashIV      = "9NtfkektI11H2JY9";
+    private $ECPAY_MerchantID  = "3100529";
+    public $product_type = array(
+        '1' => '點數',
+        '2' => '自由載 30 天',
+        '3' => '自由載 90 天',
+        '4' => '自由載 360 天',
+    );
     protected function needLogin(): bool
     {
         return true;
@@ -61,8 +70,8 @@ class SiteController extends CController{
         if (!Yii::app() -> user -> isGuest){
             $memberService = new MemberService();
             $memberplanService = new MemberplanService();
-            $member = $memberService->findByMemId(Yii::app()->session['uid']);
-            $memberplan = $memberplanService->findByMemberPlanEnable(Yii::app()->session['uid']);
+            $member = $memberService->findByMemId(Yii::app()->session['member_id']);
+            $memberplan = $memberplanService->findByMemberPlanEnable(Yii::app()->session['member_id']);
             $member_point = $member->active_point;
             if($memberplan) $member_plan = $memberplan[0]['remain_amount'];
         }
@@ -111,7 +120,7 @@ class SiteController extends CController{
                 $order_point_data[$value['orders_item_id']] = $order_total_point;
             }
         }
-        $member = $memberService->findByMemId(Yii::app()->session['uid']);
+        $member = $memberService->findByMemId(Yii::app()->session['member_id']);
         $member_point = $member->active_point;
         $sale_point = $single_data[0]['sale_point'];
         if(($order_total_point-$total_cost-$sale_point) > 0){
@@ -155,7 +164,7 @@ class SiteController extends CController{
     public function doPlanDownloadImage($single_id, $size_type, $single_data){
         $memberplanService = new MemberplanService();
         $imgdownloadService = new ImgdownloadService();
-        $memberplan = $memberplanService->findByMemberPlanEnable(Yii::app()->session['uid']);
+        $memberplan = $memberplanService->findByMemberPlanEnable(Yii::app()->session['member_id']);
         if( $memberplan && $memberplan[0]['remain_amount']>0){
             $member_plan_id = $memberplan[0]['member_plan_id'];
             $order_item_id = $memberplan[0]['order_item_id'];
@@ -283,9 +292,9 @@ class SiteController extends CController{
     }
     public function actionLogout() {   
         Yii::app ()->user->logout ();
-        unset(Yii::app()->session['uid']);
-        unset(Yii::app()->session['pid']);
-        unset(Yii::app()->session['name']);
+        unset(Yii::app()->session['member_id']);
+        unset(Yii::app()->session['member_account']);
+        unset(Yii::app()->session['member_name']);
         $this->redirect(Yii::app()->createUrl('site'));
     }
     //fb 註冊登入
@@ -367,9 +376,9 @@ class SiteController extends CController{
             if($inputs['fb_user_id'] == $model->fb_user_id){
                 $useridentity = new UserIdentity($model->account,"");
                 $is_login = $useridentity->authenticate();
-                Yii::app()->session['uid'] = $model->id;//會員帳號ID
-                Yii::app()->session['pid'] = $model->account;//會員帳號
-                Yii::app()->session['name'] = $model->name;//會員名稱
+                Yii::app()->session['member_id'] = $model->id;//會員帳號ID
+                Yii::app()->session['member_account'] = $model->account;//會員帳號
+                Yii::app()->session['member_name'] = $model->name;//會員名稱
                 $duration = 3600 * 24 * 30; // 30 days
                 Yii::app()->user->login($useridentity, $duration);
                 $this->redirect(Yii::app()->createUrl('site'));
@@ -418,9 +427,9 @@ class SiteController extends CController{
                 if($profile['sub'] == $model->google_sub){
                     $useridentity = new UserIdentity($model->account,"");
                     $is_login = $useridentity->authenticate();
-                    Yii::app()->session['uid'] = $model->id;//會員帳號ID
-                    Yii::app()->session['pid'] = $model->account;//會員帳號
-                    Yii::app()->session['name'] = $model->name;//會員名稱
+                    Yii::app()->session['member_id'] = $model->id;//會員帳號ID
+                    Yii::app()->session['member_account'] = $model->account;//會員帳號
+                    Yii::app()->session['member_name'] = $model->name;//會員名稱
                     $duration = 3600 * 24 * 30; // 30 days
                     Yii::app()->user->login($useridentity, $duration);
                     $this->redirect(Yii::app()->createUrl('site'));
@@ -586,6 +595,9 @@ class SiteController extends CController{
     }
     //會員專區
     public function ActionMy_account() {
+        if (Yii::app() -> user -> isGuest){
+            $this->redirect(Yii::app()->createUrl('site/login'));
+        }
         if(Yii::app()->request->isPostRequest) {
             $this->doPostMyaccount();
         }else{
@@ -627,7 +639,7 @@ class SiteController extends CController{
     }
     //會員專區-會員資料
     public function doGetMyaccount(){
-        $member = Member::model()->findByPk(Yii::app()->session['uid']);
+        $member = Member::model()->findByPk(Yii::app()->session['member_id']);
         $inputs = array();
         $inputs['account'] = $member->account;
         $inputs['name'] = $member->name;
@@ -643,7 +655,21 @@ class SiteController extends CController{
     }
     //會員專區-我的點數
     public function ActionMy_points() {
-        $this->render('my_points');
+        if (Yii::app() -> user -> isGuest){
+            $this->redirect(Yii::app()->createUrl('site/login'));
+        }
+        $memberplanService = new MemberplanService();
+        $imgdownloadService = new ImgdownloadService();
+        $member = Member::model()->findByPk(Yii::app()->session['member_id']);
+        $member_plan = $memberplanService->findByMemberAllPlanEnable(Yii::app()->session['member_id']);
+        $plan_data = array('2'=>0,'3'=>0,'4'=>0);
+        if($member_plan){
+            foreach ($member_plan as $key => $value) {
+                $plan_data[$value['product_type']] += $value['remain_amount'];
+            }
+        }
+        $image_download = $imgdownloadService->findMemberDownloadImage(Yii::app()->session['member_id']);
+        $this->render('my_points',array('member' => $member,'member_plan' => $plan_data, 'image_download'=>$image_download));
     }
     //會員專區-我的收藏
     public function ActionMy_favorite() {
@@ -651,7 +677,9 @@ class SiteController extends CController{
     }
     //會員專區-購買紀錄
     public function ActionMy_record() {
-        $this->render('my_record');
+        $orderService = new OrderService();
+        $member_order_data = $orderService->findMemberOrderData(Yii::app()->session['member_id'],3);
+        $this->render('my_record',array('member_order_data' => $member_order_data));
     }
 
     public function ActionPrivacy(){
@@ -663,7 +691,187 @@ class SiteController extends CController{
     }
 
     public function ActionPlan(){
-        $this->render('plan');
+        $productService = new ProductService();
+        $data = $productService->findWithStatus(1);
+        $this->render('plan', array('data'=>$data, 'product_type'=> $this->product_type));
     }
+    public function ActionCheck_order(){
+        if (Yii::app() -> user -> isGuest){
+            $this->redirect(Yii::app()->createUrl('site/login'));
+        }
+        if(isset($_POST['product_id'])){
+            $product_id = $_POST['product_id'];
+            $productService = new ProductService();
+            $memberService = new MemberService();
+            $memberaddressbook = $memberService->findMemberAddressBook(Yii::app()->session['member_id']);
+
+            $data = $productService->findById($product_id);
+            if( $data->product_type == 1 ){
+                $product_name = $this->product_type[$data->product_type] . ' ( ' . $data->pic_point . ' 點 )';
+            }else{
+                $product_name = $this->product_type[$data->product_type] . ' ( ' . $data->pic_number . ' 張 )';
+            }
+            $data->product_name = $data->product_name . $product_name;
+            $this->render('check_order', array('data'=>$data, 'memberaddressbook'=>$memberaddressbook, 'product_type'=> $this->product_type));
+        }else{
+
+        } 
+    }
+
+    public function ActionSend_order(){
+        if (Yii::app() -> user -> isGuest){
+            $this->redirect(Yii::app()->createUrl('site/login'));
+        }
+        //var_dump($_POST);exit();
+        if(isset($_POST['product_id'])){
+            $product_id = $_POST['product_id'];
+            $productService = new ProductService();
+            $memberService = new MemberService();
+            $orderService = new OrderService();
+            $product_data = $productService->findById($product_id);
+            if( $product_data->product_type == 1 ){
+                $product_name = $product_data->product_name . $this->product_type[$product_data->product_type] . ' ( ' . $product_data->pic_point . ' 點 )';
+            }else{
+                $product_name = $product_data->product_name . $this->product_type[$product_data->product_type] . ' ( ' . $product_data->pic_number . ' 張 )';
+            }
+            $order_data = array(
+                "product_id" => $product_id,
+                "pay_method" => $_POST['pay_method'],
+                "member_id" => Yii::app()->session['member_id'],
+                "mobile" => isset($_POST['mobile'])?$_POST['mobile']:"",
+                "nationality" => isset($_POST['nationality'])?$_POST['nationality']:"",
+                "county" => isset($_POST['county'])?$_POST['county']:"",
+                "town" => isset($_POST['town'])?$_POST['town']:"",
+                "zipcode" => isset($_POST['zipcode'])?$_POST['zipcode']:"",
+                "address" => isset($_POST['mobile'])?$_POST['address']:"",
+                "invoice_category" => isset($_POST['invoice_category'])?$_POST['invoice_category']:"",
+                "invoice_number" => isset($_POST['invoice_number'])?$_POST['invoice_number']:"",
+                "invoice_title" => isset($_POST['invoice_title'])?$_POST['invoice_title']:"",
+                "cost_total" => $product_data->price,
+                "order_category"=>$product_data->product_type,
+                "order_detail_status" => 3,
+                "product_name" => $product_name
+            );
+
+            $memberaddressbook_update_insert = $memberService->updateMemberAddressBook(Yii::app()->session['member_id'],$order_data);
+            $order_create = $orderService->create_order($order_data);
+            if($order_create[0]){
+                $this->redirect(Yii::app()->createUrl('/site/Ecpayapi'));
+            }else{
+                $this->redirect(Yii::app()->createUrl('/site/plan'));
+            }
+        }else{
+            $this->redirect(Yii::app()->createUrl('/site/plan'));
+        } 
+    }
+
+    public function actionEcpayapi(){
+
+        if( empty(Yii::app()->session['order'])){
+           echo '尚未填寫表單資訊,無法進行結帳動作';
+           exit;
+        }
+        require_once( dirname(__FILE__) . '/../components/ECPay.Payment.Integration.php');
+        try {
+            $obj = new ECPay_AllInOne();       
+            //服務參數
+            $obj->ServiceURL  = "https://payment.ecpay.com.tw/Cashier/AioCheckOut/V5";      //服務位置
+            $obj->HashKey     = $this->ECPAY_HashKey;//測試用Hashkey，請自行帶入ECPay提供的HashKey
+            $obj->HashIV      = $this->ECPAY_HashIV;//測試用HashIV，請自行帶入ECPay提供的HashIV
+            $obj->MerchantID  = $this->ECPAY_MerchantID;//測試用MerchantID，請自行帶入ECPay提供的MerchantID
+            $obj->EncryptType = '1';//CheckMacValue加密類型，請固定填入1，使用SHA256加密
+            $igt_amount = (int)(Yii::app()->session['order']['cost_total']);
+
+            $obj->Send['OrderResultURL'] = DOMAIN . 'site/index';//基本參數(請依系統規劃自行調整)
+            $obj->Send['ReturnURL'] = DOMAIN . "site/osuccess" ;     //付款完成通知回傳的網址
+            $obj->Send['MerchantTradeNo'] = Yii::app()->session['order']['order_id'];//訂單編號
+            $obj->Send['MerchantTradeDate'] = date('Y-m-d H:i:s');//交易時間
+            $obj->Send['TotalAmount'] = (int)(Yii::app()->session['order']['cost_total']);//交易金額
+            $obj->Send['TradeDesc'] = Yii::app()->session['order']['product_name']; //交易描述
+            $obj->Send['ChoosePayment']     = ECPay_PaymentMethod::ALL;                  //付款方式:全功能
+            //$obj->Send['IgnorePayment'] = implode("#", json_decode($company->ignore_payment)); //不顯示的付款方式，多項的話以 # 分隔
+
+            //訂單的商品資料
+            array_push($obj->Send['Items'], 
+                array('Name' => Yii::app()->session['order']['product_name'], 
+                      'Price' => (int)(Yii::app()->session['order']['cost_total']),
+                      'Currency' => "元", 
+                      'Quantity' => (int)1,
+                      'URL' => "dedwed")
+            );
+            /*
+            $obj->SendExtend['CreditInstallment'] = '' ;    //分期期數，預設0(不分期)，信用卡分期可用參數為:3,6,12,18,24
+            $obj->SendExtend['InstallmentAmount'] = 0 ;    //使用刷卡分期的付款金額，預設0(不分期)
+            $obj->SendExtend['Redeem'] = false ;           //是否使用紅利折抵，預設false
+            $obj->SendExtend['UnionPay'] = false;          //是否為聯營卡，預設false;
+            */
+            unset(Yii::app()->session['order']);
+            //產生訂單(auto submit至ECPay)
+            $obj->CheckOut();
+        } catch (Exception $e) {
+            echo $e->getMessage();
+        } 
+    }
+
+    public function actionOsuccess(){
+        require_once( dirname(__FILE__) . '/../components/ECPay.Payment.Integration.php');
+        try {
+            // 收到綠界科技的付款結果訊息，並判斷檢查碼是否相符
+            $AL = new ECPay_AllInOne();
+            $AL->HashKey     = $this->ECPAY_HashKey;//測試用Hashkey，請自行帶入ECPay提供的HashKey
+            $AL->HashIV      = $this->ECPAY_HashIV;//測試用HashIV，請自行帶入ECPay提供的HashIV
+            $AL->MerchantID  = $this->ECPAY_MerchantID;//測試用MerchantID，請自行帶入ECPay提供的MerchantID
+            $AL->EncryptType = '1'; 
+            //正式要開啟 - 很重要
+            //$backval = $AL->CheckOutFeedback();//正式要開啟
+            //正式要開啟 - 很重要
+
+            //測試用
+            $backval['MerchantTradeNo'] = 'P201909240003';
+            $backval['RtnCode'] = '1';
+            //測試用
+        
+            // 只有RtnCode == 1 時才是交易成功
+            if($backval['RtnCode'] == 1){            
+                // 修改對應訂單
+                $tmpser     = new OrderService();
+                $mailService     = new MailService();
+                $tmpres     = $tmpser->chanage_pay_status( $backval['MerchantTradeNo'] );
+
+                $order = Orders::model()->findByPk($backval['MerchantTradeNo']);
+                if( $tmpres[0] == true){
+                    $open_order_plan = $tmpser->open_order_plan($backval['MerchantTradeNo']);
+                }
+                // 抓取有關會員帳戶的一切資料
+                $member = Member::model()->findByPk($order->member_id);
+                $today = date('Y-m-d') ;
+                if( $tmpres[0] == true){
+                    $to        = $member->account; //收件者
+                
+                    $subject   = "付款成功通知書"; //信件標題
+                    
+                    if( $to ){
+                        $msg    = "親愛的顧客您好,<br/>
+                        感謝您於本平台訂購商品,我們已收到商品款項<br/>
+                        <a href='" . DOMAIN . "site/index'>點此進入平台</a><br/>
+                        如有任何問題,歡迎與本平台客服聯繫<br/>";
+                    }
+                    $headers   = "From: wenhsun7@ms19.hinet.net\r\n"; //寄件者
+                    $headers  .= "Content-Type: text/html; charset=UTF-8\r\n";
+            
+                    if($mailService->sendImageMail($to,$member->name,$msg,$subject)){
+                        Yii::log(date('Y-m-d H:i:s') . 'Order mail success.', CLogger::LEVEL_INFO);
+                    }else{
+                        Yii::log(date('Y-m-d H:i:s') . 'Order mail fail.', CLogger::LEVEL_INFO);
+                        echo '0|';
+                    }
+                }
+            }
+            $this->redirect(Yii::app()->createUrl('/site/index'));
+        } catch(Exception $e) {
+            echo '0|' . $e->getMessage();
+        }  
+    
+    }//success end
 }
 ?>
