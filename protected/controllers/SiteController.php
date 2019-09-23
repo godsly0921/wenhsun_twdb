@@ -785,7 +785,7 @@ class SiteController extends CController{
             $obj->Send['OrderResultURL'] = DOMAIN . 'site/index';//基本參數(請依系統規劃自行調整)
             $obj->Send['ReturnURL'] = DOMAIN . "site/osuccess" ;     //付款完成通知回傳的網址
             $obj->Send['MerchantTradeNo'] = Yii::app()->session['order']['order_id'];//訂單編號
-            $obj->Send['MerchantTradeDate'] = date('Y-m-d H:i:s');//交易時間
+            $obj->Send['MerchantTradeDate'] = date('Y/m/d H:i:s');//交易時間
             $obj->Send['TotalAmount'] = (int)(Yii::app()->session['order']['cost_total']);//交易金額
             $obj->Send['TradeDesc'] = Yii::app()->session['order']['product_name']; //交易描述
             $obj->Send['ChoosePayment']     = ECPay_PaymentMethod::ALL;                  //付款方式:全功能
