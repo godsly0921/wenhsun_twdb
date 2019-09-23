@@ -196,6 +196,7 @@
                 $("#first_hours").val(diff);
                 var lastDay = moment(end.format("YYYY/MM/DD") + " " + "00:00", "YYYY/MM/DD HH:mm");
                 diff += end.diff(lastDay, "hours", true);
+                $("#last_hours").val(end.diff(lastDay, "hours", true));
             }
 
             $("#leave_minutes").val(diff);
