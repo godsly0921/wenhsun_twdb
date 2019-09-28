@@ -628,7 +628,7 @@ class SiteController extends CController{
         $inputs['mobile'] = filter_input(INPUT_POST, 'mobile');
         $inputs['member_type'] = 2;
         $inputs['account_type'] = 1;
-        $inputs['active'] = "N";
+        $inputs['active'] = "Y";
         $inputs['verification_code'] = substr(md5(uniqid(rand(), true)),0,20);
         $inputs['nationality'] = filter_input(INPUT_POST, 'nationality');
         $inputs['county'] = filter_input(INPUT_POST, 'county');
