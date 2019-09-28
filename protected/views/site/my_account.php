@@ -113,6 +113,21 @@
     </div>
     <hr class="top">
     <div class="point">
+        <?php if(isset(Yii::app()->session['error_msg']) && Yii::app()->session['error_msg'] !== ''): ?>
+            <div class="alert alert-danger">
+                <?=Yii::app()->session['error_msg'];?>
+            </div>
+        <?php endif; ?>
+        <?php if(isset(Yii::app()->session['success_msg']) && Yii::app()->session['success_msg'] !== ''): ?>
+        <div class="alert alert-success">
+        <?=Yii::app()->session['success_msg'];?>
+        </div>
+        <?php endif; ?>
+
+        <?php
+        unset( Yii::app()->session['error_msg'] );
+        unset( Yii::app()->session['success_msg'] );
+        ?>
         <form role="form" class="col-lg-8 mx-auto mt-5 register_form" action="<?php echo Yii::app()->createUrl('site/my_account'); ?>" method="post" accept-charset="utf-8" id="register_form">
             <div class="form-group row">
                 <label for="account" class="col-sm-3 col-form-label">會員帳號(Email)</label>
