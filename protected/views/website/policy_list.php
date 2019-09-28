@@ -32,6 +32,7 @@ unset( Yii::app()->session['success_msg'] );
                 <th>編號</th>
                 <th>分類</th>
                 <th>條款內容</th>
+                <th></th>
             </tr>
             </thead>
             <tbody>
