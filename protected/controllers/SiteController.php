@@ -617,7 +617,7 @@ class SiteController extends CController{
 
     //會員專區-會員資料修改
     public function doPostMyaccount(){
-        $inputs['id'] = Yii::app()->session['uid'];
+        $inputs['id'] = Yii::app()->session['member_id'];
         $inputs['account'] = filter_input(INPUT_POST, 'account');
         $inputs['password'] = filter_input(INPUT_POST, 'password');
         $inputs['password_confirm'] = filter_input(INPUT_POST, 'password_confirm');
