@@ -297,7 +297,8 @@ class SiteController extends CController{
         }else{
             $duration = 3600 * 24 * 30; // 30 days
             Yii::app()->user->login($useridentity, $duration);
-            $this->redirect(Yii::app()->createUrl('site'));
+            $this->redirect(Yii::app()->user->setReturnUrl());
+            //$this->redirect(Yii::app()->createUrl('site'));
         }
     }
     public function actionLogout() {   
@@ -709,9 +710,10 @@ class SiteController extends CController{
     }
     public function ActionCheck_order(){
         if (Yii::app() -> user -> isGuest){
+            Yii::app()->user->setReturnUrl(Yii::app()->request->url);
             $this->redirect(Yii::app()->createUrl('site/login'));
         }
-        if(isset($_POST['product_id'])){
+        if(isset($_GET['product_id'])){
             $product_id = $_POST['product_id'];
             $productService = new ProductService();
             $memberService = new MemberService();

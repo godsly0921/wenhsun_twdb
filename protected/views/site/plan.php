@@ -44,7 +44,7 @@
     <div id="option">
         <div class="plan col-sm-12 row">
             <div class="col-sm-6">
-                <form method='POST' class='form-horizontal' action='<?= Yii::app()->createUrl('site/check_order');?>'>
+                <form method='GET' class='form-horizontal' action='<?= Yii::app()->createUrl('site/check_order');?>'>
                     <div class="shadow">
                         <div class="header">
                             <div class="header-div col-sm-12">
@@ -90,7 +90,7 @@
                 </form>
             </div>
             <div class="col-sm-6">
-                <form method='POST' class='form-horizontal' action='<?= Yii::app()->createUrl('site/check_order');?>'>
+                <form method='GET' class='form-horizontal' action='<?= Yii::app()->createUrl('site/check_order');?>'>
                     <div class="shadow">
                         <div class="header">
                             <div class="header-div col-sm-12">
@@ -141,7 +141,7 @@
     <div id="title2" class="text-center">尺寸指南</div>
     <div class="size">
         <div class="shadow1">
-            <div class="strip3">
+            <div class="strip_size_info">
                 <div class="col-sm-12 row text-center padding-radio">
                     <div class="col-sm-2">尺寸</div>
                     <div class="col-sm-2">解析度</div>
@@ -149,7 +149,7 @@
                     <div class="col-sm-6">用途</div>
                 </div>
             </div>
-            <div class="strip1">
+            <div class="strip_size_info">
                 <div class="col-sm-12 row text-center padding-radio">
                     <div class="col-sm-2 point">S</div>
                     <div class="col-sm-2 wording">72dpi</div>
@@ -157,7 +157,7 @@
                     <div class="col-sm-6 point">適合於網路文章搭配</div>
                 </div>
             </div>
-            <div class="strip3">
+            <div class="strip_size_info">
                 <div class="col-sm-12 row text-center padding-radio">
                     <div class="col-sm-2 point">M</div>
                     <div class="col-sm-2 wording">96dpi</div>
@@ -165,7 +165,7 @@
                     <div class="col-sm-6 point">適合於學術報告、簡報</div>
                 </div>
             </div>
-            <div class="strip1">
+            <div class="strip_size_info">
                 <div class="col-sm-12 row text-center padding-radio">
                     <div class="col-sm-2 point">L</div>
                     <div class="col-sm-2 wording">150dpi</div>
@@ -173,7 +173,7 @@
                     <div class="col-sm-6 point">適合於網站廣告</div>
                 </div>
             </div>
-            <div class="strip3">
+            <div class="strip_size_info">
                 <div class="col-sm-12 row text-center padding-radio">
                     <div class="col-sm-2 point">XL</div>
                     <div class="col-sm-2 wording">300dpi</div>
@@ -181,7 +181,7 @@
                     <div class="col-sm-6 point">適合於書刊、雜誌印刷出版、廣告海報或大圖輸出、展覽</div>
                 </div>
             </div>
-            <div class="strip1">
+            <div class="strip_size_info">
                 <div class="col-sm-12 row text-center padding-radio">
                     <div class="col-sm-12 point">
                         *商業用途、或需大批檔案下載、600dpi以上檔案者，需與文訊進一步確認用途等相關事宜，價格則由本公司依媒體、數量、地域、網路流量等做報價，並保留是否接受訂單之最後權利。
@@ -252,6 +252,14 @@
 
     .header-description {
         font-size: 12px;
+    }
+    .strip_size_info:nth-child(even){
+        background-color: #e3decd;
+        height: 80px;
+    }
+    .strip_size_info:nth-child(odd){
+        height: 80px;
+        background-color: #f8f5ec;
     }
     .strip:nth-child(even){
         background-color: #e3decd;
