@@ -643,7 +643,7 @@ class SiteController extends CController{
             Yii::app()->session['error_msg'] = '修改失敗';
             $this->redirect(Yii::app()->createUrl('site/my_account',['data' => $inputs]));
         } else {
-            Yii::app()->session['success'] = '修改成功';
+            Yii::app()->session['success_msg'] = '修改成功';
             $this->redirect(Yii::app()->createUrl('site/my_account',['data' => $inputs]));
         }
     }
