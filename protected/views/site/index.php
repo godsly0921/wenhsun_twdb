@@ -40,7 +40,7 @@
       <div class="py-5" id="ad_image">
         <?php if(count($ad_data)>0){?>
           <?php foreach ($ad_data as $key => $value) {?>
-            <div><img src="<?=Yii::app()->createUrl('/')."/".PHOTOGRAPH_STORAGE_URL.$value['single_id']?>.jpg"></div>
+            <div onclick="open_image_info(this,'<?=$value['single_id']?>')" style="cursor:pointer;"><img src="<?=Yii::app()->createUrl('/')."/".PHOTOGRAPH_STORAGE_URL.$value['single_id']?>.jpg"></div>
           <?php }?>
         <?php }?>
       </div>
@@ -49,7 +49,7 @@
       <div class="py-5 col-lg-8 mx-auto">
         <?php if(count($ad_data)>0){?>
           <?php foreach ($ad_data as $key => $value) {?>
-            <div class="row col-lg-12 py-3">
+            <div class="row col-lg-12 py-3" onclick="open_image_info(this,'<?=$value['single_id']?>')" style="cursor:pointer;">
               <div class="col-lg-4 text-right"><img src="<?=Yii::app()->createUrl('/')."/".PHOTOGRAPH_STORAGE_URL.$value['single_id']?>.jpg" width="80%"></div>
               <div class="col-lg-8 my-auto">
                 <div class="col-lg-12">人物資訊:<?=$value['people_info']?></div>
@@ -64,6 +64,8 @@
     </div>
   </div>
 </div>
+<link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/assets/css/jquery.fancybox.min.css">
+<script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/jquery.fancybox.min.js"></script>
 <script type="text/javascript">
   function search(){
     var keyword = $("#keyword").val();
@@ -72,6 +74,21 @@
       $('#keyword_search').attr('action',"<?php echo Yii::app()->createUrl('site/search');?>/" + keyword + "/" + page);
       $('#keyword_search').submit();
     }   
+  }
+  function open_image_info(a,single_id){
+    $.fancybox.open({
+      type: 'iframe',
+      src: '<?= Yii::app()->createUrl('site/ImageInfo');?>/'+single_id,
+      toolbar  : false,
+      smallBtn : true,
+      iframe : {
+        preload : true,
+        css : {
+          width : '90%',
+          height: '90%'
+        }
+      }
+    });
   }
   $(document).ready( function() {
     $('#ad_image').justifiedGallery({

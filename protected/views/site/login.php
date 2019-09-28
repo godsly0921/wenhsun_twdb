@@ -45,6 +45,7 @@
         padding-bottom: 16px;
     }
 </style>
+<script src='https://www.google.com/recaptcha/api.js'></script>
 <div class="container">
     <div class="text-center">
         <h3 class="login_title">會員登入</h3>
@@ -81,6 +82,14 @@
             </div>
             <label class="col-sm-2 col-form-label" style="color:red;font-size: 14px;">必填 *</label>
         </div>
+        <div class="form-group row">
+            <label for="password" class="col-sm-2 col-form-label">驗證碼</label>
+            <div class="col-sm-8">
+                <div class="g-recaptcha" data-sitekey="6LdxkAYTAAAAAPob7xfSwvYt6gm4Ivz75fEcpzZ2"></div>
+            </div>
+            <label class="col-sm-2 col-form-label" style="color:red;font-size: 14px;">必填 *</label>
+        </div>
+        
         <div class="form-group row">
             <div class="col-sm-2"></div>
             <a href="<?php echo Yii::app()->createUrl('site/forget'); ?>" class="col-sm-8 forget"><h6>忘記密碼?</h6></a>

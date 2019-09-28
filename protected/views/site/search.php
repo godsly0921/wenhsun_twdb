@@ -1,10 +1,6 @@
 <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/assets/css/justifiedGallery.min.css">
 <link href="<?php echo Yii::app()->request->baseUrl; ?>/assets/css/bootstrap-slider.css" rel="stylesheet">
 <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/assets/css/jquery.fancybox.min.css">
-<script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/jquery.fancybox.min.js"></script>
-<script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/jquery.justifiedGallery.min.js"></script>
-<script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/jquery.twbsPagination.js"></script>
-<script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/bootstrap-slider.js"></script>
 <style type="text/css">
 	.container{
 		padding-top: 80px;
@@ -230,6 +226,10 @@
 </div>
 <div class="row my-5" id="page_selection"></div>
 <div class="to_top"><span class="tri_up"></span><span class="tri_up_underline"></span></div>
+<script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/jquery.fancybox.min.js"></script>
+<script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/jquery.justifiedGallery.min.js"></script>
+<script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/jquery.twbsPagination.js"></script>
+<script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/bootstrap-slider.js"></script>
 <script type="text/javascript">
 	function search(){
 	    var keyword = $("#keyword").val();
@@ -239,6 +239,9 @@
 	      $('#keyword_search').submit();
 	    }   
 	}
+	// function closeIFrame(){
+	//     $('#youriframeid').remove();
+	// }
 	function open_image_info(a,single_id){
 		$.fancybox.open({
 	        type: 'iframe',

@@ -1,6 +1,6 @@
 <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/assets/css/slick-theme.css">
 <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/assets/css/slick.css">
-<script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/slick.js"></script>
+<link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/assets/css/jquery.fancybox.min.css">
 <style type="text/css">
 	/*.container{
 		
@@ -311,12 +311,12 @@
 		</div>
 		<div class="col-lg-6 mx-auto slider-for">
 			<?php foreach ($same_category as $key => $value) {?>
-				<img class="px-3" src="<?=DOMAIN.PHOTOGRAPH_STORAGE_URL.$value->single_id?>.jpg">
+				<img class="px-3" onclick="open_image_info(this,'<?=$value->single_id?>')" src="<?=DOMAIN.PHOTOGRAPH_STORAGE_URL.$value->single_id?>.jpg">
 			<?php }?>
 		</div>
 		<div class="col-lg-10 mx-auto slider-nav"> 
 			<?php foreach ($same_category as $key => $value) {?>
-				<img class="px-3" src="<?=DOMAIN.PHOTOGRAPH_STORAGE_URL.$value->single_id?>.jpg">
+				<img class="px-3" onclick="open_image_info(this,'<?=$value->single_id?>')" src="<?=DOMAIN.PHOTOGRAPH_STORAGE_URL.$value->single_id?>.jpg">
 			<?php }?>
 			
 		</div>
@@ -342,7 +342,12 @@
     </div>
   </div>
 </div>
+<script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/slick.js"></script>
+<script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/jquery.fancybox.min.js"></script>
 <script type="text/javascript">
+	function open_image_info(a,single_id){
+		window.location = "<?= Yii::app()->createUrl('site/ImageInfo');?>/"+single_id;
+	}
 	function size_type(a){
 		var w_h = $(a).attr('data-w_h');
 		var print_w_h = $(a).attr('data-print_w_h');
