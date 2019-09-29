@@ -298,6 +298,9 @@ class SiteController extends CController{
         }else{
             $duration = 3600 * 24 * 30; // 30 days
             Yii::app()->user->login($useridentity, $duration);
+            if(Yii::app()->user->returnUrl == ''){
+                Yii::app()->user->returnUrl = Yii::app()->createUrl('site');
+            }
             $this->redirect(Yii::app()->user->returnUrl);
             //$this->redirect(Yii::app()->createUrl('site'));
         }
@@ -393,6 +396,9 @@ class SiteController extends CController{
                 Yii::app()->session['member_name'] = $model->name;//會員名稱
                 $duration = 3600 * 24 * 30; // 30 days
                 Yii::app()->user->login($useridentity, $duration);
+                if(Yii::app()->user->returnUrl == ''){
+                    Yii::app()->user->returnUrl = Yii::app()->createUrl('site');
+                }
                 $this->redirect(Yii::app()->user->returnUrl);
                 //$this->redirect(Yii::app()->createUrl('site'));
             }else{
@@ -445,6 +451,9 @@ class SiteController extends CController{
                     Yii::app()->session['member_name'] = $model->name;//會員名稱
                     $duration = 3600 * 24 * 30; // 30 days
                     Yii::app()->user->login($useridentity, $duration);
+                    if(Yii::app()->user->returnUrl == ''){
+                        Yii::app()->user->returnUrl = Yii::app()->createUrl('site');
+                    }
                     $this->redirect(Yii::app()->user->returnUrl);
                     //$this->redirect(Yii::app()->createUrl('site'));
                 }else{
