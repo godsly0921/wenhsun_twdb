@@ -63,12 +63,12 @@
     }
 
     img.download {
-        height: 196px;
+        height: 100%;
     }
 
     button.download {
-        width: 196px;
-        background-color: #7d7d7d;
+        width: 100%;
+        background-color: #dc5514;
         color: white;
         padding: 0, 0, 0, 0;
         border-radius: 0;
@@ -213,8 +213,9 @@
             <?php foreach ($image_download as $key => $value) {?>
                 <div>
                     <img src="<?= Yii::app()->createUrl('/'). "/" .PHOTOGRAPH_STORAGE_URL . $value['single_id']?>.jpg">
-                    <div class="caption">
-                        <a href="<?php echo Yii::app()->request->baseUrl; ?>/assets/site/authorization.pdf" target="_blank" class="download_authorization"><span class="btn btn-dark btn-sm" style="font-size: 24px;color:white;line-height: 24px;">授權書</span></a>
+                    <div class="caption p-0">
+                        <a href="<?php echo Yii::app()->request->baseUrl; ?>/assets/site/authorization.pdf" target="_blank" class="download_authorization"><button class="btn download">授權書</button></a>
+                        <!-- <a href="<?php echo Yii::app()->request->baseUrl; ?>/assets/site/authorization.pdf" target="_blank" class="download_authorization"><span class="btn btn-dark btn-sm" style="font-size: 24px;color:white;line-height: 24px;">授權書</span></a> -->
                     </div>
                 </div>
             <?php }?>
