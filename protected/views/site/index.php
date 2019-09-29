@@ -1,9 +1,12 @@
 <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/assets/css/justifiedGallery.min.css">
 <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/assets/css/slick-theme.css">
 <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/assets/css/slick.css">
-
-<script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/jquery.justifiedGallery.min.js"></script>
-<script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/slick.js"></script>
+<link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/assets/css/jquery.fancybox.min.css">
+<style>
+  #keyword:focus{
+    z-index: 0;
+  }
+</style>
 <!-- 輪播圖 -- Start -->
 <div id="banner" class="row">
   <?php if(count($banner_data)>0){?>
@@ -64,7 +67,9 @@
     </div>
   </div>
 </div>
-<link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/assets/css/jquery.fancybox.min.css">
+
+<script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/jquery.justifiedGallery.min.js"></script>
+<script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/slick.js"></script>
 <script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/jquery.fancybox.min.js"></script>
 <script type="text/javascript">
   function search(){

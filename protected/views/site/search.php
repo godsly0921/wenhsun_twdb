@@ -2,6 +2,9 @@
 <link href="<?php echo Yii::app()->request->baseUrl; ?>/assets/css/bootstrap-slider.css" rel="stylesheet">
 <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/assets/css/jquery.fancybox.min.css">
 <style type="text/css">
+	#keyword:focus{
+	    z-index: 0;
+	  }
 	.container{
 		padding-top: 80px;
 	}
