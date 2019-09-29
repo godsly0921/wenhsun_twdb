@@ -218,18 +218,24 @@ class OrderService
         $cnt = Orders::model()->findAllBySql("select * from orders where order_id like 'P" . $date . "%' order by order_id desc");
         return $cnt;
     }
-    public function chanage_pay_status($order_id){
+    public function chanage_pay_status($order_id,$backval){
         $transaction = Yii::app()->db->beginTransaction();
         try {
             $order = Orders::model()->findByPk($order_id);
-            $order->order_status = 2;
-            $order->receive_date = date("Y-m-d H:i:s");
-            if($order->save()){
-                Yii::log(date('Y-m-d H:i:s') . " order_id => " . $order_id. " order_status update success", CLogger::LEVEL_INFO);
+            if($order->order_status == 1){
+                $order->order_status = 2;
+                $order->pay_feedback = http_build_query($backval);
+                $order->receive_date = date("Y-m-d H:i:s");
+                if($order->save()){
+                    Yii::log(date('Y-m-d H:i:s') . " order_id => " . $order_id. " order_status update success", CLogger::LEVEL_INFO);
+                }else{
+                    Yii::log(date('Y-m-d H:i:s') . " order_id => " . $order_id. " order_status update fail", CLogger::LEVEL_INFO);
+                    throw new Exception(date('Y-m-d H:i:s') . " order_id => " . $order_id. "訂單狀態更新失敗");
+                    return array(false,"0|");
+                }
             }else{
-                Yii::log(date('Y-m-d H:i:s') . " order_id => " . $order_id. " order_status update fail", CLogger::LEVEL_INFO);
-                throw new Exception(date('Y-m-d H:i:s') . " order_id => " . $order_id. "訂單狀態更新失敗");
-                return array(false,"0|");
+                Yii::log(date('Y-m-d H:i:s') . " order_id => " . $order_id. " order_status is already update", CLogger::LEVEL_INFO);
+                return array(false,"order_status is already update");
             }
             $transaction->commit();
             return array(true,"order_status update success");
@@ -351,11 +357,13 @@ class OrderService
             $order_data['order_category'] = $inputs['order_category'];
             $order_data['order_detail_status'] = $inputs['order_detail_status'];
             $order_data['product_name'] = $inputs['product_name'];
+            $order_data['pay_method'] = $inputs['pay_method'];
             $order = new Orders();
             $order->order_id = $order_data['order_id'];
             $order->member_id = $order_data['member_id'];
             $order->order_datetime = $order_data['order_datetime'];
             $order->order_status = $order_data['order_status'];
+            $order->pay_method = $order_data['pay_method'];
             //$order->name = $order_data['name'];
             $order->mobile = $order_data['mobile'];
             //$order->email = $order_data['email'];

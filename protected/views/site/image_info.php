@@ -248,7 +248,7 @@
 		        </form>
 		        <form action="<?= Yii::app()->createUrl('site/add_favorite');?>" method="post" target="my_iframe" class="d-inline-block">
 	        		<input type="hidden" name="single_id" value="<?=$photograph_data['photograph_info']['single_id']?>">
-		        	<button type="submit" class="btn btn-favorite mx-2"><i class="fa fa-star"></i> 加入收藏</button>
+	        		<button type="button" onclick="add_favorite()" class="btn btn-favorite mx-2">加入收藏 <i class="fa fa-star"></i></button>
 		        </form>
 	        	
 	        </div>
@@ -377,6 +377,7 @@
 	            	alert(data.error_msg);
 	            }
 	            if(data.status){
+	            	$.fancybox.open('<div class="message"><h2>下載完成</h2><p>請到會員專區的<a href="<?php echo Yii::app()->createUrl('site/my_points')?>" target="_parent">「我的點數與下載」</a>的下載記錄裡下載圖片的授權書</p></div>');
 	            	window.open("<?php echo Yii::app()->createUrl('site/GetImage')?>?single_id=<?=$photograph_data['photograph_info']['single_id']?>"+"&size_type="+$('#size_type').val()+"&ext="+data.ext);
 	            }
 	        }  
@@ -406,6 +407,33 @@
 		<?php }?>		
 	}
 
+	function add_favorite(){
+		<?php if (Yii::app() -> user -> isGuest){
+			Yii::app()->user->returnUrl = Yii::app()->request->urlReferrer;
+		?>
+			localStorage.setItem("page",window.parent.$("#page").val());
+			localStorage.setItem("single_id","<?=$_GET['id']?>");
+			localStorage.setItem("add_favorite","true");
+			parent.location.href="<?=Yii::app()->createUrl('site/login')?>";
+        <?php }else{?>
+        	$.ajax({  
+		        url: "<?php echo Yii::app()->createUrl('site/add_favorite')?>",  
+		        type: "post",  
+		        dataType: "json",  
+		        data: {
+		        	single_id: "<?=$photograph_data['photograph_info']['single_id']?>",
+		        }, 
+		        success: function(data) {
+		            if(!data.status){
+		            	$.fancybox.open('<div class="alert alert-danger"><h4>加入失敗，請在試一次</h4></p></div>');
+		            }
+		            if(data.status){
+		            	$.fancybox.open('<div class="alert alert-success"><h4>已加入我的收藏</h4></p></div>');
+		            }
+		        }  
+		    });
+        <?php }?>
+	}
 	$(document).ready( function() {
 		$('.dropdown-menu button').on('click', function(){    
 		    $('#download_method').html($(this).html());
@@ -445,5 +473,9 @@
 			focusOnSelect: true
 		});
 
+		if (localStorage.getItem("add_favorite") != null) {
+	    	add_favorite();
+	    	localStorage.removeItem("add_favorite");
+	    }
 	});
 </script>

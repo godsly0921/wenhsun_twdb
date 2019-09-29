@@ -1056,4 +1056,77 @@ class MemberService
             }
         }
     }
+
+    public function listMemberFavorite($member_id){
+        $data = array();
+        if( $member_id != '' ){
+            $sql = "SELECT mf.* FROM `member_favorite` mf INNER JOIN single s on mf.single_id=s.single_id where mf.member_id=".$member_id." and mf.status=1 order by create_time desc";
+            $data = Yii::app()->db->createCommand($sql)->queryAll();
+        }
+        return $data;
+    }
+
+    public function add_favorite($single_id,$member_id){
+        $data = Memberfavorite::model()->find([
+            'condition' => 'member_id=:member_id and single_id=:single_id',
+            'params' => [
+                ':member_id' => $member_id,
+                ':single_id' => $single_id,
+            ]
+        ]);
+        if(!$data){
+            $model = new Memberfavorite();
+            $model->member_id = $member_id;
+            $model->single_id = $single_id;
+            $model->status = 1;
+            $model->create_time = date('Y-m-d H:i:s');
+            if($model->save()){
+                return true;
+            }else{
+                foreach ($model->getErrors() as $error){
+                    Yii::log(date("Y-m-d H:i:s")."member_id =>".$member_id.", add_favorite error：".$error[0],  CLogger::LEVEL_INFO);
+                }
+                return false;
+            }
+        }else{
+            if($data['status'] == 0){
+                $model = Memberfavorite::model()->findByPk($data['member_favorite_id']);
+                $model->status = 1;
+                $model->update_time = date('Y-m-d H:i:s');
+                if($model->save()){
+                    return true;
+                }else{
+                    foreach ($model->getErrors() as $error){
+                        Yii::log(date("Y-m-d H:i:s")."member_id =>".$member_id.", remove_favorite error：".$error[0],  CLogger::LEVEL_INFO);
+                    }
+                    return false;
+                }
+            }
+            return true;
+        }
+    }
+    public function remove_favorite($single_id,$member_id){
+        $data = Memberfavorite::model()->find([
+            'condition' => 'member_id=:member_id and single_id=:single_id',
+            'params' => [
+                ':member_id' => $member_id,
+                ':single_id' => $single_id,
+            ]
+        ]);
+        if($data){
+            $model = Memberfavorite::model()->findByPk($data['member_favorite_id']);
+            $model->status = 0;
+            $model->update_time = date('Y-m-d H:i:s');
+            if($model->save()){
+                return true;
+            }else{
+                foreach ($model->getErrors() as $error){
+                    Yii::log(date("Y-m-d H:i:s")."member_id =>".$member_id.", remove_favorite error：".$error[0],  CLogger::LEVEL_INFO);
+                }
+                return false;
+            }
+        }else{
+            return true;
+        }
+    }
 }

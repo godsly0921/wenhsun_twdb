@@ -224,11 +224,13 @@ class SiteController extends CController{
     }
 
     public function ActionAbout(){
+        Yii::app()->user->returnUrl = Yii::app()->request->urlReferrer;
         $aboutService = new AboutService();
         $about = $aboutService->getAllAbout();
         $this->render('about', array('about' => $about));
     }
     public function ActionPiccolumn(){
+        Yii::app()->user->returnUrl = Yii::app()->request->urlReferrer;
         $websiteService = new WebsiteService();
         $banner_data = $websiteService->findAllBanner();
         $piccolumn_date = $websiteService->findAllPicColumn();
@@ -236,6 +238,7 @@ class SiteController extends CController{
         $this->render('piccolumn',['piccolumn_date'=>$piccolumn_date,'banner_data'=>$banner_data]);
     }
     public function ActionPiccolumnInfo($id){
+        Yii::app()->user->returnUrl = Yii::app()->request->urlReferrer;
         $websiteService = new WebsiteService();
         $banner_data = $websiteService->findAllBanner();
         $piccolumn_data = $websiteService->findPiccolumnById($id);
@@ -244,6 +247,7 @@ class SiteController extends CController{
     }
 
     public function ActionNews() {
+        Yii::app()->user->returnUrl = Yii::app()->request->urlReferrer;
         $pageCount = isset($_GET['pageCount']) ? filter_input(INPUT_GET, 'pageCount') : 1;
         if (!is_numeric($pageCount)) {
             $pageCount = 1;
@@ -257,6 +261,7 @@ class SiteController extends CController{
     }
 
     public function ActionNews_detail($id) {
+        Yii::app()->user->returnUrl = Yii::app()->request->urlReferrer;
         $activityNewsService = new ActivityNewsService();
         $news = $activityNewsService->findById($id);
         $this->render('news_detail', array('news' => $news));
@@ -592,6 +597,7 @@ class SiteController extends CController{
     }
     //前台忘記密碼頁面
     public function doGetForget(){
+        Yii::app()->user->returnUrl = Yii::app()->request->urlReferrer;
         $this->render('forget');
     }
     //前台忘記密碼，產生臨時密碼並發送驗證信，驗證通過才會修改會員密碼
@@ -663,6 +669,10 @@ class SiteController extends CController{
     }
     //會員專區-會員資料
     public function doGetMyaccount(){
+        if (Yii::app() -> user -> isGuest){
+            Yii::app()->user->returnUrl = Yii::app()->request->urlReferrer;
+            $this->redirect(Yii::app()->createUrl('site/login'));
+        }
         $member = Member::model()->findByPk(Yii::app()->session['member_id']);
         $inputs = array();
         $inputs['account'] = $member->account;
@@ -698,26 +708,39 @@ class SiteController extends CController{
     }
     //會員專區-我的收藏
     public function ActionMy_favorite() {
-        $this->render('my_favorite');
+        if (Yii::app() -> user -> isGuest){
+            Yii::app()->user->returnUrl = Yii::app()->request->urlReferrer;
+            $this->redirect(Yii::app()->createUrl('site/login'));
+        }
+        $memberService = new MemberService();
+        $data = $memberService->listMemberFavorite(Yii::app()->session['member_id']);
+        $this->render('my_favorite',array('data'=>$data));
     }
     //會員專區-購買紀錄
     public function ActionMy_record() {
+        if (Yii::app() -> user -> isGuest){
+            Yii::app()->user->returnUrl = Yii::app()->request->urlReferrer;
+            $this->redirect(Yii::app()->createUrl('site/login'));
+        }
         $orderService = new OrderService();
         $member_order_data = $orderService->findMemberOrderData(Yii::app()->session['member_id'],3);
         $this->render('my_record',array('member_order_data' => $member_order_data));
     }
 
     public function ActionPrivacy(){
+        Yii::app()->user->returnUrl = Yii::app()->request->urlReferrer;
         $data = Sitepolicy::model()->findByPk(1);
         $this->render('privacy',array('data'=>$data));
     }
 
     public function ActionMember_rule(){
+        Yii::app()->user->returnUrl = Yii::app()->request->urlReferrer;
         $data = Sitepolicy::model()->findByPk(2);
         $this->render('member_rule',array('data'=>$data));
     }
 
     public function ActionPlan(){
+        Yii::app()->user->returnUrl = Yii::app()->request->urlReferrer;
         $productService = new ProductService();
         $data = $productService->findWithStatus(1);
         $this->render('plan', array('data'=>$data, 'product_type'=> $this->product_type));
@@ -784,13 +807,41 @@ class SiteController extends CController{
             $memberaddressbook_update_insert = $memberService->updateMemberAddressBook(Yii::app()->session['member_id'],$order_data);
             $order_create = $orderService->create_order($order_data);
             if($order_create[0]){
-                $this->redirect(Yii::app()->createUrl('/site/Ecpayapi'));
+                if($_POST['pay_method'] == 1)
+                    $this->redirect(Yii::app()->createUrl('/site/Ecpayapi'));
+                if($_POST['pay_method'] == 2)
+                    $this->redirect(Yii::app()->createUrl('/site/Landbankapi'));
             }else{
                 $this->redirect(Yii::app()->createUrl('/site/plan'));
             }
         }else{
             $this->redirect(Yii::app()->createUrl('/site/plan'));
         } 
+    }
+
+    public function actionLandbankapi(){
+        if( empty(Yii::app()->session['order'])){
+           echo '尚未填寫表單資訊,無法進行結帳動作';
+           exit;
+        }
+        echo "<script type=\"text/javascript\">";
+        echo "document.write(\"<form method=\\\"POST\\\" action=\\\"https://www.focas-test.fisc.com.tw/FOCAS_WEBPOS/online/\\\" enctype=\\\"application/x-www-form-urlencoded\\\" target=\\\"_self\\\" hidden>\
+        <input type=\\\"hidden\\\" name=\\\"MerchantID\\\" value=\\\"005809899149001\\\">\
+        <input type=\\\"hidden\\\" name=\\\"TerminalID\\\" value=\\\"90010001\\\">\
+        <input type=\\\"hidden\\\" name=\\\"merID\\\" value=\\\"005\\\">\
+        <input type=\\\"hidden\\\" name=\\\"MerchantName\\\" value=\\\"文訊雜誌社\\\">\
+        <input type=\\\"hidden\\\" name=\\\"purchAmt\\\" value=\\\"".(int)(Yii::app()->session['order']['cost_total'])."\\\">\
+        <input type=\\\"hidden\\\" name=\\\"lidm\\\" value=\\\"".Yii::app()->session['order']['order_id']."\\\">\
+        <input type=\\\"hidden\\\" name=\\\"AutoCap\\\" value=\\\"1\\\">\
+        <input type=\\\"hidden\\\" name=\\\"AuthResURL \\\" value=\\\"".DOMAIN . "site/Landbankosuccess\\\">\
+        <input type=\\\"hidden\\\" name=\\\"PayType\\\" value=\\\"0\\\">\
+        <input type=\\\"hidden\\\" name=\\\"lagSelect\\\" value=\\\"0\\\">\
+        <input type=\\\"hidden\\\" name=\\\"enCodeType\\\" value=\\\"UTF-8\\\">\
+        <input type=\\\"hidden\\\" name=\\\"CurrencyNote\\\" value=\\\"".Yii::app()->session['order']['product_name']."\\\">\
+        <input type=\\\"hidden\\\" name=\\\"reqToken\\\" value=\\\"123456\\\">\
+        </form>\");";
+        echo "document.forms[0].submit();";
+        echo "</script>";
     }
 
     public function actionEcpayapi(){
@@ -841,6 +892,52 @@ class SiteController extends CController{
         } 
     }
 
+    public function actionLandbankosuccess(){
+        try{
+            if(isset($_POST['status']) && isset($_POST['authCode'])){
+                if($_POST['status'] == 0 && $_POST['authCode'] != ''){
+                    $order_id = $_POST['lidm'];
+                    // 修改對應訂單
+                    $tmpser     = new OrderService();
+                    $mailService     = new MailService();
+                    $tmpres     = $tmpser->chanage_pay_status( $order_id,$_POST );
+
+                    $order = Orders::model()->findByPk($order_id);
+                    if( $tmpres[0] == true){
+                        $open_order_plan = $tmpser->open_order_plan($order_id);
+                    }
+                    // 抓取有關會員帳戶的一切資料
+                    $member = Member::model()->findByPk($order->member_id);
+                    $today = date('Y-m-d') ;
+                    if( $tmpres[0] == true){
+                        $to        = $member->account; //收件者
+                    
+                        $subject   = "付款成功通知書"; //信件標題
+                        
+                        if( $to ){
+                            $msg    = "親愛的顧客您好,<br/>
+                            感謝您於本平台訂購商品,我們已收到商品款項<br/>
+                            <a href='" . DOMAIN . "site/index'>點此進入平台</a><br/>
+                            如有任何問題,歡迎與本平台客服聯繫<br/>";
+                        }
+                        $headers   = "From: wenhsun7@ms19.hinet.net\r\n"; //寄件者
+                        $headers  .= "Content-Type: text/html; charset=UTF-8\r\n";
+                        if($mailService->sendImageMail($to,$member->name,$msg,$subject)){
+                            Yii::log(date('Y-m-d H:i:s') . 'Order mail success.', CLogger::LEVEL_INFO);
+                        }else{
+                            Yii::log(date('Y-m-d H:i:s') . 'Order mail fail.', CLogger::LEVEL_INFO);
+                        }
+                    }
+                    Yii::app()->session['success_msg'] = "購買成功";
+                    $this->redirect(Yii::app()->createUrl('/site/my_record'));
+                }
+            }
+        } catch(Exception $e) {
+            Yii::app()->session['error_msg'] = "購買失敗。".$e->getMessage();
+            $this->redirect(Yii::app()->createUrl('/site/my_record'));
+        }
+    }
+
     public function actionOsuccess(){
         require_once( dirname(__FILE__) . '/../components/ECPay.Payment.Integration.php');
         try {
@@ -851,11 +948,11 @@ class SiteController extends CController{
             $AL->MerchantID  = $this->ECPAY_MerchantID;//測試用MerchantID，請自行帶入ECPay提供的MerchantID
             $AL->EncryptType = '1'; 
             //正式要開啟 - 很重要
-            //$backval = $AL->CheckOutFeedback();//正式要開啟
+            // $backval = $AL->CheckOutFeedback();//正式要開啟
             //正式要開啟 - 很重要
 
             //測試用
-            $backval['MerchantTradeNo'] = 'P201909240003';
+            $backval['MerchantTradeNo'] = 'P201909230001';
             $backval['RtnCode'] = '1';
             //測試用
         
@@ -864,7 +961,7 @@ class SiteController extends CController{
                 // 修改對應訂單
                 $tmpser     = new OrderService();
                 $mailService     = new MailService();
-                $tmpres     = $tmpser->chanage_pay_status( $backval['MerchantTradeNo'] );
+                $tmpres     = $tmpser->chanage_pay_status( $backval['MerchantTradeNo'],$backval );
 
                 $order = Orders::model()->findByPk($backval['MerchantTradeNo']);
                 if( $tmpres[0] == true){
@@ -886,7 +983,7 @@ class SiteController extends CController{
                     }
                     $headers   = "From: wenhsun7@ms19.hinet.net\r\n"; //寄件者
                     $headers  .= "Content-Type: text/html; charset=UTF-8\r\n";
-            
+                    echo '1|OK';
                     if($mailService->sendImageMail($to,$member->name,$msg,$subject)){
                         Yii::log(date('Y-m-d H:i:s') . 'Order mail success.', CLogger::LEVEL_INFO);
                     }else{
@@ -901,5 +998,37 @@ class SiteController extends CController{
         }  
     
     }//success end
+
+    public function ActionAdd_favorite(){
+        if (Yii::app() -> user -> isGuest){
+            $this->redirect(Yii::app()->createUrl('site/login'));
+        }
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $single_id = $_POST['single_id'];
+            $photographService = new MemberService();
+            $add_favorite = $photographService->add_favorite($single_id, Yii::app()->session['member_id']);
+            if($add_favorite){
+                echo json_encode(array('status'=>true));
+            }else{
+                echo json_encode(array('status'=>false));
+            }
+        }
+    }
+
+    public function ActionRemove_favorite(){
+        if (Yii::app() -> user -> isGuest){
+            $this->redirect(Yii::app()->createUrl('site/login'));
+        }
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $single_id = $_POST['single_id'];
+            $photographService = new MemberService();
+            $remove_favorite = $photographService->remove_favorite($single_id, Yii::app()->session['member_id']);
+            if($remove_favorite){
+                echo json_encode(array('status'=>true));
+            }else{
+                echo json_encode(array('status'=>false));
+            }
+        }
+    }
 }
 ?>

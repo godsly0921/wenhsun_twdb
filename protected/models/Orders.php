@@ -8,6 +8,7 @@
  * @property integer $member_id
  * @property string $order_datetime
  * @property string $receive_date
+ * @property integer $pay_method
  * @property integer $pay_type
  * @property integer $order_status
  * @property string $name
@@ -46,19 +47,19 @@ class Orders extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('order_id, member_id, order_datetime, order_status, mobile, invoice_category', 'required'),
-			array('member_id, pay_type, order_status, codezip, invoice_category, invoice_number, memo_create_account_id', 'numerical', 'integerOnly'=>true),
+			array('member_id, pay_method, pay_type, order_status, codezip, invoice_category, invoice_number, memo_create_account_id', 'numerical', 'integerOnly'=>true),
 			array('order_id', 'length', 'max'=>14),
 			array('name, mobile', 'length', 'max'=>50),
 			array('email, country, invoice_title', 'length', 'max'=>100),
 			array('nationality', 'length', 'max'=>2),
 			array('town', 'length', 'max'=>36),
 			array('address', 'length', 'max'=>256),
-			array('pay_feedback, pya_result', 'length', 'max'=>500),
+			array('pya_result', 'length', 'max'=>500),
 			array('memo', 'length', 'max'=>200),
-			array('receive_date, memo_create_time', 'safe'),
+			array('receive_date, pay_feedback, memo_create_time', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('order_id, member_id, order_datetime, receive_date, pay_type, order_status, name, mobile, email, nationality, country, town, codezip, address, invoice_category, invoice_number, invoice_title, pay_feedback, pya_result, memo, memo_create_time, memo_create_account_id', 'safe', 'on'=>'search'),
+			array('order_id, member_id, order_datetime, receive_date, pay_method, pay_type, order_status, name, mobile, email, nationality, country, town, codezip, address, invoice_category, invoice_number, invoice_title, pay_feedback, pya_result, memo, memo_create_time, memo_create_account_id', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -83,6 +84,7 @@ class Orders extends CActiveRecord
 			'member_id' => '會員編號',
 			'order_datetime' => '下訂時間',
 			'receive_date' => '收到款項時間',
+			'pay_method' => '付款方式 ( 1:綠界 2:土銀 )',
 			'pay_type' => '付款方式 ( 1：信用卡 2：超商繳款 3：超商代碼 4：ATM 轉帳 )',
 			'order_status' => '訂單狀態 ( 0：取消訂單 1：未結帳 2：已付款 3：已開通 4：已退款 )',
 			'name' => '姓名',
@@ -126,6 +128,7 @@ class Orders extends CActiveRecord
 		$criteria->compare('member_id',$this->member_id);
 		$criteria->compare('order_datetime',$this->order_datetime,true);
 		$criteria->compare('receive_date',$this->receive_date,true);
+		$criteria->compare('pay_method',$this->pay_method);
 		$criteria->compare('pay_type',$this->pay_type);
 		$criteria->compare('order_status',$this->order_status);
 		$criteria->compare('name',$this->name,true);

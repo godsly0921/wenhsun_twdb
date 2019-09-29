@@ -13,3 +13,6 @@ ALTER TABLE `orders` CHANGE `pay_type` `pay_type` INT(1) NULL COMMENT '付款方
 ALTER TABLE `orders_item` CHANGE `order_detail_status` `order_detail_status` INT(1) NOT NULL COMMENT '訂單詳細狀態 ( 0：取消訂單 1：已開通 2：已退款 3:訂購中 )';
 ALTER TABLE `orders` ADD `receive_date` DATETIME NULL DEFAULT NULL COMMENT '收到款項時間' AFTER `order_datetime`;
 ALTER TABLE `orders_item` CHANGE `cost_total` `cost_total` DECIMAL(8,2) NOT NULL COMMENT '訂單總額';
+
+ALTER TABLE `orders` ADD `pay_method` INT(1) NOT NULL DEFAULT '1' COMMENT '付款方式 ( 1:綠界 2:土銀 )' AFTER `receive_date`;
+ALTER TABLE `order_Orders` CHANGE `feedback` `feedback` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '金流Feedback參數';
