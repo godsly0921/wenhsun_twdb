@@ -825,7 +825,7 @@ class SiteController extends CController{
            exit;
         }
         echo "<script type=\"text/javascript\">";
-        echo "document.write(\"<form method=\\\"POST\\\" action=\\\"https://www.focas-test.fisc.com.tw/FOCAS_WEBPOS/online/\\\" enctype=\\\"application/x-www-form-urlencoded\\\" target=\\\"_self\\\" hidden>\
+        echo "document.write(\"<form method=\\\"POST\\\" action=\\\"https://www.focas.fisc.com.tw/FOCAS_WEBPOS/online/\\\" enctype=\\\"application/x-www-form-urlencoded\\\" target=\\\"_self\\\" hidden>\
         <input type=\\\"hidden\\\" name=\\\"MerchantID\\\" value=\\\"005809899149001\\\">\
         <input type=\\\"hidden\\\" name=\\\"TerminalID\\\" value=\\\"90010001\\\">\
         <input type=\\\"hidden\\\" name=\\\"merID\\\" value=\\\"005\\\">\
