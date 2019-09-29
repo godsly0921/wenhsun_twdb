@@ -285,16 +285,16 @@ class SiteController extends CController{
     public function doLogin(){
         $input['account'] = filter_input(INPUT_POST, 'account');
         $input['password'] = filter_input(INPUT_POST, 'password');
-        // require_once( dirname(__FILE__) . '/../../vendor/google/recaptcha/src/autoload.php');
-        // // _GOOGLE_RECAPTCHA_SEC_KEY 就是 google 給的 Secret Key
-        // $recaptcha = new \ReCaptcha\ReCaptcha('6LdxkAYTAAAAAK5e5Ya6xva3naFgDAxtI_vLTgz8');
-        // $gRecaptchaResponse = $_POST['g-recaptcha-response'];
-        // $remoteIp = $_SERVER['REMOTE_ADDR'];
-        // $resp = $recaptcha->verify($gRecaptchaResponse, $remoteIp);
-        // if(!$resp->isSuccess()){
-        //     Yii::app()->session['error_msg'] = '請先證明您不是機器人';
-        //     $this->redirect(Yii::app()->createUrl('site/login'));
-        // }
+        require_once( dirname(__FILE__) . '/../../vendor/google/recaptcha/src/autoload.php');
+        // _GOOGLE_RECAPTCHA_SEC_KEY 就是 google 給的 Secret Key
+        $recaptcha = new \ReCaptcha\ReCaptcha('6LdxkAYTAAAAAK5e5Ya6xva3naFgDAxtI_vLTgz8');
+        $gRecaptchaResponse = $_POST['g-recaptcha-response'];
+        $remoteIp = $_SERVER['REMOTE_ADDR'];
+        $resp = $recaptcha->verify($gRecaptchaResponse, $remoteIp);
+        if(!$resp->isSuccess()){
+            Yii::app()->session['error_msg'] = '請先證明您不是機器人';
+            $this->redirect(Yii::app()->createUrl('site/login'));
+        }
         $useridentity = new UserIdentity($input['account'],$input['password']);
         $is_login = $useridentity->authenticate(1);
         if (!$is_login) {
