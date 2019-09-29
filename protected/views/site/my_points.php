@@ -214,7 +214,7 @@
                 <div>
                     <img src="<?= Yii::app()->createUrl('/'). "/" .PHOTOGRAPH_STORAGE_URL . $value['single_id']?>.jpg">
                     <div class="caption">
-                        <a href="<?php echo Yii::app()->request->baseUrl; ?>/assets/site/authorization.pdf" target="_blank" class="download_authorization"><span class="btn btn-dark btn-sm" style="font-size: 24px;color:white;line-height: 24px;">下載授權書</span></a>
+                        <a href="<?php echo Yii::app()->request->baseUrl; ?>/assets/site/authorization.pdf" target="_blank" class="download_authorization"><span class="btn btn-dark btn-sm" style="font-size: 24px;color:white;line-height: 24px;">授權書</span></a>
                     </div>
                 </div>
             <?php }?>
