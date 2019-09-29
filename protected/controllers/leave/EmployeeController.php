@@ -112,17 +112,17 @@ class EmployeeController extends Controller
             [
                 'category' => '年假(特別休假)',
                 'leave_applied' => $appliedAnnualLeave / 60,
-                'leave_available' => $annualLeaveMinutes->minutesValue() / 60,
+                'leave_available' => $annualLeaveMinutes->minutesValue() / 60 - $appliedAnnualLeave / 60,
             ],
             [
                 'category' => '事假',
                 'leave_applied' => $personalLeavedMinutes / 60,
-                'leave_available' => $personalLeaveAnnualMinutes / 60,
+                'leave_available' => $personalLeaveAnnualMinutes / 60 - $personalLeavedMinutes / 60,
             ],
             [
                 'category' => '病假',
                 'leave_applied' => $sickLeavedMinutes / 60,
-                'leave_available' => $sickLeaveAnnualMinutes / 60,
+                'leave_available' => $sickLeaveAnnualMinutes / 60 - $sickLeavedMinutes / 60,
             ],
             [
                 'category' => '補休假',
