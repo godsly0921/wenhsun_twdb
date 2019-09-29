@@ -750,8 +750,8 @@ class SiteController extends CController{
             Yii::app()->user->returnUrl = Yii::app()->request->urlReferrer;
             $this->redirect(Yii::app()->createUrl('site/login'));
         }
-        if(isset($_GET['product_id'])){
-            $product_id = $_GET['product_id'];
+        if(isset($_POST['product_id'])){
+            $product_id = $_POST['product_id'];
             $productService = new ProductService();
             $memberService = new MemberService();
             $memberaddressbook = $memberService->findMemberAddressBook(Yii::app()->session['member_id']);
