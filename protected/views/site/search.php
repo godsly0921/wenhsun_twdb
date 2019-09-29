@@ -373,7 +373,7 @@
 	        prev: '上一頁',
 	        next: '下一頁',
 	        last: '最後一頁',
-	        startPage: init_page,
+	        startPage: parseInt(init_page),
 	        onPageClick: function (event, page) {
 	            $('#page').val(page);
 	            $.ajax({  
