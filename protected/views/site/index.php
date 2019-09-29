@@ -40,7 +40,7 @@
       <div class="py-5" id="ad_image">
         <?php if(count($ad_data)>0){?>
           <?php foreach ($ad_data as $key => $value) {?>
-            <div onclick="open_image_info(this,'<?=$value['single_id']?>')" style="cursor:pointer;"><img src="<?=Yii::app()->createUrl('/')."/".PHOTOGRAPH_STORAGE_URL.$value['single_id']?>.jpg"></div>
+            <div onclick="open_image_info('<?=$value['single_id']?>')" style="cursor:pointer;"><img src="<?=Yii::app()->createUrl('/')."/".PHOTOGRAPH_STORAGE_URL.$value['single_id']?>.jpg"></div>
           <?php }?>
         <?php }?>
       </div>
@@ -49,7 +49,7 @@
       <div class="py-5 col-lg-8 mx-auto">
         <?php if(count($ad_data)>0){?>
           <?php foreach ($ad_data as $key => $value) {?>
-            <div class="row col-lg-12 py-3" onclick="open_image_info(this,'<?=$value['single_id']?>')" style="cursor:pointer;">
+            <div class="row col-lg-12 py-3" onclick="open_image_info('<?=$value['single_id']?>')" style="cursor:pointer;">
               <div class="col-lg-4 text-right"><img src="<?=Yii::app()->createUrl('/')."/".PHOTOGRAPH_STORAGE_URL.$value['single_id']?>.jpg" width="80%"></div>
               <div class="col-lg-8 my-auto">
                 <div class="col-lg-12">人物資訊:<?=$value['people_info']?></div>
@@ -107,5 +107,12 @@
         slidesToShow: 1,
         slidesToScroll: 1
     });
+    if (localStorage.getItem("single_id") != null) {
+      open_image_info(localStorage.getItem("single_id"));
+      localStorage.removeItem("single_id");
+    }
+    if (localStorage.getItem("page") != null) {
+      localStorage.removeItem("page");
+    }
   });
 </script>
