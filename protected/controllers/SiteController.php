@@ -287,12 +287,13 @@ class SiteController extends CController{
         $remoteIp = $_SERVER['REMOTE_ADDR'];
         $resp = $recaptcha->verify($gRecaptchaResponse, $remoteIp);
         if(!$resp->isSuccess()){
-            echo '請先證明您不是機器人';
+            Yii::app()->session['error_msg'] = '請先證明您不是機器人';
             $this->redirect(Yii::app()->createUrl('site/login'));
         }
         $useridentity = new UserIdentity($input['account'],$input['password']);
         $is_login = $useridentity->authenticate(1);
         if (!$is_login) {
+            Yii::app()->session['error_msg'] = '帳號密碼錯誤';
             $this->redirect(Yii::app()->createUrl('site/login'));
         }else{
             $duration = 3600 * 24 * 30; // 30 days
@@ -392,7 +393,8 @@ class SiteController extends CController{
                 Yii::app()->session['member_name'] = $model->name;//會員名稱
                 $duration = 3600 * 24 * 30; // 30 days
                 Yii::app()->user->login($useridentity, $duration);
-                $this->redirect(Yii::app()->createUrl('site'));
+                $this->redirect(Yii::app()->user->returnUrl);
+                //$this->redirect(Yii::app()->createUrl('site'));
             }else{
                 $this->redirect(Yii::app()->createUrl('site/login'));
             }
@@ -443,7 +445,8 @@ class SiteController extends CController{
                     Yii::app()->session['member_name'] = $model->name;//會員名稱
                     $duration = 3600 * 24 * 30; // 30 days
                     Yii::app()->user->login($useridentity, $duration);
-                    $this->redirect(Yii::app()->createUrl('site'));
+                    $this->redirect(Yii::app()->user->returnUrl);
+                    //$this->redirect(Yii::app()->createUrl('site'));
                 }else{
                     $this->redirect(Yii::app()->createUrl('site/login'));
                 }
@@ -607,6 +610,7 @@ class SiteController extends CController{
     //會員專區
     public function ActionMy_account() {
         if (Yii::app() -> user -> isGuest){
+            Yii::app()->user->returnUrl = Yii::app()->request->urlReferrer;
             $this->redirect(Yii::app()->createUrl('site/login'));
         }
         if(Yii::app()->request->isPostRequest) {
@@ -667,6 +671,7 @@ class SiteController extends CController{
     //會員專區-我的點數
     public function ActionMy_points() {
         if (Yii::app() -> user -> isGuest){
+            Yii::app()->user->returnUrl = Yii::app()->request->urlReferrer;
             $this->redirect(Yii::app()->createUrl('site/login'));
         }
         $memberplanService = new MemberplanService();
@@ -710,7 +715,7 @@ class SiteController extends CController{
     }
     public function ActionCheck_order(){
         if (Yii::app() -> user -> isGuest){
-            Yii::app()->user->returnUrl = Yii::app()->request->url;
+            Yii::app()->user->returnUrl = Yii::app()->request->urlReferrer;
             $this->redirect(Yii::app()->createUrl('site/login'));
         }
         if(isset($_GET['product_id'])){

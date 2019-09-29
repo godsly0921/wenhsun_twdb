@@ -383,19 +383,27 @@
 	    });
 	}
 	function download_image(){
-		if($('#download_method').attr('data-download_method')==1){
-			if(<?=$member_point?> > parseInt($('input[name=size_type]:checked').attr('data-sale_point'))){
-				ajax_download_image();
-			}else{
-				$('#not_enough_modal').modal('show');
+		<?php if (Yii::app() -> user -> isGuest){
+			Yii::app()->user->returnUrl = Yii::app()->request->urlReferrer;
+		?>
+			localStorage.setItem("page",window.parent.$("#page").val());
+			localStorage.setItem("single_id","<?=$_GET['id']?>");
+			parent.location.href="<?=Yii::app()->createUrl('site/login')?>";
+        <?php }else{?>
+			if($('#download_method').attr('data-download_method')==1){
+				if(<?=$member_point?> > parseInt($('input[name=size_type]:checked').attr('data-sale_point'))){
+					ajax_download_image();
+				}else{
+					$('#not_enough_modal').modal('show');
+				}
+			}else if($('#download_method').attr('data-download_method')==2){
+				if(<?=$member_plan?> > 0){
+					ajax_download_image();
+				}else{
+					$('#not_enough_modal').modal('show');
+				}
 			}
-		}else if($('#download_method').attr('data-download_method')==2){
-			if(<?=$member_plan?> > 0){
-				ajax_download_image();
-			}else{
-				$('#not_enough_modal').modal('show');
-			}
-		}		
+		<?php }?>		
 	}
 
 	$(document).ready( function() {

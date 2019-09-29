@@ -242,7 +242,7 @@
 	// function closeIFrame(){
 	//     $('#youriframeid').remove();
 	// }
-	function open_image_info(a,single_id){
+	function open_image_info(single_id){
 		$.fancybox.open({
 	        type: 'iframe',
 	        src: '<?= Yii::app()->createUrl('site/ImageInfo');?>/'+single_id,
@@ -285,7 +285,7 @@
 	}
 
 	function create_image(value){
-		$html = '<div onclick="open_image_info(this,\''+value.single_id+'\')" style="cursor:pointer;"><img src="<?= Yii::app()->createUrl('/'). "/" .PHOTOGRAPH_STORAGE_URL?>'+value.single_id+'.jpg"><div>';
+		$html = '<div onclick="open_image_info(\''+value.single_id+'\')" style="cursor:pointer;"><img src="<?= Yii::app()->createUrl('/'). "/" .PHOTOGRAPH_STORAGE_URL?>'+value.single_id+'.jpg"><div>';
         $('#image_result').append($html);
 	}
 
@@ -359,7 +359,13 @@
 		    
       		$('#keyword_search').submit();
 		});
-
+	  	var init_page = 1;
+	  	if (localStorage.getItem("page") != null) {
+	  		init_page = localStorage.getItem("page");
+	  		localStorage.removeItem("page");
+	  	}else{
+	  		init_page = <?=isset($_GET['page'])?$_GET['page']:1?>;
+	  	}
 	    $('#page_selection').twbsPagination({
 	        totalPages: <?=$total_result != 0 ?$total_result:1?>,
 	        visiblePages: 10,
@@ -367,7 +373,7 @@
 	        prev: '上一頁',
 	        next: '下一頁',
 	        last: '最後一頁',
-	        startPage: <?=isset($_GET['page'])?$_GET['page']:1?>,
+	        startPage: init_page,
 	        onPageClick: function (event, page) {
 	            $('#page').val(page);
 	            $.ajax({  
@@ -391,6 +397,9 @@
 	            });
 	        }
 	    });
-
+	    if (localStorage.getItem("single_id") != null) {
+	    	open_image_info(localStorage.getItem("single_id"));
+	    	localStorage.removeItem("single_id");
+	    }
   	});
 </script>
