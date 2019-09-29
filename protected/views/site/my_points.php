@@ -209,9 +209,14 @@
     <hr class="bottom">
     <div id="download">
         <p class="download-title">下載記錄</p>
-        <div class="row col-lg-12" id="image_result">
+        <div class="row col-lg-12 text-center" id="image_result">
             <?php foreach ($image_download as $key => $value) {?>
-                <div><img src="<?= Yii::app()->createUrl('/'). "/" .PHOTOGRAPH_STORAGE_URL . $value['single_id']?>.jpg"></div>
+                <div>
+                    <img src="<?= Yii::app()->createUrl('/'). "/" .PHOTOGRAPH_STORAGE_URL . $value['single_id']?>.jpg">
+                    <div class="caption">
+                        <a href="<?php echo Yii::app()->request->baseUrl; ?>/assets/site/authorization.pdf" target="_blank" class="download_authorization"><span class="btn btn-dark btn-sm" style="font-size: 24px;color:white;line-height: 24px;">下載授權書</span></a>
+                    </div>
+                </div>
             <?php }?>
         </div>
     </div>
@@ -226,5 +231,6 @@
             // refreshTime: 1000,
             rel : 'gallery1',
         });
+        $('.download_authorization').click(function(e){ e.stopPropagation(); });
     });
 </script>
