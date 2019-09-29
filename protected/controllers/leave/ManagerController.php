@@ -475,7 +475,7 @@ class ManagerController extends Controller
                     $attendanceRecord->reply_update_at = '0000-00-00 00:00:00';
                     $attendanceRecord->reason = filter_input(INPUT_POST, 'reason');
                     $attendanceRecord->remark = filter_input(INPUT_POST, 'remark');
-                    $attendanceRecord->start_time = filter_input(INPUT_POST, 'start_date') . ' ' . '00:00';
+                    $attendanceRecord->start_time = filter_input(INPUT_POST, 'end_date') . ' ' . '00:00';
                     $attendanceRecord->end_time = $end_time;
                     $attendanceRecord->manager = $manager->id;
                     $attendanceRecord->agent = isset($_POST['agent']) ? $agent->id : '';
