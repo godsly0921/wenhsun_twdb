@@ -75,7 +75,7 @@
       $('#keyword_search').submit();
     }   
   }
-  function open_image_info(a,single_id){
+  function open_image_info(single_id){
     $.fancybox.open({
       type: 'iframe',
       src: '<?= Yii::app()->createUrl('site/ImageInfo');?>/'+single_id,
