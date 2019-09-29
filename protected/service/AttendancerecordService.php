@@ -597,7 +597,7 @@ class AttendancerecordService{
                                 <tr style='border: 1px solid black; padding: 10px;'>
                                     <th style='border: 1px solid black; padding: 10px;'>申請日期</th>
                                     <th style='border: 1px solid black; padding: 10px;'>事由</th>
-                                    <th style='border: 1px solid black; padding: 10px;'>請假日期</th>
+                                    <th style='border: 1px solid black; padding: 10px;'>加班日期</th>
                                     <th style='border: 1px solid black; padding: 10px;'>時間</th>
                                     <th style='border: 1px solid black; padding: 10px;'>申請時數</th>
                                     <th style='border: 1px solid black; padding: 10px;'>審核狀態</th>
