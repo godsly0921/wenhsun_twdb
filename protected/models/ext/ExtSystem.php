@@ -20,7 +20,7 @@ class ExtSystem extends System
 	public static function system_list(){
 		return System::model() -> findAll(array(
 		'select' => 'id,system_number,system_name,system_controller ,system_type,system_range',
-		'order' => 'system_range ASC ,system_type ASC',
+		'order' => 'system_number ASC, system_range ASC ,system_type ASC',
 		));
 	}
 
