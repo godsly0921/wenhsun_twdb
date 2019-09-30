@@ -79,7 +79,7 @@ class OrderService
     public function getOrderInfo($order_id){
         $productService = new ProductService();
         $product = $order_data = $result = $order_message_data = array();
-        $sql = "SELECT o.*,oi.*,m.* FROM `orders` o JOIN orders_item oi on o.order_id=oi.order_id JOIN member_address_book m on m.address_book_id=o.address_book_id where o.order_id = '" . $order_id . "'";
+        $sql = "SELECT o.*,oi.* FROM `orders` o JOIN orders_item oi on o.order_id=oi.order_id where o.order_id = '" . $order_id . "'";
         $order_info = Yii::app()->db->createCommand($sql)->queryAll();
         $order_info = $order_info[0];
         $order_message = $this->getOrderMessage($order_id);
@@ -89,9 +89,8 @@ class OrderService
                 $order_message_data[] = $value['message'];
             }
         }
-        
         $member_address_book = array(
-            'name' => $order_info['name'],
+            'name' => $order_info['invoice_title'],
             'address' => $order_info['address'],
             'mobile' => $order_info['mobile'],
             'email' => $order_info['email'],
@@ -107,7 +106,7 @@ class OrderService
             );
         }else{
             $order_item = array(
-                'single_id' => $order_info['single_id '],
+                'single_id' => $order_info['single_id '] === NULL ? '' : $order_info['single_id '],
                 'size_type' => $order_info['size_type'],
                 'cost_total' => $order_info['cost_total'],
                 'discount' => $order_info['discount'], 
