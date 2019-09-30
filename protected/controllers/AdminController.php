@@ -397,7 +397,14 @@ class AdminController extends CController
         Yii::app()->session['power_session_jsons'] = $power_session_jsons;
         Yii::app()->session['group_session_jsons'] = $account_group_list->group_number;
         Yii::app()->session['group_list_session_jsons'] = CJSON::encode(explode(',', $account_group_list->group_list));
-        $this->redirect(Yii::app()->createUrl('news/list'));
+
+        $configService = new ConfigService();
+        $config = $configService->findByConfigName('index');
+        if ($config[0]['config_value'] === 'db') {
+            $this->redirect(Yii::app()->createUrl('report/system'));
+        } else {
+            $this->redirect(Yii::app()->createUrl('news/list'));
+        }
 
 	}
 
