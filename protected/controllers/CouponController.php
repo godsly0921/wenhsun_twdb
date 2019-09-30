@@ -45,7 +45,7 @@ class CouponController extends Controller{
 
     public function ActionUpdate($id){
         $couponService = new CouponService();
-        $operationlogService = new operationlogService();
+        $operationlogService = new OperationlogService();
         if( Yii::app()->request->isPostRequest ){
             if (!CsrfProtector::comparePost()) {
                 $this->redirect('index');

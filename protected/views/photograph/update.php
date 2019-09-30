@@ -21,12 +21,6 @@
                     </div>
                     <div class="col-lg-6">
                         <div class="form-group">
-                            <label class="control-label col-md-3 col-sm-3 col-xs-12">物件名稱</label>
-                            <div class="col-md-9 col-sm-9 col-xs-12">
-                                <input type="text" class="form-control" placeholder="物件名稱" name="object_name" value="<?=$photograph_data['photograph_info']['object_name']?>">
-                            </div>
-                        </div>
-                        <div class="form-group">
                             <label class="control-label col-md-3 col-sm-3 col-xs-12">圖庫編號</label>
                             <div class="col-md-9 col-sm-9 col-xs-12">
                                 <input type="text" class="form-control" placeholder="圖庫編號" readonly="readonly" value="<?=$photograph_data['photograph_info']['single_id']?>">
@@ -39,26 +33,36 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="control-label col-md-3 col-sm-3 col-xs-12">圖片描述</label>
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12">物件名稱</label>
                             <div class="col-md-9 col-sm-9 col-xs-12">
-                                <input type="text" class="form-control" placeholder="圖片描述" name="description" value="<?=$photograph_data['photograph_info']['description']?>">
+                                <input type="text" class="form-control" placeholder="物件名稱" name="object_name" value="<?=$photograph_data['photograph_info']['object_name']?>">
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="control-label col-md-3 col-sm-3 col-xs-12">圖片人物</label>
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12">圖片分類</label>
                             <div class="col-md-9 col-sm-9 col-xs-12">
-                                <input type="text" class="form-control" placeholder="圖片人物" name="people_info" value="<?=$photograph_data['photograph_info']['people_info']?>">
+                                <select class="select2_multiple form-control" id="category_id" name="category_id[]" multiple="multiple" required>
+                                  <?php foreach ($category_data as $key => $value) { ?>
+                                    <option value="<?=$value['category_id']?>" <?=in_array($value['category_id'], $photograph_data['photograph_info']['category_id'])?'selected':''?>><?=$value['parents_name']?>_<?=$value['child_name']?></option>
+                                  <?php }?>
+                                </select>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="control-label col-md-3 col-sm-3 col-xs-12">圖片年份</label>
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12">人物資訊</label>
+                            <div class="col-md-9 col-sm-9 col-xs-12">
+                                <input type="text" class="form-control" placeholder="人物資訊" name="people_info" value="<?=$photograph_data['photograph_info']['people_info']?>">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12">拍攝時間</label>
                             <div class="col-md-6 col-sm-6 col-xs-12">
-                                <input type="text" class="form-control  has-feedback-left" id="filming_date" name="filming_date" placeholder="圖片年份" value="<?=$photograph_data['photograph_info']['filming_date']?>" aria-describedby="inputSuccess2Status2">
+                                <input type="text" class="form-control  has-feedback-left" id="filming_date" name="filming_date" placeholder="拍攝時間" value="<?=$photograph_data['photograph_info']['filming_date']?>" aria-describedby="inputSuccess2Status2">
                                 <span class="fa fa-calendar-o form-control-feedback left" aria-hidden="true"></span>
                                 <span id="inputSuccess2Status2" class="sr-only">(success)</span>
                             </div>
                             <div class="col-md-3 col-sm-3 col-xs-12">
-                                <input type="text" class="tags form-control" placeholder="攝影年份文字" name="filming_date_text" value="<?=$photograph_data['photograph_info']['filming_date_text']?>" />
+                                <input type="text" class="tags form-control" placeholder="拍攝時間文字" name="filming_date_text" value="<?=$photograph_data['photograph_info']['filming_date_text']?>" />
                             </div>
                         </div>
                         <div class="form-group">
@@ -74,6 +78,18 @@
                             </div>
                         </div>
                         <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12">圖片描述</label>
+                            <div class="col-md-9 col-sm-9 col-xs-12">
+                                <input type="text" class="form-control" placeholder="圖片描述" name="description" value="<?=$photograph_data['photograph_info']['description']?>">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12">內容描述</label>
+                            <div class="col-md-9 col-sm-9 col-xs-12">
+                                <textarea id="description" required="required" class="form-control" name="description"><?=$photograph_data['photograph_info']['description']?></textarea>
+                            </div>
+                        </div>                       
+                        <div class="form-group">
                             <label class="control-label col-md-3 col-sm-3 col-xs-12">保存狀況</label>
                             <div class="col-md-9 col-sm-9 col-xs-12">
                             <select id="store_status" class="form-control" name="store_status" required>
@@ -82,6 +98,12 @@
                                 <option value="3" <?=$photograph_data['photograph_info']['store_status'] == 3?"selected":""?>>嚴重破損</option>
                             </select>
                           </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12">入藏來源</label>
+                            <div class="col-md-9 col-sm-9 col-xs-12">
+                                <input type="text" class="form-control" placeholder="入藏來源" name="photo_source" value="<?=$photograph_data['photograph_info']['photo_source']?>">
+                            </div>
                         </div>
                         <div class="form-group">
                             <label class="control-label col-md-3 col-sm-3 col-xs-12">索引使用限制</label>
@@ -121,16 +143,6 @@
                             </div>
                         </div> -->
                         <div class="form-group">
-                            <label class="control-label col-md-3 col-sm-3 col-xs-12">圖片分類</label>
-                            <div class="col-md-9 col-sm-9 col-xs-12">
-                                <select class="select2_multiple form-control" id="category_id" name="category_id[]" multiple="multiple" required>
-                                  <?php foreach ($category_data as $key => $value) { ?>
-                                    <option value="<?=$value['category_id']?>" <?=in_array($value['category_id'], $photograph_data['photograph_info']['category_id'])?'selected':''?>><?=$value['parents_name']?>_<?=$value['child_name']?></option>
-                                  <?php }?>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group">
                             <label class="control-label col-md-3 col-sm-3 col-xs-12">圖片作者</label>
                             <div class="col-md-9 col-sm-9 col-xs-12">
                                 <input id="author" type="text" class="tags form-control" name="author" value="<?=$photograph_data['photograph_info']['author']?>" />
@@ -142,12 +154,7 @@
                                 <input id="keywords" type="text" class="tags form-control" name="keyword" value="<?=$photograph_data['photograph_info']['keyword']?>" />
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label class="control-label col-md-3 col-sm-3 col-xs-12">內容描述</label>
-                            <div class="col-md-9 col-sm-9 col-xs-12">
-                                <textarea id="description" required="required" class="form-control" name="description"><?=$photograph_data['photograph_info']['description']?></textarea>
-                            </div>
-                        </div>
+                        
                         <div class="form-group">
                             <label class="control-label col-md-3 col-sm-3 col-xs-12">備註一</label>
                             <div class="col-md-9 col-sm-9 col-xs-12">

@@ -76,7 +76,7 @@
                 <label class="table_text"><input type="radio" name="pay_method" value="1" checked> 綠界線上支付 </label>
             </div>
             <div class="mb-4 text-center col-lg-12">
-                <label class="table_text"><input type="radio" name="pay_method" value="2"> 合作金庫線上支付 </label>
+                <label class="table_text"><input type="radio" name="pay_method" value="2"> 土地銀行線上支付 </label>
             </div>
         </div>
         <div class="text-center">
