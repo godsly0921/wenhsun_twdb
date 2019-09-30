@@ -91,6 +91,12 @@
                 <div class="x_conetne">
                   <form id="single_data" data-parsley-validate class="form-horizontal form-label-left">
                     <div class="form-group">
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12">物件名稱</label>
+                      <div class="col-md-9 col-sm-9 col-xs-12">
+                        <input type="text" class="form-control" name="object_name" placeholder="物件名稱">
+                      </div>
+                    </div>
+                    <div class="form-group">
                       <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">照片類型 <span class="required">*</span>
                       </label>
                       <div class="col-md-9 col-sm-9 col-xs-12">
@@ -102,22 +108,21 @@
                       </div>
                     </div>
                     <div class="form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="author">作者名稱
-                      </label>
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12">人物資訊</label>
                       <div class="col-md-9 col-sm-9 col-xs-12">
-                        <input id="author" type="text" class="tags form-control" name="author" value="" />
+                        <input type="text" class="form-control" name="people_info" placeholder="人物資訊">
                       </div>
                     </div>
                     <div class="form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="filming_date">攝影年份
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="filming_date">攝影時間
                       </label>
                       <div class="col-md-6 col-sm-6 col-xs-12">
-                        <input type="text" class="form-control has-feedback-left" id="filming_date" name="filming_date" placeholder="攝影年份" aria-describedby="inputSuccess2Status2">
+                        <input type="text" class="form-control has-feedback-left" id="filming_date" name="filming_date" placeholder="攝影時間" aria-describedby="inputSuccess2Status2">
                         <span class="fa fa-calendar-o form-control-feedback left" aria-hidden="true"></span>
                         <span id="inputSuccess2Status2" class="sr-only">(success)</span>
                       </div>
                       <div class="col-md-3 col-sm-3 col-xs-12">
-                        <input type="text" class="tags form-control" placeholder="攝影年份文字" name="filming_date_text" value="" />
+                        <input type="text" class="tags form-control" placeholder="攝影時間文字" name="filming_date_text" value="" />
                       </div>
                     </div>
                     <div class="form-group">
@@ -133,6 +138,12 @@
                       </div>
                     </div>
                     <div class="form-group">
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12">內容描述</label>
+                      <div class="col-md-9 col-sm-9 col-xs-12">
+                        <textarea id="description" required="required" class="form-control" name="description"></textarea>
+                      </div>
+                    </div>
+                    <div class="form-group">
                       <label class="control-label col-md-3 col-sm-3 col-xs-12">保存狀況</label>
                       <div class="col-md-9 col-sm-9 col-xs-12">
                         <select id="store_status" class="form-control" name="store_status" required>
@@ -143,15 +154,16 @@
                       </div>
                     </div>
                     <div class="form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12">人物資訊</label>
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12">入藏來源</label>
                       <div class="col-md-9 col-sm-9 col-xs-12">
-                        <input type="text" class="form-control" name="people_info" placeholder="人物資訊">
+                        <input type="text" class="form-control" name="photo_source" placeholder="入藏來源">
                       </div>
                     </div>
                     <div class="form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12">物件名稱</label>
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="author">作者名稱
+                      </label>
                       <div class="col-md-9 col-sm-9 col-xs-12">
-                        <input type="text" class="form-control" name="object_name" placeholder="物件名稱">
+                        <input id="author" type="text" class="tags form-control" name="author" value="" />
                       </div>
                     </div>
                      <div class="form-group">
@@ -185,12 +197,7 @@
                         </select>
                       </div>
                     </div>
-                    <div class="form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12">內容描述</label>
-                      <div class="col-md-9 col-sm-9 col-xs-12">
-                        <textarea id="description" required="required" class="form-control" name="description"></textarea>
-                      </div>
-                    </div>
+                    
                     <div class="form-group">
                       <label class="control-label col-md-3 col-sm-3 col-xs-12">備註一</label>
                       <div class="col-md-9 col-sm-9 col-xs-12">
@@ -380,7 +387,7 @@ $(document).ready(function () {
 
   //檔案上傳完成後更新進度條進度，進度為100%
   function update_progress(index, filename, filesize, single_id){
-    $('.' + index + '_' + filesize + ' .file_id_name').text('檔案名稱：' + filename + ' 編號：' + single_id);
+    $('.' + index + '_' + filesize + ' .file_id_name').text('原始檔名：' + filename + ' 編號：' + single_id);
     $('.' + index + '_' + filesize + ' .progress-bar').attr('data-transitiongoal','100');
     $('.' + index + '_' + filesize + ' .progress-bar').attr('aria-valuenow','100');
     $('.' + index + '_' + filesize + ' .progress-bar').attr('style','width: 100%;');
