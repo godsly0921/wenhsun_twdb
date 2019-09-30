@@ -67,9 +67,9 @@ class OrderController extends Controller{
     }
     public function Actiondelete(){
         $product_id = $_POST['id'];
-        $post = Product::model()->findByPk( $product_id );
+        $post = Orders::model()->findByPk( $product_id );
         $post->delete();
-        $this->redirect(Yii::app()->createUrl('product/list'));
+        $this->redirect(Yii::app()->createUrl('order/list'));
     }
 }
 ?>
