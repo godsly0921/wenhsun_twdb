@@ -717,4 +717,28 @@ class AttendancerecordService{
             return false;
         }
     }
+
+    public function getLeaveHoursByDate($date) {
+        $start_time = $date . ' 00:00:00';
+        $end_time = $date . '11:59:59';
+        $list = Yii::app()->db->createCommand(
+            '
+              SELECT employee_id, SUM(leave_minutes) minutes FROM attendance_record
+               WHERE leave_time >= :start_time
+                 AND leave_time < :end_time
+                 AND take != 11
+               GROUP BY employee_id
+            '
+        )->bindValues([
+            ':start_time' => $start_time,
+            ':end_time' => $end_time
+        ])->queryAll();
+
+        $listArr = array();
+        foreach ($list as $value) {
+           $listArr[$value['employee_id']] = (float) $value['minutes'] / 60;
+        }
+
+        return $listArr;
+    }
 }
