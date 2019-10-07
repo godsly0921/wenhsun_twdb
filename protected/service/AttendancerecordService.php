@@ -720,7 +720,7 @@ class AttendancerecordService{
 
     public function getLeaveHoursByDate($date) {
         $start_time = $date . ' 00:00:00';
-        $end_time = $date . '11:59:59';
+        $end_time = $date . ' 11:59:59';
         $list = Yii::app()->db->createCommand(
             '
               SELECT employee_id, SUM(leave_minutes) minutes FROM attendance_record

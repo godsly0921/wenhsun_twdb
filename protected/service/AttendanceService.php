@@ -94,9 +94,10 @@ class AttendanceService
             $data = $employee_service->findEmployeeNotInRolesListObject([7,37,38,39,40,43,44,45]);
 
             $attendanceRecordService = new AttendancerecordService();
-            $leaveList = $attendanceRecordService->getLeaveHoursBydDate($day);
+            $leaveList = $attendanceRecordService->getLeaveHoursByDate($day);
 
             foreach ($data as $key => $value) {
+                $leaveHours = isset($leaveList[$value['id']]) ? $leaveList[$value['id']] : 0;
                 if (!empty($value->door_card_num) || $value->door_card_num == "0000000000") { // 如果有員工有設定卡號的使用者就去抓
 
                     $start_date = $day . ' 00:00:00';
@@ -163,10 +164,10 @@ class AttendanceService
                     }
 
                     $diff_time = strtotime($last_time) - strtotime($first_time);
-                    $includingLeaveTime = $diff_time + $leaveList[$data->employee_id];
+                    $includingLeaveTime = $diff_time + $leaveHours;
 
                     // 請假時數小於8時才判斷出勤
-                    if ($leaveList[$data->employee_id < 8]) {
+                    if ($leaveHours < 8) {
                         if ($special_attendance == true) { //特殊情況
                             if ($special_attendance_type == 1) { //特殊出勤日
                                 if ($this->get_chinese_weekday($day) == "星期日") {
