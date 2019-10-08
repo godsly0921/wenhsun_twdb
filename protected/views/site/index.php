@@ -96,6 +96,9 @@
     });
   }
   $(document).ready( function() {
+    $("#keyword").click(function(event){
+      event.preventDefault();
+    });
     $('#ad_image').justifiedGallery({
       rowHeight: 200,
       maxRowHeight: 200,

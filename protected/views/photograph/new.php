@@ -91,13 +91,13 @@
                 <div class="x_conetne">
                   <form id="single_data" data-parsley-validate class="form-horizontal form-label-left">
                     <div class="form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12">物件名稱</label>
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12">圖片名稱</label>
                       <div class="col-md-9 col-sm-9 col-xs-12">
-                        <input type="text" class="form-control" name="object_name" placeholder="物件名稱">
+                        <input type="text" class="form-control" name="filming_name" placeholder="圖片名稱">
                       </div>
                     </div>
                     <div class="form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">照片類型 <span class="required">*</span>
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">圖片分類 <span class="required">*</span>
                       </label>
                       <div class="col-md-9 col-sm-9 col-xs-12">
                         <select class="select2_multiple form-control" name="category_id[]" multiple="multiple" required>
@@ -114,10 +114,16 @@
                       </div>
                     </div>
                     <div class="form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="filming_date">攝影時間
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12">事件名稱</label>
+                      <div class="col-md-9 col-sm-9 col-xs-12">
+                        <input type="text" class="form-control" name="event_name" placeholder="事件名稱">
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="filming_date">拍攝時間
                       </label>
                       <div class="col-md-6 col-sm-6 col-xs-12">
-                        <input type="text" class="form-control has-feedback-left" id="filming_date" name="filming_date" placeholder="攝影時間" aria-describedby="inputSuccess2Status2">
+                        <input type="text" class="form-control has-feedback-left" id="filming_date" name="filming_date" placeholder="拍攝時間" aria-describedby="inputSuccess2Status2">
                         <span class="fa fa-calendar-o form-control-feedback left" aria-hidden="true"></span>
                         <span id="inputSuccess2Status2" class="sr-only">(success)</span>
                       </div>
@@ -132,11 +138,12 @@
                       </div>
                     </div>
                     <div class="form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12">攝影名稱</label>
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12">物件名稱</label>
                       <div class="col-md-9 col-sm-9 col-xs-12">
-                        <input type="text" class="form-control" name="filming_name" placeholder="攝影名稱">
+                        <input type="text" class="form-control" name="object_name" placeholder="物件名稱">
                       </div>
                     </div>
+                    
                     <div class="form-group">
                       <label class="control-label col-md-3 col-sm-3 col-xs-12">內容描述</label>
                       <div class="col-md-9 col-sm-9 col-xs-12">

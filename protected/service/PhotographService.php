@@ -50,6 +50,7 @@ class PhotographService{
                 $data['image'] = Yii::app()->createUrl('/') . '/image_storage/S/' . $value['single_id'] . '.jpg';
                 $data['photograph_info'] = array(
                     'object_name' => $value['object_name'],
+                    'event_name' => $value['event_name'],
                     'photo_name' => $value['photo_name'],
                     'single_id' => $value['single_id'],
                     'description' => $value['description'],

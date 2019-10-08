@@ -236,7 +236,7 @@
 <script type="text/javascript">
 	function search(){
 	    var keyword = $("#keyword").val();
-	    var page = $("#page").val();
+	    var page = 1;
 	    if(keyword != '' && page >0){
 	      $('#keyword_search').attr('action',"<?php echo Yii::app()->createUrl('site/search');?>/" + keyword + "/" + page);
 	      $('#keyword_search').submit();

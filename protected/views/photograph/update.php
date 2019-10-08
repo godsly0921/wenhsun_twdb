@@ -33,11 +33,12 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="control-label col-md-3 col-sm-3 col-xs-12">物件名稱</label>
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12">圖片名稱</label>
                             <div class="col-md-9 col-sm-9 col-xs-12">
-                                <input type="text" class="form-control" placeholder="物件名稱" name="object_name" value="<?=$photograph_data['photograph_info']['object_name']?>">
+                                <input type="text" class="form-control" placeholder="圖片名稱" name="filming_name" value="<?=$photograph_data['photograph_info']['filming_name']?>">
                             </div>
                         </div>
+                        
                         <div class="form-group">
                             <label class="control-label col-md-3 col-sm-3 col-xs-12">圖片分類</label>
                             <div class="col-md-9 col-sm-9 col-xs-12">
@@ -52,6 +53,12 @@
                             <label class="control-label col-md-3 col-sm-3 col-xs-12">人物資訊</label>
                             <div class="col-md-9 col-sm-9 col-xs-12">
                                 <input type="text" class="form-control" placeholder="人物資訊" name="people_info" value="<?=$photograph_data['photograph_info']['people_info']?>">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12">事件名稱</label>
+                            <div class="col-md-9 col-sm-9 col-xs-12">
+                                <input type="text" class="form-control" placeholder="事件名稱" name="event_name" value="<?=$photograph_data['photograph_info']['event_name']?>">
                             </div>
                         </div>
                         <div class="form-group">
@@ -72,15 +79,9 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="control-label col-md-3 col-sm-3 col-xs-12">攝影名稱</label>
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12">物件名稱</label>
                             <div class="col-md-9 col-sm-9 col-xs-12">
-                                <input type="text" class="form-control" placeholder="攝影名稱" name="filming_name" value="<?=$photograph_data['photograph_info']['filming_name']?>">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label col-md-3 col-sm-3 col-xs-12">圖片描述</label>
-                            <div class="col-md-9 col-sm-9 col-xs-12">
-                                <input type="text" class="form-control" placeholder="圖片描述" name="description" value="<?=$photograph_data['photograph_info']['description']?>">
+                                <input type="text" class="form-control" placeholder="物件名稱" name="object_name" value="<?=$photograph_data['photograph_info']['object_name']?>">
                             </div>
                         </div>
                         <div class="form-group">

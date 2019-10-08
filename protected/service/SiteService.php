@@ -19,7 +19,12 @@ class SiteService
             //$store_filter['keyword'] = array( '$all' => $explode_keyword ); 
             $store_filter['$or'] = array(
                 array('keyword'=>array( '$in' => $explode_keyword )),
-                array('author'=>array( '$in' => $explode_keyword ))
+                array('author'=>array( '$in' => $explode_keyword )),
+                array('people_info'=>array( '$regex' => $keyword )),
+                array('event_name'=>array( '$regex' => $keyword )),
+                array('filming_location'=>array( '$regex' => $keyword )),
+                array('filming_date'=>array( '$regex' => $keyword )),
+                array('filming_date_text'=>array( '$regex' => $keyword ))
             );
         }
         // 分類搜尋
@@ -59,7 +64,6 @@ class SiteService
         ];
 
         //$option['projection'] = array('single_id'=>1,'people_info'=>1,'object_name'=>1,'filming_date'=>1,'filming_location'=>1,'keyword'=>1);
-
         $result = $mongo->command('wenhsun', $cmd)->toArray();
         if (!empty($result)) {
             $total_result = $result[0]->n;
