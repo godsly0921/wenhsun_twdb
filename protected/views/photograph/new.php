@@ -343,13 +343,15 @@ $(document).ready(function () {
     uploadUrl: "<?php echo Yii::app()->createUrl('photograph/BatUploadFile'); ?>",
     overwriteInitial: false,
     enableResumableUpload: false,
-    initialPreviewFileType: 'image',
+    // initialPreviewFileType: 'image',
     initialPreviewAsData: true,
+    showCaption: true,
+    showPreview: true,
     uploadAsync: true,
     showCancel: false,
     showRemove: false,
     showUpload: false,
-    layoutTemplates:{actions:actions},
+    // layoutTemplates:{actions:actions},
   }).on("filebatchselected", function(event, files) {
     fileupload_count += Object.keys(files).length;
     fileinput_upload.fileinput("upload");
@@ -362,21 +364,21 @@ $(document).ready(function () {
       var single_id = response.single_id; 
       upload_single_id.push(single_id);
       finishupload_count++;
-      update_progress(index, file_name, size, single_id);
+      update_progress(previewId, file_name, size, single_id);
     }else{
-      delete_progress(index, file_name, size);
+      delete_progress(previewId, file_name, size);
       fileupload_count = fileupload_count -1;
       alert(response.errorMsg);
     }
-  }).on('filepreupload', function(event, data, previewId, index) {
-    var size = data.files[index].size;
-    var file_name = data.files[index].name;
-    create_progress(index, file_name, size);
+  }).on('fileloaded', function(event, data, previewId, index, reader) {
+    var size = data.size;
+    var file_name = data.name;
+    create_progress(previewId, file_name, size);
   });
 
   //在選取檔案開始上傳時建立進度條，進度為0%
-  function create_progress( index, filename, filesize ){
-    var html = '<div class="row '+ index + '_' + filesize + '">'+
+  function create_progress( previewId, filename, filesize ){
+    var html = '<div class="row '+ previewId + '_' + filesize + '">'+
       '<div class="col-xs-4 text-right">'+
         '<span class="file_id_name">檔案名稱：' + filename + '</span>'+
       '</div>'+
@@ -393,17 +395,17 @@ $(document).ready(function () {
   }
 
   //檔案上傳完成後更新進度條進度，進度為100%
-  function update_progress(index, filename, filesize, single_id){
-    $('.' + index + '_' + filesize + ' .file_id_name').text('原始檔名：' + filename + ' 編號：' + single_id);
-    $('.' + index + '_' + filesize + ' .progress-bar').attr('data-transitiongoal','100');
-    $('.' + index + '_' + filesize + ' .progress-bar').attr('aria-valuenow','100');
-    $('.' + index + '_' + filesize + ' .progress-bar').attr('style','width: 100%;');
-    $('.' + index + '_' + filesize + ' .progress_status').text('100%');
+  function update_progress(previewId, filename, filesize, single_id){
+    $('.' + previewId + '_' + filesize + ' .file_id_name').text('原始檔名：' + filename + ' 編號：' + single_id);
+    $('.' + previewId + '_' + filesize + ' .progress-bar').attr('data-transitiongoal','100');
+    $('.' + previewId + '_' + filesize + ' .progress-bar').attr('aria-valuenow','100');
+    $('.' + previewId + '_' + filesize + ' .progress-bar').attr('style','width: 100%;');
+    $('.' + previewId + '_' + filesize + ' .progress_status').text('100%');
   }
 
   //檔案上傳失敗移除該檔案的進度條
-  function delete_progress( index, filename, filesize ){
-    $('.' + index + '_' + filesize).remove();
+  function delete_progress( previewId, filename, filesize ){
+    $('.' + previewId + '_' + filesize).remove();
   }
 
   $('#wizard').smartWizard({
