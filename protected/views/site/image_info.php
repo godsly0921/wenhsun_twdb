@@ -272,7 +272,7 @@
 		<div class="col-lg-5">
 			<div class="my-4">
 	        	<p class="info_color">人物資訊：<?=$photograph_data['photograph_info']['people_info']?></p>
-	        	<p class="info_color">事件名稱：<?=$photograph_data['photograph_info']['object_name']?></p>
+	        	<p class="info_color">事件名稱：<?=$photograph_data['photograph_info']['event_name']?></p>
 	        	<p class="info_color">拍攝時間：<?=$photograph_data['photograph_info']['filming_date']?></p>
 	        	<p class="info_color">拍攝地點：<?=$photograph_data['photograph_info']['filming_location']?></p>
 	        	<p class="info_color mt_45">內容描述：<?=$photograph_data['photograph_info']['description']?></p>

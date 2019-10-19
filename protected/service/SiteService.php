@@ -19,7 +19,7 @@ class SiteService
             //$store_filter['keyword'] = array( '$all' => $explode_keyword ); 
             $store_filter['$or'] = array(
                 array('keyword'=>array( '$in' => $explode_keyword )),
-                array('author'=>array( '$in' => $explode_keyword )),
+                // array('author'=>array( '$in' => $explode_keyword )),
                 array('people_info'=>array( '$regex' => $keyword )),
                 array('event_name'=>array( '$regex' => $keyword )),
                 array('filming_location'=>array( '$regex' => $keyword )),
