@@ -44,7 +44,7 @@
     <div id="option">
         <div class="plan col-sm-12 row">
             <div class="col-sm-6">
-                <form method='GET' class='form-horizontal' action='<?= Yii::app()->createUrl('site/check_order');?>'>
+                <form method='POST' class='form-horizontal' action='<?= Yii::app()->createUrl('site/check_order');?>'>
                     <div class="shadow">
                         <div class="header">
                             <div class="header-div col-sm-12">
