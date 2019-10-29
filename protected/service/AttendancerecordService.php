@@ -8,6 +8,9 @@ use PHPUnit\Framework\Exception;
 
 class AttendancerecordService{
 
+    public $normal_take = [0,3,4,5,6,7,8,9,10,11,16,17,18];
+    public $abnormal_take = [1,2,12,13,14,15];
+
     // 新增一筆紀錄
     public function create($employee_id , $day , $first_time , $last_time ,$abnormal_type,$abnormal){
       $transaction = Yii::app()->db->beginTransaction();
@@ -740,5 +743,138 @@ class AttendancerecordService{
         }
 
         return $listArr;
+    }
+
+    public function queryFullAttendanceRecord($startDate, $endDate) {
+        $start_time = $startDate;
+        $end_time = $endDate;
+        // 計算名單：文訊主管(2)、文訊正職(5)、文訊人事主管／會計(26)、社長(27)、文訊企畫編輯(33)
+        $roleList = array(2,5,26,27,33);
+        $list = Yii::app()->db->createCommand(
+            '
+              SELECT a.id, a.name, b.day, b.first_time, b.last_time, b.abnormal_type FROM employee a, attendance_record b
+               WHERE b.day >= :start_time
+                 AND b.day < :end_time
+                 AND a.id = b.employee_id
+                 AND a.role IN ('. implode(',',$roleList) . ')
+            '
+        )->bindValues([
+            ':start_time' => date('Y-m-d', strtotime($start_time)),
+            ':end_time' => date('Y-m-d', strtotime($end_time))
+        ])->queryAll();
+        $attendanceDays = $this->getAttendanceDayList($start_time, $end_time);
+        $resultList = $this->organizeFullAttendanceRecord($list, $attendanceDays);
+        return $resultList;
+    }
+
+    private function organizeFullAttendanceRecord($list, $attendanceDays) {
+
+        $resultList = array();
+        foreach ($list as $record) {
+          if(array_key_exists($record["id"], $resultList)) { // 個人第二筆之後出勤
+              $r = $resultList[$record["id"]];
+              if(strtotime($record["day"]) < $r->start_date) {
+                  $r->start_date = strtotime($record["day"]);
+              }
+              if(strtotime($record["day"]) > $r->end_date) {
+                  $r->end_date = strtotime($record["day"]);
+              }
+              if($this->isAttendanceDay($record["day"], $attendanceDays)) { // 是出勤日
+                  if(strtotime($record["first_time"]) >= 0){ //有出勤
+                      $r->inOfficeDays += 1;
+                      $r->minutes += floor((strtotime($record["last_time"]) - strtotime($record["first_time"])) / 60);
+                      if("0" == $record["abnormal_type"]) {
+                          //正常出勤
+                          $fullAttendanceType = $this->getFullAttendanceType($record["day"], $record["first_time"]);
+                          if("A" == $fullAttendanceType) {
+                              $r->a_normal_take += 1;
+                          } else if("B" == $fullAttendanceType) {
+                              $r->b_normal_take += 1;
+                          }
+                      }
+                      else if(in_array((int)$record["abnormal_type"], $this->normal_take)) {
+                          // 全勤休假種類
+                          $r->a_normal_take += 1;
+                      }
+                  }
+              }
+          } else { // 個人第一筆出勤
+              $r = new stdClass();
+              $r->id = $record["id"];
+              $r->name = $record["name"];
+              $r->start_date = strtotime($record["day"]);
+              $r->end_date = strtotime($record["day"]);
+              $r->a_normal_take = 0;
+              $r->b_normal_take = 0;
+              $r->inOfficeDays = 0;
+              $r->minutes = 0;
+              if($this->isAttendanceDay($record["day"], $attendanceDays)) { // 是出勤日
+                  if(strtotime($record["first_time"]) >= 0){ //有出勤
+                      $r->inOfficeDays = 1;
+                      $r->minutes = floor((strtotime($record["last_time"]) - strtotime($record["first_time"])) / 60);
+                      if("0" == $record["abnormal_type"]) {
+                          //正常出勤
+                          $fullAttendanceType = $this->getFullAttendanceType($record["day"], $record["first_time"]);
+                          if("A" == $fullAttendanceType) {
+                              $r->a_normal_take = 1;
+
+                          } else if("B" == $fullAttendanceType) {
+                              $r->b_normal_take = 1;
+                          }
+                      }
+                      else if(in_array((int)$record["abnormal_type"], $this->normal_take)) {
+                          // 全勤休假種類
+                          $r->a_normal_take = 1;
+                      }
+                  }
+              }
+              $resultList[$record["id"]] = $r;
+          }
+
+
+        }
+        return $resultList;
+    }
+    public function getAttendanceDayList($start_time, $end_time) {
+        $list = Yii::app()->db->createCommand(
+            '
+              SELECT day, type FROM attendance
+               WHERE day >= :start_time
+                 AND day < :end_time
+            '
+        )->bindValues([
+            ':start_time' => date('Y-m-d', strtotime($start_time)),
+            ':end_time' => date('Y-m-d', strtotime($end_time))
+        ])->queryAll();
+        $resultList = array();
+        foreach ($list as $record) {
+            $resultList[$record["day"]] = $record["type"];
+        }
+        return $resultList;
+    }
+
+    public function isAttendanceDay($day, $attendanceDayList) {
+        if(array_key_exists($day, $attendanceDayList)) {
+            if($attendanceDayList[$day] == "0") {
+               return false;
+            }
+            return true;
+        }
+        $weekday = date('w', strtotime($day));
+        if(6 == $weekday || 0 == $weekday) {
+            return false;
+        }
+        return true;
+    }
+
+    public function getFullAttendanceType($day, $first_time) {
+        $a_period = strtotime($day . ' 09:00:00');
+        $b_period = strtotime($day . ' 09:30:00');
+        if(strtotime($first_time) < $a_period) {
+            return "A";
+        } else if (strtotime($first_time) > $a_period && strtotime($first_time) <= $b_period) {
+            return "B";
+        }
+        return "C";
     }
 }

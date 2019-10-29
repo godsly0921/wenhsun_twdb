@@ -319,6 +319,32 @@ class AttendancerecordController extends Controller
 
     }
 
+    public function actionFull()
+    {
+        if (isset($_POST['date_start']) && !empty($_POST['date_start'])) {
+
+            $choosestart = $_POST['date_start'] . ' 00:00:00';
+
+        } else {
+
+            $choosestart = date("Y-m-d").' 00:00:00';
+        }
+
+        if (isset($_POST['date_end']) && !empty($_POST['date_end'])) {
+
+            $chooseend = $_POST['date_end'] . ' 23:59:59';
+
+        } else {
+
+            $chooseend = date("Y-m-d").' 23:59:59';
+        }
+        $attRecService = new AttendancerecordService();
+        $list = $attRecService->queryFullAttendanceRecord($choosestart, $chooseend);
+        Yii::app()->session['fullAttendanceReport'] = $list;
+        $this->render('fullAttendanceReport', ['rcdata' => $list
+        ]);
+    }
+
     /**
      * @param $id
      */
