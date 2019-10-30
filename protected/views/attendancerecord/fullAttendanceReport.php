@@ -88,7 +88,17 @@
                                     <td><?=$value->name?></td>
                                     <td><?=date('m/d/Y', $value->start_date)?></td>
                                     <td><?=date('m/d/Y', $value->end_date)?></td>
-                                    <td><?="A: ".$value->a_normal_take .", B: ". $value->b_normal_take?></td>
+                                    <td>
+                                        <?php
+                                            if($value->a_normal_take == 0 && $value->b_normal_take == 0) {
+                                                echo "A: 0,<br> B: 0";
+                                            } else {
+                                                echo "A: ".$value->a_normal_take ."  ("
+                                                . floor(($value->a_normal_take * 100 ) / ($value->a_normal_take + $value->b_normal_take))
+                                                . "%),<br> B: " . $value->b_normal_take ."  (" .(100 - floor(($value->a_normal_take * 100 ) / ($value->a_normal_take + $value->b_normal_take))) . "%)";
+                                            }
+
+                                    ?></td>
                                     <td><?=floor($value->minutes / 60 )?></td>
                                     <td><?=$value->inOfficeDays?></td>
                                 </tr>

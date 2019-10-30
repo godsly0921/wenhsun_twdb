@@ -385,7 +385,7 @@ class AttendancerecordController extends Controller
                 ->setCellValue('B' . $i, $value->name)
                 ->setCellValue('C' . $i, date('m/d/Y', $value->start_date))
                 ->setCellValue('D' . $i, date('m/d/Y', $value->end_date))
-                ->setCellValue('E' . $i, "A: ".$value->a_normal_take .", B: ". $value->b_normal_take)
+                ->setCellValue('E' . $i, $this->exportFullAttString($value->a_normal_take,$value->b_normal_take))
                 ->setCellValue('F' . $i, floor($value->minutes / 60 ))
                 ->setCellValue('G' . $i, $value->inOfficeDays);
             $i++;
@@ -460,5 +460,14 @@ class AttendancerecordController extends Controller
         }
     }
 
+    private function exportFullAttString($a, $b) {
+        if($a== 0 && $b == 0) {
+            return "A: 0, B: 0";
+        } else {
+            return "A: ".$a ."  ("
+            . floor(($a * 100 ) / ($a + $b))
+            . "%), B: " . $b ."  (" .(100 - floor(($a * 100 ) / ($a + $b))) . "%)";
+        }
+    }
 
 }
