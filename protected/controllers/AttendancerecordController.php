@@ -319,6 +319,94 @@ class AttendancerecordController extends Controller
 
     }
 
+    public function actionFull()
+    {
+        if (isset($_POST['date_start']) && !empty($_POST['date_start'])) {
+
+            $choosestart = $_POST['date_start'] . ' 00:00:00';
+
+        } else {
+
+            $choosestart = date("Y-m-d").' 00:00:00';
+        }
+
+        if (isset($_POST['date_end']) && !empty($_POST['date_end'])) {
+
+            $chooseend = $_POST['date_end'] . ' 23:59:59';
+
+        } else {
+
+            $chooseend = date("Y-m-d").' 23:59:59';
+        }
+        $attRecService = new AttendancerecordService();
+        $list = $attRecService->queryFullAttendanceRecord($choosestart, $chooseend);
+        Yii::app()->session['fullAttendanceReport'] = $list;
+        $this->render('fullAttendanceReport', ['rcdata' => $list
+        ]);
+    }
+
+    // 匯出excel
+    function actionGetFullExcel()
+    {
+        $model = Yii::app()->session['fullAttendanceReport'];
+        error_reporting(E_ALL);
+        ini_set('display_errors', TRUE);
+        ini_set('display_startup_errors', TRUE);
+        date_default_timezone_set('Europe/London');
+        if (PHP_SAPI == 'cli')
+            die('This example should only be run from a Web Browser');
+        /** Include PHPExcel */
+        require_once dirname(__FILE__) . '/../components/PHPExcel.php';
+        // Create new PHPExcel object
+        $objPHPExcel = new PHPExcel();
+        // Set document properties
+        $objPHPExcel->getProperties()->setCreator("文訊")
+            ->setLastModifiedBy("文訊")
+            ->setTitle("文訊")
+            ->setSubject("文訊")
+            ->setDescription("文訊")
+            ->setKeywords("文訊")
+            ->setCategory("文訊");
+        // Add some data 設定匯出欄位資料
+        $objPHPExcel->setActiveSheetIndex(0)
+            ->setCellValue('A1', '員工帳號')
+            ->setCellValue('B1', '員工姓名')
+            ->setCellValue('C1', '開始日期')
+            ->setCellValue('D1', '結束日期')
+            ->setCellValue('E1', '全勤天數')
+            ->setCellValue('F1', '出勤總時數')
+            ->setCellValue('G1', '出勤總天數');
+
+        // Miscellaneous glyphs, UTF-8 設定內容資料
+        $i = 2;
+        foreach ($model as $value) {
+            $objPHPExcel->setActiveSheetIndex(0)
+                ->setCellValue('A' . $i, $value->id)
+                ->setCellValue('B' . $i, $value->name)
+                ->setCellValue('C' . $i, date('m/d/Y', $value->start_date))
+                ->setCellValue('D' . $i, date('m/d/Y', $value->end_date))
+                ->setCellValue('E' . $i, $this->exportFullAttString($value->a_normal_take,$value->b_normal_take))
+                ->setCellValue('F' . $i, floor($value->minutes / 60 ))
+                ->setCellValue('G' . $i, $value->inOfficeDays);
+            $i++;
+        }
+        // Rename worksheet 表單名稱
+        $objPHPExcel->getActiveSheet()->setTitle('全勤紀錄明細表');
+        // Set active sheet index to the first sheet, so Excel opens this as the first sheet
+        $objPHPExcel->setActiveSheetIndex(0);
+        $filename = urlencode( "全勤紀錄明細表" . ".xlsx" );
+        ob_end_clean();
+        header( "Content-type: text/html; charset=utf-8" );
+        header( "Content-Type: application/vnd.ms-excel" );
+        header( "Content-Disposition: attachment;filename=" . $filename );
+        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, "Excel2007");
+       // $objWriter = PHPExcel_IOFactory::createWriter( $objPHPExcel, 'Excel5' );
+        $objWriter->save( 'php://output' );
+        exit();
+
+
+    }
+
     /**
      * @param $id
      */
@@ -372,5 +460,14 @@ class AttendancerecordController extends Controller
         }
     }
 
+    private function exportFullAttString($a, $b) {
+        if($a== 0 && $b == 0) {
+            return "A: 0, B: 0";
+        } else {
+            return "A: ".$a ."  ("
+            . floor(($a * 100 ) / ($a + $b))
+            . "%), B: " . $b ."  (" .(100 - floor(($a * 100 ) / ($a + $b))) . "%)";
+        }
+    }
 
 }
