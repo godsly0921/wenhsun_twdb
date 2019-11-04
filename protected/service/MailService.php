@@ -348,8 +348,7 @@ class MailService
             }
             $mail->addAddress($inputs['manager']);
             $mail->addAddress('jenny@wenhsun.com.tw');
-            $mail->addAddress('pinkfloydbigman@gmail.com');
-            // $mail->addAddress('fdp.wenhsun@gmail.com');
+            $mail->addAddress('fdp.wenhsun@gmail.com');
             $mail->IsHTML(true);
 
             $mail->Subject = $inputs['subject'];
