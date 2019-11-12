@@ -608,11 +608,6 @@ class AttendanceService
                         if ($diff_time != 1) { //0 2~以上
                             if ($diff_time != 0) {
                                 //假如第一筆時間大於9:30 //加註 遲到
-                                if (strtotime($first_time) >= $this->getArriveLateTime($day) and $diff_time >= NINE_HOUR && $diff_time     <= TEN_HOUR) {
-                                    $abnormal_type = 0;
-                                    $abnormal = '出勤日 上班八小時';
-                                }
-
                                 if (strtotime($first_time) >= $this->getArriveLateTime($day) and $diff_time < NINE_HOUR) {
                                     $abnormal_type = 1;
                                     $abnormal .= '|遲到|';
@@ -620,11 +615,6 @@ class AttendanceService
 
 
                                 //假如第一筆時間小於18:30 //加註 早退
-                                if (strtotime($last_time) < $this->getLeaveEarlyTime($day) and $diff_time >= NINE_HOUR && $diff_time <=     TEN_HOUR) {
-                                    $abnormal_type = 0;
-                                    $abnormal = '出勤日 上班八小時';
-                                }
-
                                 if (strtotime($first_time) < $this->getLeaveEarlyTime($day) and $diff_time < NINE_HOUR) {
                                     $abnormal_type = 1;
                                     $abnormal .= '|早退|';
