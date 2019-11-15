@@ -166,6 +166,7 @@ class MailService
 
     public function sendNewsMail($inputs)
     {
+        set_time_limit(0);
         try {
             // 管理者信箱
             $admin_email = $this->findAllEmail();
