@@ -339,9 +339,11 @@ class AttendancerecordController extends Controller
             $chooseend = date("Y-m-d").' 23:59:59';
         }
         $attRecService = new AttendancerecordService();
+        $dayCount = $attRecService->getDayCount($choosestart, $chooseend);
         $list = $attRecService->queryFullAttendanceRecord($choosestart, $chooseend);
         Yii::app()->session['fullAttendanceReport'] = $list;
-        $this->render('fullAttendanceReport', ['rcdata' => $list
+        Yii::app()->session['fullAttendanceReportDayCount'] = $dayCount;
+        $this->render('fullAttendanceReport', ['rcdata' => $list, 'dayCount' => $dayCount
         ]);
     }
 
@@ -349,10 +351,11 @@ class AttendancerecordController extends Controller
     function actionGetFullExcel()
     {
         $model = Yii::app()->session['fullAttendanceReport'];
+        $dayCount = Yii::app()->session['fullAttendanceReportDayCount'];
         error_reporting(E_ALL);
         ini_set('display_errors', TRUE);
         ini_set('display_startup_errors', TRUE);
-        date_default_timezone_set('Europe/London');
+        //date_default_timezone_set('Europe/London');
         if (PHP_SAPI == 'cli')
             die('This example should only be run from a Web Browser');
         /** Include PHPExcel */
@@ -373,22 +376,20 @@ class AttendancerecordController extends Controller
             ->setCellValue('B1', '員工姓名')
             ->setCellValue('C1', '開始日期')
             ->setCellValue('D1', '結束日期')
-            ->setCellValue('E1', '全勤天數')
-            ->setCellValue('F1', '出勤總時數')
-            ->setCellValue('G1', '出勤總天數');
+            ->setCellValue('E1', '全勤天數');
 
         // Miscellaneous glyphs, UTF-8 設定內容資料
         $i = 2;
         foreach ($model as $value) {
-            $objPHPExcel->setActiveSheetIndex(0)
-                ->setCellValue('A' . $i, $value->id)
-                ->setCellValue('B' . $i, $value->name)
-                ->setCellValue('C' . $i, date('m/d/Y', $value->start_date))
-                ->setCellValue('D' . $i, date('m/d/Y', $value->end_date))
-                ->setCellValue('E' . $i, $this->exportFullAttString($value->a_normal_take,$value->b_normal_take))
-                ->setCellValue('F' . $i, floor($value->minutes / 60 ))
-                ->setCellValue('G' . $i, $value->inOfficeDays);
-            $i++;
+            if($value->absence == false) {
+                $objPHPExcel->setActiveSheetIndex(0)
+                    ->setCellValue('A' . $i, $value->id)
+                    ->setCellValue('B' . $i, $value->name)
+                    ->setCellValue('C' . $i, date('m/d/Y', $value->start_date))
+                    ->setCellValue('D' . $i, date('m/d/Y', $value->end_date))
+                    ->setCellValue('E' . $i, $this->exportFullAttString($value->a_normal_take, $value->b_normal_take, $dayCount));
+                $i++;
+            }
         }
         // Rename worksheet 表單名稱
         $objPHPExcel->getActiveSheet()->setTitle('全勤紀錄明細表');
@@ -460,13 +461,13 @@ class AttendancerecordController extends Controller
         }
     }
 
-    private function exportFullAttString($a, $b) {
+    private function exportFullAttString($a, $b, $dayCount) {
         if($a== 0 && $b == 0) {
             return "A: 0, B: 0";
         } else {
             return "A: ".$a ."  ("
-            . floor(($a * 100 ) / ($a + $b))
-            . "%), B: " . $b ."  (" .(100 - floor(($a * 100 ) / ($a + $b))) . "%)";
+            . floor(($a * 100 ) / $dayCount)
+            . "%), B: " . $b ."  (" .floor(($b * 100 ) / $dayCount) . "%)";
         }
     }
 

@@ -76,12 +76,12 @@
                                 <th>開始日期</th>
                                 <th>結束日期</th>
                                 <th>全勤天數</th>
-                                <th>出勤總時數</th>
-                                <th>出勤總天數</th>
+                                <!-- <th>temp</th> -->
                             </tr>
                             </thead>
                             <tbody>
                             <?php foreach ($rcdata as $value): ?>
+                                <?php if ($value->absence == false): ?>
                                 <tr class="gradeC" role="row">
                                    <!-- <td><?/*=$value['position_name']*/?></td>-->
                                     <td><?=$value->id?></td>
@@ -94,14 +94,16 @@
                                                 echo "A: 0,<br> B: 0";
                                             } else {
                                                 echo "A: ".$value->a_normal_take ."  ("
-                                                . floor(($value->a_normal_take * 100 ) / ($value->a_normal_take + $value->b_normal_take))
-                                                . "%),<br> B: " . $value->b_normal_take ."  (" .(100 - floor(($value->a_normal_take * 100 ) / ($value->a_normal_take + $value->b_normal_take))) . "%)";
+                                                . floor(($value->a_normal_take * 100 ) / $dayCount)
+                                                . "%),<br> B: " . $value->b_normal_take ."  ("
+                                                . floor(($value->b_normal_take * 100 ) / $dayCount)
+                                                . "%)";
                                             }
 
                                     ?></td>
-                                    <td><?=floor($value->minutes / 60 )?></td>
-                                    <td><?=$value->inOfficeDays?></td>
+                                    <!-- <td><?=var_dump($value->absence)?></td> -->
                                 </tr>
+                                <?php endif; ?>
                             <?php endforeach; ?>
                             </tbody>
                         </table>
