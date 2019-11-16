@@ -339,9 +339,10 @@ class AttendancerecordController extends Controller
             $chooseend = date("Y-m-d").' 23:59:59';
         }
         $attRecService = new AttendancerecordService();
+        $dayCount = $attRecService->getDayCount($choosestart, $chooseend);
         $list = $attRecService->queryFullAttendanceRecord($choosestart, $chooseend);
         Yii::app()->session['fullAttendanceReport'] = $list;
-        $this->render('fullAttendanceReport', ['rcdata' => $list
+        $this->render('fullAttendanceReport', ['rcdata' => $list, 'dayCount' => $dayCount
         ]);
     }
 

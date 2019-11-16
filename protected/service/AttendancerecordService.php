@@ -8,8 +8,7 @@ use PHPUnit\Framework\Exception;
 
 class AttendancerecordService{
 
-    public $normal_take = [0,3,4,5,6,7,8,9,10,11,16,17,18];
-    public $abnormal_take = [1,2,12,13,14,15];
+    public $normal_take = [3,4,5,6,7,8,9,10,16,17,18]; // 不扣全勤的假
 
     // 新增一筆紀錄
     public function create($employee_id , $day , $first_time , $last_time ,$abnormal_type,$abnormal){
@@ -752,9 +751,9 @@ class AttendancerecordService{
         $roleList = array(2,5,26,27,33);
         $list = Yii::app()->db->createCommand(
             '
-              SELECT a.id, a.name, b.day, b.first_time, b.last_time, b.abnormal_type FROM employee a, attendance_record b
+              SELECT a.id, a.name, b.day, b.first_time, b.last_time, b.abnormal_type, b.take FROM employee a, attendance_record b
                WHERE b.day >= :start_time
-                 AND b.day < :end_time
+                 AND b.day <= :end_time
                  AND a.id = b.employee_id
                  AND a.role IN ('. implode(',',$roleList) . ')
             '
@@ -768,7 +767,6 @@ class AttendancerecordService{
     }
 
     private function organizeFullAttendanceRecord($list, $attendanceDays) {
-
         $resultList = array();
         foreach ($list as $record) {
           if(array_key_exists($record["id"], $resultList)) { // 個人第二筆之後出勤
@@ -780,21 +778,27 @@ class AttendancerecordService{
                   $r->end_date = strtotime($record["day"]);
               }
               if($this->isAttendanceDay($record["day"], $attendanceDays)) { // 是出勤日
-                  if(strtotime($record["first_time"]) >= 0){ //有出勤
-                      $r->inOfficeDays += 1;
-                      $r->minutes += floor((strtotime($record["last_time"]) - strtotime($record["first_time"])) / 60);
-                      if("0" == $record["abnormal_type"]) {
-                          //正常出勤
+                  if ("1" == $record["take"] || "2" == $record["take"]) { // 普通傷病假 or 事假
+                      $r->absence = true;
+                  } else if (in_array((int)$record["take"], $this->normal_take)){ // 不扣全勤的假
+                      // do nothing
+                  } else {
+                      if(strtotime($record["first_time"]) >= 0){ //有出勤
+                          $diff_time = strtotime($record["last_time"]) - strtotime($record["first_time"]);
+                          if($diff_time < (60 * 60 * 8)) {
+                              // 工作未滿並八小時
+                              $r->absence = true;
+                          }
                           $fullAttendanceType = $this->getFullAttendanceType($record["day"], $record["first_time"]);
                           if("A" == $fullAttendanceType) {
                               $r->a_normal_take += 1;
                           } else if("B" == $fullAttendanceType) {
                               $r->b_normal_take += 1;
+                          } else {
+                              $r->absence = true;
                           }
-                      }
-                      else if(in_array((int)$record["abnormal_type"], $this->normal_take)) {
-                          // 全勤休假種類
-                          $r->a_normal_take += 1;
+                      } else {
+                          $r->absence = true;
                       }
                   }
               }
@@ -806,32 +810,35 @@ class AttendancerecordService{
               $r->end_date = strtotime($record["day"]);
               $r->a_normal_take = 0;
               $r->b_normal_take = 0;
-              $r->inOfficeDays = 0;
-              $r->minutes = 0;
+              $r->absence = false;
               if($this->isAttendanceDay($record["day"], $attendanceDays)) { // 是出勤日
-                  if(strtotime($record["first_time"]) >= 0){ //有出勤
-                      $r->inOfficeDays = 1;
-                      $r->minutes = floor((strtotime($record["last_time"]) - strtotime($record["first_time"])) / 60);
-                      if("0" == $record["abnormal_type"]) {
-                          //正常出勤
+                  if ("1" == $record["take"] || "2" == $record["take"]) { // 普通傷病假 or 事假
+                      $r->absence = true;
+                  } else if (in_array((int)$record["take"], $this->normal_take)){ // 不扣全勤的假
+                      // do nothing
+                  } else {
+                      if(strtotime($record["first_time"]) >= 0){ //有出勤
+                          $diff_time = strtotime($record["last_time"]) - strtotime($record["first_time"]);
+                          if($diff_time < (60 * 60 * 8)) {
+                              // 工作未滿並八小時
+                              $r->absence = true;
+                          }
                           $fullAttendanceType = $this->getFullAttendanceType($record["day"], $record["first_time"]);
                           if("A" == $fullAttendanceType) {
                               $r->a_normal_take = 1;
-
                           } else if("B" == $fullAttendanceType) {
                               $r->b_normal_take = 1;
+                          } else {
+                              $r->absence = true;
                           }
-                      }
-                      else if(in_array((int)$record["abnormal_type"], $this->normal_take)) {
-                          // 全勤休假種類
-                          $r->a_normal_take = 1;
+
+                      } else {
+                          $r->absence = true;
                       }
                   }
               }
               $resultList[$record["id"]] = $r;
           }
-
-
         }
         return $resultList;
     }
@@ -840,7 +847,7 @@ class AttendancerecordService{
             '
               SELECT day, type FROM attendance
                WHERE day >= :start_time
-                 AND day < :end_time
+                 AND day <= :end_time
             '
         )->bindValues([
             ':start_time' => date('Y-m-d', strtotime($start_time)),
@@ -876,5 +883,21 @@ class AttendancerecordService{
             return "B";
         }
         return "C";
+    }
+
+    public function getDayCount($start_date, $end_date) {
+        $attendanceDayList = $this->getAttendanceDayList($start_date, $end_date);
+        $period = new DatePeriod(
+            new DateTime($start_date),
+            new DateInterval('P1D'),
+            new DateTime($end_date)
+        );
+        $count = 0;
+        foreach ($period as $day) {
+            if($this->isAttendanceDay($day->format('Y-m-d'), $attendanceDayList)) {
+                $count += 1;
+            }
+        }
+        return $count;
     }
 }
