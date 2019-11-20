@@ -29,7 +29,7 @@
                         <br>
                         <center>圖片編號：<?=$value['single_id']?></center>
                     </td>
-                    <td><?=$value['object_name']?></td>
+                    <td><?=$value['filming_name']?></td>
                     <td><?=$value['copyright'] == 0 ?'不通過':'通過'?></td>
                     <td><?=$value['publish'] == 0 ?'否':'是'?></td>
                     <td><?=round($value['percent'],2)?> %</td>
