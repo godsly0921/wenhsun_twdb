@@ -606,7 +606,7 @@ class AttendanceService
                         }
 
                         if ($diff_time != 1) { //0 2~以上
-                            if ($diff_time != 0) {
+                            if ($diff_time != 0 && $leaveHours == 0) {
                                 //假如第一筆時間大於9:30 //加註 遲到
                                 if (strtotime($first_time) >= $this->getArriveLateTime($day) and $diff_time < NINE_HOUR) {
                                     $abnormal_type = 1;
