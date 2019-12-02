@@ -67,7 +67,7 @@ class SiteController extends CController{
         $photograph_data['photograph_info']['keyword'] = explode(",", $photograph_data['photograph_info']['keyword']);
         $same_category = $siteService->findSameCategory($photograph_data['photograph_info']['category_id'],$id);
         $member_point = $member_plan = 0;
-        if (!Yii::app() -> user -> isGuest){
+        if (!Yii::app() -> user -> isGuest && isset(Yii::app()->session['member_id'])){
             $memberService = new MemberService();
             $memberplanService = new MemberplanService();
             $member = $memberService->findByMemId(Yii::app()->session['member_id']);
@@ -579,8 +579,16 @@ class SiteController extends CController{
                 Yii::app()->session['error_msg'] = '帳號驗證失敗';
                 $this->redirect(Yii::app()->createUrl('site/forget'));
             } else {
-                Yii::app()->session['success_msg'] = '帳號驗證成功';
-                $this->redirect(Yii::app()->createUrl('site/login'));
+                Yii::app()->session['success_msg'] = '帳號驗證成功，請盡速變更密碼';
+                $useridentity = new UserIdentity($verification->account,$verification_code);
+                $is_login = $useridentity->authenticate(1);
+                if ($is_login) {
+                    $duration = 3600 * 24 * 30; // 30 days
+                    Yii::app()->user->login($useridentity, $duration);
+                    $this->redirect(Yii::app()->createUrl('site/my_account'));
+                }else{
+                    $this->redirect(Yii::app()->createUrl('site/login'));
+                }
             }
         }else{
             Yii::app()->session['error_msg'] = "帳號驗證失敗";
@@ -607,7 +615,6 @@ class SiteController extends CController{
         $inputs['verification_code'] = substr(md5(uniqid(rand(), true)),0,20);
         $memberService = new MemberService();
         $forgetVerification = $memberService->forgetVerification($inputs);
-
         if (!$forgetVerification->hasErrors() && $forgetVerification){
             $mail = new MailService();
             $mail_type = $mail->sendForgetPwdMail($inputs);

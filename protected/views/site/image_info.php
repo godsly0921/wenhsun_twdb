@@ -309,11 +309,6 @@
 		<div class="col-lg-12">
 			<h5 class="info_color brown_text_underline my-3 mt-5 mt_45">類似的圖片</h5>
 		</div>
-		<div class="col-lg-6 mx-auto slider-for">
-			<?php foreach ($same_category as $key => $value) {?>
-				<img class="px-3" onclick="open_image_info(this,'<?=$value->single_id?>')" src="<?=DOMAIN.PHOTOGRAPH_STORAGE_URL.$value->single_id?>.jpg">
-			<?php }?>
-		</div>
 		<div class="col-lg-10 mx-auto slider-nav"> 
 			<?php foreach ($same_category as $key => $value) {?>
 				<img class="px-3" onclick="open_image_info(this,'<?=$value->single_id?>')" src="<?=DOMAIN.PHOTOGRAPH_STORAGE_URL.$value->single_id?>.jpg">
@@ -384,7 +379,7 @@
 	    });
 	}
 	function download_image(){
-		<?php if (Yii::app() -> user -> isGuest){
+		<?php if (Yii::app() -> user -> isGuest || !isset(Yii::app()->session['member_id'])){
 			Yii::app()->user->returnUrl = Yii::app()->request->urlReferrer;
 		?>
 			localStorage.setItem("page",window.parent.$("#page").val());
@@ -455,20 +450,11 @@
 			});
 		});
 
-		$('.slider-for').slick({
-			slidesToShow: 1,
-			slidesToScroll: 1,
-		 	arrows: true,
-			fade: true,
-			asNavFor: '.slider-nav'
-		});
-
 		$('.slider-nav').slick({
 			slidesToShow: 3,
 			slidesToScroll: 1,
-			asNavFor: '.slider-for',
 			dots: false,
-			arrows: false,
+			arrows: true,
 			centerMode: true,
 			focusOnSelect: true
 		});

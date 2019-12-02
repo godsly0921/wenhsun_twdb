@@ -318,6 +318,9 @@
         return query_string;
     }
   	$(document).ready( function() {
+  		if("<?=(isset($_GET['filming_date']))?>" || "<?=(isset($_GET['object_name']))?>" || "<?=(isset($_GET['category_id']))?>"){
+  			adv_show_hide();
+  		}
   		$( ".to_top" ).click(function() {
 			// document.body.scrollTop = 0; // For Safari
   	// 		document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
