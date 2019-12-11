@@ -781,13 +781,16 @@ class AttendancerecordService{
                   if ("1" == $record["take"] || "2" == $record["take"]) { // 普通傷病假 or 事假
                       $r->absence = true;
                   } else if (in_array((int)$record["take"], $this->normal_take)){ // 不扣全勤的假
-                      // do nothing
+                      array_push($r->leaveDays, $record["day"]);
                   } else {
                       if(strtotime($record["first_time"]) >= 0){ //有出勤
                           $diff_time = strtotime($record["last_time"]) - strtotime($record["first_time"]);
                           if($diff_time < (60 * 60 * 8)) {
-                              // 工作未滿並八小時
-                              $r->absence = true;
+                              if(in_array($record["day"], $r->leaveDays)) {
+                                  // 有請假, do nothing
+                              } else {
+                                  $r->absenceDays[$record["day"]] = true;
+                              }
                           }
                           $fullAttendanceType = $this->getFullAttendanceType($record["day"], $record["first_time"]);
                           if("A" == $fullAttendanceType) {
@@ -795,10 +798,18 @@ class AttendancerecordService{
                           } else if("B" == $fullAttendanceType) {
                               $r->b_normal_take += 1;
                           } else {
-                              $r->absence = true;
+                              if(in_array($record["day"], $r->leaveDays)) {
+                                  // 有請假, do nothing
+                              } else {
+                                  $r->absenceDays[$record["day"]] = true;
+                              }
                           }
                       } else {
-                          $r->absence = true;
+                          if(in_array($record["day"], $r->leaveDays) || "11" == $record["take"]) {
+                              // 有請假或是加班(take == 11),do nothing
+                          } else {
+                              $r->absenceDays[$record["day"]] = true;
+                          }
                       }
                   }
               }
@@ -811,17 +822,25 @@ class AttendancerecordService{
               $r->a_normal_take = 0;
               $r->b_normal_take = 0;
               $r->absence = false;
+              $r->leaveDays = array(); // 記錄有請假的日子
+              $r->absenceDays = array(); //記錄有缺勤的日子，缺勤為 true ，有補請假為 false
               if($this->isAttendanceDay($record["day"], $attendanceDays)) { // 是出勤日
                   if ("1" == $record["take"] || "2" == $record["take"]) { // 普通傷病假 or 事假
                       $r->absence = true;
                   } else if (in_array((int)$record["take"], $this->normal_take)){ // 不扣全勤的假
-                      // do nothing
+                      // 記錄於 leaveDays array
+                      array_push($r->leaveDays, $record["day"]);
                   } else {
                       if(strtotime($record["first_time"]) >= 0){ //有出勤
                           $diff_time = strtotime($record["last_time"]) - strtotime($record["first_time"]);
                           if($diff_time < (60 * 60 * 8)) {
                               // 工作未滿並八小時
-                              $r->absence = true;
+                              if(in_array($record["day"], $r->leaveDays)) {
+                                  // 有請假, do nothing
+
+                              } else {
+                                  $r->absenceDays[$record["day"]] = true;
+                              }
                           }
                           $fullAttendanceType = $this->getFullAttendanceType($record["day"], $record["first_time"]);
                           if("A" == $fullAttendanceType) {
@@ -829,16 +848,32 @@ class AttendancerecordService{
                           } else if("B" == $fullAttendanceType) {
                               $r->b_normal_take = 1;
                           } else {
-                              $r->absence = true;
+                              $r->absenceDays[$record["day"]] = true;
                           }
 
                       } else {
-                          $r->absence = true;
+                            if(in_array($record["day"], $r->leaveDays) || "11" == $record["take"]) {
+                                // 有請假或是加班(take == 11),do nothing
+                            } else {
+                                $r->absenceDays[$record["day"]] = true;
+                        }
                       }
                   }
               }
               $resultList[$record["id"]] = $r;
-          }
+            }
+        }
+        foreach ($resultList as $result) {
+            foreach ($result->leaveDays as $leaveDay) {
+                if(array_key_exists($leaveDay, $result->absenceDays)) {
+                    $result->absenceDays[$leaveDay] = false;
+                }
+            }
+            foreach ($result->absenceDays as $absenceDay) {
+                if($absenceDay) {
+                    $result->absence = true;
+                }
+            }
         }
         return $resultList;
     }
