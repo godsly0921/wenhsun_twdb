@@ -701,6 +701,7 @@ class AttendancerecordService{
 
                 $body .= "</tbody></table>";
             }
+            $body .= "<a href='".Yii::app()->request->hostInfo.'/leave/manager/hist?type=1&user_name='.$emp->user_name.'&name=&year='.$year.'">請點擊審核</a>';
 
             $inputs = array();
             $inputs['subject'] = $subject;

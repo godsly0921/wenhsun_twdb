@@ -194,26 +194,32 @@
     }
 
     function del($id) {
-        $.ajax({
-            url: "<?= Yii::app()->createUrl('/leave/manager/delete') ?>",
-            type: "POST",
-            dataType: "json",
-            data: {
-                id: $id
-            },
-            success: function(response) {
-                if (response) {
-                    alert("刪除成功");
-                    $("#" + $id).remove();
-                } else {
+        var result =confirm("你確定要刪除嗎");
+        if (result==true){
+            $.ajax({
+                url: "<?= Yii::app()->createUrl('/leave/manager/delete') ?>",
+                type: "POST",
+                dataType: "json",
+                data: {
+                    id: $id
+                },
+                success: function(response) {
+                    if (response) {
+                        alert("刪除成功");
+                        $("#" + $id).remove();
+                    } else {
+                        alert("刪除失敗");
+                    }
+                },
+                error: function(xhr) {
+                    console.log(xhr.responseText);
                     alert("刪除失敗");
                 }
-            },
-            error: function(xhr) {
-                console.log(xhr.responseText);
-                alert("刪除失敗");
-            }
-        });
+            });
+        }
+        else {
+            return;
+        }
     }
 
     $(document).ready(function() {
