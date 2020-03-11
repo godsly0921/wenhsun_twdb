@@ -701,7 +701,7 @@ class AttendancerecordService{
 
                 $body .= "</tbody></table>";
             }
-            $body .= "<a href='".Yii::app()->request->hostInfo.'/leave/manager/hist?type=1&user_name='.$emp->user_name.'&name=&year='.$year.'">請點擊審核</a>';
+            $body .= "<a href=\'".Yii::app()->request->hostInfo."/leave/manager/hist?type=1&user_name=".$emp->user_name."&name=&year=".$year."\'>請點擊審核</a>";
 
             $inputs = array();
             $inputs['subject'] = $subject;
@@ -723,7 +723,7 @@ class AttendancerecordService{
 
     public function getLeaveHoursByDate($date) {
         $start_time = $date . ' 00:00:00';
-        $end_time = $date . ' 11:59:59';
+        $end_time = $date . ' 23:59:59';
         $list = Yii::app()->db->createCommand(
             '
               SELECT employee_id, SUM(leave_minutes) minutes FROM attendance_record
@@ -911,11 +911,11 @@ class AttendancerecordService{
     }
 
     public function getFullAttendanceType($day, $first_time) {
-        $a_period = strtotime($day . ' 09:00:00');
-        $b_period = strtotime($day . ' 09:30:00');
-        if(strtotime($first_time) < $a_period) {
+        $a_period = strtotime($day . ' 09:01:00');
+        $b_period = strtotime($day . ' 09:31:00');
+        if(strtotime($first_time) <= $a_period) {
             return "A";
-        } else if (strtotime($first_time) > $a_period && strtotime($first_time) <= $b_period) {
+        } else if (strtotime($first_time) >= $a_period && strtotime($first_time) <= $b_period) {
             return "B";
         }
         return "C";

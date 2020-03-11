@@ -75,21 +75,21 @@
                                     for ($i = 0;$i <= 23;$i++)
                                     {
 
-                                            if($i%2==0){
 
-                                                $time = str_pad($i,2,'0',STR_PAD_LEFT).":00";
+
+
+                                            $time = str_pad($i,2,'0',STR_PAD_LEFT).":00";
+                                            echo  "<option value='{$time}'>{$time}</option>";
+
+                                            
+
+                                            $time = str_pad($i,2,'0',STR_PAD_LEFT).":30";
+                                            echo  "<option value='{$time}'>{$time}</option>";
+
+                                            if($i == 23){//最後一筆
+                                                $time = str_pad($i,2,'0',STR_PAD_LEFT).":59";
                                                 echo  "<option value='{$time}'>{$time}</option>";
 
-                                            }else{
-
-                                                $time = str_pad($i,2,'0',STR_PAD_LEFT).":30";
-                                                echo  "<option value='{$time}'>{$time}</option>";
-
-                                                if($i == 23){
-                                                    $time = str_pad($i,2,'0',STR_PAD_LEFT).":59";
-                                                    echo  "<option value='{$time}'>{$time}</option>";
-
-                                                }
                                             }
                                     }
                                     ?>
@@ -101,22 +101,22 @@
                                     for ($i = 0;$i <= 23;$i++)
                                     {
 
-                                        if($i%2==0){
+
+
 
                                             $time = str_pad($i,2,'0',STR_PAD_LEFT).":00";
                                             echo  "<option value='{$time}'>{$time}</option>";
 
-                                        }else{
+                                            
 
                                             $time = str_pad($i,2,'0',STR_PAD_LEFT).":30";
                                             echo  "<option value='{$time}'>{$time}</option>";
 
-                                            if($i == 23){
+                                            if($i == 23){//最後一筆
                                                 $time = str_pad($i,2,'0',STR_PAD_LEFT).":59";
                                                 echo  "<option value='{$time}'>{$time}</option>";
 
                                             }
-                                        }
                                     }
                                     ?>
                                 </select>

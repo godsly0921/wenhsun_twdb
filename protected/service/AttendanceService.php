@@ -1307,7 +1307,7 @@ class AttendanceService
         try {
             $employee_service = new EmployeeService();
             $start_date = $day . ' 00:00:00';
-            $end_date = $day . ' 09:30:59';
+            $end_date = $day . ' 09:31:00';
             $pt_start_date = $day . ' 00:00:00';
             $pt_end_date = $day . ' 23:59:59';
             //找出所有的刷卡紀錄
