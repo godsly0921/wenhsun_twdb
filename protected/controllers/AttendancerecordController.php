@@ -253,7 +253,7 @@ class AttendancerecordController extends Controller
             ->setCellValue( 'H1', '假別' )
             ->setCellValue( 'I1', '員工回覆' )
             ->setCellValue( 'J1', '建立時間' )
-            ->setCellValue( 'K1', '修改時間' )
+            ->setCellValue( 'K1', '修改時間' );
          //   ->setCellValue( 'L1', '出勤紀錄開始' )
          //   ->setCellValue( 'M1', '出勤紀錄結束' );
 
@@ -273,7 +273,7 @@ class AttendancerecordController extends Controller
                 ->setCellValue( 'H' . $i, $value[ 'take' ] )
                 ->setCellValue( 'I' . $i, $value[ 'reply_description' ] )
                 ->setCellValue( 'J' . $i, $value[ 'att_create_at' ] )
-                ->setCellValue( 'K' . $i, $value[ 'update_at' ] )
+                ->setCellValue( 'K' . $i, $value[ 'update_at' ] );
               //  ->setCellValue( 'L' . $i, substr($value[ 'first_time' ],10,9) )
               //  ->setCellValue( 'M' . $i, substr($value[ 'last_time' ],10,9) );
             $i++;

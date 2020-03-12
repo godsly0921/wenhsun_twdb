@@ -65,7 +65,7 @@
                         <div class="form-group">
                             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="date">加班時間起</label>
                             <div class="col-md-3 xdisplay_inputx form-group has-feedback">
-                                <input type="text" class="form-control has-feedback-left" id="start_date" name="start_date" aria-describedby="inputSuccess2Status" onChange="changeDate();">
+                                <input type="text" class="form-control has-feedback-left" id="start_date" name="start_date" aria-describedby="inputSuccess2Status">
                                 <span class="fa fa-calendar-o form-control-feedback left" aria-hidden="true"></span>
                                 <span id="inputSuccess2Status" class="sr-only">(success)</span>
                             </div>
@@ -74,10 +74,6 @@
                                     <?php
                                     for ($i = 0;$i <= 23;$i++)
                                     {
-
-
-
-
                                             $time = str_pad($i,2,'0',STR_PAD_LEFT).":00";
                                             echo  "<option value='{$time}'>{$time}</option>";
 
@@ -94,6 +90,15 @@
                                     }
                                     ?>
                                 </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="date">加班日期迄</label>
+                            <div class="col-md-3 xdisplay_inputx form-group has-feedback">
+                                <input type="text" class="form-control has-feedback-left" id="end_date" name="end_date" aria-describedby="inputSuccess2Status">
+                                <span class="fa fa-calendar-o form-control-feedback left" aria-hidden="true"></span>
+                                <span id="inputSuccess2Status" class="sr-only">(success)</span>
                             </div>
                             <div class="col-md-1">
                                 <select id="end_time" name="end_time" class="form-control" onChange="checkTime();">
@@ -123,7 +128,7 @@
                             </div>
                         </div>
 
-                        <input type="hidden" class="form-control has-feedback-left" id="end_date" name="end_date" aria-describedby="inputSuccess2Status" readonly>
+                        <!--<input type="hidden" class="form-control has-feedback-left" id="end_date" name="end_date" aria-describedby="inputSuccess2Status" readonly>-->
 
                         <input type="hidden" id="days" name="days" value="1">
                         <input type="hidden" id="first_hours" name="first_hours" value="0.5">
@@ -166,6 +171,13 @@
             }
         });
 
+        $("#end_date").daterangepicker({
+            singleDatePicker: true,
+            locale: {
+                format: "YYYY-MM-DD"
+            }
+        });
+
         let availableTags = [<?= $userNameSearchWord ?>];
         $("#user_name").autocomplete({
             source: availableTags
@@ -181,29 +193,24 @@
     });
 
     function checkTime() {
-        var start = moment($("#start_date").val() + " " + $("#start_time").val(), "YYYY/MM/DD hh:mm");
-        var end = moment($("#end_date").val() + " " + $("#end_time").val(), "YYYY/MM/DD hh:mm");
+        var start = moment($("#start_date").val() + " " + $("#start_time").val(), "YYYY/MM/DD HH:mm");
+        console.log(start);
+        var end = moment($("#end_date").val() + " " + $("#end_time").val(), "YYYY/MM/DD HH:mm");
+        console.log(end);
         var diff = 0;
 
         if (start >= end) {
             alert("請確認加班時間是否正確,“開始時間不可大於等於結束時間”。");
         } else {
 
-            var firstDay = moment($("#start_date").val() + " " + "23:59", "YYYY-MM-DD hh:mm");
-            diff = Math.round(firstDay.diff(start, "hours", true));
-            $("#first_hours").val(diff);
-            var lastDay = moment(end.format("YYYY-MM-DD") + " " + "00:00", "YYYY-MM-DD hh:mm");
-            diff = end.diff(lastDay, "hours", true);
+            var firstDay = moment($("#start_date").val() + " " + $("#start_time").val(), "YYYY/MM/DD HH:mm");
+            var lastDay = moment(end.format("YYYY-MM-DD") + " " + $("#end_time").val(), "YYYY/MM/DD HH:mm");
+            diff = lastDay.diff(firstDay, "hours", true);
             $("#last_hours").val(end.diff(lastDay, "hours", true));
-
-
-            $("#leave_minutes").val(diff);
+            console.log(lastDay);
             console.log(diff);
+            $("#leave_minutes").val(diff);
             $("#minutes").val(diff + "小時");
         }
-    }
-
-    function changeDate() {
-        $("#end_date").val($("#start_date").val());
     }
 </script>
