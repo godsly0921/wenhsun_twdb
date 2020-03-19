@@ -217,6 +217,7 @@
                     <th>規格名稱</th>
                     <th>尺寸</th>
                     <th>檔案大小</th>
+                    <th>下載檔案</th>
                     <th>點數價格</th>
                     <th>單圖價格</th>               
                 </tr>
@@ -227,6 +228,7 @@
                         <td><?=$value['size_type']?></td>
                         <td><?=$value['w_h']?></td>
                         <td><?=$value['file_size']?></td>
+                        <td><a href="<?= Yii::app()->request->hostInfo.'/image_storage/'.$value['size_type'].'/'.$photograph_data['photograph_info']['single_id'].'.'.strtolower($value['ext'])?>" download="filename.<?= strtolower($value['ext'])?>">Download file</a></td>
                         <td> <input type="text" class="form-control"  name="sale_point[<?=$value['size_type']?>]" value="<?=$value['sale_point']?>"></td>
                         <td> <input type="text" class="form-control"  name="sale_twd[<?=$value['size_type']?>]" value="<?=$value['sale_twd']?>"></td>
                     </tr>
