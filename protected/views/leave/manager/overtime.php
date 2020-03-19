@@ -94,7 +94,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="date">加班日期迄</label>
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="date">加班日期訖</label>
                             <div class="col-md-3 xdisplay_inputx form-group has-feedback">
                                 <input type="text" class="form-control has-feedback-left" id="end_date" name="end_date" aria-describedby="inputSuccess2Status">
                                 <span class="fa fa-calendar-o form-control-feedback left" aria-hidden="true"></span>
@@ -209,7 +209,10 @@
             $("#last_hours").val(end.diff(lastDay, "hours", true));
             console.log(lastDay);
             console.log(diff);
+            
             $("#leave_minutes").val(diff);
+
+            diff = diff.toFixed(2); 
             $("#minutes").val(diff + "小時");
         }
     }
