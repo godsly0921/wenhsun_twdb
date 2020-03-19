@@ -8,6 +8,8 @@ use PHPUnit\Framework\Exception;
 
 class AttendancerecordService{
 
+    public $normal_take = [3,4,5,6,7,8,9,10,16,17,18]; // 不扣全勤的假
+
     // 新增一筆紀錄
     public function create($employee_id , $day , $first_time , $last_time ,$abnormal_type,$abnormal){
       $transaction = Yii::app()->db->beginTransaction();
@@ -271,11 +273,7 @@ class AttendancerecordService{
 
     }
 
-    public function summaryMinutesByPeriodOfTimeAndLeaveType(
-        string $employeeId,
-        string $startDateTime,
-        string $endDateTime,
-        string $leaveType): int
+    public function summaryMinutesByPeriodOfTimeAndLeaveType(string $employeeId,string $startDateTime,string $endDateTime,string $leaveType)
     {
         $r = Yii::app()->db->createCommand(
             '
@@ -299,7 +297,7 @@ class AttendancerecordService{
         return (int) $r['summary_leave_minutes'];
     }
 
-    public function getEmployeeLeaveList($employeeId, $year): array
+    public function getEmployeeLeaveList($employeeId, $year)
     {
         $startDateTime = "{$year}-01-01 00:00:00";
         $yearEndDT = new DateTime($startDateTime);
@@ -321,7 +319,7 @@ class AttendancerecordService{
         ])->queryAll();
     }
 
-    public function getEmployeeLeaveListHoliday($employeeId, $year): array
+    public function getEmployeeLeaveListHoliday($employeeId, $year)
     {
         $startDateTime = "{$year}-01-01 00:00:00";
         $yearEndDT = new DateTime($startDateTime);
@@ -351,7 +349,7 @@ class AttendancerecordService{
         return $listArr;
     }
 
-    public function getEmployeeLeaveListOvertime($employeeId, $year): array
+    public function getEmployeeLeaveListOvertime($employeeId, $year)
     {
         $startDateTime = "{$year}-01-01 00:00:00";
         $yearEndDT = new DateTime($startDateTime);
@@ -597,7 +595,7 @@ class AttendancerecordService{
                                 <tr style='border: 1px solid black; padding: 10px;'>
                                     <th style='border: 1px solid black; padding: 10px;'>申請日期</th>
                                     <th style='border: 1px solid black; padding: 10px;'>事由</th>
-                                    <th style='border: 1px solid black; padding: 10px;'>請假日期</th>
+                                    <th style='border: 1px solid black; padding: 10px;'>加班日期</th>
                                     <th style='border: 1px solid black; padding: 10px;'>時間</th>
                                     <th style='border: 1px solid black; padding: 10px;'>申請時數</th>
                                     <th style='border: 1px solid black; padding: 10px;'>審核狀態</th>
@@ -607,7 +605,7 @@ class AttendancerecordService{
                                 <tr style='border: 1px solid black; padding: 10px;'>
                                     <td style='border: 1px solid black; padding: 10px;'>" . substr($leave->create_at, 0, 10) . "</td>
                                     <td style='border: 1px solid black; padding: 10px;'>" . $leave->reason . "</td>
-                                    <td style='border: 1px solid black; padding: 10px;'>" . substr($leave->leave_time, 0, 10) . "</td>
+                                    <td style='border: 1px solid black; padding: 10px;'>" . substr($start_time, 0, 10) . "</td>
                                     <td style='border: 1px solid black; padding: 10px;'>" . $start_time . " - " . $end_time . "</td>
                                     <td style='border: 1px solid black; padding: 10px;'>" . $leave_hours . "</td>
                                     <td style='border: 1px solid black; padding: 10px;'>" . ($leave->status == 0 ? "未審核" : "已審核") . "</td>
@@ -636,7 +634,7 @@ class AttendancerecordService{
                                     <td style='border: 1px solid black; padding: 10px;'>" . substr($leave->create_at, 0, 10) . "</td>
                                     <td style='border: 1px solid black; padding: 10px;'>" . $this->leaveMap[$leave->take] . "</td>
                                     <td style='border: 1px solid black; padding: 10px;'>" . $leave->reason . "</td>
-                                    <td style='border: 1px solid black; padding: 10px;'>" . substr($leave->leave_time, 0, 10) . "</td>
+                                    <td style='border: 1px solid black; padding: 10px;'>" . substr($start_time, 0, 10) . "</td>
                                     <td style='border: 1px solid black; padding: 10px;'>" . $start_time . " - " . $end_time . "</td>
                                     <td style='border: 1px solid black; padding: 10px;'>" . $leave_hours . "</td>
                                     <td style='border: 1px solid black; padding: 10px;'>" . $leave->remark . "</td>
@@ -693,12 +691,15 @@ class AttendancerecordService{
                     $body .= "<td style='border: 1px solid black; padding: 10px;'>" . substr($row['start_time'], 11, 8) . " - " . substr($row['end_time'], 11, 8) . "</td>";
                     $body .= "<td style='border: 1px solid black; padding: 10px;'>" . (float) $row['leave_minutes'] / 60 . "</td>";
                     $body .= "<td style='border: 1px solid black; padding: 10px;'>" . $row['remark'] . "</td>";
-                    $body .= "<td style='border: 1px solid black; padding: 10px;'>" . ($row['status'] === 0 ? "未審核" : "已審核") . "</td>";
+                    $body .= "<td style='border: 1px solid black; padding: 10px;'>" . ($row['status'] == 0 ? "未審核" : "已審核") . "</td>";
                     $body .= "</tr>";
                 }
 
                 $body .= "</tbody></table>";
             }
+            $body .=  '<a href="'.'http://192.168.0.160/wenhsun_hr/leave/manager/hist?type=1&user_name='.$emp->user_name.'&name=&year='.$year.'">內網請點擊審核</a>';
+            $body .= '<hr size="8px" align="center" width="100%">';
+            $body .=  '<a href="'.'http://203.69.216.186/wenhsun_hr/leave/manager/hist?type=1&user_name='.$emp->user_name.'&name=&year='.$year.'">外網請點擊審核</a>';
 
             $inputs = array();
             $inputs['subject'] = $subject;
@@ -706,6 +707,8 @@ class AttendancerecordService{
             $inputs['to'] = $emp->email;
             $inputs['agent'] = $agent == null ? '' : $agent->email;
             $inputs['manager'] = $manager->email;
+            //$inputs['agent'] = 'godsly0921@gmail.com';
+            //$inputs['manager'] = 'godsly0921@gmail.com';
 
             $mailService = new MailService();
             $mailService->sendApproveMail($inputs);
@@ -716,5 +719,221 @@ class AttendancerecordService{
             Yii::app()->session[Controller::ERR_MSG_KEY] = $e->getMessage();
             return false;
         }
+    }
+
+    public function getLeaveHoursByDate($date) {
+        $start_time = $date . ' 00:00:00';
+        $end_time = $date . ' 23:59:59';
+        $list = Yii::app()->db->createCommand(
+            '
+              SELECT employee_id, SUM(leave_minutes) minutes FROM attendance_record
+               WHERE leave_time >= :start_time
+                 AND leave_time < :end_time
+                 AND take != 11
+               GROUP BY employee_id
+            '
+        )->bindValues([
+            ':start_time' => $start_time,
+            ':end_time' => $end_time
+        ])->queryAll();
+
+        $listArr = array();
+        foreach ($list as $value) {
+           $listArr[$value['employee_id']] = (float) $value['minutes'] / 60;
+        }
+
+        return $listArr;
+    }
+
+    public function queryFullAttendanceRecord($startDate, $endDate) {
+        $start_time = $startDate;
+        $end_time = $endDate;
+        // 計算名單：文訊主管(2)、文訊正職(5)、文訊人事主管／會計(26)、社長(27)、文訊企畫編輯(33)
+        $roleList = array(2,5,26,27,33);
+        $list = Yii::app()->db->createCommand(
+            '
+              SELECT a.id, a.name, b.day, b.first_time, b.last_time, b.abnormal_type, b.take FROM employee a, attendance_record b
+               WHERE b.day >= :start_time
+                 AND b.day <= :end_time
+                 AND a.id = b.employee_id
+                 AND a.role IN ('. implode(',',$roleList) . ')
+            '
+        )->bindValues([
+            ':start_time' => date('Y-m-d', strtotime($start_time)),
+            ':end_time' => date('Y-m-d', strtotime($end_time))
+        ])->queryAll();
+        $attendanceDays = $this->getAttendanceDayList($start_time, $end_time);
+        $resultList = $this->organizeFullAttendanceRecord($list, $attendanceDays);
+        return $resultList;
+    }
+
+    private function organizeFullAttendanceRecord($list, $attendanceDays) {
+        $resultList = array();
+        foreach ($list as $record) {
+          if(array_key_exists($record["id"], $resultList)) { // 個人第二筆之後出勤
+              $r = $resultList[$record["id"]];
+              if(strtotime($record["day"]) < $r->start_date) {
+                  $r->start_date = strtotime($record["day"]);
+              }
+              if(strtotime($record["day"]) > $r->end_date) {
+                  $r->end_date = strtotime($record["day"]);
+              }
+              if($this->isAttendanceDay($record["day"], $attendanceDays)) { // 是出勤日
+                  if ("1" == $record["take"] || "2" == $record["take"]) { // 普通傷病假 or 事假
+                      $r->absence = true;
+                  } else if (in_array((int)$record["take"], $this->normal_take)){ // 不扣全勤的假
+                      array_push($r->leaveDays, $record["day"]);
+                  } else {
+                      if(strtotime($record["first_time"]) >= 0){ //有出勤
+                          $diff_time = strtotime($record["last_time"]) - strtotime($record["first_time"]);
+                          if($diff_time < (60 * 60 * 8)) {
+                              if(in_array($record["day"], $r->leaveDays)) {
+                                  // 有請假, do nothing
+                              } else {
+                                  $r->absenceDays[$record["day"]] = true;
+                              }
+                          }
+                          $fullAttendanceType = $this->getFullAttendanceType($record["day"], $record["first_time"]);
+                          if("A" == $fullAttendanceType) {
+                              $r->a_normal_take += 1;
+                          } else if("B" == $fullAttendanceType) {
+                              $r->b_normal_take += 1;
+                          } else {
+                              if(in_array($record["day"], $r->leaveDays)) {
+                                  // 有請假, do nothing
+                              } else {
+                                  $r->absenceDays[$record["day"]] = true;
+                              }
+                          }
+                      } else {
+                          if(in_array($record["day"], $r->leaveDays) || "11" == $record["take"]) {
+                              // 有請假或是加班(take == 11),do nothing
+                          } else {
+                              $r->absenceDays[$record["day"]] = true;
+                          }
+                      }
+                  }
+              }
+          } else { // 個人第一筆出勤
+              $r = new stdClass();
+              $r->id = $record["id"];
+              $r->name = $record["name"];
+              $r->start_date = strtotime($record["day"]);
+              $r->end_date = strtotime($record["day"]);
+              $r->a_normal_take = 0;
+              $r->b_normal_take = 0;
+              $r->absence = false;
+              $r->leaveDays = array(); // 記錄有請假的日子
+              $r->absenceDays = array(); //記錄有缺勤的日子，缺勤為 true ，有補請假為 false
+              if($this->isAttendanceDay($record["day"], $attendanceDays)) { // 是出勤日
+                  if ("1" == $record["take"] || "2" == $record["take"]) { // 普通傷病假 or 事假
+                      $r->absence = true;
+                  } else if (in_array((int)$record["take"], $this->normal_take)){ // 不扣全勤的假
+                      // 記錄於 leaveDays array
+                      array_push($r->leaveDays, $record["day"]);
+                  } else {
+                      if(strtotime($record["first_time"]) >= 0){ //有出勤
+                          $diff_time = strtotime($record["last_time"]) - strtotime($record["first_time"]);
+                          if($diff_time < (60 * 60 * 8)) {
+                              // 工作未滿並八小時
+                              if(in_array($record["day"], $r->leaveDays)) {
+                                  // 有請假, do nothing
+
+                              } else {
+                                  $r->absenceDays[$record["day"]] = true;
+                              }
+                          }
+                          $fullAttendanceType = $this->getFullAttendanceType($record["day"], $record["first_time"]);
+                          if("A" == $fullAttendanceType) {
+                              $r->a_normal_take = 1;
+                          } else if("B" == $fullAttendanceType) {
+                              $r->b_normal_take = 1;
+                          } else {
+                              $r->absenceDays[$record["day"]] = true;
+                          }
+
+                      } else {
+                            if(in_array($record["day"], $r->leaveDays) || "11" == $record["take"]) {
+                                // 有請假或是加班(take == 11),do nothing
+                            } else {
+                                $r->absenceDays[$record["day"]] = true;
+                        }
+                      }
+                  }
+              }
+              $resultList[$record["id"]] = $r;
+            }
+        }
+        foreach ($resultList as $result) {
+            foreach ($result->leaveDays as $leaveDay) {
+                if(array_key_exists($leaveDay, $result->absenceDays)) {
+                    $result->absenceDays[$leaveDay] = false;
+                }
+            }
+            foreach ($result->absenceDays as $absenceDay) {
+                if($absenceDay) {
+                    $result->absence = true;
+                }
+            }
+        }
+        return $resultList;
+    }
+    public function getAttendanceDayList($start_time, $end_time) {
+        $list = Yii::app()->db->createCommand(
+            '
+              SELECT day, type FROM attendance
+               WHERE day >= :start_time
+                 AND day <= :end_time
+            '
+        )->bindValues([
+            ':start_time' => date('Y-m-d', strtotime($start_time)),
+            ':end_time' => date('Y-m-d', strtotime($end_time))
+        ])->queryAll();
+        $resultList = array();
+        foreach ($list as $record) {
+            $resultList[$record["day"]] = $record["type"];
+        }
+        return $resultList;
+    }
+
+    public function isAttendanceDay($day, $attendanceDayList) {
+        if(array_key_exists($day, $attendanceDayList)) {
+            if($attendanceDayList[$day] == "0") {
+               return false;
+            }
+            return true;
+        }
+        $weekday = date('w', strtotime($day));
+        if(6 == $weekday || 0 == $weekday) {
+            return false;
+        }
+        return true;
+    }
+
+    public function getFullAttendanceType($day, $first_time) {
+        $a_period = strtotime($day . ' 09:01:00');
+        $b_period = strtotime($day . ' 09:31:00');
+        if(strtotime($first_time) <= $a_period) {
+            return "A";
+        } else if (strtotime($first_time) >= $a_period && strtotime($first_time) <= $b_period) {
+            return "B";
+        }
+        return "C";
+    }
+
+    public function getDayCount($start_date, $end_date) {
+        $attendanceDayList = $this->getAttendanceDayList($start_date, $end_date);
+        $period = new DatePeriod(
+            new DateTime($start_date),
+            new DateInterval('P1D'),
+            new DateTime($end_date)
+        );
+        $count = 0;
+        foreach ($period as $day) {
+            if($this->isAttendanceDay($day->format('Y-m-d'), $attendanceDayList)) {
+                $count += 1;
+            }
+        }
+        return $count;
     }
 }

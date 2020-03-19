@@ -262,7 +262,7 @@ class WebsiteController extends Controller{
         }else{
             Yii::app()->session['error_msg'] = $piccolumn[1];
         }
-        $this->redirect(array('website/piccolumn_list'));
+        $this->redirect(array('website/piccolumn_update/'.$id));
     }
     public function doGetPiccolumnUpdate($id){
         $websiteService = new WebsiteService();
@@ -315,6 +315,7 @@ class WebsiteController extends Controller{
             $inputs['content'] = filter_input(INPUT_POST, 'content');
             $inputs['main_content'] = filter_input(INPUT_POST, 'main_content');
             $inputs['image'] = $_FILES['image'];
+            $inputs['active'] = filter_input(INPUT_POST, 'active');
             $result = $activityNewsService->create($inputs);
 
             if ($result[0]) {
@@ -363,6 +364,36 @@ class WebsiteController extends Controller{
 
         $news = $activityNewsService->findById($inputs['id']);
         $this->render("activity_news_update" , array('news' => $news));
+    }
+
+    public function ActionPolicy_list(){
+        $data = Sitepolicy::model()->findAll();
+        $policy_type = array('1'=>'隱私條款','2'=>'合作洽談','3'=>'服務條款');
+        $this->render('policy_list',array('data'=>$data,'policy_type'=>$policy_type));
+    }
+    public function ActionPolicy_update($id){
+        $data = Sitepolicy::model()->findByPk($id);
+        $policy_type = array('1'=>'隱私條款','2'=>'合作洽談','3'=>'服務條款');
+        if(Yii::app()->request->isPostRequest) {
+            if (!CsrfProtector::comparePost()) {
+                $this->redirect('policy_update');
+            }
+            $data->type = filter_input(INPUT_POST, 'type');
+            $data->policy_content = filter_input(INPUT_POST, 'policy_content');
+            if ($data->save()) {
+                Yii::app()->session['success_msg'] = '更新成功';
+            } else {
+                //var_dump($data->getErrors());exit();
+                $error_msg = array();
+                foreach ($data->getErrors() as $attribute => $error){
+                    foreach ($error as $message){
+                        $error_msg[] = $attribute.": ".$message;
+                    }
+                }
+                Yii::app()->session['error_msg'] = $error_msg;
+            }
+        }   
+        $this->render('policy_update',array('data'=>$data,'policy_type'=>$policy_type));
     }
 }
 ?>

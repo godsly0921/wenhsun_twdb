@@ -32,6 +32,7 @@ unset( Yii::app()->session['success_msg'] );
             <thead>
             <tr role="row">
                 <th>編號</th>
+                <th>圖片名稱</th>
                 <th>小圖</th>
                 <th>活動標題</th>  
                 <th>活動日期</th>
@@ -46,6 +47,7 @@ unset( Yii::app()->session['success_msg'] );
             <?php foreach($picColumn_date as $key => $value){ ?>
                 <tr class="gradeC" role="row">
                     <td><?=$value['piccolumn_id']?></td>
+                    <td><?=$value['title']?></td>
                     <td><img src="<?php echo Yii::app()->createUrl('/'); ?><?=$value['pic']?>" width="100%"></td>
                     <td><?=$value['title']?></td>
                     <td><?=$value['date_start']?> ~ <?=$value['date_end']?></td>

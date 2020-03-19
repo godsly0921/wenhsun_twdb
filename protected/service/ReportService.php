@@ -69,7 +69,7 @@ class ReportService
     }
 
     public function top3_Order(){
-        $sql = "SELECT o.order_id,case oi.order_category when 1 then '購買點數方案' when 2 then '購買自由載' else '購買單圖授權' end as order_category,o.order_datetime,m.name as member_name FROM `orders` o JOIN orders_item oi on o.order_id=oi.order_id LEFT JOIN member_address_book m on o.address_book_id=m.address_book_id order by o.order_datetime desc limit 3";
+        $sql = "SELECT o.order_id,case oi.order_category when 1 then '購買點數方案' when 2 then '購買自由載' else '購買單圖授權' end as order_category,o.order_datetime,m.name as member_name FROM `orders` o JOIN orders_item oi on o.order_id=oi.order_id JOIN member m on o.member_id=m.id order by o.order_datetime desc limit 3";
         $top3_order = Yii::app()->db->createCommand($sql)->queryAll();
         return $top3_order;
     }

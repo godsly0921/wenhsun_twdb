@@ -51,9 +51,9 @@ unset( Yii::app()->session['success_msg'] );
                         <a class="oprate-right" href="<?php echo Yii::app()->createUrl('product/update/') ?>/<?= $value['product_id'] ?>">
                             <i class="fa fa-pencil-square-o fa-lg"></i>
                         </a>
-                        <a
-                            class="oprate-right oprate-del" data-mem-id="<?= $value['product_id'] ?>" data-mem-name="<?= $value['product_id'] ?>"><i class="fa fa-times fa-lg"></i>
-                        </a>
+                        <!-- <a
+                            class="oprate-right oprate-del" data-mem-id="<?#= $value['product_id'] ?>" data-mem-name="<?#= $value['product_id'] ?>"><i class="fa fa-times fa-lg"></i>
+                        </a> -->
                     </td>
                </tr>
             <?php } ?>

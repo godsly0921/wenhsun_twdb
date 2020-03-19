@@ -166,6 +166,7 @@ class MailService
 
     public function sendNewsMail($inputs)
     {
+        set_time_limit(0);
         try {
             // 管理者信箱
             $admin_email = $this->findAllEmail();
@@ -195,7 +196,7 @@ class MailService
                     . nl2br($inputs["new_content"]) . '<br><br>' .
                     '請妥善處理，謝謝。<br><br>' .
                     '文訊雜誌社人資系統敬啟<br><br>' .
-                    '<a href="'.Yii::app()->createUrl('news/download').'?id='.$inputs['id'].'">請下載附件</a><br>'.
+                    '<a href="'. ROOT_HTTP .'/news/download?id='.$inputs['id'].'">請下載附件</a><br>'.
                     '備註：此信箱為公告用信箱，請勿回信，若有疑問，請洽HR。謝謝。</p>';
 
             }elseif(empty($inputs["new_image"])) {
@@ -297,6 +298,36 @@ class MailService
             return false;
         }
     }
+    public function sendImageMail($to,$toname,$msg,$title){
+        try {
+            $mail = new PHPMailer();
+            $mail->IsSMTP();
+            $mail->SMTPAuth = true;
+            $mail->SMTPSecure = 'ssl';
+            $mail->Host = 'smtp.gmail.com';
+            $mail->Port = 465;
+            $mail->CharSet = 'utf-8';
+            $mail->Username = 'wenhsun0509@gmail.com';
+            $mail->Password = 'cute0921';
+            $mail->From = 'wenhsun0509@gmail.com';
+            $mail->FromName = '文訊雜誌社人資系統';
+            $mail->addAddress($to);
+            // $mail->addAddress('fdp.wenhsun@gmail.com');
+            $mail->IsHTML(true);
+
+            $mail->Subject = $title;
+            $mail->Body = $msg;
+
+            if ($mail->Send()) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (Exception $e) {
+            Yii::log(date('Y-m-d H:i:s') . " sendImageMail error write exception {$e->getTraceAsString()}", CLogger::LEVEL_INFO);
+            return false;
+        }
+    }
 
     public function sendApproveMail($inputs)
     {
@@ -318,8 +349,7 @@ class MailService
             }
             $mail->addAddress($inputs['manager']);
             $mail->addAddress('jenny@wenhsun.com.tw');
-            $mail->addAddress('pinkfloydbigman@gmail.com');
-            // $mail->addAddress('fdp.wenhsun@gmail.com');
+            $mail->addAddress('fdp.wenhsun@gmail.com');
             $mail->IsHTML(true);
 
             $mail->Subject = $inputs['subject'];

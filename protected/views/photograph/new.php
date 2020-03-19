@@ -86,12 +86,18 @@
               </div>
             </div>
             <div id="step-2">
-              <h2 class="StepTitle">圖片上架(全釋資料)</h2>
+              <h2 class="StepTitle">圖片上架(詮釋資料)</h2>
               <div class="x_panel">
                 <div class="x_conetne">
                   <form id="single_data" data-parsley-validate class="form-horizontal form-label-left">
                     <div class="form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">照片類型 <span class="required">*</span>
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12">圖片名稱</label>
+                      <div class="col-md-9 col-sm-9 col-xs-12">
+                        <input type="text" class="form-control" name="filming_name" placeholder="圖片名稱">
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">圖片分類 <span class="required">*</span>
                       </label>
                       <div class="col-md-9 col-sm-9 col-xs-12">
                         <select class="select2_multiple form-control" name="category_id[]" multiple="multiple" required>
@@ -102,19 +108,27 @@
                       </div>
                     </div>
                     <div class="form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="author">作者名稱
-                      </label>
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12">人物資訊</label>
                       <div class="col-md-9 col-sm-9 col-xs-12">
-                        <input id="author" type="text" class="tags form-control" name="author" value="" />
+                        <input type="text" class="form-control" name="people_info" placeholder="人物資訊">
                       </div>
                     </div>
                     <div class="form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="filming_date">攝影年份
-                      </label>
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12">事件名稱</label>
                       <div class="col-md-9 col-sm-9 col-xs-12">
-                        <input type="text" class="form-control has-feedback-left" id="filming_date" name="filming_date" placeholder="攝影年份" aria-describedby="inputSuccess2Status2">
+                        <input type="text" class="form-control" name="event_name" placeholder="事件名稱">
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="filming_date">拍攝時間
+                      </label>
+                      <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input type="text" class="form-control has-feedback-left" id="filming_date" name="filming_date" placeholder="拍攝時間" aria-describedby="inputSuccess2Status2">
                         <span class="fa fa-calendar-o form-control-feedback left" aria-hidden="true"></span>
                         <span id="inputSuccess2Status2" class="sr-only">(success)</span>
+                      </div>
+                      <div class="col-md-3 col-sm-3 col-xs-12">
+                        <input type="text" class="tags form-control" placeholder="攝影時間文字" name="filming_date_text" value="" />
                       </div>
                     </div>
                     <div class="form-group">
@@ -124,9 +138,16 @@
                       </div>
                     </div>
                     <div class="form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12">攝影名稱</label>
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12">物件名稱</label>
                       <div class="col-md-9 col-sm-9 col-xs-12">
-                        <input type="text" class="form-control" name="filming_name" placeholder="攝影名稱">
+                        <input type="text" class="form-control" name="object_name" placeholder="物件名稱">
+                      </div>
+                    </div>
+                    
+                    <div class="form-group">
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12">內容描述</label>
+                      <div class="col-md-9 col-sm-9 col-xs-12">
+                        <textarea id="description" required="required" class="form-control" name="description"></textarea>
                       </div>
                     </div>
                     <div class="form-group">
@@ -140,17 +161,18 @@
                       </div>
                     </div>
                     <div class="form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12">人物資訊</label>
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12">入藏來源</label>
                       <div class="col-md-9 col-sm-9 col-xs-12">
-                        <input type="text" class="form-control" name="people_info" placeholder="人物資訊">
+                        <input type="text" class="form-control" name="photo_source" placeholder="入藏來源">
                       </div>
                     </div>
-                    <div class="form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12">物件名稱</label>
+                    <!-- <div class="form-group">
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="author">作者名稱
+                      </label>
                       <div class="col-md-9 col-sm-9 col-xs-12">
-                        <input type="text" class="form-control" name="object_name" placeholder="物件名稱">
+                        <input id="author" type="text" class="tags form-control" name="author" value="" />
                       </div>
-                    </div>
+                    </div> -->
                      <div class="form-group">
                       <label class="control-label col-md-3 col-sm-3 col-xs-12">索引使用限制</label>
                       <div class="col-md-9 col-sm-9 col-xs-12">
@@ -182,12 +204,7 @@
                         </select>
                       </div>
                     </div>
-                    <div class="form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12">內容描述</label>
-                      <div class="col-md-9 col-sm-9 col-xs-12">
-                        <textarea id="description" required="required" class="form-control" name="description"></textarea>
-                      </div>
-                    </div>
+                    
                     <div class="form-group">
                       <label class="control-label col-md-3 col-sm-3 col-xs-12">備註一</label>
                       <div class="col-md-9 col-sm-9 col-xs-12">
@@ -326,13 +343,15 @@ $(document).ready(function () {
     uploadUrl: "<?php echo Yii::app()->createUrl('photograph/BatUploadFile'); ?>",
     overwriteInitial: false,
     enableResumableUpload: false,
-    initialPreviewFileType: 'image',
+    // initialPreviewFileType: 'image',
     initialPreviewAsData: true,
+    showCaption: true,
+    showPreview: true,
     uploadAsync: true,
     showCancel: false,
     showRemove: false,
     showUpload: false,
-    layoutTemplates:{actions:actions},
+    // layoutTemplates:{actions:actions},
   }).on("filebatchselected", function(event, files) {
     fileupload_count += Object.keys(files).length;
     fileinput_upload.fileinput("upload");
@@ -345,21 +364,21 @@ $(document).ready(function () {
       var single_id = response.single_id; 
       upload_single_id.push(single_id);
       finishupload_count++;
-      update_progress(index, file_name, size, single_id);
+      update_progress(previewId, file_name, size, single_id);
     }else{
-      delete_progress(index, file_name, size);
+      delete_progress(previewId, file_name, size);
       fileupload_count = fileupload_count -1;
       alert(response.errorMsg);
     }
-  }).on('filepreupload', function(event, data, previewId, index) {
-    var size = data.files[index].size;
-    var file_name = data.files[index].name;
-    create_progress(index, file_name, size);
+  }).on('fileloaded', function(event, data, previewId, index, reader) {
+    var size = data.size;
+    var file_name = data.name;
+    create_progress(previewId, file_name, size);
   });
 
   //在選取檔案開始上傳時建立進度條，進度為0%
-  function create_progress( index, filename, filesize ){
-    var html = '<div class="row '+ index + '_' + filesize + '">'+
+  function create_progress( previewId, filename, filesize ){
+    var html = '<div class="row '+ previewId + '_' + filesize + '">'+
       '<div class="col-xs-4 text-right">'+
         '<span class="file_id_name">檔案名稱：' + filename + '</span>'+
       '</div>'+
@@ -376,21 +395,22 @@ $(document).ready(function () {
   }
 
   //檔案上傳完成後更新進度條進度，進度為100%
-  function update_progress(index, filename, filesize, single_id){
-    $('.' + index + '_' + filesize + ' .file_id_name').text('檔案名稱：' + filename + ' 編號：' + single_id);
-    $('.' + index + '_' + filesize + ' .progress-bar').attr('data-transitiongoal','100');
-    $('.' + index + '_' + filesize + ' .progress-bar').attr('aria-valuenow','100');
-    $('.' + index + '_' + filesize + ' .progress-bar').attr('style','width: 100%;');
-    $('.' + index + '_' + filesize + ' .progress_status').text('100%');
+  function update_progress(previewId, filename, filesize, single_id){
+    $('.' + previewId + '_' + filesize + ' .file_id_name').text('原始檔名：' + filename + ' 編號：' + single_id);
+    $('.' + previewId + '_' + filesize + ' .progress-bar').attr('data-transitiongoal','100');
+    $('.' + previewId + '_' + filesize + ' .progress-bar').attr('aria-valuenow','100');
+    $('.' + previewId + '_' + filesize + ' .progress-bar').attr('style','width: 100%;');
+    $('.' + previewId + '_' + filesize + ' .progress_status').text('100%');
   }
 
   //檔案上傳失敗移除該檔案的進度條
-  function delete_progress( index, filename, filesize ){
-    $('.' + index + '_' + filesize).remove();
+  function delete_progress( previewId, filename, filesize ){
+    $('.' + previewId + '_' + filesize).remove();
   }
 
   $('#wizard').smartWizard({
     cycleSteps:true,
+    keyNavigation: false,
     labelNext: '下一步',
     labelPrevious: '上一步',
     labelFinish: '送出表單',

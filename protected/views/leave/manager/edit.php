@@ -114,6 +114,16 @@
                                     <option value="23:00" <?php if (substr($attendanceRecord->start_time, 11, 5) == "23:00") : ?>selected<?php endif; ?>>23:00</option>
                                     <option value="23:30" <?php if (substr($attendanceRecord->start_time, 11, 5) == "23:30") : ?>selected<?php endif; ?>>23:30</option>
                                     <option value="23:59" <?php if (substr($attendanceRecord->start_time, 11, 5) == "23:59") : ?>selected<?php endif; ?>>23:59</option>
+                                    <option value="00:00" <?php if (substr($attendanceRecord->start_time, 11, 5) == "00:00") : ?>selected<?php endif; ?>>00:00</option>
+                                    <option value="00:30" <?php if (substr($attendanceRecord->start_time, 11, 5) == "00:30") : ?>selected<?php endif; ?>>00:30</option>
+                                    <option value="01:00" <?php if (substr($attendanceRecord->start_time, 11, 5) == "01:00") : ?>selected<?php endif; ?>>01:00</option>
+                                    <option value="01:30" <?php if (substr($attendanceRecord->start_time, 11, 5) == "01:30") : ?>selected<?php endif; ?>>01:30</option>
+                                    <option value="02:00" <?php if (substr($attendanceRecord->start_time, 11, 5) == "02:00") : ?>selected<?php endif; ?>>02:00</option>
+                                    <option value="02:30" <?php if (substr($attendanceRecord->start_time, 11, 5) == "02:30") : ?>selected<?php endif; ?>>02:30</option>
+                                    <option value="03:00" <?php if (substr($attendanceRecord->start_time, 11, 5) == "03:00") : ?>selected<?php endif; ?>>03:00</option>
+                                    <option value="03:30" <?php if (substr($attendanceRecord->start_time, 11, 5) == "03:30") : ?>selected<?php endif; ?>>03:30</option>
+                                    <option value="04:00" <?php if (substr($attendanceRecord->start_time, 11, 5) == "04:00") : ?>selected<?php endif; ?>>04:00</option>
+                                    <option value="04:30" <?php if (substr($attendanceRecord->start_time, 11, 5) == "04:30") : ?>selected<?php endif; ?>>04:30</option>
                                 </select>
                             </div>
                             <div class="col-md-2">
@@ -150,6 +160,17 @@
                                     <option value="23:00" <?php if (substr($attendanceRecord->end_time, 11, 5) == "23:00") : ?>selected<?php endif; ?>>23:00</option>
                                     <option value="23:30" <?php if (substr($attendanceRecord->end_time, 11, 5) == "23:30") : ?>selected<?php endif; ?>>23:30</option>
                                     <option value="23:59" <?php if (substr($attendanceRecord->end_time, 11, 5) == "23:59") : ?>selected<?php endif; ?>>23:59</option>
+                                    <option value="00:00" <?php if (substr($attendanceRecord->end_time, 11, 5) == "00:00") : ?>selected<?php endif; ?>>00:00</option>
+                                    <option value="00:30" <?php if (substr($attendanceRecord->end_time, 11, 5) == "00:30") : ?>selected<?php endif; ?>>00:30</option>
+                                    <option value="01:00" <?php if (substr($attendanceRecord->end_time, 11, 5) == "01:00") : ?>selected<?php endif; ?>>01:00</option>
+                                    <option value="01:30" <?php if (substr($attendanceRecord->end_time, 11, 5) == "01:30") : ?>selected<?php endif; ?>>01:30</option>
+                                    <option value="02:00" <?php if (substr($attendanceRecord->end_time, 11, 5) == "02:00") : ?>selected<?php endif; ?>>02:00</option>
+                                    <option value="02:30" <?php if (substr($attendanceRecord->end_time, 11, 5) == "02:30") : ?>selected<?php endif; ?>>02:30</option>
+                                    <option value="03:00" <?php if (substr($attendanceRecord->end_time, 11, 5) == "03:00") : ?>selected<?php endif; ?>>03:00</option>
+                                    <option value="03:30" <?php if (substr($attendanceRecord->end_time, 11, 5) == "03:30") : ?>selected<?php endif; ?>>03:30</option>
+                                    <option value="04:00" <?php if (substr($attendanceRecord->end_time, 11, 5) == "04:00") : ?>selected<?php endif; ?>>04:00</option>
+                                    <option value="04:30" <?php if (substr($attendanceRecord->end_time, 11, 5) == "04:30") : ?>selected<?php endif; ?>>04:30</option>
+                                    <option value="05:00" <?php if (substr($attendanceRecord->end_time, 11, 5) == "05:00") : ?>selected<?php endif; ?>>05:00</option>
                                 </select>
                             </div>
                         </div>

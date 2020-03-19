@@ -1,3 +1,7 @@
+<?php
+$configService = new ConfigService();
+$config = $configService->findByConfigName('title');
+?>
 <!DOCTYPE html>
 <html lang="zh-tw">
 <head>
@@ -5,7 +9,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>文訊雜誌社人資管理系統</title>
+    <title><?=$config[0]['config_value']?></title>
     <link href="<?php echo Yii::app()->request->baseUrl; ?>/assets/gentelella/vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="<?php echo Yii::app()->request->baseUrl; ?>/assets/gentelella/vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
     <link href="<?php echo Yii::app()->request->baseUrl; ?>/assets/gentelella/vendors/nprogress/nprogress.css" rel="stylesheet">
@@ -45,7 +49,7 @@
             <div class="col-md-3 left_col">
                 <div class="left_col scroll-view">
                     <div class="navbar nav_title" style="border: 0;">
-                        <a href="<?php echo Yii::app()->createUrl('news/list'); ?>" class="site_title"><span>文訊雜誌社人資系統</span></a>
+                        <a href="<?php echo Yii::app()->createUrl('news/list'); ?>" class="site_title"><span><?=$config[0]['config_value']?></span></a>
                     </div>
 
                     <div class="clearfix"></div>

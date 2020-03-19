@@ -122,7 +122,7 @@ unset( Yii::app()->session['success_msg'] );
                     <div class="form-group row">
                         <label for="date_start" class="col-sm-2 control-label"> 分類:</label>
                         <div class="col-sm-6">
-                        	<select class="select2_multiple form-control" id="category_id" name="category_id[]" multiple="multiple" required>
+                        	<select class="select2_multiple form-control" id="category_id" name="category_id[]" multiple="multiple">
                               <?php foreach ($category_data as $key => $value) { ?>
                                 <option value="<?=$value['category_id']?>"><?=$value['parents_name']?>_<?=$value['child_name']?></option>
                               <?php }?>

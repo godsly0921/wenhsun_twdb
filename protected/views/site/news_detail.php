@@ -12,13 +12,13 @@
             <?= $news->title ?>
         </div>
         <div class="content1">
-            <?= nl2br($news->content) ?>
+            <?= html_entity_decode($news->content, ENT_COMPAT); ?>
         </div>
         <div class="image text-center">
             <img src="<?= Yii::app()->request->baseUrl . $news->image ?>" class="img-rounded">
         </div>
         <div class="main-content">
-            <?= nl2br($news->main_content) ?>
+            <?= html_entity_decode($news->main_content, ENT_COMPAT) ?>
         </div>
         <div class="text-center">
         <a href="javascript: history.back();">->返回上頁</a>

@@ -32,6 +32,7 @@ class ActivityNewsService
         $news->second_title = $inputs['second_title'];
         $news->content = $inputs['content'];
         $news->main_content = $inputs['main_content'];
+        $news->active = $inputs['active'];
         $news->create_at = date('Y-m-d H:i:s');
         $news->update_at = date('Y-m-d H:i:s');
         $news->create_by = Yii::app()->session['uid'];

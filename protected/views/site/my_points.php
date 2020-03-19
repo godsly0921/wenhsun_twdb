@@ -1,106 +1,4 @@
-<div id="banner" class="row"></div>
-
-<div class="container">
-    <div id="title" class="text-center">
-        <h3>會員專區</h3>
-    </div>
-    <div id="table" class="row">
-        <table class="col-sm-12">
-            <thead>
-                <tr>
-                    <td>
-                        <a href="<?php echo Yii::app()->createUrl('site/my_account'); ?>">我的帳戶</a>
-                    </td>
-                    <td>
-                        <a href="<?php echo Yii::app()->createUrl('site/my_points'); ?>" class="small">我的點數與下載</a>
-                    </td>
-                    <td>
-                        <a href="<?php echo Yii::app()->createUrl('site/my_record'); ?>">購買記錄</a>
-                    </td>
-                    <td>
-                        <a href="<?php echo Yii::app()->createUrl('site/my_favorite'); ?>">我的收藏</a>
-                    </td>
-                </tr>
-            </thead>
-        </table>
-    </div>
-    <hr class="top">
-    <div class="point">
-        <div class="row">
-            <div class="col-sm-2"></div>
-            <div class="col-sm-3 plan">
-                <img src="<?= Yii::app()->request->baseUrl . '/assets/image/point_icon.png' ?>">&nbsp;點數方案
-            </div>
-            <div class="col-sm-2 plan">
-                剩餘&nbsp;3&nbsp;點
-            </div>
-            <div class="col-sm-3">
-                <button type="button" class="btn add-point col-sm-12">
-                    <i class="fa fa-plus">&nbsp;添加點數</i>
-                </button>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-sm-2"></div>
-            <div class="col-sm-8">
-                <hr class="plan">
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-sm-2"></div>
-            <div class="col-sm-3 plan">
-                <img src="<?= Yii::app()->request->baseUrl . '/assets/image/point_icon.png' ?>">&nbsp;90天自由載
-            </div>
-            <div class="col-sm-2 plan">
-                剩餘&nbsp;56&nbsp;天
-            </div>
-            <div class="col-sm-3">
-                <button type="button" class="btn add-point col-sm-12">
-                    <i class="fa fa-plus">&nbsp;購買天數</i>
-                </button>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-sm-2"></div>
-            <div class="col-sm-8">
-                <hr class="plan">
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-sm-2"></div>
-            <div class="col-sm-3 plan">
-                <img src="<?= Yii::app()->request->baseUrl . '/assets/image/point_icon.png' ?>">&nbsp;60天自由載
-            </div>
-            <div class="col-sm-2 plan">
-                無
-            </div>
-            <div class="col-sm-3">
-                <button type="button" class="btn add-point col-sm-12">
-                    <i class="fa fa-plus">&nbsp;購買天數</i>
-                </button>
-            </div>
-        </div>
-    </div>
-    <hr class="bottom">
-    <div id="download">
-        <p class="download-title">下載記錄</p>
-        <div class="row">
-            <div class="col-sm-1"></div>
-            <div class="col-sm-2">
-                <img src="<?= Yii::app()->request->baseUrl . '/assets/image/demo1.png' ?>" class="download">
-            </div>
-            <div class="col-sm-2"></div>
-            <div class="col-sm-2">
-                <img src="<?= Yii::app()->request->baseUrl . '/assets/image/demo2.png' ?>" class="download">
-            </div>
-            <div class="col-sm-2"></div>
-            <div class="col-sm-2">
-                <img src="<?= Yii::app()->request->baseUrl . '/assets/image/demo3.png' ?>" class="download">
-            </div>
-        </div>
-    </div>
-</div>
-
+<link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/assets/css/justifiedGallery.min.css">
 <style type="text/css">
     #title {
         padding-top: 25px;
@@ -165,12 +63,12 @@
     }
 
     img.download {
-        height: 196px;
+        height: 100%;
     }
 
     button.download {
-        width: 196px;
-        background-color: #7d7d7d;
+        width: 100%;
+        background-color: #dc5514;
         color: white;
         padding: 0, 0, 0, 0;
         border-radius: 0;
@@ -180,3 +78,160 @@
         padding-bottom: 30px;
     }
 </style>
+<div id="banner" class="row"></div>
+<div class="container">
+    <div id="title" class="text-center">
+        <h3>會員專區</h3>
+    </div>
+    <div id="table" class="row">
+        <table class="col-sm-12">
+            <thead>
+                <tr>
+                    <td>
+                        <a href="<?php echo Yii::app()->createUrl('site/my_account'); ?>">我的帳戶</a>
+                    </td>
+                    <td>
+                        <a href="<?php echo Yii::app()->createUrl('site/my_points'); ?>" class="small">我的點數與下載</a>
+                    </td>
+                    <td>
+                        <a href="<?php echo Yii::app()->createUrl('site/my_record'); ?>">購買記錄</a>
+                    </td>
+                    <td>
+                        <a href="<?php echo Yii::app()->createUrl('site/my_favorite'); ?>">我的收藏</a>
+                    </td>
+                </tr>
+            </thead>
+        </table>
+    </div>
+    <hr class="top">
+    <div class="point">
+        <div class="row">
+            <div class="col-sm-2"></div>
+            <div class="col-sm-3 plan">
+                <img src="<?= Yii::app()->request->baseUrl . '/assets/image/point_icon.png' ?>">&nbsp;點數方案
+            </div>
+            <div class="col-sm-2 plan">
+                剩餘 <?= $member->active_point?> 點
+            </div>
+            <div class="col-sm-3">
+                <a href="<?php echo Yii::app()->createUrl('site/plan'); ?>">
+                    <button type="button" class="btn add-point col-sm-12">
+                        <i class="fa fa-plus">&nbsp;添加點數</i>
+                    </button>
+                </a>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-2"></div>
+            <div class="col-sm-8">
+                <hr class="plan">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-2"></div>
+            <div class="col-sm-3 plan">
+                <img src="<?= Yii::app()->request->baseUrl . '/assets/image/point_icon.png' ?>">&nbsp;30天自由載
+            </div>
+            <div class="col-sm-2 plan">
+                <?php if($member_plan['2'] != 0 ){?>
+                    剩餘 <?= $member_plan['2']?> 張
+                <?php }else{?>
+                    無
+                <?php }?>
+            </div>
+            <div class="col-sm-3">
+                <a href="<?php echo Yii::app()->createUrl('site/plan'); ?>">
+                    <button type="button" class="btn add-point col-sm-12">
+                        <i class="fa fa-plus">&nbsp;購買方案</i>
+                    </button>
+                </a>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-2"></div>
+            <div class="col-sm-8">
+                <hr class="plan">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-2"></div>
+            <div class="col-sm-3 plan">
+                <img src="<?= Yii::app()->request->baseUrl . '/assets/image/point_icon.png' ?>">&nbsp;90天自由載
+            </div>
+            <div class="col-sm-2 plan">
+                <?php if($member_plan['3'] != 0 ){?>
+                    剩餘 <?= $member_plan['3']?> 張
+                <?php }else{?>
+                    無
+                <?php }?>
+            </div>
+            <div class="col-sm-3">
+                <a href="<?php echo Yii::app()->createUrl('site/plan'); ?>">
+                    <button type="button" class="btn add-point col-sm-12">
+                        <i class="fa fa-plus">&nbsp;購買方案</i>
+                    </button>
+                </a>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-2"></div>
+            <div class="col-sm-8">
+                <hr class="plan">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-2"></div>
+            <div class="col-sm-3 plan">
+                <img src="<?= Yii::app()->request->baseUrl . '/assets/image/point_icon.png' ?>">&nbsp;360天自由載
+            </div>
+            <div class="col-sm-2 plan">
+                <?php if($member_plan['4'] != 0 ){?>
+                    剩餘 <?= $member_plan['4']?> 張
+                <?php }else{?>
+                    無
+                <?php }?>
+            </div>
+            <div class="col-sm-3">
+                <a href="<?php echo Yii::app()->createUrl('site/plan'); ?>">
+                    <button type="button" class="btn add-point col-sm-12">
+                        <i class="fa fa-plus">&nbsp;購買方案</i>
+                    </button>
+                </a>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-2"></div>
+            <div class="col-sm-8">
+                <hr class="plan">
+            </div>
+        </div>
+    </div>
+    <hr class="bottom">
+    <div id="download">
+        <p class="download-title">下載記錄</p>
+        <div class="row col-lg-12 text-center" id="image_result">
+            <?php foreach ($image_download as $key => $value) {?>
+                <div>
+                    <img src="<?= Yii::app()->createUrl('/'). "/" .PHOTOGRAPH_STORAGE_URL . $value['single_id']?>.jpg">
+                    <div class="caption p-0">
+                        <a href="<?php echo Yii::app()->request->baseUrl; ?>/assets/site/authorization.pdf" target="_blank" class="download_authorization"><button class="btn download">授權書</button></a>
+                        <!-- <a href="<?php echo Yii::app()->request->baseUrl; ?>/assets/site/authorization.pdf" target="_blank" class="download_authorization"><span class="btn btn-dark btn-sm" style="font-size: 24px;color:white;line-height: 24px;">授權書</span></a> -->
+                    </div>
+                </div>
+            <?php }?>
+        </div>
+    </div>
+</div>
+<script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/jquery.justifiedGallery.min.js"></script>
+<script type="text/javascript">
+    $(document).ready( function() {
+        $('#image_result').justifiedGallery({
+            rowHeight: 200,
+            maxRowHeight: 200,
+            margins : 25,
+            // refreshTime: 1000,
+            rel : 'gallery1',
+        });
+        $('.download_authorization').click(function(e){ e.stopPropagation(); });
+    });
+</script>

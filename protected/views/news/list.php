@@ -2,7 +2,7 @@
 <?php unset(Yii::app()->session['page_msg']); ?>
 <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->createUrl('/assets/site/css/newslist.css');?>">
 <ul class="nav nav-tabs">
-    <li class="active"><a data-toggle="tab" href="#news">公布欄</a></li>
+    <li class="active"><a data-toggle="tab" href="#news">公佈欄</a></li>
     <?php if(Yii::app()->session['personal'] == false){?>
       <!--  <li><a data-toggle="tab" href="#device">儀器即時監控</a></li>-->
        <!-- <li><a data-toggle="tab" href="#door">門禁即時監控</a></li>-->
@@ -13,7 +13,7 @@
     <div id="news" class="tab-pane fade in active">
         <div class="row">
             <div class="title-wrap col-lg-12">
-                <h3 class="title-left">公布欄</h3>
+                <h3 class="title-left">公佈欄</h3>
             </div>
         </div><?php $session_jsons = CJSON::decode(Yii::app()->session['power_session_jsons']); ?>
 

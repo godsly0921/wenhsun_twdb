@@ -997,4 +997,136 @@ class MemberService
 
         return $permissionArr;
     }
+    public function findMemberAddressBook($member_id){
+        return Memberaddressbook::model()->find([
+            'condition' => 'member_id=:member_id',
+            'params' => [
+                ':member_id' => $member_id,
+            ]
+        ]);
+    }
+
+    public function create_member_address_book($inputs){
+        $member_address_book = new Memberaddressbook;
+        $member_address_book->member_id = $inputs['member_id'];
+        $member_address_book->mobile = $inputs['mobile'];
+        $member_address_book->nationality = $inputs['nationality'];
+        $member_address_book->country = $inputs['county'];
+        $member_address_book->town = $inputs['town'];
+        $member_address_book->codezip = $inputs['zipcode'];
+        $member_address_book->address = $inputs['address'];
+        $member_address_book->invoice_number = $inputs['invoice_number'];
+        $member_address_book->invoice_title = $inputs['invoice_title'];
+        $member_address_book->invoice_category = $inputs['invoice_category'];
+        if ($member_address_book->save()){
+            return true;
+        }else{
+            return false;
+        }
+    }
+    public function updateMemberAddressBook($member_id,$inputs){
+        $member_address_book = Memberaddressbook::model()->findByAttributes([
+            'member_id' => $member_id
+        ]);
+        if($member_address_book){
+            $member_address_book->mobile = $inputs['mobile'];
+            $member_address_book->nationality = $inputs['nationality'];
+            $member_address_book->country = $inputs['county'];
+            $member_address_book->town = $inputs['town'];
+            $member_address_book->codezip = $inputs['zipcode'];
+            $member_address_book->address = $inputs['address'];
+            $member_address_book->invoice_number = $inputs['invoice_number'];
+            $member_address_book->invoice_title = $inputs['invoice_title'];
+            $member_address_book->invoice_category = $inputs['invoice_category'];
+            if($member_address_book->save()){
+                Yii::log("member_address_book update success member => {$member_id}", CLogger::LEVEL_INFO);
+                return true;
+            }else{
+                Yii::log("member_address_book update fail member => {$member_id}", CLogger::LEVEL_INFO);
+                return false;
+            }
+        }else{
+            $create = $this->create_member_address_book($inputs);
+            if($create){
+                Yii::log("member_address_book create success member => {$member_id}", CLogger::LEVEL_INFO);
+                return true;
+            }else{
+                Yii::log("member_address_book create fail member => {$member_id}", CLogger::LEVEL_INFO);
+                return false;
+            }
+        }
+    }
+
+    public function listMemberFavorite($member_id){
+        $data = array();
+        if( $member_id != '' ){
+            $sql = "SELECT mf.* FROM `member_favorite` mf INNER JOIN single s on mf.single_id=s.single_id where mf.member_id=".$member_id." and mf.status=1 order by create_time desc";
+            $data = Yii::app()->db->createCommand($sql)->queryAll();
+        }
+        return $data;
+    }
+
+    public function add_favorite($single_id,$member_id){
+        $data = Memberfavorite::model()->find([
+            'condition' => 'member_id=:member_id and single_id=:single_id',
+            'params' => [
+                ':member_id' => $member_id,
+                ':single_id' => $single_id,
+            ]
+        ]);
+        if(!$data){
+            $model = new Memberfavorite();
+            $model->member_id = $member_id;
+            $model->single_id = $single_id;
+            $model->status = 1;
+            $model->create_time = date('Y-m-d H:i:s');
+            if($model->save()){
+                return true;
+            }else{
+                foreach ($model->getErrors() as $error){
+                    Yii::log(date("Y-m-d H:i:s")."member_id =>".$member_id.", add_favorite error：".$error[0],  CLogger::LEVEL_INFO);
+                }
+                return false;
+            }
+        }else{
+            if($data['status'] == 0){
+                $model = Memberfavorite::model()->findByPk($data['member_favorite_id']);
+                $model->status = 1;
+                $model->update_time = date('Y-m-d H:i:s');
+                if($model->save()){
+                    return true;
+                }else{
+                    foreach ($model->getErrors() as $error){
+                        Yii::log(date("Y-m-d H:i:s")."member_id =>".$member_id.", remove_favorite error：".$error[0],  CLogger::LEVEL_INFO);
+                    }
+                    return false;
+                }
+            }
+            return true;
+        }
+    }
+    public function remove_favorite($single_id,$member_id){
+        $data = Memberfavorite::model()->find([
+            'condition' => 'member_id=:member_id and single_id=:single_id',
+            'params' => [
+                ':member_id' => $member_id,
+                ':single_id' => $single_id,
+            ]
+        ]);
+        if($data){
+            $model = Memberfavorite::model()->findByPk($data['member_favorite_id']);
+            $model->status = 0;
+            $model->update_time = date('Y-m-d H:i:s');
+            if($model->save()){
+                return true;
+            }else{
+                foreach ($model->getErrors() as $error){
+                    Yii::log(date("Y-m-d H:i:s")."member_id =>".$member_id.", remove_favorite error：".$error[0],  CLogger::LEVEL_INFO);
+                }
+                return false;
+            }
+        }else{
+            return true;
+        }
+    }
 }

@@ -67,12 +67,12 @@ class CouponService
         if (!$model->hasErrors()) {
             if( $model->save() ){
                 $motion = "建立優惠";
-                $log = "建立 產品名稱 = " . $inputs["coupon_name"];
+                $log = "建立 產品名稱 = " . $input["coupon_name"];
                 $operationlogService->create_operationlog( $motion, $log );
                 return array(true,'新增成功');         
             }else{       
                 $motion = "建立優惠";
-                $log = "建立 產品名稱 = " . $inputs["coupon_name"];
+                $log = "建立 產品名稱 = " . $input["coupon_name"];
                 $operationlogService->create_operationlog( $motion, $log, 0 );
                 return array(false,$model->getErrors());
             }
@@ -100,12 +100,12 @@ class CouponService
         if (!$model->hasErrors()) {
             if( $model->save() ){
                 $motion = "更新優惠";
-                $log = "更新 優惠編號 = " . $id . "；優惠名稱 = " . $inputs["coupon_name"];
+                $log = "更新 優惠編號 = " . $input['id'] . "；優惠名稱 = " . $input["coupon_name"];
                 $operationlogService->create_operationlog( $motion, $log );
                 return array(true,'修改成功',$model);         
             }else{       
                 $motion = "更新優惠";
-                $log = "更新 優惠編號 = " . $id . "；優惠名稱 = " . $inputs["coupon_name"];
+                $log = "更新 優惠編號 = " . $input['id']. "；優惠名稱 = " . $input["coupon_name"];
                 $operationlogService->create_operationlog( $motion, $log, 0 );
                 return array(false,$model->getErrors());
             }
