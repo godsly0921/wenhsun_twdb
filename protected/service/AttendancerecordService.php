@@ -698,7 +698,7 @@ class AttendancerecordService{
                 $body .= "</tbody></table>";
             }
             $body .=  '<a href="'.'http://192.168.0.160/wenhsun_hr/leave/manager/hist?type=1&user_name='.$emp->user_name.'&name=&year='.$year.'">內網請點擊審核</a>';
-            $body .= "<h6>" . '|' . "<h6>" .
+            $body .= '<hr size="8px" align="center" width="100%">';
             $body .=  '<a href="'.'http://203.69.216.186/wenhsun_hr/leave/manager/hist?type=1&user_name='.$emp->user_name.'&name=&year='.$year.'">外網請點擊審核</a>';
 
             $inputs = array();
