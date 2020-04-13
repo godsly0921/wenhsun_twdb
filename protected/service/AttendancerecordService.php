@@ -273,11 +273,7 @@ class AttendancerecordService{
 
     }
 
-    public function summaryMinutesByPeriodOfTimeAndLeaveType(
-        string $employeeId,
-        string $startDateTime,
-        string $endDateTime,
-        string $leaveType): int
+    public function summaryMinutesByPeriodOfTimeAndLeaveType(string $employeeId,string $startDateTime,string $endDateTime,string $leaveType)
     {
         $r = Yii::app()->db->createCommand(
             '
@@ -301,7 +297,7 @@ class AttendancerecordService{
         return (int) $r['summary_leave_minutes'];
     }
 
-    public function getEmployeeLeaveList($employeeId, $year): array
+    public function getEmployeeLeaveList($employeeId, $year)
     {
         $startDateTime = "{$year}-01-01 00:00:00";
         $yearEndDT = new DateTime($startDateTime);
@@ -323,7 +319,7 @@ class AttendancerecordService{
         ])->queryAll();
     }
 
-    public function getEmployeeLeaveListHoliday($employeeId, $year): array
+    public function getEmployeeLeaveListHoliday($employeeId, $year)
     {
         $startDateTime = "{$year}-01-01 00:00:00";
         $yearEndDT = new DateTime($startDateTime);
@@ -353,7 +349,7 @@ class AttendancerecordService{
         return $listArr;
     }
 
-    public function getEmployeeLeaveListOvertime($employeeId, $year): array
+    public function getEmployeeLeaveListOvertime($employeeId, $year)
     {
         $startDateTime = "{$year}-01-01 00:00:00";
         $yearEndDT = new DateTime($startDateTime);
@@ -701,6 +697,9 @@ class AttendancerecordService{
 
                 $body .= "</tbody></table>";
             }
+            $body .=  '<a href="'.'http://192.168.0.160/wenhsun_hr/leave/manager/hist?type=1&user_name='.$emp->user_name.'&name=&year='.$year.'">內網請點擊審核</a>';
+            $body .= '<hr size="8px" align="center" width="100%">';
+            $body .=  '<a href="'.'http://203.69.216.186/wenhsun_hr/leave/manager/hist?type=1&user_name='.$emp->user_name.'&name=&year='.$year.'">外網請點擊審核</a>';
 
             $inputs = array();
             $inputs['subject'] = $subject;
@@ -708,6 +707,8 @@ class AttendancerecordService{
             $inputs['to'] = $emp->email;
             $inputs['agent'] = $agent == null ? '' : $agent->email;
             $inputs['manager'] = $manager->email;
+            //$inputs['agent'] = 'godsly0921@gmail.com';
+            //$inputs['manager'] = 'godsly0921@gmail.com';
 
             $mailService = new MailService();
             $mailService->sendApproveMail($inputs);
@@ -722,7 +723,7 @@ class AttendancerecordService{
 
     public function getLeaveHoursByDate($date) {
         $start_time = $date . ' 00:00:00';
-        $end_time = $date . ' 11:59:59';
+        $end_time = $date . ' 23:59:59';
         $list = Yii::app()->db->createCommand(
             '
               SELECT employee_id, SUM(leave_minutes) minutes FROM attendance_record
@@ -910,11 +911,11 @@ class AttendancerecordService{
     }
 
     public function getFullAttendanceType($day, $first_time) {
-        $a_period = strtotime($day . ' 09:00:00');
-        $b_period = strtotime($day . ' 09:30:00');
-        if(strtotime($first_time) < $a_period) {
+        $a_period = strtotime($day . ' 09:01:00');
+        $b_period = strtotime($day . ' 09:31:00');
+        if(strtotime($first_time) <= $a_period) {
             return "A";
-        } else if (strtotime($first_time) > $a_period && strtotime($first_time) <= $b_period) {
+        } else if (strtotime($first_time) >= $a_period && strtotime($first_time) <= $b_period) {
             return "B";
         }
         return "C";

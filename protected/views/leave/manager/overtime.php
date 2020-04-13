@@ -64,56 +64,71 @@
 
                         <div class="form-group">
                             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="date">加班時間起</label>
-                            <div class="col-md-2 xdisplay_inputx form-group has-feedback">
-                                <input type="text" class="form-control has-feedback-left" id="start_date" name="start_date" aria-describedby="inputSuccess2Status" onChange="changeDate();">
+                            <div class="col-md-3 xdisplay_inputx form-group has-feedback">
+                                <input type="text" class="form-control has-feedback-left" id="start_date" name="start_date" aria-describedby="inputSuccess2Status">
                                 <span class="fa fa-calendar-o form-control-feedback left" aria-hidden="true"></span>
                                 <span id="inputSuccess2Status" class="sr-only">(success)</span>
                             </div>
-                            <div class="col-md-2">
+                            <div class="col-md-1">
                                 <select id="start_time" name="start_time" class="form-control" onChange="checkTime();">
-                                    <option value="18:00">18:00</option>
-                                    <option value="18:30">18:30</option>
-                                    <option value="19:00">19:00</option>
-                                    <option value="19:30">19:30</option>
-                                    <option value="20:00">20:00</option>
-                                    <option value="20:30">20:30</option>
-                                    <option value="21:00">21:00</option>
-                                    <option value="21:30">21:30</option>
-                                    <option value="22:00">22:00</option>
-                                    <option value="22:30">22:30</option>
-                                    <option value="23:00">23:00</option>
-                                    <option value="23:30">23:30</option>
-                                </select>
-                            </div>
-                            <div class="col-md-2">
-                                <select id="end_time" name="end_time" class="form-control" onChange="checkTime();">
-                                    <option value="18:30">18:30</option>
-                                    <option value="19:00">19:00</option>
-                                    <option value="19:30">19:30</option>
-                                    <option value="20:00">20:00</option>
-                                    <option value="20:30">20:30</option>
-                                    <option value="21:00">21:00</option>
-                                    <option value="21:30">21:30</option>
-                                    <option value="22:00">22:00</option>
-                                    <option value="22:30">22:30</option>
-                                    <option value="23:00">23:00</option>
-                                    <option value="23:30">23:30</option>
-                                    <option value="23:59">23:59</option>
-                                    <option value="00:30">00:30</option>
-                                    <option value="01:00">01:00</option>
-                                    <option value="01:30">01:30</option>
-                                    <option value="02:00">02:00</option>
-                                    <option value="02:30">02:30</option>
-                                    <option value="03:00">03:00</option>
-                                    <option value="03:30">03:30</option>
-                                    <option value="04:00">04:00</option>
-                                    <option value="04:30">04:30</option>
-                                    <option value="05:00">05:00</option>
+                                    <?php
+                                    for ($i = 0;$i <= 23;$i++)
+                                    {
+                                            $time = str_pad($i,2,'0',STR_PAD_LEFT).":00";
+                                            echo  "<option value='{$time}'>{$time}</option>";
+
+                                            
+
+                                            $time = str_pad($i,2,'0',STR_PAD_LEFT).":30";
+                                            echo  "<option value='{$time}'>{$time}</option>";
+
+                                            if($i == 23){//最後一筆
+                                                $time = str_pad($i,2,'0',STR_PAD_LEFT).":59";
+                                                echo  "<option value='{$time}'>{$time}</option>";
+
+                                            }
+                                    }
+                                    ?>
                                 </select>
                             </div>
                         </div>
 
-                        <input type="hidden" class="form-control has-feedback-left" id="end_date" name="end_date" aria-describedby="inputSuccess2Status" readonly>
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="date">加班日期訖</label>
+                            <div class="col-md-3 xdisplay_inputx form-group has-feedback">
+                                <input type="text" class="form-control has-feedback-left" id="end_date" name="end_date" aria-describedby="inputSuccess2Status">
+                                <span class="fa fa-calendar-o form-control-feedback left" aria-hidden="true"></span>
+                                <span id="inputSuccess2Status" class="sr-only">(success)</span>
+                            </div>
+                            <div class="col-md-1">
+                                <select id="end_time" name="end_time" class="form-control" onChange="checkTime();">
+                                    <?php
+                                    for ($i = 0;$i <= 23;$i++)
+                                    {
+
+
+
+
+                                            $time = str_pad($i,2,'0',STR_PAD_LEFT).":00";
+                                            echo  "<option value='{$time}'>{$time}</option>";
+
+                                            
+
+                                            $time = str_pad($i,2,'0',STR_PAD_LEFT).":30";
+                                            echo  "<option value='{$time}'>{$time}</option>";
+
+                                            if($i == 23){//最後一筆
+                                                $time = str_pad($i,2,'0',STR_PAD_LEFT).":59";
+                                                echo  "<option value='{$time}'>{$time}</option>";
+
+                                            }
+                                    }
+                                    ?>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!--<input type="hidden" class="form-control has-feedback-left" id="end_date" name="end_date" aria-describedby="inputSuccess2Status" readonly>-->
 
                         <input type="hidden" id="days" name="days" value="1">
                         <input type="hidden" id="first_hours" name="first_hours" value="0.5">
@@ -152,7 +167,14 @@
         $("#start_date").daterangepicker({
             singleDatePicker: true,
             locale: {
-                format: "YYYY/MM/DD"
+                format: "YYYY-MM-DD"
+            }
+        });
+
+        $("#end_date").daterangepicker({
+            singleDatePicker: true,
+            locale: {
+                format: "YYYY-MM-DD"
             }
         });
 
@@ -172,39 +194,26 @@
 
     function checkTime() {
         var start = moment($("#start_date").val() + " " + $("#start_time").val(), "YYYY/MM/DD HH:mm");
+        console.log(start);
         var end = moment($("#end_date").val() + " " + $("#end_time").val(), "YYYY/MM/DD HH:mm");
+        console.log(end);
         var diff = 0;
 
-        if (end.format("H") <= 5) {
-            end.add(1, 'days');
-            $("#end_date").val(end.format("YYYY/MM/DD"));
-            $("#days").val(2);
-        }
-
         if (start >= end) {
-            alert("請確認加班時間是否正確");
+            alert("請確認加班時間是否正確,“開始時間不可大於等於結束時間”。");
         } else {
-            if ($("#start_date").val() === $("#end_date").val()) {
-                if ($("#end_time").val() === "23:59") {
-                    diff = Math.round(end.diff(start, "hours", true) * 10) / 10;
-                } else {
-                    diff = end.diff(start, "hours", true);
-                }
-            } else {
-                var firstDay = moment($("#start_date").val() + " " + "23:59", "YYYY/MM/DD HH:mm");
-                diff = Math.round(firstDay.diff(start, "hours", true) * 10) / 10;
-                $("#first_hours").val(diff);
-                var lastDay = moment(end.format("YYYY/MM/DD") + " " + "00:00", "YYYY/MM/DD HH:mm");
-                diff += end.diff(lastDay, "hours", true);
-                $("#last_hours").val(end.diff(lastDay, "hours", true));
-            }
 
+            var firstDay = moment($("#start_date").val() + " " + $("#start_time").val(), "YYYY/MM/DD HH:mm");
+            var lastDay = moment(end.format("YYYY-MM-DD") + " " + $("#end_time").val(), "YYYY/MM/DD HH:mm");
+            diff = lastDay.diff(firstDay, "hours", true);
+            $("#last_hours").val(end.diff(lastDay, "hours", true));
+            console.log(lastDay);
+            console.log(diff);
+            
             $("#leave_minutes").val(diff);
+
+            diff = diff.toFixed(2); 
             $("#minutes").val(diff + "小時");
         }
-    }
-
-    function changeDate() {
-        $("#end_date").val($("#start_date").val());
     }
 </script>

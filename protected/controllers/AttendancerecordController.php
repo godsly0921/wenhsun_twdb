@@ -254,6 +254,8 @@ class AttendancerecordController extends Controller
             ->setCellValue( 'I1', '員工回覆' )
             ->setCellValue( 'J1', '建立時間' )
             ->setCellValue( 'K1', '修改時間' );
+         //   ->setCellValue( 'L1', '出勤紀錄開始' )
+         //   ->setCellValue( 'M1', '出勤紀錄結束' );
 
 
         // Miscellaneous glyphs, UTF-8 設定內容資料
@@ -264,14 +266,16 @@ class AttendancerecordController extends Controller
                 ->setCellValue( 'A' . $i, $value[ 'user_name' ] )
                 ->setCellValue( 'B' . $i, $value[ 'name' ] )
                 ->setCellValue( 'C' . $i, $value[ 'day' ] )
-                ->setCellValue( 'D' . $i, $value[ 'first_time' ] )
-                ->setCellValue( 'E' . $i, $value[ 'last_time' ] )
+                ->setCellValue( 'D' . $i, substr($value[ 'first_time' ],10,9) )
+                ->setCellValue( 'E' . $i, substr($value[ 'last_time' ],10,9) )
                 ->setCellValue( 'F' . $i, $value[ 'abnormal_type' ] )
                 ->setCellValue( 'G' . $i, $value[ 'abnormal' ] )
                 ->setCellValue( 'H' . $i, $value[ 'take' ] )
                 ->setCellValue( 'I' . $i, $value[ 'reply_description' ] )
                 ->setCellValue( 'J' . $i, $value[ 'att_create_at' ] )
                 ->setCellValue( 'K' . $i, $value[ 'update_at' ] );
+              //  ->setCellValue( 'L' . $i, substr($value[ 'first_time' ],10,9) )
+              //  ->setCellValue( 'M' . $i, substr($value[ 'last_time' ],10,9) );
             $i++;
 
         }
