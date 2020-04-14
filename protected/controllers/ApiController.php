@@ -2,6 +2,7 @@
 class ApiController extends CController{
 	public $page = 1;
 	public $limit = 30;
+	private $output = array();
 	public function setresponse($params = array() , $result = array(), $debug = "",$log=1 ,$memberid = null) {
 	    //設定header
 	    //header 訊息修改
@@ -11,7 +12,7 @@ class ApiController extends CController{
 	    	case '399': $headermsg = SUCCESS_EMPTYERR_EMSG; break;
 	    	case '400': $headermsg = ERROR_WEB_POSTONLY_EMSG; break;
 	    	case '401': $headermsg = ERROR_WEB_TOKEN_EMSG; break;
-	    	case '308': $headermsg = ERROR_WEB_TOKENERR_EMSG; break; //2019.08.01 修改code為308
+	    	case '308': $headermsg = ERROR_WEB_TOKENERR_EMSG; break;
 	    	case '404': $headermsg = ERROR_WEB_NOAPI_EMSG; break;
 	    	case '410': $headermsg = ERROR_WEB_PARAMETERTYPE_EMSG; break;
 	    	case '500': $headermsg = ERROR_SERVER_EMSG; break;
@@ -34,7 +35,13 @@ class ApiController extends CController{
 		$sql = "SELECT * FROM api_manage WHERE api_token = '" . $token . "'";
 		$data = Yii::app()->db->createCommand($sql)->queryAll();
 		if(!empty($data)){
-			return true;
+			$token_createtime = $data[0]['token_createtime'];
+			$token_expire = date('Y-m-d H:i:s', strtotime($token_createtime.' +30 minutes'));
+			if(strtotime("now")<=strtotime($token_expire)){
+				return true;
+			}else{
+				return false;
+			}
 		}else{
 			return false;
 		}
@@ -85,6 +92,80 @@ class ApiController extends CController{
 		);
 		return $params;
 	}
+	public function ActionreVerifyToken(){
+		$params = $this->getparams();
+		if( !Yii::app()->request->isPostRequest ){
+			$response = $this->setresponse(
+				$params, 
+				array(
+					"result" => false, 
+					"code" => ERROR_WEB_POSTONLY_NO, 
+					"msg" => ERROR_WEB_POSTONLY_MSG, 
+					"content" => array()
+				)
+			);
+		}else{
+			if(!empty($params['body']['api_key']) && !empty($params['body']['password'])){
+				$sql = "SELECT * FROM api_manage WHERE api_key = '" . $params['body']['api_key'] . "' AND api_password = '" . $params['body']['password'] . "'";
+				$data = Yii::app()->db->createCommand($sql)->queryAll();
+				if(!empty($data)){
+					$request_time = date("Y-m-d H:i:s");
+					$secret = $data[0]['createtime'];
+					// Create token header as a JSON string
+					$header = json_encode(['typ' => 'JWT', 'alg' => 'HS256']);
+					// Create token payload as a JSON string
+					$payload = json_encode(['user_id' => $data[0]['id'], 'request_time' => $request_time]);
+					// Encode Header to Base64Url String
+					$base64UrlHeader = str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($header));
+					// Encode Payload to Base64Url String
+					$base64UrlPayload = str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($payload));
+					// Create Signature Hash
+					$signature = hash_hmac('sha256', $base64UrlHeader . "." . $base64UrlPayload, $secret, true);
+					// Encode Signature to Base64Url String
+					$base64UrlSignature = str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($signature));
+					// Create JWT
+					$jwt = $base64UrlHeader . "." . $base64UrlPayload . "." . $base64UrlSignature;
+					$model = Apimanage::model()->findByPk($data[0]['id']);
+					$model->api_token = $jwt;
+					$model->token_createtime = date("Y-m-d H:i:s");
+					$model->save();
+					$this->output = array("token"=>$jwt);
+					$response = $this->setresponse(
+						$params, 
+						array(
+							"result" => true, 
+							"code" => SUCCESS_GEL_NO, 
+							"msg" => SUCCESS_GEL_MSG, 
+							"content" => $this->output
+						)
+					);
+				}else{
+					$response = $this->setresponse(
+						$params, 
+						array(
+							"result" => false, 
+							"code" => ERROR_WEB_TOKENERR_NO, 
+							"msg" => ERROR_WEB_TOKENERR_MSG, 
+							"content" => $this->output
+						)
+					);
+				}
+			}else{
+				$response = $this->setresponse(
+					$params, 
+					array(
+						"result" => false, 
+						"code" => ERROR_WEB_PARAMETERTYPE_NO, 
+						"msg" => ERROR_WEB_PARAMETERTYPE_MSG, 
+						"content" => $this->output
+					)
+				);
+			}
+		}
+		echo $response;
+		exit();
+	}
+
 	public function ActionGetImage(){
 		$params = $this->getparams();
 		$check_commmon = $this->check_common($params['body']);
@@ -94,7 +175,7 @@ class ApiController extends CController{
 				$check_commmon
 			);
 		}else{
-			$filter = $option = $result = $output = $content = array();
+			$filter = $option = $result = $content = array();
 			if(isset($params['body']['keyword'])){
 	        	$mongo = new Mongo();
 	        	//$filter =  array('keyword'=>array( '$in' => $explode_keyword ));
@@ -111,7 +192,6 @@ class ApiController extends CController{
 		            'count' => "single",
 		            'query' => $filter
 		        ];
-
 		        //$option['projection'] = array('single_id'=>1,'people_info'=>1,'object_name'=>1,'filming_date'=>1,'filming_location'=>1,'keyword'=>1);
 		        $count_result = $mongo->command('wenhsun', $cmd)->toArray();
 		        if (!empty($count_result)) {
@@ -134,13 +214,13 @@ class ApiController extends CController{
 						"interface_system" => "台灣文學照片資料庫",
 						"verify" => "文訊雜誌社",
 						"people_info" => $value->people_info,
-						"event_name" =>  $value->event_name,
-						"photo_source" =>  $value->photo_source,
+						"event_name" => !empty($value->event_name)?$value->event_name:"",
+						"photo_source" =>  !empty($value->photo_source)?$value->photo_source:"",
 						"memo2" =>  $value->memo2
 					);
 				}
-				$output["total_result"] = $total_result;
-				$output["content"] = $content;
+				$this->output["total_result"] = $total_result;
+				$this->output["content"] = $content;
 				if(empty($total_result)){
 					$response = $this->setresponse(
 						$params, 
@@ -148,7 +228,7 @@ class ApiController extends CController{
 							"result" => true, 
 							"code" => SUCCESS_EMPTYERR_NO, 
 							"msg" => SUCCESS_EMPTYERR_MSG, 
-							"content" => $output
+							"content" => $this->output
 						)
 					);
 				}else{
@@ -158,7 +238,7 @@ class ApiController extends CController{
 							"result" => true, 
 							"code" => SUCCESS_GEL_NO, 
 							"msg" => SUCCESS_GEL_MSG, 
-							"content" => $output
+							"content" => $this->output
 						)
 					);
 				}
@@ -169,7 +249,7 @@ class ApiController extends CController{
 						"result" => false, 
 						"code" => ERROR_WEB_PARAMETERTYPE_NO, 
 						"msg" => ERROR_WEB_PARAMETERTYPE_MSG, 
-						"content" => $output
+						"content" => $this->output
 					)
 				);
 			}
@@ -187,7 +267,7 @@ class ApiController extends CController{
 				$check_commmon
 			);
 		}else{
-			$data = $output = array();
+			$data = array();
 			if(isset($params['body']['image_id'])){
 				$id = $params['body']['image_id'];
 				$sql = "SELECT * FROM `single` s LEFT JOIN single_size ss on s.single_id = ss.single_id where s.single_id =" . $id . " and ss.size_type <> 'source' order by ss.single_size_id asc";
@@ -250,14 +330,14 @@ class ApiController extends CController{
 			            }        
 			        }
 			        $data['image_info']['size'] = $data['size'];
-			        $output['content'] = $data['image_info'];
+			       	$this->output['content'] = $data['image_info'];
 			        $response = $this->setresponse(
 						$params, 
 						array(
 							"result" => true, 
 							"code" => SUCCESS_GEL_NO, 
 							"msg" => SUCCESS_GEL_MSG, 
-							"content" => $output
+							"content" => $this->output
 						)
 					);
 		        }else{
@@ -267,7 +347,7 @@ class ApiController extends CController{
 							"result" => true, 
 							"code" => SUCCESS_EMPTYERR_NO, 
 							"msg" => SUCCESS_EMPTYERR_MSG, 
-							"content" => $output
+							"content" => $this->output
 						)
 					);
 		        }
@@ -278,7 +358,7 @@ class ApiController extends CController{
 						"result" => false, 
 						"code" => ERROR_WEB_PARAMETERTYPE_NO, 
 						"msg" => ERROR_WEB_PARAMETERTYPE_MSG, 
-						"content" => $output
+						"content" => $this->output
 					)
 				);
 			}
