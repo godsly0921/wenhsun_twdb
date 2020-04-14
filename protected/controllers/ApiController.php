@@ -330,7 +330,7 @@ class ApiController extends CController{
 			            }        
 			        }
 			        $data['image_info']['size'] = $data['size'];
-			       	$this->output['content'] = $data['image_info'];
+			       	$this->output = $data['image_info'];
 			        $response = $this->setresponse(
 						$params, 
 						array(
