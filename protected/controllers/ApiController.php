@@ -22,10 +22,10 @@ class ApiController extends CController{
 	    header('Content-Type: application/json; charset=utf-8');
 	    // output format
 	    $response = array(
-	        "retResult" => $result['result'],
-	        "retCode"   => $result['code'],
-	        "retMsg"    => $result['msg'],
-	        "debugMsg"  => $debug,
+	        "result" => $result['result'],
+	        "code"   => $result['code'],
+	        "msg"    => $result['msg'],
+	        // "debugMsg"  => $debug,
 	        "content"   => $result['content']
 	    );
 	    $response = json_encode($response, JSON_UNESCAPED_UNICODE);
