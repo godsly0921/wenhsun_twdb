@@ -17,7 +17,8 @@ define ('ROOT_HTTP','http://203.69.216.186/wenhsun_hr');
 define ('IMAGES_STORAGE_DIR',$image);
 define ('IMAGES_SHOW_DIR','/assets/uploads/');
 define ('mysql_bak',dirname(__FILE__).'/assets/site/mysql_bak/');
-
+define('API_DOMAIN','https://api.twdb.com.tw');
+define('API_DOWNLOAD_PATH','/download/image/');
 //載入上傳圖片檔案路徑
 $file=dirname(__FILE__).'/assets/uploads/file/';
 define ('FILE_STORAGE_DIR',$file);

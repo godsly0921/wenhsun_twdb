@@ -94,73 +94,86 @@ class ApiController extends CController{
 	}
 	public function ActionreVerifyToken(){
 		$params = $this->getparams();
-		if( !Yii::app()->request->isPostRequest ){
-			$response = $this->setresponse(
-				$params, 
-				array(
-					"result" => false, 
-					"code" => ERROR_WEB_POSTONLY_NO, 
-					"msg" => ERROR_WEB_POSTONLY_MSG, 
-					"content" => array()
-				)
-			);
-		}else{
-			if(!empty($params['body']['api_key']) && !empty($params['body']['password'])){
-				$sql = "SELECT * FROM api_manage WHERE api_key = '" . $params['body']['api_key'] . "' AND api_password = '" . $params['body']['password'] . "'";
-				$data = Yii::app()->db->createCommand($sql)->queryAll();
-				if(!empty($data)){
-					$request_time = date("Y-m-d H:i:s");
-					$secret = $data[0]['createtime'];
-					// Create token header as a JSON string
-					$header = json_encode(['typ' => 'JWT', 'alg' => 'HS256']);
-					// Create token payload as a JSON string
-					$payload = json_encode(['user_id' => $data[0]['id'], 'request_time' => $request_time]);
-					// Encode Header to Base64Url String
-					$base64UrlHeader = str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($header));
-					// Encode Payload to Base64Url String
-					$base64UrlPayload = str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($payload));
-					// Create Signature Hash
-					$signature = hash_hmac('sha256', $base64UrlHeader . "." . $base64UrlPayload, $secret, true);
-					// Encode Signature to Base64Url String
-					$base64UrlSignature = str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($signature));
-					// Create JWT
-					$jwt = $base64UrlHeader . "." . $base64UrlPayload . "." . $base64UrlSignature;
-					$model = Apimanage::model()->findByPk($data[0]['id']);
-					$model->api_token = $jwt;
-					$model->token_createtime = date("Y-m-d H:i:s");
-					$model->save();
-					$this->output = array("token"=>$jwt);
-					$response = $this->setresponse(
-						$params, 
-						array(
-							"result" => true, 
-							"code" => SUCCESS_GEL_NO, 
-							"msg" => SUCCESS_GEL_MSG, 
-							"content" => $this->output
-						)
-					);
+		try{
+			if( !Yii::app()->request->isPostRequest ){
+				$response = $this->setresponse(
+					$params, 
+					array(
+						"result" => false, 
+						"code" => ERROR_WEB_POSTONLY_NO, 
+						"msg" => ERROR_WEB_POSTONLY_MSG, 
+						"content" => array()
+					)
+				);
+			}else{
+				if(!empty($params['body']['api_key']) && !empty($params['body']['password'])){
+					$sql = "SELECT * FROM api_manage WHERE api_key = '" . $params['body']['api_key'] . "' AND api_password = '" . $params['body']['password'] . "'";
+					$data = Yii::app()->db->createCommand($sql)->queryAll();
+					if(!empty($data)){
+						$request_time = date("Y-m-d H:i:s");
+						$secret = $data[0]['createtime'];
+						// Create token header as a JSON string
+						$header = json_encode(['typ' => 'JWT', 'alg' => 'HS256']);
+						// Create token payload as a JSON string
+						$payload = json_encode(['user_id' => $data[0]['id'], 'request_time' => $request_time]);
+						// Encode Header to Base64Url String
+						$base64UrlHeader = str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($header));
+						// Encode Payload to Base64Url String
+						$base64UrlPayload = str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($payload));
+						// Create Signature Hash
+						$signature = hash_hmac('sha256', $base64UrlHeader . "." . $base64UrlPayload, $secret, true);
+						// Encode Signature to Base64Url String
+						$base64UrlSignature = str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($signature));
+						// Create JWT
+						$jwt = $base64UrlHeader . "." . $base64UrlPayload . "." . $base64UrlSignature;
+						$model = Apimanage::model()->findByPk($data[0]['id']);
+						$model->api_token = $jwt;
+						$model->token_createtime = date("Y-m-d H:i:s");
+						$model->save();
+						$this->output = array("token"=>$jwt);
+						$response = $this->setresponse(
+							$params, 
+							array(
+								"result" => true, 
+								"code" => SUCCESS_GEL_NO, 
+								"msg" => SUCCESS_GEL_MSG, 
+								"content" => $this->output
+							)
+						);
+					}else{
+						$response = $this->setresponse(
+							$params, 
+							array(
+								"result" => false, 
+								"code" => ERROR_WEB_TOKENERR_NO, 
+								"msg" => ERROR_WEB_TOKENERR_MSG, 
+								"content" => $this->output
+							)
+						);
+					}
 				}else{
 					$response = $this->setresponse(
 						$params, 
 						array(
 							"result" => false, 
-							"code" => ERROR_WEB_TOKENERR_NO, 
-							"msg" => ERROR_WEB_TOKENERR_MSG, 
+							"code" => ERROR_WEB_PARAMETERTYPE_NO, 
+							"msg" => ERROR_WEB_PARAMETERTYPE_MSG, 
 							"content" => $this->output
 						)
 					);
 				}
-			}else{
-				$response = $this->setresponse(
-					$params, 
-					array(
-						"result" => false, 
-						"code" => ERROR_WEB_PARAMETERTYPE_NO, 
-						"msg" => ERROR_WEB_PARAMETERTYPE_MSG, 
-						"content" => $this->output
-					)
-				);
 			}
+		} catch (Exception $e) {
+		    $response = $this->setresponse(
+				$params, 
+				array(
+					"result" => false, 
+					"code" => ERROR_SERVER_NO, 
+					"msg" => ERROR_SERVER_MSG, 
+					"content" => $this->output
+				)
+			);
+			Yii::log(date("Y-m-d H:i:s").' VerifyToken false。error message => ' . $e->getMessage(), CLogger::LEVEL_INFO);
 		}
 		echo $response;
 		exit();
@@ -168,91 +181,104 @@ class ApiController extends CController{
 
 	public function ActionGetImage(){
 		$params = $this->getparams();
-		$check_commmon = $this->check_common($params['body']);
-		if(!$check_commmon['result']){
-			$response = $this->setresponse(
-				$params, 
-				$check_commmon
-			);
-		}else{
-			$filter = $option = $result = $content = array();
-			if(isset($params['body']['keyword'])){
-	        	$mongo = new Mongo();
-	        	//$filter =  array('keyword'=>array( '$in' => $explode_keyword ));
-	        	$explode_keyword = explode(",",$params['body']['keyword']);
-	        	$filter['$and'] = array(array('copyright' => '1'),array('publish' => '1'),array('keyword'=>array( '$in' => $explode_keyword )));
-	        	$select_limit = (isset($params['body']['limit']) && $params['body']['limit']>0) ? $params['body']['limit'] :$this->limit;
-	        	$select_page = (isset($params['body']['page']) && $params['body']['page']>0) ? $params['body']['page'] :$this->page;
+		try{
+			$check_commmon = $this->check_common($params['body']);
+			if(!$check_commmon['result']){
+				$response = $this->setresponse(
+					$params, 
+					$check_commmon
+				);
+			}else{
+				$filter = $option = $result = $content = array();
+				if(isset($params['body']['keyword'])){
+		        	$mongo = new Mongo();
+		        	//$filter =  array('keyword'=>array( '$in' => $explode_keyword ));
+		        	$explode_keyword = explode(",",$params['body']['keyword']);
+		        	$filter['$and'] = array(array('copyright' => '1'),array('publish' => '1'),array('keyword'=>array( '$in' => $explode_keyword )));
+		        	$select_limit = (isset($params['body']['limit']) && $params['body']['limit']>0) ? $params['body']['limit'] :$this->limit;
+		        	$select_page = (isset($params['body']['page']) && $params['body']['page']>0) ? $params['body']['page'] :$this->page;
 
-	        	$option['skip'] = ($select_page-1)*$select_limit;
-	        	$option['limit'] = $select_limit;
-	        	$result = $mongo->search_record('wenhsun', 'single', $filter, $option);
-	        	$result = iterator_to_array($result);
-	        	$cmd = [
-		            'count' => "single",
-		            'query' => $filter
-		        ];
-		        //$option['projection'] = array('single_id'=>1,'people_info'=>1,'object_name'=>1,'filming_date'=>1,'filming_location'=>1,'keyword'=>1);
-		        $count_result = $mongo->command('wenhsun', $cmd)->toArray();
-		        if (!empty($count_result)) {
-		            $total_result = $count_result[0]->n;
-		        }
-		        
-				foreach ($result as $key => $value) {
-					$content[] = array(
-						"img_url" => DOMAIN . "image_storage/O/" . $value->single_id . ".jpg",
-						"filming_name" => $value->filming_name,
-						"description" => $value->description,
-						"website_url" => DOMAIN . "site/ImageInfo/" . $value->single_id,
-						"image_id" => $value->single_id,
-						// "category" => $value['filming_name'],
-						"object_type" => "照片",
-						"update_time" => $value->create_time,
-						"keyword" => $value->keyword,
-						"filming_date" => $value->filming_date,
-						"filming_location" => $value->filming_location,
-						"interface_system" => "台灣文學照片資料庫",
-						"verify" => "文訊雜誌社",
-						"people_info" => $value->people_info,
-						"event_name" => !empty($value->event_name)?$value->event_name:"",
-						"photo_source" =>  !empty($value->photo_source)?$value->photo_source:"",
-						"memo2" =>  $value->memo2
-					);
-				}
-				$this->output["total_result"] = $total_result;
-				$this->output["content"] = $content;
-				if(empty($total_result)){
-					$response = $this->setresponse(
-						$params, 
-						array(
-							"result" => true, 
-							"code" => SUCCESS_EMPTYERR_NO, 
-							"msg" => SUCCESS_EMPTYERR_MSG, 
-							"content" => $this->output
-						)
-					);
+		        	$option['skip'] = ($select_page-1)*$select_limit;
+		        	$option['limit'] = $select_limit;
+		        	$result = $mongo->search_record('wenhsun', 'single', $filter, $option);
+		        	$result = iterator_to_array($result);
+		        	$cmd = [
+			            'count' => "single",
+			            'query' => $filter
+			        ];
+			        //$option['projection'] = array('single_id'=>1,'people_info'=>1,'object_name'=>1,'filming_date'=>1,'filming_location'=>1,'keyword'=>1);
+			        $count_result = $mongo->command('wenhsun', $cmd)->toArray();
+			        if (!empty($count_result)) {
+			            $total_result = $count_result[0]->n;
+			        }
+			        
+					foreach ($result as $key => $value) {
+						$content[] = array(
+							"img_url" => DOMAIN . "image_storage/O/" . $value->single_id . ".jpg",
+							"filming_name" => $value->filming_name,
+							"description" => $value->description,
+							"website_url" => DOMAIN . "site/ImageInfo/" . $value->single_id,
+							"image_id" => $value->single_id,
+							// "category" => $value['filming_name'],
+							"object_type" => "照片",
+							"update_time" => $value->create_time,
+							"keyword" => $value->keyword,
+							"filming_date" => $value->filming_date,
+							"filming_location" => $value->filming_location,
+							"interface_system" => "台灣文學照片資料庫",
+							"verify" => "文訊雜誌社",
+							"people_info" => $value->people_info,
+							"event_name" => !empty($value->event_name)?$value->event_name:"",
+							"photo_source" =>  !empty($value->photo_source)?$value->photo_source:"",
+							"memo2" =>  $value->memo2
+						);
+					}
+					$this->output["total_result"] = $total_result;
+					$this->output["content"] = $content;
+					if(empty($total_result)){
+						$response = $this->setresponse(
+							$params, 
+							array(
+								"result" => true, 
+								"code" => SUCCESS_EMPTYERR_NO, 
+								"msg" => SUCCESS_EMPTYERR_MSG, 
+								"content" => $this->output
+							)
+						);
+					}else{
+						$response = $this->setresponse(
+							$params, 
+							array(
+								"result" => true, 
+								"code" => SUCCESS_GEL_NO, 
+								"msg" => SUCCESS_GEL_MSG, 
+								"content" => $this->output
+							)
+						);
+					}
 				}else{
 					$response = $this->setresponse(
 						$params, 
 						array(
-							"result" => true, 
-							"code" => SUCCESS_GEL_NO, 
-							"msg" => SUCCESS_GEL_MSG, 
+							"result" => false, 
+							"code" => ERROR_WEB_PARAMETERTYPE_NO, 
+							"msg" => ERROR_WEB_PARAMETERTYPE_MSG, 
 							"content" => $this->output
 						)
 					);
 				}
-			}else{
-				$response = $this->setresponse(
-					$params, 
-					array(
-						"result" => false, 
-						"code" => ERROR_WEB_PARAMETERTYPE_NO, 
-						"msg" => ERROR_WEB_PARAMETERTYPE_MSG, 
-						"content" => $this->output
-					)
-				);
 			}
+		} catch (Exception $e) {
+		    $response = $this->setresponse(
+				$params, 
+				array(
+					"result" => false, 
+					"code" => ERROR_SERVER_NO, 
+					"msg" => ERROR_SERVER_MSG, 
+					"content" => $this->output
+				)
+			);
+			Yii::log(date("Y-m-d H:i:s").' VerifyToken false。error message => ' . $e->getMessage(), CLogger::LEVEL_INFO);
 		}	
 		echo $response;
 		exit();
@@ -260,108 +286,257 @@ class ApiController extends CController{
 
 	public function ActionGetImageDetail(){
 		$params = $this->getparams();
-		$check_commmon = $this->check_common($params['body']);
-		if(!$check_commmon['result']){
-			$response = $this->setresponse(
-				$params, 
-				$check_commmon
-			);
-		}else{
-			$data = array();
-			if(isset($params['body']['image_id'])){
-				$id = $params['body']['image_id'];
-				$sql = "SELECT * FROM `single` s LEFT JOIN single_size ss on s.single_id = ss.single_id where s.single_id =" . $id . " and ss.size_type <> 'source' order by ss.single_size_id asc";
-		        $result = Yii::app()->db->createCommand($sql)->queryAll();
-		        $data['image_info'] = $data['size'] = array();
-		        if(!empty($result)){
-		        	foreach ($result as $key => $value) {
-			            if($key == 0){
-			                $data['size'][] = array(
-			                    'size_type' => $value['size_type'],
-			                    'size_description' => $value['size_description'],
-			                    'dpi' => $value['dpi'],
-			                    'mp' => $value['mp'],
-			                    'w_h' => $value['w_h'],
-			                    'ext' => $value['ext'],
-			                    'print_w_h' => $value['print_w_h'],
-			                    'file_size' => round($value['file_size']/1024/1024,2) . " MB",
-			                    // 'sale_twd' => $value['sale_twd'],
-			                    // 'sale_point' => $value['sale_point'],
-			                );
-			                $category_sql = 'SELECT a.name as child_name,b.name as parent_name FROM category a join category b on a.parents=b.category_id where a.category_id in('.'"'.$value["category_id"].'"'.')';
-			                $category_result = Yii::app()->db->createCommand($category_sql)->queryAll();
-			                $category = array();
-			                foreach ($category_result as $category_key => $category_value) {
-			                    $txt = $category_value['parent_name'] . ' => ' . $category_value['child_name'];
-			                    array_push($category, $txt);
-			                }
-			                $data['image_info'] = array(
-			                	"img_url" => DOMAIN . "image_storage/O/" . $value['single_id'] . ".jpg",
-								"filming_name" => $value['filming_name'],
-								"description" => $value['description'],
-								"website_url" => DOMAIN . "site/ImageInfo/" . $value['single_id'],
-								"image_id" => $value['single_id'],
-								"category" => implode('<br/>', $category),
-								"object_type" => "照片",
-								"update_time" => $value['create_time'],
-								"keyword" => explode(",",$value['keyword']),
-								"filming_date" => $value['filming_date'],
-								"filming_location" => $value['filming_location'],
-								"interface_system" => "台灣文學照片資料庫",
-								"verify" => "文訊雜誌社",
-								"people_info" => $value['people_info'],
-								"event_name" =>  $value['event_name'],
-								"photo_source" =>  $value['photo_source'],
-								"memo2" =>  $value['memo2']
-			                );
-			            }else{
-			                $data['size'][] = array(
-			                    'size_type' => $value['size_type'],
-			                    'size_description' => $value['size_description'],
-			                    'dpi' => $value['dpi'],
-			                    'mp' => $value['mp'],
-			                    'w_h' => $value['w_h'],
-			                    'ext' => $value['ext'],
-			                    'print_w_h' => $value['print_w_h'],
-			                    'file_size' => round($value['file_size']/1024/1024,2) . " MB",
-			                    // 'sale_twd' => $value['sale_twd'],
-			                    // 'sale_point' => $value['sale_point'],
-			                );
-			            }        
-			        }
-			        $data['image_info']['size'] = $data['size'];
-			       	$this->output = $data['image_info'];
-			        $response = $this->setresponse(
-						$params, 
-						array(
-							"result" => true, 
-							"code" => SUCCESS_GEL_NO, 
-							"msg" => SUCCESS_GEL_MSG, 
-							"content" => $this->output
-						)
-					);
-		        }else{
-		        	$response = $this->setresponse(
-						$params, 
-						array(
-							"result" => true, 
-							"code" => SUCCESS_EMPTYERR_NO, 
-							"msg" => SUCCESS_EMPTYERR_MSG, 
-							"content" => $this->output
-						)
-					);
-		        }
-			}else{
+		try{
+			$check_commmon = $this->check_common($params['body']);
+			if(!$check_commmon['result']){
 				$response = $this->setresponse(
 					$params, 
-					array(
-						"result" => false, 
-						"code" => ERROR_WEB_PARAMETERTYPE_NO, 
-						"msg" => ERROR_WEB_PARAMETERTYPE_MSG, 
-						"content" => $this->output
-					)
+					$check_commmon
 				);
+			}else{
+				$data = array();
+				if(isset($params['body']['image_id'])){
+					$id = $params['body']['image_id'];
+					$sql = "SELECT * FROM `single` s LEFT JOIN single_size ss ON s.single_id = ss.single_id WHERE s.single_id =" . $id . " AND ss.size_type <> 'source' AND publish='1' AND copyright='1' order by ss.single_size_id asc";
+			        $result = Yii::app()->db->createCommand($sql)->queryAll();
+			        $data['image_info'] = $data['size'] = array();
+			        if(!empty($result)){
+			        	foreach ($result as $key => $value) {
+				            if($key == 0){
+				                $data['size'][] = array(
+				                    'size_type' => $value['size_type'],
+				                    'size_description' => $value['size_description'],
+				                    'dpi' => $value['dpi'],
+				                    'mp' => $value['mp'],
+				                    'w_h' => $value['w_h'],
+				                    'ext' => $value['ext'],
+				                    'print_w_h' => $value['print_w_h'],
+				                    'file_size' => round($value['file_size']/1024/1024,2) . " MB",
+				                    // 'sale_twd' => $value['sale_twd'],
+				                    // 'sale_point' => $value['sale_point'],
+				                );
+				                $category_sql = 'SELECT a.name as child_name,b.name as parent_name FROM category a join category b on a.parents=b.category_id where a.category_id in('.'"'.$value["category_id"].'"'.')';
+				                $category_result = Yii::app()->db->createCommand($category_sql)->queryAll();
+				                $category = array();
+				                foreach ($category_result as $category_key => $category_value) {
+				                    $txt = $category_value['parent_name'] . ' => ' . $category_value['child_name'];
+				                    array_push($category, $txt);
+				                }
+				                $data['image_info'] = array(
+				                	"img_url" => DOMAIN . "image_storage/O/" . $value['single_id'] . ".jpg",
+									"filming_name" => $value['filming_name'],
+									"description" => $value['description'],
+									"website_url" => DOMAIN . "site/ImageInfo/" . $value['single_id'],
+									"image_id" => $value['single_id'],
+									"category" => implode('<br/>', $category),
+									"object_type" => "照片",
+									"update_time" => $value['create_time'],
+									"keyword" => explode(",",$value['keyword']),
+									"filming_date" => $value['filming_date'],
+									"filming_location" => $value['filming_location'],
+									"interface_system" => "台灣文學照片資料庫",
+									"verify" => "文訊雜誌社",
+									"people_info" => $value['people_info'],
+									"event_name" =>  $value['event_name'],
+									"photo_source" =>  $value['photo_source'],
+									"memo2" =>  $value['memo2']
+				                );
+				            }else{
+				                $data['size'][] = array(
+				                    'size_type' => $value['size_type'],
+				                    'size_description' => $value['size_description'],
+				                    'dpi' => $value['dpi'],
+				                    'mp' => $value['mp'],
+				                    'w_h' => $value['w_h'],
+				                    'ext' => $value['ext'],
+				                    'print_w_h' => $value['print_w_h'],
+				                    'file_size' => round($value['file_size']/1024/1024,2) . " MB",
+				                    // 'sale_twd' => $value['sale_twd'],
+				                    // 'sale_point' => $value['sale_point'],
+				                );
+				            }        
+				        }
+				        $data['image_info']['size'] = $data['size'];
+				       	$this->output = $data['image_info'];
+				        $response = $this->setresponse(
+							$params, 
+							array(
+								"result" => true, 
+								"code" => SUCCESS_GEL_NO, 
+								"msg" => SUCCESS_GEL_MSG, 
+								"content" => $this->output
+							)
+						);
+			        }else{
+			        	$response = $this->setresponse(
+							$params, 
+							array(
+								"result" => true, 
+								"code" => SUCCESS_EMPTYERR_NO, 
+								"msg" => SUCCESS_EMPTYERR_MSG, 
+								"content" => $this->output
+							)
+						);
+			        }
+				}else{
+					$response = $this->setresponse(
+						$params, 
+						array(
+							"result" => false, 
+							"code" => ERROR_WEB_PARAMETERTYPE_NO, 
+							"msg" => ERROR_WEB_PARAMETERTYPE_MSG, 
+							"content" => $this->output
+						)
+					);
+				}
 			}
+		} catch (Exception $e) {
+		    $response = $this->setresponse(
+				$params, 
+				array(
+					"result" => false, 
+					"code" => ERROR_SERVER_NO, 
+					"msg" => ERROR_SERVER_MSG, 
+					"content" => $this->output
+				)
+			);
+			Yii::log(date("Y-m-d H:i:s").' VerifyToken false。error message => ' . $e->getMessage(), CLogger::LEVEL_INFO);
+		}
+		echo $response;
+		exit();
+	}
+
+	public function ActiongetImageAuthorization(){
+		$params = $this->getparams();
+		try{
+			$check_commmon = $this->check_common($params['body']);
+			if(!$check_commmon['result']){
+				$response = $this->setresponse(
+					$params, 
+					$check_commmon
+				);
+			}else{
+				$result = array();
+				if(isset($params['body']['image_id'])){
+					$id = $params['body']['image_id'];
+					$sql = "SELECT * FROM `single` WHERE single_id='".$id."' AND publish='1' AND copyright='1'";
+			        $result = Yii::app()->db->createCommand($sql)->queryAll();
+			        if(!empty($result)){
+			        	$response = $this->setresponse(
+							$params, 
+							array(
+								"result" => true, 
+								"code" => SUCCESS_GEL_NO, 
+								"msg" => SUCCESS_GEL_MSG, 
+								"content" => array(
+					        		"authorization_status" => $result[0]["authorization_status"],
+					        		"contributor" => "文訊雜誌社",
+					        		"right_of_portrait" => $result[0]["people_info"]
+					        	)
+							)
+						);
+			        }else{
+			        	$response = $this->setresponse(
+							$params, 
+							array(
+								"result" => true, 
+								"code" => SUCCESS_EMPTYERR_NO, 
+								"msg" => SUCCESS_EMPTYERR_MSG, 
+								"content" => $this->output
+							)
+						);
+			        }
+				}else{
+					$response = $this->setresponse(
+						$params, 
+						array(
+							"result" => false, 
+							"code" => ERROR_WEB_PARAMETERTYPE_NO, 
+							"msg" => ERROR_WEB_PARAMETERTYPE_MSG, 
+							"content" => $this->output
+						)
+					);
+				}
+			}
+		} catch (Exception $e) {
+		    $response = $this->setresponse(
+				$params, 
+				array(
+					"result" => false, 
+					"code" => ERROR_SERVER_NO, 
+					"msg" => ERROR_SERVER_MSG, 
+					"content" => $this->output
+				)
+			);
+			Yii::log(date("Y-m-d H:i:s").' VerifyToken false。error message => ' . $e->getMessage(), CLogger::LEVEL_INFO);
+		}
+		echo $response;
+		exit();
+	}
+
+	public function ActiongetDownload(){
+		$params = $this->getparams();
+		try{
+			$check_commmon = $this->check_common($params['body']);
+			if(!$check_commmon['result']){
+				$response = $this->setresponse(
+					$params, 
+					$check_commmon
+				);
+			}else{
+				$result = array();
+				if(isset($params['body']['image_id']) && isset($params['body']['size'])){
+					$sql = "SELECT * FROM `single` s LEFT JOIN single_size ss ON s.single_id = ss.single_id WHERE s.single_id =" . $params['body']['image_id'] . " AND ss.size_type = '".$params['body']['size']."' AND publish='1' AND copyright='1'";
+			        $result = Yii::app()->db->createCommand($sql)->queryAll();
+			        if(!empty($result)){
+			        	if(!file_exists(PHOTOGRAPH_STORAGE_DIR . $params['body']['size'] . "/" . $params['body']['image_id'] . "." . $result[0]["ext"])){
+			        		$photographService = new PhotographService();
+			        		$photographService->ConvertImage($result);
+			        	}
+						$zip = new ZipArchive;
+						$zip_filename = rawurlencode(base64_encode($params['body']['image_id'] . "_" . $params['body']['size'])) . '_' . $params['body']['image_id'] .'.zip';
+						if ($zip->open(ROOT_DIR.API_DOWNLOAD_PATH.$zip_filename, ZipArchive::CREATE) === TRUE){
+						    // Add files to the zip file
+						    $zip->addFile(PHOTOGRAPH_STORAGE_DIR . $params['body']['size'] . "/" . $params['body']['image_id'] . "." . $result[0]["ext"],$params['body']['image_id'] . "_".$params['body']['size']."." . $result[0]["ext"]);
+						    // All files are added, so close the zip file.
+						    $zip->close();
+						}
+						$response = $this->setresponse(
+							$params, 
+							array(
+								"result" => true, 
+								"code" => SUCCESS_GEL_NO, 
+								"msg" => "正確提供圖檔連結", 
+								"content" => array(
+									"download_url" => API_DOMAIN . API_DOWNLOAD_PATH . $zip_filename
+								)
+							)
+						);
+			        }
+					
+				}else{
+					$response = $this->setresponse(
+						$params, 
+						array(
+							"result" => false, 
+							"code" => ERROR_WEB_PARAMETERTYPE_NO, 
+							"msg" => ERROR_WEB_PARAMETERTYPE_MSG, 
+							"content" => $this->output
+						)
+					);
+				}
+			}
+		} catch (Exception $e) {
+		    $response = $this->setresponse(
+				$params, 
+				array(
+					"result" => false, 
+					"code" => ERROR_SERVER_NO, 
+					"msg" => ERROR_SERVER_MSG, 
+					"content" => $this->output
+				)
+			);
+			Yii::log(date("Y-m-d H:i:s").' VerifyToken false。error message => ' . $e->getMessage(), CLogger::LEVEL_INFO);
 		}
 		echo $response;
 		exit();
