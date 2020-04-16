@@ -494,7 +494,7 @@ class ApiController extends CController{
 			        		$photographService->ConvertImage($result);
 			        	}
 						$zip = new ZipArchive;
-						$zip_filename = rawurlencode(base64_encode($params['body']['image_id'] . "_" . $params['body']['size'])) . '_' . $params['body']['image_id'] .'.zip';
+						$zip_filename = rtrim(strtr(base64_encode($params['body']['image_id'] . "_" . $params['body']['size']), '+/', '-_'), '=') . '_' . $params['body']['image_id'] .'.zip';
 						if ($zip->open(ROOT_DIR.API_DOWNLOAD_PATH.$zip_filename, ZipArchive::CREATE) === TRUE){
 						    // Add files to the zip file
 						    $zip->addFile(PHOTOGRAPH_STORAGE_DIR . $params['body']['size'] . "/" . $params['body']['image_id'] . "." . $result[0]["ext"],$params['body']['image_id'] . "_".$params['body']['size']."." . $result[0]["ext"]);
