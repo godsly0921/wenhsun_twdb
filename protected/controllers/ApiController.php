@@ -3,7 +3,8 @@ class ApiController extends CController{
 	public $page = 1;
 	public $limit = 30;
 	private $output = array();
-	public function setresponse($params = array() , $result = array(), $debug = "",$log=1 ,$memberid = null) {
+	public function setresponse($params = array() , $result = array(), $log=1) {
+		$apiservice = new ApiService();
 	    //設定header
 	    //header 訊息修改
 	    switch ($result['code']) {
@@ -29,6 +30,8 @@ class ApiController extends CController{
 	        "content"   => $result['content']
 	    );
 	    $response = json_encode($response, JSON_UNESCAPED_UNICODE);
+	    $action = Yii::app()->controller->action->id;
+	    $apiservice->LogRecord($action,$params,$response);
 	    return $response;
 	}
 	public function checkToken($token){
@@ -86,9 +89,14 @@ class ApiController extends CController{
 		$data = getallheaders();
 		$header = array_change_key_case($data, CASE_LOWER);
 		$body = json_decode(file_get_contents('php://input'), true);
+		$start_microtime = microtime(true);
 		$params = array(
+			"start_microtime" => $start_microtime,
+			"start" => DateTime::createFromFormat('U.u', $start_microtime)->format("Y-m-d H:i:s.u"),
 			"header" => $header,
-			"body" => $body
+			"body" => $body,
+			"token" => isset($body['token'])?$body['token']:"",
+			"api_key" => isset($body['api_key'])?$body['api_key']:""
 		);
 		return $params;
 	}
@@ -110,26 +118,31 @@ class ApiController extends CController{
 					$sql = "SELECT * FROM api_manage WHERE api_key = '" . $params['body']['api_key'] . "' AND api_password = '" . $params['body']['password'] . "'";
 					$data = Yii::app()->db->createCommand($sql)->queryAll();
 					if(!empty($data)){
-						$request_time = date("Y-m-d H:i:s");
-						$secret = $data[0]['createtime'];
-						// Create token header as a JSON string
-						$header = json_encode(['typ' => 'JWT', 'alg' => 'HS256']);
-						// Create token payload as a JSON string
-						$payload = json_encode(['user_id' => $data[0]['id'], 'request_time' => $request_time]);
-						// Encode Header to Base64Url String
-						$base64UrlHeader = str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($header));
-						// Encode Payload to Base64Url String
-						$base64UrlPayload = str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($payload));
-						// Create Signature Hash
-						$signature = hash_hmac('sha256', $base64UrlHeader . "." . $base64UrlPayload, $secret, true);
-						// Encode Signature to Base64Url String
-						$base64UrlSignature = str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($signature));
-						// Create JWT
-						$jwt = $base64UrlHeader . "." . $base64UrlPayload . "." . $base64UrlSignature;
-						$model = Apimanage::model()->findByPk($data[0]['id']);
-						$model->api_token = $jwt;
-						$model->token_createtime = date("Y-m-d H:i:s");
-						$model->save();
+						$token_expire = date('Y-m-d H:i:s', strtotime($data[0]['token_createtime'].' +30 minutes'));
+						if(strtotime("now")<=strtotime($token_expire) && !empty($data[0]["api_token"])){
+							$jwt = $data[0]["api_token"];
+						}else{
+							$request_time = date("Y-m-d H:i:s");
+							$secret = $data[0]['createtime'];
+							// Create token header as a JSON string
+							$header = json_encode(['typ' => 'JWT', 'alg' => 'HS256']);
+							// Create token payload as a JSON string
+							$payload = json_encode(['user_id' => $data[0]['id'], 'request_time' => $request_time]);
+							// Encode Header to Base64Url String
+							$base64UrlHeader = str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($header));
+							// Encode Payload to Base64Url String
+							$base64UrlPayload = str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($payload));
+							// Create Signature Hash
+							$signature = hash_hmac('sha256', $base64UrlHeader . "." . $base64UrlPayload, $secret, true);
+							// Encode Signature to Base64Url String
+							$base64UrlSignature = str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($signature));
+							// Create JWT
+							$jwt = $base64UrlHeader . "." . $base64UrlPayload . "." . $base64UrlSignature;
+							$model = Apimanage::model()->findByPk($data[0]['id']);
+							$model->api_token = $jwt;
+							$model->token_createtime = date("Y-m-d H:i:s");
+							$model->save();
+						}
 						$this->output = array("token"=>$jwt);
 						$response = $this->setresponse(
 							$params, 
@@ -485,6 +498,7 @@ class ApiController extends CController{
 				);
 			}else{
 				$result = array();
+				$apiservice = new ApiService();
 				if(isset($params['body']['image_id']) && isset($params['body']['size'])){
 					$sql = "SELECT * FROM `single` s LEFT JOIN single_size ss ON s.single_id = ss.single_id WHERE s.single_id =" . $params['body']['image_id'] . " AND ss.size_type = '".$params['body']['size']."' AND publish='1' AND copyright='1'";
 			        $result = Yii::app()->db->createCommand($sql)->queryAll();
@@ -500,6 +514,11 @@ class ApiController extends CController{
 						    $zip->addFile(PHOTOGRAPH_STORAGE_DIR . $params['body']['size'] . "/" . $params['body']['image_id'] . "." . $result[0]["ext"],$params['body']['image_id'] . "_".$params['body']['size']."." . $result[0]["ext"]);
 						    // All files are added, so close the zip file.
 						    $zip->close();
+						}
+						$sql = "SELECT * FROM api_manage WHERE api_token = '" . $params['body']['token'] . "'";
+						$api_data = Yii::app()->db->createCommand($sql)->queryAll();
+						if(!empty($api_data)){
+							$apiservice->ApiDownloadLog($api_data[0]['id'], $params['body']['image_id'], $params['body']['size'], $zip_filename);
 						}
 						$response = $this->setresponse(
 							$params, 
@@ -525,6 +544,158 @@ class ApiController extends CController{
 						)
 					);
 				}
+			}
+		} catch (Exception $e) {
+		    $response = $this->setresponse(
+				$params, 
+				array(
+					"result" => false, 
+					"code" => ERROR_SERVER_NO, 
+					"msg" => ERROR_SERVER_MSG, 
+					"content" => $this->output
+				)
+			);
+			Yii::log(date("Y-m-d H:i:s").' VerifyToken false。error message => ' . $e->getMessage(), CLogger::LEVEL_INFO);
+		}
+		echo $response;
+		exit();
+	}
+
+	public function ActiongetRequestRecordByImage(){
+		$params = $this->getparams();
+		try{
+			$check_commmon = $this->check_common($params['body']);
+			if(!$check_commmon['result']){
+				$response = $this->setresponse(
+					$params, 
+					$check_commmon
+				);
+			}else{
+				$token = $params['body']['token'];
+				$apiservice = new ApiService();
+				$this->output[]=$apiservice->FindLogByTokenAndLogFormat($token,'getimage');
+		        if(!empty($this->output)){
+		        	$response = $this->setresponse(
+						$params, 
+						array(
+							"result" => true, 
+							"code" => SUCCESS_GEL_NO, 
+							"msg" => SUCCESS_GEL_MSG, 
+							"content" => $this->output
+						)
+					);
+		        }else{
+		        	$response = $this->setresponse(
+						$params, 
+						array(
+							"result" => true, 
+							"code" => SUCCESS_EMPTYERR_NO, 
+							"msg" => SUCCESS_EMPTYERR_MSG, 
+							"content" => $this->output
+						)
+					);
+		        }
+			}
+		} catch (Exception $e) {
+		    $response = $this->setresponse(
+				$params, 
+				array(
+					"result" => false, 
+					"code" => ERROR_SERVER_NO, 
+					"msg" => ERROR_SERVER_MSG, 
+					"content" => $this->output
+				)
+			);
+			Yii::log(date("Y-m-d H:i:s").' VerifyToken false。error message => ' . $e->getMessage(), CLogger::LEVEL_INFO);
+		}
+		echo $response;
+		exit();
+	}
+	public function ActiongetRequestRecordByDownload(){
+		$params = $this->getparams();
+		try{
+			$check_commmon = $this->check_common($params['body']);
+			if(!$check_commmon['result']){
+				$response = $this->setresponse(
+					$params, 
+					$check_commmon
+				);
+			}else{
+				$token = $params['body']['token'];
+				$apiservice = new ApiService();
+				$this->output[]=$apiservice->FindLogByTokenAndLogFormat($token,'getdownload');
+		        if(!empty($this->output)){
+		        	$response = $this->setresponse(
+						$params, 
+						array(
+							"result" => true, 
+							"code" => SUCCESS_GEL_NO, 
+							"msg" => SUCCESS_GEL_MSG, 
+							"content" => $this->output
+						)
+					);
+		        }else{
+		        	$response = $this->setresponse(
+						$params, 
+						array(
+							"result" => true, 
+							"code" => SUCCESS_EMPTYERR_NO, 
+							"msg" => SUCCESS_EMPTYERR_MSG, 
+							"content" => $this->output
+						)
+					);
+		        }
+			}
+		} catch (Exception $e) {
+		    $response = $this->setresponse(
+				$params, 
+				array(
+					"result" => false, 
+					"code" => ERROR_SERVER_NO, 
+					"msg" => ERROR_SERVER_MSG, 
+					"content" => $this->output
+				)
+			);
+			Yii::log(date("Y-m-d H:i:s").' VerifyToken false。error message => ' . $e->getMessage(), CLogger::LEVEL_INFO);
+		}
+		echo $response;
+		exit();
+	}
+
+	public function ActiongetRequestRecordByImageDetail(){
+		$params = $this->getparams();
+		try{
+			$check_commmon = $this->check_common($params['body']);
+			if(!$check_commmon['result']){
+				$response = $this->setresponse(
+					$params, 
+					$check_commmon
+				);
+			}else{
+				$token = $params['body']['token'];
+				$apiservice = new ApiService();
+				$this->output[]=$apiservice->FindLogByTokenAndLogFormat($token,'getimagedetail');
+		        if(!empty($this->output)){
+		        	$response = $this->setresponse(
+						$params, 
+						array(
+							"result" => true, 
+							"code" => SUCCESS_GEL_NO, 
+							"msg" => SUCCESS_GEL_MSG, 
+							"content" => $this->output
+						)
+					);
+		        }else{
+		        	$response = $this->setresponse(
+						$params, 
+						array(
+							"result" => true, 
+							"code" => SUCCESS_EMPTYERR_NO, 
+							"msg" => SUCCESS_EMPTYERR_MSG, 
+							"content" => $this->output
+						)
+					);
+		        }
 			}
 		} catch (Exception $e) {
 		    $response = $this->setresponse(
