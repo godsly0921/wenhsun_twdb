@@ -59,5 +59,97 @@ class ApiService{
         	}
         }return $data;
 	}
+
+	function ApimanageList($status=array()){
+		$data = array();
+		if(empty($status)){
+			$sql = "SELECT * FROM api_manage WHERE status in(0,1)";
+		}else{
+			$sql = "SELECT * FROM api_manage WHERE status in(".implode(',',$status).")";
+		}
+		$data = Yii::app()->db->createCommand($sql)->queryAll();
+		return $data;
+	}
+	function apimanage_create($input){
+		try {
+		 	$create_msg = "";
+            $operationlogService = new OperationlogService();
+            if(empty($input["id"])){
+            	$model = new Apimanage();
+            	$model->api_key = $input['api_key'];
+            	$model->api_password = $input['api_password'];
+            	$model->createtime = date("Y-m-d H:i:s");
+            }else{
+            	$model = Apimanage::model()->findByPk($input["id"]);
+            }
+            $model->status = $input['status'];
+            $model->remark = $input['remark'];
+            
+            if (!$model->validate()) {
+                return $input;
+            }
+
+            if (!$model->hasErrors()) {
+                if( $model->save() ){
+                	if(empty($input["id"])){
+	                    $motion = "建立 API KEY";
+	                    $log = "成功 建立 API KEY = " .$input['api_key'];
+	                }else{
+	                	$motion = "修改 API KEY";
+	                    $log = "修改 建立 API KEY = " .$input['api_key'];
+	                }
+                    $operationlogService->create_operationlog( $motion, $log );
+                }else{
+                    if(empty($input["id"])){
+	                    $motion = "建立 API KEY";
+	                    $log = "成功 建立 API KEY = " .$input['api_key'];
+	                }else{
+	                	$motion = "修改 API KEY";
+	                    $log = "修改 建立 API KEY = " .$input['api_key'];
+	                }
+                    $operationlogService->create_operationlog( $motion, $log, 0 );
+                    foreach ($model->getErrors () as $attribute => $error){
+	                    foreach ($error as $message){
+	                        $create_msg.": ".$message;
+	                    }
+	                }
+                    return array("status"=>false,'msg'=>$create_msg,'data'=>$input);
+                }
+            }
+            return array("status"=>true, 'msg'=> '成功','data'=>$input);
+
+        } catch (Exception $e) {
+            return array("status"=>false,'msg'=>$e->getMessage(),'data'=>$input);
+        }
+	}
+
+	function apimanage_delete($id){
+		try {
+			$create_msg = "";
+			$operationlogService = new OperationlogService();
+			$model = Apimanage::model()->findByPk($id);
+			$api_key = $model->api_key;
+			if(!empty($model)){
+            	$model->status=99;
+            	if( $model->save() ){
+            		$motion = "刪除 API KEY";
+	                $log = "刪除 API KEY = " .$api_key;
+                    $operationlogService->create_operationlog( $motion, $log );
+            	}else{
+            		foreach ($model->getErrors () as $attribute => $error){
+	                    foreach ($error as $message){
+	                        $create_msg.": ".$message;
+	                    }
+	                }
+                    return array("status"=>false,'msg'=>$create_msg);
+            	}
+            }else{
+                return array("status"=>false,'msg'=>"編號：" . $id . "資料不存在");
+            }
+			return array("status"=>true, 'msg'=> '成功');
+		} catch (Exception $e) {
+            return array("status"=>false,'msg'=>$e->getMessage());
+        }
+	}
 }
 ?>
