@@ -207,7 +207,12 @@ class ApiController extends CController{
 		        	$mongo = new Mongo();
 		        	//$filter =  array('keyword'=>array( '$in' => $explode_keyword ));
 		        	$explode_keyword = explode(",",$params['body']['keyword']);
-		        	$filter['$and'] = array(array('copyright' => '1'),array('publish' => '1'),array('keyword'=>array( '$in' => $explode_keyword )));
+		        	if(empty($params['body']['keyword'])){
+		        		$filter['$and'] = array(array('copyright' => '1'),array('publish' => '1'));
+		        	}else{
+		        		$filter['$and'] = array(array('copyright' => '1'),array('publish' => '1'),array('keyword'=>array( '$in' => $explode_keyword )));
+		        	}
+		        	
 		        	$select_limit = (isset($params['body']['limit']) && $params['body']['limit']>0) ? $params['body']['limit'] :$this->limit;
 		        	$select_page = (isset($params['body']['page']) && $params['body']['page']>0) ? $params['body']['page'] :$this->page;
 
