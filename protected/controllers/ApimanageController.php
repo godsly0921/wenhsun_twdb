@@ -8,7 +8,11 @@ class ApimanageController extends Controller{
     {
         return true;
     }
-
+    public function ActionLog_list(){
+        $apiservice = new ApiService();
+        $data = $apiservice->Log_list();
+        $this->render('log_list',array( 'data' => $data ));
+    }
     public function ActionApimanage_index(){
         $apiservice = new ApiService();
         $data = $apiservice->ApimanageList();

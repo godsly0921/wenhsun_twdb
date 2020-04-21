@@ -151,5 +151,10 @@ class ApiService{
             return array("status"=>false,'msg'=>$e->getMessage());
         }
 	}
+	function Log_list(){
+		$sql = "SELECT al.*,am.api_key FROM api_log_record al LEFT JOIN api_manage am ON al.api_manage_id=am.id";
+		$data = Yii::app()->db->createCommand($sql)->queryAll();
+		return $data;
+	}
 }
 ?>
