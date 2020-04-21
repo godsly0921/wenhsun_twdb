@@ -156,5 +156,10 @@ class ApiService{
 		$data = Yii::app()->db->createCommand($sql)->queryAll();
 		return $data;
 	}
+	function Api_download_list(){
+		$sql = "SELECT al.*,am.api_key FROM api_download al LEFT JOIN api_manage am ON al.api_manage_id=am.id AND al.status=1";
+		$data = Yii::app()->db->createCommand($sql)->queryAll();
+		return $data;
+	}
 }
 ?>

@@ -8,6 +8,11 @@ class ApimanageController extends Controller{
     {
         return true;
     }
+    public function ActionApi_download_list(){
+        $apiservice = new ApiService();
+        $data = $apiservice->Api_download_list();
+        $this->render('api_download_list',array( 'data' => $data ));
+    }
     public function ActionLog_list(){
         $apiservice = new ApiService();
         $data = $apiservice->Log_list();

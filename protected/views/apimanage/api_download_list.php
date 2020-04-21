@@ -1,7 +1,7 @@
 <?php $session_jsons = CJSON::decode(Yii::app()->session['power_session_jsons']); ?>
 <div class="row">
     <div class="title-wrap col-lg-12">
-        <h3 class="title-left">API調用異常查詢</h3>
+        <h3 class="title-left">API 下載管理</h3>
     </div>
 </div>
 <?php if(isset(Yii::app()->session['error_msg']) && Yii::app()->session['error_msg'] !== ''): ?>
@@ -24,24 +24,24 @@ unset( Yii::app()->session['success_msg'] );
         <table id="specialcaseTable" width="100%" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid">
             <thead>
             <tr role="row">
-                <th>API名稱</th>
-                <th>API token</th>
+                <th>圖片</th>
+                <th>圖片編號</th>
+                <th>尺寸</th>
                 <th>API KEY</th>
-                <th>request</th>
-                <th>respond</th>
-                <th>呼叫時間</th>
+                <th>下載時間</th>
             </tr>
             </thead>
             <tbody>
             <?php if(!empty($data)){?>
                 <?php foreach ($data as $key => $value) {?>
                     <tr>
-                        <td><?=$value['log_format']?></td>
-                        <td><?=$value['api_token']?></td>
+                        <td>
+                            <img src="<?php echo Yii::app()->createUrl('/'); ?>/image_storage/P/<?=$value['image_id']?>.jpg">
+                        </td>
+                        <td><?=$value['image_id']?></td>
+                        <td><?=$value['size_type']?></td>
                         <td><?=$value['api_key']?></td>
-                        <td><?=$value['request']?></td>
-                        <td><?=$value['respond']?></td>
-                        <td><?=$value['start_time']?></td>
+                        <td><?=$value['createtime']?></td>
                     </tr>
                 <?php }?> 
             <?php }?>
@@ -67,7 +67,7 @@ unset( Yii::app()->session['success_msg'] );
                 "oPaginate": {"sFirst": "第一頁", "sPrevious": "上一頁", "sNext": "下一頁", "sLast": "最後一頁"},
                 "sEmptyTable": "無任何聯繫資料"
             },
-            "order": [[ 5, "desc" ]]
+            "order": [[ 4, "desc" ]]
         });
     });
 </script>
