@@ -29,6 +29,7 @@ unset( Yii::app()->session['success_msg'] );
                 <th>尺寸</th>
                 <th>API KEY</th>
                 <th>下載時間</th>
+                <th>操作</th>
             </tr>
             </thead>
             <tbody>
@@ -42,6 +43,15 @@ unset( Yii::app()->session['success_msg'] );
                         <td><?=$value['size_type']?></td>
                         <td><?=$value['api_key']?></td>
                         <td><?=$value['createtime']?></td>
+                        <td>
+                            <?php foreach ($session_jsons as $jsons) : ?>
+                                <?php if ($jsons["power_controller"] == 'apimanage/api_download_delete') : ?>
+                                <a class="oprate-right oprate-del" data-mem-id="<?= $value['id'] ?>" data-api_key="<?= $value['api_key'] ?>">
+                                    <i class="fa fa-times fa-lg"></i>
+                                </a>
+                                <?php endif; ?>
+                            <?php endforeach; ?>
+                        </td>
                     </tr>
                 <?php }?> 
             <?php }?>
@@ -68,6 +78,27 @@ unset( Yii::app()->session['success_msg'] );
                 "sEmptyTable": "無任何聯繫資料"
             },
             "order": [[ 4, "desc" ]]
+        });
+        $(".oprate-del").on('click', function(){
+            var id = $(this).data("mem-id");
+            var apikey = $(this).data("api_key");
+            var answer = confirm("確定要刪除 (" + id + ") ?");
+
+            if (answer == true) {
+                var form = document.createElement("form");
+                form.setAttribute('method',"post");
+                form.setAttribute('action', "<?php echo Yii::app()->createUrl('apimanage/api_download_delete') ?>/" + id);
+                var input = document.createElement("input");
+                input.setAttribute('type', 'hidden');
+                input.setAttribute('name', '_token');
+                input.setAttribute('value', "<?php echo CsrfProtector::putToken(true); ?>");
+
+                form.appendChild(input);
+
+                document.body.appendChild(form);
+
+                form.submit();
+            }
         });
     });
 </script>

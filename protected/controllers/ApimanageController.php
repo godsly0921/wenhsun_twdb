@@ -8,6 +8,22 @@ class ApimanageController extends Controller{
     {
         return true;
     }
+    public function ActionApi_download_delete($id){
+        $method = $_SERVER['REQUEST_METHOD'];
+        if ($method === 'POST') {
+            $apiservice = new ApiService();
+            $data = $apiservice->api_download_delete($id);
+            if($data['status']){
+                Yii::app()->session['success_msg'] = $data['msg'];
+            }else{
+                Yii::app()->session['error_msg'] = $data['msg'];
+            }
+            $this->redirect(Yii::app()->createUrl('apimanage/api_download_list'));
+        } else {
+            Yii::app()->session['error_msg'] = "request only post";
+            $this->redirect(Yii::app()->createUrl('apimanage/api_download_list'));
+        }
+    }
     public function ActionApi_download_list(){
         $apiservice = new ApiService();
         $data = $apiservice->Api_download_list();

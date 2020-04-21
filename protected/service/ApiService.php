@@ -151,13 +151,40 @@ class ApiService{
             return array("status"=>false,'msg'=>$e->getMessage());
         }
 	}
+	function api_download_delete($id){
+		try {
+			$create_msg = "";
+			$operationlogService = new OperationlogService();
+			$model = Apidownload::model()->findByPk($id);
+			if(!empty($model)){
+            	$model->status=99;
+            	if( $model->save() ){
+            		$motion = "刪除 下載記錄";
+	                $log = "刪除 下載記錄 = " .$id;
+                    $operationlogService->create_operationlog( $motion, $log );
+            	}else{
+            		foreach ($model->getErrors () as $attribute => $error){
+	                    foreach ($error as $message){
+	                        $create_msg.": ".$message;
+	                    }
+	                }
+                    return array("status"=>false,'msg'=>$create_msg);
+            	}
+            }else{
+                return array("status"=>false,'msg'=>"編號：" . $id . "資料不存在");
+            }
+			return array("status"=>true, 'msg'=> '成功');
+		} catch (Exception $e) {
+            return array("status"=>false,'msg'=>$e->getMessage());
+        }
+	}
 	function Log_list(){
 		$sql = "SELECT al.*,am.api_key FROM api_log_record al LEFT JOIN api_manage am ON al.api_manage_id=am.id";
 		$data = Yii::app()->db->createCommand($sql)->queryAll();
 		return $data;
 	}
 	function Api_download_list(){
-		$sql = "SELECT al.*,am.api_key FROM api_download al LEFT JOIN api_manage am ON al.api_manage_id=am.id AND al.status=1";
+		$sql = "SELECT al.*,am.api_key FROM api_download al LEFT JOIN api_manage am ON al.api_manage_id=am.id WHERE al.status=1";
 		$data = Yii::app()->db->createCommand($sql)->queryAll();
 		return $data;
 	}
