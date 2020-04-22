@@ -8,6 +8,28 @@ class ApimanageController extends Controller{
     {
         return true;
     }
+    public function ActionApi_getimage_delete($id){
+         $method = $_SERVER['REQUEST_METHOD'];
+        if ($method === 'POST') {
+            $apiservice = new ApiService();
+            $data = $apiservice->api_getimage_list($id);
+            if($data['status']){
+                Yii::app()->session['success_msg'] = $data['msg'];
+            }else{
+                Yii::app()->session['error_msg'] = $data['msg'];
+            }
+            $this->redirect(Yii::app()->createUrl('apimanage/api_getimage_list'));
+        } else {
+            Yii::app()->session['error_msg'] = "request only post";
+            $this->redirect(Yii::app()->createUrl('apimanage/api_getimage_list'));
+        }
+    }
+    public function ActionApi_getimage_list(){
+        $apiservice = new ApiService();
+        $data = $apiservice->Log_list(array("getimage","getimagedetail"));
+        $this->render('api_getimage_list',array( 'data' => $data ));
+    }
+
     public function ActionApi_download_delete($id){
         $method = $_SERVER['REQUEST_METHOD'];
         if ($method === 'POST') {

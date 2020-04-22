@@ -178,8 +178,43 @@ class ApiService{
             return array("status"=>false,'msg'=>$e->getMessage());
         }
 	}
-	function Log_list(){
+	function api_getimage_list($id){
+		try {
+			$create_msg = "";
+			$operationlogService = new OperationlogService();
+			$model = Apilogrecord::model()->findByPk($id);
+			if(!empty($model)){
+            	$model->status=99;
+            	if( $model->save() ){
+            		$motion = "刪除 圖資請記錄";
+	                $log = "刪除 圖資請記錄 = " .$id;
+                    $operationlogService->create_operationlog( $motion, $log );
+            	}else{
+            		foreach ($model->getErrors () as $attribute => $error){
+	                    foreach ($error as $message){
+	                        $create_msg.": ".$message;
+	                    }
+	                }
+                    return array("status"=>false,'msg'=>$create_msg);
+            	}
+            }else{
+                return array("status"=>false,'msg'=>"編號：" . $id . "資料不存在");
+            }
+			return array("status"=>true, 'msg'=> '成功');
+		} catch (Exception $e) {
+            return array("status"=>false,'msg'=>$e->getMessage());
+        }
+	}
+	function Log_list($log_format=array()){
 		$sql = "SELECT al.*,am.api_key FROM api_log_record al LEFT JOIN api_manage am ON al.api_manage_id=am.id";
+		if(!empty($log_format)){
+			$sql .="  WHERE al.log_format IN ( ";
+			foreach ($log_format as $key => $value) {
+				$sql .= "'" . $value . "'";
+				if(end($log_format) != $value) $sql .= ",";
+			}
+			$sql .= ")";
+		}
 		$data = Yii::app()->db->createCommand($sql)->queryAll();
 		return $data;
 	}
