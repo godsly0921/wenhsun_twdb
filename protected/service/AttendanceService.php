@@ -1312,8 +1312,9 @@ class AttendanceService
             $pt_end_date = $day . ' 23:59:59';
             //找出所有的刷卡紀錄
             $data = $this->getAttxendanceAndCheckPT($start_date,$end_date,$pt_start_date,$pt_end_date);
-            foreach ($data as $key => $value) {                
-                if (empty($value['flashDate'])) {
+            foreach ($data as $key => $value) {
+                $checkattendancerecord = $this->checkAttendanceRecordStartTime($day . ' 09:30:00');
+                if (empty($value['flashDate']) && empty($checkattendancerecord)) {
                     $abnormal_type = 2;
                     $employee_email = $value['email'];
                     $employee_name = $value['name'];
@@ -1332,7 +1333,11 @@ class AttendanceService
             $mail->sendAdminMail(0,$msg);
         }
     }
-
+    function checkAttendanceRecordStartTime($start_time){
+        $sql = "SELECT * FROM attendance_record WHERE " . $start_time . " BETWEEN start_time AND end_time";
+        $data = Yii::app()->db->createCommand($sql)->queryAll();
+        return $data;
+    }
     function getAttxendanceAndCheckPT($start_date,$end_date,$pt_start_date,$pt_end_date){
         //37,38,39,40,43,44,45
         //檢查 pt 當天有沒有排班，有班的才列
