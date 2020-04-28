@@ -1334,7 +1334,7 @@ class AttendanceService
         }
     }
     function checkAttendanceRecordStartTime($start_time){
-        $sql = "SELECT * FROM attendance_record WHERE " . $start_time . " BETWEEN start_time AND end_time";
+        $sql = "SELECT * FROM attendance_record WHERE '" . $start_time . "' BETWEEN start_time AND end_time";
         $data = Yii::app()->db->createCommand($sql)->queryAll();
         return $data;
     }
