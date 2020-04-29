@@ -50,8 +50,8 @@ class ApiService{
         if(!empty($lot_data)){
         	foreach ($lot_data as $key => $value) {
         		$data[]=array(
-        			"request"=>$value["request"],
-        			"respond"=>$value["respond"],
+        			"request"=>json_decode($value["request"],true),
+        			"respond"=>json_decode($value["respond"],true),
         			"start_time"=>$value["start_time"],
         			"end_time"=>$value["end_time"],
         			"total_time"=>$value["total_time"],

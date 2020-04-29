@@ -29,10 +29,10 @@ class ApiController extends CController{
 	        // "debugMsg"  => $debug,
 	        "content"   => $result['content']
 	    );
-	    $response = json_encode($response, JSON_UNESCAPED_UNICODE);
+	    //$response = json_encode($response);
 	    $action = Yii::app()->controller->action->id;
 	    $apiservice->LogRecord($action,$params,$response);
-	    return $response;
+	    return json_encode($response);
 	}
 	public function checkToken($token){
 		$sql = "SELECT * FROM api_manage WHERE api_token = '" . $token . "'";
@@ -578,7 +578,7 @@ class ApiController extends CController{
 			}else{
 				$token = $params['body']['token'];
 				$apiservice = new ApiService();
-				$this->output[]=$apiservice->FindLogByTokenAndLogFormat($token,'getimage');
+				$this->output=$apiservice->FindLogByTokenAndLogFormat($token,'getimage');
 		        if(!empty($this->output)){
 		        	$response = $this->setresponse(
 						$params, 
@@ -628,7 +628,7 @@ class ApiController extends CController{
 			}else{
 				$token = $params['body']['token'];
 				$apiservice = new ApiService();
-				$this->output[]=$apiservice->FindLogByTokenAndLogFormat($token,'getdownload');
+				$this->output=$apiservice->FindLogByTokenAndLogFormat($token,'getdownload');
 		        if(!empty($this->output)){
 		        	$response = $this->setresponse(
 						$params, 
@@ -679,7 +679,7 @@ class ApiController extends CController{
 			}else{
 				$token = $params['body']['token'];
 				$apiservice = new ApiService();
-				$this->output[]=$apiservice->FindLogByTokenAndLogFormat($token,'getimagedetail');
+				$this->output=$apiservice->FindLogByTokenAndLogFormat($token,'getimagedetail');
 		        if(!empty($this->output)){
 		        	$response = $this->setresponse(
 						$params, 

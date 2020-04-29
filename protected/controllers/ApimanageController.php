@@ -15,12 +15,7 @@ class ApimanageController extends Controller{
             $sql = "SELECT respond as api_respond FROM api_log_record WHERE id=".$id;
             $data = Yii::app()->db->createCommand($sql)->queryAll();
             if(!empty($data)){
-                #echo $data[0]['respond'];
-                //var_dump(preg_replace("/^\"/","",str_replace("\\","",$data[0]['respond'])));exit();
-                $respond = preg_replace("/^\"/","",str_replace("\\","",$data[0]['api_respond']));
-                $respond = rtrim($respond, "\"");
-               // var_dump($respond);exit();
-                echo $respond;
+                echo $data[0]['api_respond'];
             }else{
                 echo "NO DATA";
             }

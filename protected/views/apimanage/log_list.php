@@ -44,7 +44,7 @@ unset( Yii::app()->session['success_msg'] );
                         <!-- <td><?#=$value['respond']?></td> -->
                         <td><?=$value['start_time']?></td>
                         <td>
-                            <a class="oprate-right oprate-search" data-mem-id="<?= $value['id'] ?>"><i class="fa fa-search fa-lg"></i></a>
+                            <a class="oprate-right oprate-search" onclick="check_respond('<?= $value['id'] ?>')"><i class="fa fa-search fa-lg"></i></a>
                         </td>
                     </tr>
                 <?php }?> 
@@ -72,19 +72,7 @@ unset( Yii::app()->session['success_msg'] );
     })
 </script>
 <script>
-    $(document).ready(function() {
-        $('#specialcaseTable').DataTable( {
-            "scrollX": true,
-            "lengthChange": false,
-            "oLanguage": {
-                "oPaginate": {"sFirst": "第一頁", "sPrevious": "上一頁", "sNext": "下一頁", "sLast": "最後一頁"},
-                "sEmptyTable": "無任何聯繫資料"
-            },
-            "order": [[ 5, "desc" ]]
-        });
-
-        $(".oprate-search").on('click', function(){
-            var id = $(this).data("mem-id");
+    function check_respond(id){
             $.ajax({
                 url: "<?= Yii::app()->createUrl('/apimanage/check_respond') ?>",
                 type: "POST",
@@ -99,11 +87,23 @@ unset( Yii::app()->session['success_msg'] );
                 },
                 error: function(response) {
                     swal(
-                        "查詢失敗"
+                        "<pre>"+JSON.stringify(response, undefined, 4)+"</pre>"
                     )
                 }
             });
+        }
+    $(document).ready(function() {
+        $('#specialcaseTable').DataTable( {
+            "scrollX": true,
+            "lengthChange": false,
+            "oLanguage": {
+                "oPaginate": {"sFirst": "第一頁", "sPrevious": "上一頁", "sNext": "下一頁", "sLast": "最後一頁"},
+                "sEmptyTable": "無任何聯繫資料"
+            },
+            "order": [[ 5, "desc" ]]
         });
+
+        
     });
 </script>
 
