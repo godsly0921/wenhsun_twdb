@@ -214,8 +214,9 @@ class ApiService{
 				$sql .= "'" . $value . "'";
 				if(end($log_format) != $value) $sql .= ",";
 			}
-			$sql .= ") AND al.status<>99";
+			$sql .= ")";
 		}
+		$sql .= " AND al.status<>99";
 		$data = Yii::app()->db->createCommand($sql)->queryAll();
 		return $data;
 	}
