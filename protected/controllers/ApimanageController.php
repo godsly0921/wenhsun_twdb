@@ -8,8 +8,29 @@ class ApimanageController extends Controller{
     {
         return true;
     }
+    public function Actioncheck_respond(){
+        $method = $_SERVER['REQUEST_METHOD'];
+        if ($method === 'POST') {
+            $id = $_POST['id'];
+            $sql = "SELECT respond as api_respond FROM api_log_record WHERE id=".$id;
+            $data = Yii::app()->db->createCommand($sql)->queryAll();
+            if(!empty($data)){
+                #echo $data[0]['respond'];
+                //var_dump(preg_replace("/^\"/","",str_replace("\\","",$data[0]['respond'])));exit();
+                $respond = preg_replace("/^\"/","",str_replace("\\","",$data[0]['api_respond']));
+                $respond = rtrim($respond, "\"");
+               // var_dump($respond);exit();
+                echo $respond;
+            }else{
+                echo "NO DATA";
+            }
+        }else{
+            echo "method fail";
+        }
+    }
+
     public function ActionApi_getimage_delete($id){
-         $method = $_SERVER['REQUEST_METHOD'];
+        $method = $_SERVER['REQUEST_METHOD'];
         if ($method === 'POST') {
             $apiservice = new ApiService();
             $data = $apiservice->api_getimage_list($id);

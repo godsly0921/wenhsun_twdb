@@ -28,8 +28,9 @@ unset( Yii::app()->session['success_msg'] );
                 <th>API token</th>
                 <th>API KEY</th>
                 <th>request</th>
-                <th>respond</th>
+                <!-- <th>respond</th> -->
                 <th>呼叫時間</th>
+                <th>查看 respond</th>
             </tr>
             </thead>
             <tbody>
@@ -40,8 +41,11 @@ unset( Yii::app()->session['success_msg'] );
                         <td><?=$value['api_token']?></td>
                         <td><?=$value['api_key']?></td>
                         <td><?=$value['request']?></td>
-                        <td><?=$value['respond']?></td>
+                        <!-- <td><?#=$value['respond']?></td> -->
                         <td><?=$value['start_time']?></td>
+                        <td>
+                            <a class="oprate-right oprate-search" data-mem-id="<?= $value['id'] ?>"><i class="fa fa-search fa-lg"></i></a>
+                        </td>
                     </tr>
                 <?php }?> 
             <?php }?>
@@ -51,6 +55,15 @@ unset( Yii::app()->session['success_msg'] );
 </div>
 <script src="<?php echo Yii::app()->request->baseUrl;?>/assets/admin/ext/js/jquery.dataTables.min.js"></script>
 <script src="<?php echo Yii::app()->request->baseUrl;?>/assets/admin/ext/js/dataTables.bootstrap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@7.26.12/dist/sweetalert2.all.min.js"></script>
+<style type="text/css" media="screen">
+    .swal2-popup .swal2-title{
+        text-align: left;
+    }
+    .swal2-popup{
+        width: 80%;
+    }
+</style>
 <script>
     $(function() {
         if ($('#hide_message').html() != '') {
@@ -68,6 +81,28 @@ unset( Yii::app()->session['success_msg'] );
                 "sEmptyTable": "無任何聯繫資料"
             },
             "order": [[ 5, "desc" ]]
+        });
+
+        $(".oprate-search").on('click', function(){
+            var id = $(this).data("mem-id");
+            $.ajax({
+                url: "<?= Yii::app()->createUrl('/apimanage/check_respond') ?>",
+                type: "POST",
+                dataType: "json",
+                data: {
+                    id: id
+                },
+                success: function(response) {
+                    swal(
+                        "<pre>"+JSON.stringify(response, undefined, 4)+"</pre>"
+                    )
+                },
+                error: function(response) {
+                    swal(
+                        "查詢失敗"
+                    )
+                }
+            });
         });
     });
 </script>

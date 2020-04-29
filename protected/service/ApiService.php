@@ -207,7 +207,7 @@ class ApiService{
 	}
 	function Log_list($log_format=array()){
 		ini_set('memory_limit', '256M');
-		$sql = "SELECT al.*,am.api_key FROM api_log_record al LEFT JOIN api_manage am ON al.api_manage_id=am.id";
+		$sql = "SELECT al.id,al.log_format,al.api_token,al.request,al.start_time,am.api_key FROM api_log_record al LEFT JOIN api_manage am ON al.api_manage_id=am.id";
 		if(!empty($log_format)){
 			$sql .="  WHERE al.log_format IN ( ";
 			foreach ($log_format as $key => $value) {
