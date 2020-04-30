@@ -1313,7 +1313,7 @@ class AttendanceService
             //找出所有的刷卡紀錄
             $data = $this->getAttxendanceAndCheckPT($start_date,$end_date,$pt_start_date,$pt_end_date);
             foreach ($data as $key => $value) {
-                $checkattendancerecord = $this->checkAttendanceRecordStartTime($day . ' 09:30:00');
+                $checkattendancerecord = $this->checkAttendanceRecordStartTime($day . ' 09:30:00',$value['employee_id']);
                 if (empty($value['flashDate']) && empty($checkattendancerecord)) {
                     $abnormal_type = 2;
                     $employee_email = $value['email'];
@@ -1333,8 +1333,8 @@ class AttendanceService
             $mail->sendAdminMail(0,$msg);
         }
     }
-    function checkAttendanceRecordStartTime($start_time){
-        $sql = "SELECT * FROM attendance_record WHERE '" . $start_time . "' BETWEEN start_time AND end_time";
+    function checkAttendanceRecordStartTime($start_time,$employee_id){
+        $sql = "SELECT * FROM attendance_record WHERE '" . $start_time . "' BETWEEN start_time AND end_time AND employee_id='" . $employee_id . "'";
         $data = Yii::app()->db->createCommand($sql)->queryAll();
         return $data;
     }
