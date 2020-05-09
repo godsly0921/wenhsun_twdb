@@ -1,6 +1,6 @@
 <div class="row">
     <div class="title-wrap col-lg-12">
-        <h3 class="title-left">新增 API</h3>
+        <h3 class="title-left"><?= empty($data['id'])?"新增 API":"修改 API";?></h3>
     </div>
 </div>
 
@@ -23,7 +23,7 @@ unset( Yii::app()->session['success_msg'] );
 
     <div class="panel panel-default">
         <div class="panel-body">
-            <<input type="hidden" name="id" value="<?=$data['id']?>">
+            <input type="hidden" name="id" value="<?=$data['id']?>">
             <div class="form-group">
                 <label for="group_name" class="col-lg-2 control-label">API KEY:</label>
                 <div class="col-lg-6">

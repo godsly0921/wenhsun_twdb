@@ -46,12 +46,12 @@ unset( Yii::app()->session['success_msg'] );
                             <?php foreach ($session_jsons as $jsons) : ?>
                                 <?php if ($jsons["power_controller"] == 'apimanage/apimanage_update') : ?>
                                 <a class="oprate-right" href="<?php echo Yii::app()->createUrl('apimanage/apimanage_update/') ?>/<?= $value['id'] ?>">
-                                    <i class="fa fa-pencil-square-o fa-lg"></i>
+                                    <i class="fa fa-pencil-square-o fa-lg" style="cursor: pointer">修改</i>
                                 </a>
                                 <?php endif; ?>
                                 <?php if ($jsons["power_controller"] == 'apimanage/apimanage_delete') : ?>
                                 <a class="oprate-right oprate-del" data-mem-id="<?= $value['id'] ?>" data-api_key="<?= $value['api_key'] ?>">
-                                    <i class="fa fa-times fa-lg"></i>
+                                    <i class="fa fa-times fa-lg" style="cursor: pointer">刪除</i>
                                 </a>
                                 <?php endif; ?>
                             <?php endforeach; ?>
