@@ -45,7 +45,7 @@ unset( Yii::app()->session['success_msg'] );
                         <td><?=$value['start_time']?></td>
                         <td>
                             <a class="oprate-right oprate-search" onclick="check_respond('<?= $value['id'] ?>')">
-                                <i class="fa fa-search fa-lg" style="cursor: pointer">查看</i>
+                                <i class="fa fa-search fa-lg" style="cursor: pointer"><span style="font-size:15px;">查看</span></i>
                             </a>
                         </td>
                     </tr>

@@ -44,12 +44,12 @@ unset( Yii::app()->session['success_msg'] );
                         <td><?=$value['start_time']?></td>
                         <td>
                             <a class="oprate-right oprate-search" data-mem-id="<?= $value['id'] ?>">
-                                <i class="fa fa-search fa-lg" style="cursor: pointer">查看</i>
+                                <i class="fa fa-search fa-lg" style="cursor: pointer"><span style="font-size:15px;">查看</span></i>
                             </a>
                             <?php foreach ($session_jsons as $jsons) : ?>
                                 <?php if ($jsons["power_controller"] == 'apimanage/api_getimage_delete') : ?>
                                 <a class="oprate-right oprate-del" data-mem-id="<?= $value['id'] ?>" data-api_key="<?= $value['api_key'] ?>">
-                                    <i class="fa fa-times fa-lg" style="cursor: pointer">刪除</i>
+                                    <i class="fa fa-times fa-lg" style="cursor: pointer"><span style="font-size:15px;">刪除</span></i>
                                 </a>
                                 <?php endif; ?>
                             <?php endforeach; ?>
