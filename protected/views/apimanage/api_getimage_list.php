@@ -25,7 +25,7 @@ unset( Yii::app()->session['success_msg'] );
             <thead>
             <tr role="row">
                 <th>Name<br/>功能名稱</th>
-                <th>API Token<br/>指令</th>
+                <th>API Token<br/>數據令牌</th>
                 <th>API Key<br/>金鑰</th>
                 <th>Request<br/>用戶請求資訊</th>
                 <!-- <th>respond</th> -->
