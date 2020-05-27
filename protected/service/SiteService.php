@@ -104,7 +104,7 @@ class SiteService
         $filming_date_range = Yii::app()->db->createCommand()
         ->select('DATE_FORMAT(MAX(filming_date),"%Y") as max_filming_date,DATE_FORMAT(MIN(filming_date),"%Y") as min_filming_date')
         ->from('single')
-        ->where('copyright=:copyright and publish=:publish', array(':copyright'=>1,':publish'=>1))
+        ->where('copyright=:copyright and publish=:publish and photo_limit=:photo_limit', array(':copyright'=>1,':publish'=>1,':photo_limit'=>1))
         ->queryAll();
         if($filming_date_range && $filming_date_range[0]['min_filming_date'] != NULL && $filming_date_range[0]['max_filming_date'] != NULL){
             if(($filming_date_range[0]['min_filming_date']%10)!=0){
