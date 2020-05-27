@@ -1,11 +1,10 @@
 <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/assets/css/justifiedGallery.min.css">
 <link href="<?php echo Yii::app()->request->baseUrl; ?>/assets/css/bootstrap-slider.css" rel="stylesheet">
 <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/assets/css/jquery.fancybox.min.css">
-<script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/jquery.fancybox.min.js"></script>
-<script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/jquery.justifiedGallery.min.js"></script>
-<script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/jquery.twbsPagination.js"></script>
-<script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/bootstrap-slider.js"></script>
 <style type="text/css">
+	#keyword:focus{
+	    z-index: 0;
+	  }
 	.container{
 		padding-top: 80px;
 	}
@@ -230,16 +229,23 @@
 </div>
 <div class="row my-5" id="page_selection"></div>
 <div class="to_top"><span class="tri_up"></span><span class="tri_up_underline"></span></div>
+<script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/jquery.fancybox.min.js"></script>
+<script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/jquery.justifiedGallery.min.js"></script>
+<script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/jquery.twbsPagination.js"></script>
+<script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/bootstrap-slider.js"></script>
 <script type="text/javascript">
 	function search(){
 	    var keyword = $("#keyword").val();
-	    var page = $("#page").val();
+	    var page = 1;
 	    if(keyword != '' && page >0){
 	      $('#keyword_search').attr('action',"<?php echo Yii::app()->createUrl('site/search');?>/" + keyword + "/" + page);
 	      $('#keyword_search').submit();
 	    }   
 	}
-	function open_image_info(a,single_id){
+	// function closeIFrame(){
+	//     $('#youriframeid').remove();
+	// }
+	function open_image_info(single_id){
 		$.fancybox.open({
 	        type: 'iframe',
 	        src: '<?= Yii::app()->createUrl('site/ImageInfo');?>/'+single_id,
@@ -282,7 +288,7 @@
 	}
 
 	function create_image(value){
-		$html = '<div onclick="open_image_info(this,\''+value.single_id+'\')"><img src="<?= Yii::app()->createUrl('/'). "/" .PHOTOGRAPH_STORAGE_URL?>'+value.single_id+'.jpg"><div>';
+		$html = '<div onclick="open_image_info(\''+value.single_id+'\')" style="cursor:pointer;"><img src="<?= Yii::app()->createUrl('/'). "/" .PHOTOGRAPH_STORAGE_URL?>'+value.single_id+'.jpg"><div>';
         $('#image_result').append($html);
 	}
 
@@ -312,6 +318,9 @@
         return query_string;
     }
   	$(document).ready( function() {
+  		if("<?=(isset($_GET['filming_date']))?>" || "<?=(isset($_GET['object_name']))?>" || "<?=(isset($_GET['category_id']))?>"){
+  			adv_show_hide();
+  		}
   		$( ".to_top" ).click(function() {
 			// document.body.scrollTop = 0; // For Safari
   	// 		document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
@@ -356,7 +365,13 @@
 		    
       		$('#keyword_search').submit();
 		});
-
+	  	var init_page = 1;
+	  	if (localStorage.getItem("page") != null) {
+	  		init_page = localStorage.getItem("page");
+	  		localStorage.removeItem("page");
+	  	}else{
+	  		init_page = <?=isset($_GET['page'])?$_GET['page']:1?>;
+	  	}
 	    $('#page_selection').twbsPagination({
 	        totalPages: <?=$total_result != 0 ?$total_result:1?>,
 	        visiblePages: 10,
@@ -364,7 +379,7 @@
 	        prev: '上一頁',
 	        next: '下一頁',
 	        last: '最後一頁',
-	        startPage: <?=isset($_GET['page'])?$_GET['page']:1?>,
+	        startPage: parseInt(init_page),
 	        onPageClick: function (event, page) {
 	            $('#page').val(page);
 	            $.ajax({  
@@ -388,6 +403,9 @@
 	            });
 	        }
 	    });
-
+	    if (localStorage.getItem("single_id") != null) {
+	    	open_image_info(localStorage.getItem("single_id"));
+	    	localStorage.removeItem("single_id");
+	    }
   	});
 </script>

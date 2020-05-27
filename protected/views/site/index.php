@@ -1,14 +1,17 @@
 <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/assets/css/justifiedGallery.min.css">
 <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/assets/css/slick-theme.css">
 <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/assets/css/slick.css">
-
-<script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/jquery.justifiedGallery.min.js"></script>
-<script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/slick.js"></script>
+<link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/assets/css/jquery.fancybox.min.css">
+<style>
+  #keyword:focus{
+    z-index: 0;
+  }
+</style>
 <!-- 輪播圖 -- Start -->
 <div id="banner" class="row">
   <?php if(count($banner_data)>0){?>
     <?php foreach ($banner_data as $key => $value) {?>
-      <img src="<?= Yii::app()->request->baseUrl . $value['image']; ?>">
+      <a href="<?= $value['link'] ?>"><img src="<?= Yii::app()->request->baseUrl . $value['image']; ?>">
     <?php }?>
   <?php }?>
 </div>
@@ -40,7 +43,7 @@
       <div class="py-5" id="ad_image">
         <?php if(count($ad_data)>0){?>
           <?php foreach ($ad_data as $key => $value) {?>
-            <div><img src="<?=Yii::app()->createUrl('/')."/".PHOTOGRAPH_STORAGE_URL.$value['single_id']?>.jpg"></div>
+            <div onclick="open_image_info('<?=$value['single_id']?>')" style="cursor:pointer;"><img src="<?=Yii::app()->createUrl('/')."/".PHOTOGRAPH_STORAGE_URL.$value['single_id']?>.jpg"></div>
           <?php }?>
         <?php }?>
       </div>
@@ -49,7 +52,7 @@
       <div class="py-5 col-lg-8 mx-auto">
         <?php if(count($ad_data)>0){?>
           <?php foreach ($ad_data as $key => $value) {?>
-            <div class="row col-lg-12 py-3">
+            <div class="row col-lg-12 py-3" onclick="open_image_info('<?=$value['single_id']?>')" style="cursor:pointer;">
               <div class="col-lg-4 text-right"><img src="<?=Yii::app()->createUrl('/')."/".PHOTOGRAPH_STORAGE_URL.$value['single_id']?>.jpg" width="80%"></div>
               <div class="col-lg-8 my-auto">
                 <div class="col-lg-12">人物資訊:<?=$value['people_info']?></div>
@@ -64,6 +67,10 @@
     </div>
   </div>
 </div>
+
+<script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/jquery.justifiedGallery.min.js"></script>
+<script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/slick.js"></script>
+<script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/jquery.fancybox.min.js"></script>
 <script type="text/javascript">
   function search(){
     var keyword = $("#keyword").val();
@@ -73,7 +80,25 @@
       $('#keyword_search').submit();
     }   
   }
+  function open_image_info(single_id){
+    $.fancybox.open({
+      type: 'iframe',
+      src: '<?= Yii::app()->createUrl('site/ImageInfo');?>/'+single_id,
+      toolbar  : false,
+      smallBtn : true,
+      iframe : {
+        preload : true,
+        css : {
+          width : '90%',
+          height: '90%'
+        }
+      }
+    });
+  }
   $(document).ready( function() {
+    $("#keyword").click(function(event){
+      event.preventDefault();
+    });
     $('#ad_image').justifiedGallery({
       rowHeight: 200,
       maxRowHeight: 200,
@@ -90,5 +115,12 @@
         slidesToShow: 1,
         slidesToScroll: 1
     });
+    if (localStorage.getItem("single_id") != null) {
+      open_image_info(localStorage.getItem("single_id"));
+      localStorage.removeItem("single_id");
+    }
+    if (localStorage.getItem("page") != null) {
+      localStorage.removeItem("page");
+    }
   });
 </script>

@@ -13,6 +13,27 @@ class ProductService
         '3' => '自由載 90 天',
         '4' => '自由載 360 天',
     );
+    public function findProductWithStatus($product_type, $status){
+        $result = Product::model()->findAll(array(
+            'condition'=>'product_type=:product_type and status=:status',
+            'params'=>array(
+                ':product_type' => $product_type,
+                ':status' => $status,
+            )
+        ));
+        return $result;
+    }
+
+    public function findWithStatus($status){
+        $result = Product::model()->findAll(array(
+            'condition'=>'status=:status',
+            'params'=>array(
+                ':status' => $status
+            )
+        ));
+        return $result;
+    }
+
     public function findAllProduct(){
         $accountService = new AccountService();
         $product_data = array();
@@ -27,7 +48,7 @@ class ProductService
                 }
                 $product_data[] = array(
                     'product_id' => $value['product_id'],
-                    'product_name' => $product_name,
+                    'product_name' => $value['product_name'] . $product_name,
                     'price' => $value['price'],
                     'status' => $value['status'] == 1 ? '是' : '否',
                     'create_time' => $value['create_time']

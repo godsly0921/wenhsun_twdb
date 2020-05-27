@@ -9,8 +9,8 @@ class AdminController extends CController
 {
 
 	public $layout = "//layouts/admin";
-    //223.136.185.9 alanpan 110.26.225.23 amber
-    private $ipFilters = '220.135.48.168,220.135.48.164,114.32.137.240,39.9.67.254,223.136.146.96,111.71.47.168,125.227.187.55,203.69.216.186,180.218.14.225,118.150.168.122,114.136.189.102,110.26.225.23';
+    //223.136.185.9 alanpan 36.226.151.159 amber
+    private $ipFilters = '111.250.87.245,220.135.48.168,220.135.48.164,114.32.137.240,39.9.67.254,223.137.144.231,111.71.47.168,125.227.187.55,203.69.216.186,180.218.14.225,118.150.168.122,114.136.189.102,27.52.7.219,119.77.208.243,203.69.216.186,49.158.23.126,36.226.151.159';
 
     public function ipCheck(){
         $ip = Yii::app()->request->getUserHostAddress();
@@ -397,7 +397,14 @@ class AdminController extends CController
         Yii::app()->session['power_session_jsons'] = $power_session_jsons;
         Yii::app()->session['group_session_jsons'] = $account_group_list->group_number;
         Yii::app()->session['group_list_session_jsons'] = CJSON::encode(explode(',', $account_group_list->group_list));
-        $this->redirect(Yii::app()->createUrl('news/list'));
+
+        $configService = new ConfigService();
+        $config = $configService->findByConfigName('index');
+        if ($config[0]['config_value'] === 'db') {
+            $this->redirect(Yii::app()->createUrl('report/system'));
+        } else {
+            $this->redirect(Yii::app()->createUrl('news/list'));
+        }
 
 	}
 

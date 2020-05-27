@@ -44,162 +44,96 @@
     <div id="option">
         <div class="plan col-sm-12 row">
             <div class="col-sm-6">
-                <div class="shadow">
-                    <div class="header">
-                        <div class="header-div col-sm-12">
-                            <p class="header-title text-center">點數</p>
-                            <p class="header-description text-center">依消費者需求購買，一點100元</p>
-                            <p class="header-description text-center">適合單張和少量購買的您</p>
+                <form method='POST' class='form-horizontal' action='<?= Yii::app()->createUrl('site/check_order');?>'>
+                    <div class="shadow">
+                        <div class="header">
+                            <div class="header-div col-sm-12">
+                                <p class="header-title text-center">點數</p>
+                                <p class="header-description text-center">依消費者需求購買，一點100元</p>
+                                <p class="header-description text-center">適合單張和少量購買的您</p>
+                            </div>
                         </div>
+                        <?php if($data){
+                            $checked = true;
+                            ?>
+                            <?php foreach ($data as $key => $value) {?>
+                                <?php if($value['product_type'] == 1){?>
+                                    <div class="strip">
+                                        <div class="padding-radio col-sm-12 row">
+                                            <div class="col-sm-2"></div>
+                                            <div class="col-sm-7">
+                                                <div class="radio">
+                                                    <label>
+                                                        <input type="radio" name="product_id" value="<?=$value['product_id']?>" <?=$checked?"checked":""?>>
+                                                        <?= $value['product_name'] ?> ( <?=$product_type[$value['product_type']] . " " . $value['pic_point']?> 點 ) 
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-3">
+                                                <p class="point"><?=$value['price']?> 元</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                <?php $checked=false;}?>
+                            <?php }?>
+                        <?php }?>
                     </div>
-                    <div class="strip1">
-                        <div class="padding-radio col-sm-12 row">
-                            <div class="col-sm-2"></div>
-                            <div class="col-sm-7">
-                                <div class="radio">
-                                    <label>
-                                        <input type="radio" name="radio1" checked>&nbsp;&nbsp;1960前照片﹙S、M 尺寸﹚
-                                    </label>
+                    <?php if($data){?>
+                        <?php foreach ($data as $key => $value) {?>
+                            <?php if($value['product_type'] == 1){?>
+                                <div class="button-div text-center">
+                                    <button type="submit" class="purchase">立即購買</button>
                                 </div>
-                            </div>
-                            <div class="col-sm-3">
-                                <p class="point">20點 / 張</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="strip2">
-                        <div class="padding-radio col-sm-12 row">
-                            <div class="col-sm-2"></div>
-                            <div class="col-sm-7">
-                                <div class="radio">
-                                    <label>
-                                        <input type="radio" name="radio1">&nbsp;&nbsp;1960前照片﹙L、XL 尺寸﹚
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="col-sm-3">
-                                <p class="point">40點 / 張</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="strip1">
-                        <div class="padding-radio col-sm-12 row">
-                            <div class="col-sm-2"></div>
-                            <div class="col-sm-7">
-                                <div class="radio">
-                                    <label>
-                                        <input type="radio" name="radio1">&nbsp;&nbsp;1961-1990年代照片﹙S、M 尺寸﹚
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="col-sm-3">
-                                <p class="point">15點 / 張</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="strip2">
-                        <div class="padding-radio col-sm-12 row">
-                            <div class="col-sm-2"></div>
-                            <div class="col-sm-7">
-                                <div class="radio">
-                                    <label>
-                                        <input type="radio" name="radio1">&nbsp;&nbsp;1961-1990年代照片﹙L、XL 尺寸﹚
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="col-sm-3">
-                                <p class="point">30點 / 張</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="strip1">
-                        <div class="padding-radio col-sm-12 row">
-                            <div class="col-sm-2"></div>
-                            <div class="col-sm-7">
-                                <div class="radio">
-                                    <label>
-                                        <input type="radio" name="radio1">&nbsp;&nbsp;1991年代後照片﹙S、M 尺寸﹚
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="col-sm-3">
-                                <p class="point">10點 / 張</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="strip2">
-                        <div class="padding-radio col-sm-12 row">
-                            <div class="col-sm-2"></div>
-                            <div class="col-sm-7">
-                                <div class="radio">
-                                    <label>
-                                        <input type="radio" name="radio1">&nbsp;&nbsp;1991年代後照片﹙L、XL 尺寸﹚
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="col-sm-3">
-                                <p class="point">20點 / 張</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="button-div text-center">
-                    <button type="button" class="purchase">立即購買</button>
-                </div>
+                            <?php break;}?>
+                        <?php }?>
+                    <?php }?>
+                </form>
             </div>
             <div class="col-sm-6">
-                <div class="shadow">
-                    <div class="header">
-                        <div class="header-div col-sm-12">
-                            <p class="header-title text-center">自由載</p>
-                            <p class="header-description text-center">不限年代，隨時取得圖片，讓您彈性下載</p>
-                            <p class="header-title2 text-center">最高省85%</p>
-                        </div>
-                    </div>
-                    <div class="strip1">
-                        <div class="padding-radio col-sm-12 row">
-                            <div class="col-sm-1"></div>
-                            <div class="col-sm-2">
-                                <p class="discount text-center">85% off</p>
+                <form method='GET' class='form-horizontal' action='<?= Yii::app()->createUrl('site/check_order');?>'>
+                    <div class="shadow">
+                        <div class="header">
+                            <div class="header-div col-sm-12">
+                                <p class="header-title text-center">自由載</p>
+                                <p class="header-description text-center">不限年代，隨時取得圖片，讓您彈性下載</p>
+                                <p class="header-title2 text-center">最高省85%</p>
                             </div>
-                            <div class="col-sm-7">
-                                <div class="radio">
-                                    <label>
-                                        <input type="radio" name="radio2" checked>&nbsp;&nbsp;自由載60天﹙S、M 尺寸，10張﹚
-                                    </label>
+                        </div>
+                        <?php if($data){
+                            $checked = true;
+                            ?>
+                            <?php foreach ($data as $key => $value) {?>
+                                <?php if($value['product_type'] != 1){?>
+                                    <div class="strip">
+                                        <div class="padding-radio col-sm-12 row">
+                                            <div class="col-sm-1"></div>
+                                            <div class="col-sm-7">
+                                                <div class="radio">
+                                                    <label>
+                                                        <input type="radio" name="product_id" value="<?=$value['product_id']?>" <?=$checked?"checked":""?>>
+                                                        <?= $value['product_name'] ?> ( <?=$product_type[$value['product_type']] . " " . $value['pic_number']?> 張 ) 
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <p class="point"><?=$value['price']?> 元</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                <?php $checked=false;}?>
+                            <?php }?>
+                        <?php }?>   
+                    </div>
+                    <?php if($data){?>
+                        <?php foreach ($data as $key => $value) {?>
+                            <?php if($value['product_type'] != 1){?>
+                                <div class="button-div text-center">
+                                    <button type="submit" class="purchase">立即購買</button>
                                 </div>
-                            </div>
-                            <div class="col-sm-2">
-                                <p class="point">3000 元</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="strip2">
-                        <div class="padding-radio col-sm-12 row">
-                            <div class="col-sm-1"></div>
-                            <div class="col-sm-2">
-                                <p class="discount text-center">最省方案</p>
-                            </div>
-                            <div class="col-sm-7">
-                                <div class="radio">
-                                    <label>
-                                        <input type="radio" name="radio2">&nbsp;&nbsp;自由載180天﹙S、M 尺寸，30張﹚
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="col-sm-2">
-                                <p class="point">6000 元</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="strip1"></div>
-                    <div class="strip2"></div>
-                    <div class="strip1"></div>
-                    <div class="strip2"></div>
-                </div>
-                <div class="button-div text-center">
-                    <button type="button" class="purchase">立即購買</button>
-                </div>
+                            <?php break;}?>
+                        <?php }?>
+                    <?php }?>
+                </form>
             </div>
         </div>
     </div>
@@ -207,7 +141,7 @@
     <div id="title2" class="text-center">尺寸指南</div>
     <div class="size">
         <div class="shadow1">
-            <div class="strip3">
+            <div class="strip_size_info">
                 <div class="col-sm-12 row text-center padding-radio">
                     <div class="col-sm-2">尺寸</div>
                     <div class="col-sm-2">解析度</div>
@@ -215,7 +149,7 @@
                     <div class="col-sm-6">用途</div>
                 </div>
             </div>
-            <div class="strip1">
+            <div class="strip_size_info">
                 <div class="col-sm-12 row text-center padding-radio">
                     <div class="col-sm-2 point">S</div>
                     <div class="col-sm-2 wording">72dpi</div>
@@ -223,7 +157,7 @@
                     <div class="col-sm-6 point">適合於網路文章搭配</div>
                 </div>
             </div>
-            <div class="strip3">
+            <div class="strip_size_info">
                 <div class="col-sm-12 row text-center padding-radio">
                     <div class="col-sm-2 point">M</div>
                     <div class="col-sm-2 wording">96dpi</div>
@@ -231,7 +165,7 @@
                     <div class="col-sm-6 point">適合於學術報告、簡報</div>
                 </div>
             </div>
-            <div class="strip1">
+            <div class="strip_size_info">
                 <div class="col-sm-12 row text-center padding-radio">
                     <div class="col-sm-2 point">L</div>
                     <div class="col-sm-2 wording">150dpi</div>
@@ -239,7 +173,7 @@
                     <div class="col-sm-6 point">適合於網站廣告</div>
                 </div>
             </div>
-            <div class="strip3">
+            <div class="strip_size_info">
                 <div class="col-sm-12 row text-center padding-radio">
                     <div class="col-sm-2 point">XL</div>
                     <div class="col-sm-2 wording">300dpi</div>
@@ -247,7 +181,7 @@
                     <div class="col-sm-6 point">適合於書刊、雜誌印刷出版、廣告海報或大圖輸出、展覽</div>
                 </div>
             </div>
-            <div class="strip1">
+            <div class="strip_size_info">
                 <div class="col-sm-12 row text-center padding-radio">
                     <div class="col-sm-12 point">
                         *商業用途、或需大批檔案下載、600dpi以上檔案者，需與文訊進一步確認用途等相關事宜，價格則由本公司依媒體、數量、地域、網路流量等做報價，並保留是否接受訂單之最後權利。
@@ -319,13 +253,20 @@
     .header-description {
         font-size: 12px;
     }
-
-    .strip1 {
+    .strip_size_info:nth-child(even){
+        background-color: #e3decd;
+        height: 80px;
+    }
+    .strip_size_info:nth-child(odd){
+        height: 80px;
+        background-color: #f8f5ec;
+    }
+    .strip:nth-child(even){
         background-color: #e3decd;
         height: 80px;
     }
 
-    .strip2 {
+    .strip:nth-child(odd){
         background-color: white;
         height: 80px;
     }

@@ -9,7 +9,9 @@
  * @property string $name
  * @property string $mobile
  * @property string $email
- * @property integer $country
+ * @property string $nationality
+ * @property string $country
+ * @property string $town
  * @property integer $codezip
  * @property string $address
  * @property integer $invoice_category
@@ -34,14 +36,16 @@ class Memberaddressbook extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('member_id, name, mobile, email, country, codezip, address, invoice_category', 'required'),
-			array('member_id, country, codezip, invoice_category, invoice_number', 'numerical', 'integerOnly'=>true),
+			array('member_id, mobile, invoice_category', 'required'),
+			array('member_id, codezip, invoice_category, invoice_number', 'numerical', 'integerOnly'=>true),
 			array('name, mobile', 'length', 'max'=>50),
-			array('email, invoice_title', 'length', 'max'=>100),
+			array('email, country, invoice_title', 'length', 'max'=>100),
+			array('nationality', 'length', 'max'=>2),
+			array('town', 'length', 'max'=>36),
 			array('address', 'length', 'max'=>256),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('address_book_id, member_id, name, mobile, email, country, codezip, address, invoice_category, invoice_number, invoice_title', 'safe', 'on'=>'search'),
+			array('address_book_id, member_id, name, mobile, email, nationality, country, town, codezip, address, invoice_category, invoice_number, invoice_title', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -67,7 +71,9 @@ class Memberaddressbook extends CActiveRecord
 			'name' => '姓名',
 			'mobile' => '電話',
 			'email' => '電子郵件',
-			'country' => '國家',
+			'nationality' => '國籍',
+			'country' => '縣市',
+			'town' => '鄉鎮',
 			'codezip' => '郵遞區號',
 			'address' => '地址',
 			'invoice_category' => '發票類型 ( 0：捐贈 1：二聯 2：三聯 )',
@@ -99,7 +105,9 @@ class Memberaddressbook extends CActiveRecord
 		$criteria->compare('name',$this->name,true);
 		$criteria->compare('mobile',$this->mobile,true);
 		$criteria->compare('email',$this->email,true);
-		$criteria->compare('country',$this->country);
+		$criteria->compare('nationality',$this->nationality,true);
+		$criteria->compare('country',$this->country,true);
+		$criteria->compare('town',$this->town,true);
 		$criteria->compare('codezip',$this->codezip);
 		$criteria->compare('address',$this->address,true);
 		$criteria->compare('invoice_category',$this->invoice_category);

@@ -71,12 +71,6 @@ class EmployeeController extends Controller
         $attendanceRecordServ = new AttendancerecordService();
         $tomorrow = new DateTime();
         $tomorrow->add(DateInterval::createFromDateString('1 day'));
-        $appliedAnnualLeave = $attendanceRecordServ->summaryMinutesByPeriodOfTimeAndLeaveType(
-            $employee->getEmployeeId()->value(),
-            $employee->getOnBoardDate() . ' 00:00:00',
-            $tomorrow->format('Y-m-d 00:00:00'),
-            '5'
-        );
 
         $personalLeaveAnnualMinutes = $employeeLeaveCalculator->personalLeaveAnnualMinutes();
         $sickLeaveAnnualMinutes = $employeeLeaveCalculator->sickLeaveAnnualMinutes();
@@ -86,6 +80,13 @@ class EmployeeController extends Controller
         $commonLeaveEndDateTime = new DateTime("{$year}/01/01 00:00:00");
         $commonLeaveEndDateTime->add(DateInterval::createFromDateString('1 year'));
         $commonLeaveEndDate = $commonLeaveEndDateTime->format('Y/m/d H:i:s');
+
+        $appliedAnnualLeave = $attendanceRecordServ->summaryMinutesByPeriodOfTimeAndLeaveType(
+            $employee->getEmployeeId()->value(),
+            $commonLeaveStartDate,
+            $commonLeaveEndDate,
+            '5'
+        );
 
         $personalLeavedMinutes = $attendanceRecordServ->summaryMinutesByPeriodOfTimeAndLeaveType(
             $employee->getEmployeeId()->value(),
@@ -112,17 +113,17 @@ class EmployeeController extends Controller
             [
                 'category' => '年假(特別休假)',
                 'leave_applied' => $appliedAnnualLeave / 60,
-                'leave_available' => $annualLeaveMinutes->minutesValue() / 60,
+                'leave_available' => $annualLeaveMinutes->minutesValue() / 60 - $appliedAnnualLeave / 60,
             ],
             [
                 'category' => '事假',
                 'leave_applied' => $personalLeavedMinutes / 60,
-                'leave_available' => $personalLeaveAnnualMinutes / 60,
+                'leave_available' => $personalLeaveAnnualMinutes / 60 - $personalLeavedMinutes / 60,
             ],
             [
                 'category' => '病假',
                 'leave_applied' => $sickLeavedMinutes / 60,
-                'leave_available' => $sickLeaveAnnualMinutes / 60,
+                'leave_available' => $sickLeaveAnnualMinutes / 60 - $sickLeavedMinutes / 60,
             ],
             [
                 'category' => '補休假',

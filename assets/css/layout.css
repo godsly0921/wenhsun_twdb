@@ -14,6 +14,16 @@ footer{
 footer a:hover{
 	text-decoration: none;
 }
+.member_dropdown{
+	background-color: #fff;
+	opacity: 0.9;
+}
+.member_dropdown a{
+	color: #4b2f1f;
+}
+.member_dropdown i{
+	color: #d65f30;
+}
 
 .footer_right{
 	font-size: 12px;
@@ -51,7 +61,7 @@ footer a:hover{
 }
 
 .header_navbar{
-	background-color: #e3decd;
+	background-color: #fffdf7;
 	position: fixed;
     top: 0px;
     z-index: 3;

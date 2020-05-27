@@ -126,6 +126,7 @@ class NewsController extends Controller
         $inputs["new_image"] = filter_input(INPUT_POST, "new_image");
 
         $emil_status = true;
+        set_time_limit(0);
         foreach($data as $key => $value){
             $inputs["name"] = $value['name'];
             $inputs["email"] = $value['email'];

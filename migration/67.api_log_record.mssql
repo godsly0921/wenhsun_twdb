@@ -1,0 +1,66 @@
+-- phpMyAdmin SQL Dump
+-- version 4.8.5
+-- https://www.phpmyadmin.net/
+--
+-- 主機： localhost
+-- 產生時間： 2020 年 04 月 17 日 16:49
+-- 伺服器版本： 10.3.21-MariaDB
+-- PHP 版本： 7.2.26
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET AUTOCOMMIT = 0;
+START TRANSACTION;
+SET time_zone = "+00:00";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+
+--
+-- 資料庫： `wenhsun_new`
+--
+
+-- --------------------------------------------------------
+
+--
+-- 資料表結構 `api_log_record`
+--
+
+CREATE TABLE `api_log_record` (
+  `id` int(11) NOT NULL,
+  `log_format` varchar(100) NOT NULL COMMENT 'api action',
+  `api_token` varchar(256) DEFAULT NULL,
+  `api_manage_id` int(12) DEFAULT NULL,
+  `request` text NOT NULL COMMENT 'api input',
+  `respond` text NOT NULL COMMENT 'api 執行結果',
+  `start_time` varchar(50) NOT NULL COMMENT '執行開始時間',
+  `end_time` varchar(50) NOT NULL COMMENT '執行結束時間',
+  `total_time` float NOT NULL COMMENT '統計執行時間'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='api log記錄';
+
+--
+-- 已傾印資料表的索引
+--
+
+--
+-- 資料表索引 `api_log_record`
+--
+ALTER TABLE `api_log_record`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- 在傾印的資料表使用自動增長(AUTO_INCREMENT)
+--
+
+--
+-- 使用資料表自動增長(AUTO_INCREMENT) `api_log_record`
+--
+ALTER TABLE `api_log_record`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+COMMIT;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

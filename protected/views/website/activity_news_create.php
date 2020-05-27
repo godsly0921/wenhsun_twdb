@@ -35,34 +35,43 @@ unset( Yii::app()->session['success_msg'] );
             <?php CsrfProtector::genHiddenField(); ?>
             <div class="form-group">
                 <label for="adv_id" class="col-sm-2 control-label">標題:</label>
-                <div class="col-sm-5">
+                <div class="col-sm-8">
                     <input type="text" class="form-control" id="title" name="title" value="<?=$news['title']?>" placeholder="請輸入標題">
                 </div>
             </div>
             <div class="form-group">
                 <label class="col-sm-2 control-label">副標:</label>
-                <div class="col-sm-5">
+                <div class="col-sm-8">
                     <input type="text" class="form-control" id="second_title" name="second_title" placeholder="請輸入副標" value="<?=$news['second_title']?>">
                 </div>
             </div>
             <div class="form-group">
                 <label class="col-sm-2 control-label">內文1:</label>
-                <div class="col-sm-5">
+                <div class="col-sm-8">
                     <textarea id="content" name="content" class="form-control" rows="10"><?php echo $news['content']; ?></textarea>
                 </div>
             </div>
             <div class="form-group">
                 <label class="col-sm-2 control-label">主要內文:</label>
-                <div class="col-sm-5">
+                <div class="col-sm-8">
                     <textarea id="main_content" name="main_content" class="form-control" rows="20"><?php echo $news['main_content']; ?></textarea>
                 </div>
             </div>
             <div class="form-group">
                 <label class="col-sm-2 control-label">圖片:</label>
-                <div class="col-sm-5">
+                <div class="col-sm-8">
                     <input type="file" class="form-control-file" id="image" name="image" value=""onchange="checkImage(this)">
                 </div>
                 <div class="col-sm-4"><span style="color:red;">975*500</span></div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">上下架:</label>
+                <div class="col-sm-8">
+                    <select name="active" class="form-control">
+                        <option value="T">上架</option>
+                        <option value="F">下架</option>
+                    </select>
+                </div>
             </div>
             <div class="form-group">
                 <div class="col-sm-offset-2 col-sm-10">
@@ -72,7 +81,29 @@ unset( Yii::app()->session['success_msg'] );
         </form>
     </div>
 </div>
+<script src="<?php echo Yii::app()->request->baseUrl.'/assets/ckeditor/all/ckeditor.js'; ?>"></script>
 <script type="text/javascript">
+    $(document).ready(function() {
+        CKEDITOR.replace("main_content",{
+            filebrowserBrowseUrl : "<?= Yii::app()->request->baseUrl.'/assets/ckfinder/ckfinder.html';?>",
+            filebrowserImageBrowseUrl : "<?= Yii::app()->request->baseUrl.'/assets/ckfinder/ckfinder.html?type=Images';?>",
+            filebrowserFlashBrowseUrl:"<?= Yii::app()->request->baseUrl.'/assets/ckfinder/ckfinder.html?Type=Flash';?>",
+            filebrowserUploadUrl: "<?= Yii::app()->request->baseUrl.'/assets/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Files';?>",
+            filebrowserImageUploadUrl: "<?= Yii::app()->request->baseUrl.'/assets/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Images';?>",
+            filebrowserFlashUploadUrl: "<?= Yii::app()->request->baseUrl.'/assets/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Flash';?>",
+            height: 450
+        });
+
+        CKEDITOR.replace("content",{
+            filebrowserBrowseUrl : "<?= Yii::app()->request->baseUrl.'/assets/ckfinder/ckfinder.html';?>",
+            filebrowserImageBrowseUrl : "<?= Yii::app()->request->baseUrl.'/assets/ckfinder/ckfinder.html?type=Images';?>",
+            filebrowserFlashBrowseUrl:"<?= Yii::app()->request->baseUrl.'/assets/ckfinder/ckfinder.html?Type=Flash';?>",
+            filebrowserUploadUrl: "<?= Yii::app()->request->baseUrl.'/assets/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Files';?>",
+            filebrowserImageUploadUrl: "<?= Yii::app()->request->baseUrl.'/assets/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Images';?>",
+            filebrowserFlashUploadUrl: "<?= Yii::app()->request->baseUrl.'/assets/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Flash';?>",
+            height: 200
+        });
+    })
     function checkImage(image){
         var file = image.files[0];
         var _URL = window.URL || window.webkitURL;

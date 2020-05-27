@@ -13,7 +13,7 @@
             <thead>
             <tr role="row">
                 <th>圖檔編號</th>
-                <!-- <th>分類</th> -->
+                <th>圖片名稱</th>
                 <th>著作權審核狀態</th>
                 <th>是否上架</th>
                 <th>切圖進度</th>
@@ -29,7 +29,7 @@
                         <br>
                         <center>圖片編號：<?=$value['single_id']?></center>
                     </td>
-                    <!-- <td><?#=$value['single_id']?></td> -->
+                    <td><?=$value['filming_name']?></td>
                     <td><?=$value['copyright'] == 0 ?'不通過':'通過'?></td>
                     <td><?=$value['publish'] == 0 ?'否':'是'?></td>
                     <td><?=round($value['percent'],2)?> %</td>

@@ -93,8 +93,11 @@ class AttendanceService
             // 抓出所有不是PT的員工
             $data = $employee_service->findEmployeeNotInRolesListObject([7,37,38,39,40,43,44,45]);
 
+            $attendanceRecordService = new AttendancerecordService();
+            $leaveList = $attendanceRecordService->getLeaveHoursByDate($day);
 
             foreach ($data as $key => $value) {
+                $leaveHours = isset($leaveList[$value['id']]) ? $leaveList[$value['id']] : 0;
                 if (!empty($value->door_card_num) || $value->door_card_num == "0000000000") { // 如果有員工有設定卡號的使用者就去抓
 
                     $start_date = $day . ' 00:00:00';
@@ -160,528 +163,500 @@ class AttendanceService
                         }
                     }
 
-                    if ($special_attendance == true) {//特殊情況
-                        if ($special_attendance_type == 1) {//特殊出勤日
-                            if ($this->get_chinese_weekday($day) == "星期日") {
-                                $diff_time = strtotime($last_time) - strtotime($first_time);//這個員工一整天上班時間
-                                if ($diff_time > NINE_HOUR && $diff_time <= TEN_HOUR) {
-                                    $abnormal_type = 0;//正常
-                                    $abnormal .= '特殊出勤日 上班八小時';
-                                    $abnormal .= ' ' . $special_attendance_description;
-                                } elseif ($diff_time > NINE_HOUR && $diff_time > OVER_TEN_HOUR) {
-                                    $abnormal_type = 1;//正常
-                                    $abnormal .= '特殊出勤日 加班，上班時數超過十小時';
-                                    $abnormal .= ' ' . $special_attendance_description;
-                                } elseif ($diff_time < NINE_HOUR && $diff_time > TWO_SECOND) {
-                                    $abnormal_type = 1;//異常需填寫異常單
-                                    $abnormal .= '特殊出勤日 異常，上班時數小於上班八小時';
-                                    $abnormal .= ' ' . $special_attendance_description;
-                                } elseif ($diff_time == ZERO_SECOND) {
-                                    $abnormal_type = 1;
-                                    $abnormal .= '特殊出勤日 異常，僅一筆刷卡紀錄';
-                                    $abnormal .= ' ' . $special_attendance_description;
-                                } else {
-                                    $abnormal_type = 1;
-                                    $abnormal .= '特殊出勤日 異常，沒有任何記錄';
-                                    $abnormal .= ' ' . $special_attendance_description;
+                    $diff_time = strtotime($last_time) - strtotime($first_time);
+                    $includingLeaveTime = $diff_time + $leaveHours;
+
+                    // 請假時數小於8時才判斷出勤
+                    if ($leaveHours < 8) {
+                        if ($special_attendance == true) { //特殊情況
+                            if ($special_attendance_type == 1) { //特殊出勤日
+                                if ($this->get_chinese_weekday($day) == "星期日") {
+                                    if ($diff_time > NINE_HOUR && $diff_time <= TEN_HOUR) {
+                                        $abnormal_type = 0; //正常
+                                        $abnormal .= '特殊出勤日 上班八小時';
+                                        $abnormal .= ' ' . $special_attendance_description;
+                                    } elseif ($diff_time > NINE_HOUR && $diff_time > OVER_TEN_HOUR) {
+                                        $abnormal_type = 1; //正常
+                                        $abnormal .= '特殊出勤日 加班，上班時數超過十小時';
+                                        $abnormal .= ' ' . $special_attendance_description;
+                                    } elseif ($diff_time < NINE_HOUR && $diff_time > TWO_SECOND && $includingLeaveTime < 8) {
+                                        $abnormal_type = 1; //異常需填寫異常單
+                                        $abnormal .= '特殊出勤日 異常，上班時數小於上班八小時';
+                                        $abnormal .= ' ' . $special_attendance_description;
+                                    } elseif ($diff_time == ZERO_SECOND) {
+                                        $abnormal_type = 1;
+                                        $abnormal .= '特殊出勤日 異常，僅一筆刷卡紀錄';
+                                        $abnormal .= ' ' . $special_attendance_description;
+                                    } else {
+                                        $abnormal_type = 1;
+                                        $abnormal .= '特殊出勤日 異常，沒有任何記錄';
+                                        $abnormal .= ' ' . $special_attendance_description;
+                                    }
+                                } else if ($this->get_chinese_weekday($day) == "星期一") {
+                                    if ($diff_time > NINE_HOUR && $diff_time <= TEN_HOUR) {
+                                        $abnormal_type = 0; //正常
+                                        $abnormal .= '特殊出勤日 上班八小時';
+                                        $abnormal .= ' ' . $special_attendance_description;
+                                    } elseif ($diff_time > NINE_HOUR && $diff_time > OVER_TEN_HOUR) {
+                                        $abnormal_type = 1; //正常
+                                        $abnormal .= '特殊出勤日 加班，上班時數超過十小時';
+                                        $abnormal .= ' ' . $special_attendance_description;
+                                    } elseif ($diff_time < NINE_HOUR && $diff_time > TWO_SECOND && $includingLeaveTime < 8) {
+                                        $abnormal_type = 1; //異常需填寫異常單
+                                        $abnormal .= '特殊出勤日 異常，上班時數小於上班八小時';
+                                        $abnormal .= ' ' . $special_attendance_description;
+                                    } elseif ($diff_time == ZERO_SECOND) {
+                                        $abnormal_type = 1;
+                                        $abnormal .= '特殊出勤日 異常，僅一筆刷卡紀錄';
+                                        $abnormal .= ' ' . $special_attendance_description;
+                                    } else {
+                                        $abnormal_type = 1;
+                                        $abnormal .= '特殊出勤日 異常，沒有任何記錄';
+                                        $abnormal .= ' ' . $special_attendance_description;
+                                    }
+                                } else if ($this->get_chinese_weekday($day) == "星期二") {
+                                    if ($diff_time > NINE_HOUR && $diff_time <= TEN_HOUR) {
+                                        $abnormal_type = 0; //正常
+                                        $abnormal .= '特殊出勤日 上班八小時';
+                                        $abnormal .= ' ' . $special_attendance_description;
+                                    } elseif ($diff_time > NINE_HOUR && $diff_time > OVER_TEN_HOUR) {
+                                        $abnormal_type = 1; //正常
+                                        $abnormal .= '特殊出勤日 加班，上班時數超過十小時';
+                                        $abnormal .= ' ' . $special_attendance_description;
+                                    } elseif ($diff_time < NINE_HOUR && $diff_time > TWO_SECOND && $includingLeaveTime < 8) {
+                                        $abnormal_type = 1; //異常需填寫異常單
+                                        $abnormal .= '特殊出勤日 異常，上班時數小於上班八小時';
+                                        $abnormal .= ' ' . $special_attendance_description;
+                                    } elseif ($diff_time == ZERO_SECOND) {
+                                        $abnormal_type = 1;
+                                        $abnormal .= '特殊出勤日 異常，僅一筆刷卡紀錄';
+                                        $abnormal .= ' ' . $special_attendance_description;
+                                    } else {
+                                        $abnormal_type = 1;
+                                        $abnormal .= '特殊出勤日 異常，沒有任何記錄';
+                                        $abnormal .= ' ' . $special_attendance_description;
+                                    }
+                                } else if ($this->get_chinese_weekday($day) == "星期三") {
+                                    if ($diff_time > NINE_HOUR && $diff_time <= TEN_HOUR) {
+                                        $abnormal_type = 0; //正常
+                                        $abnormal .= '特殊出勤日 上班八小時';
+                                        $abnormal .= ' ' . $special_attendance_description;
+                                    } elseif ($diff_time > NINE_HOUR && $diff_time > OVER_TEN_HOUR) {
+                                        $abnormal_type = 1; //正常
+                                        $abnormal .= '特殊出勤日 加班，上班時數超過十小時';
+                                        $abnormal .= ' ' . $special_attendance_description;
+                                    } elseif ($diff_time < NINE_HOUR && $diff_time > TWO_SECOND && $includingLeaveTime < 8) {
+                                        $abnormal_type = 1; //異常需填寫異常單
+                                        $abnormal .= '特殊出勤日 異常，上班時數小於上班八小時';
+                                        $abnormal .= ' ' . $special_attendance_description;
+                                    } elseif ($diff_time == ZERO_SECOND) {
+                                        $abnormal_type = 1;
+                                        $abnormal .= '特殊出勤日 異常，僅一筆刷卡紀錄';
+                                        $abnormal .= ' ' . $special_attendance_description;
+                                    } else {
+                                        $abnormal_type = 1;
+                                        $abnormal .= '特殊出勤日 異常，沒有任何記錄';
+                                        $abnormal .= ' ' . $special_attendance_description;
+                                    }
+                                } else if ($this->get_chinese_weekday($day) == "星期四") {
+                                    if ($diff_time > NINE_HOUR && $diff_time <= TEN_HOUR) {
+                                        $abnormal_type = 0; //正常
+                                        $abnormal .= '特殊出勤日 上班八小時';
+                                        $abnormal .= ' ' . $special_attendance_description;
+                                    } elseif ($diff_time > NINE_HOUR && $diff_time > OVER_TEN_HOUR) {
+                                        $abnormal_type = 1; //正常
+                                        $abnormal .= '特殊出勤日 加班，上班時數超過十小時';
+                                        $abnormal .= ' ' . $special_attendance_description;
+                                    } elseif ($diff_time < NINE_HOUR && $diff_time > TWO_SECOND && $includingLeaveTime < 8) {
+                                        $abnormal_type = 1; //異常需填寫異常單
+                                        $abnormal .= '特殊出勤日 異常，上班時數小於上班八小時';
+                                        $abnormal .= ' ' . $special_attendance_description;
+                                    } elseif ($diff_time == ZERO_SECOND) {
+                                        $abnormal_type = 1;
+                                        $abnormal .= '特殊出勤日 異常，僅一筆刷卡紀錄';
+                                        $abnormal .= ' ' . $special_attendance_description;
+                                    } else {
+                                        $abnormal_type = 1;
+                                        $abnormal .= '特殊出勤日 異常，沒有任何記錄';
+                                        $abnormal .= ' ' . $special_attendance_description;
+                                    }
+                                } else if ($this->get_chinese_weekday($day) == "星期五") {
+                                    if ($diff_time > NINE_HOUR && $diff_time <= TEN_HOUR) {
+                                        $abnormal_type = 0; //正常
+                                        $abnormal .= '特殊出勤日 上班八小時';
+                                        $abnormal .= ' ' . $special_attendance_description;
+                                    } elseif ($diff_time > NINE_HOUR && $diff_time > OVER_TEN_HOUR) {
+                                        $abnormal_type = 1; //正常
+                                        $abnormal .= '特殊出勤日 加班，上班時數超過十小時';
+                                        $abnormal .= ' ' . $special_attendance_description;
+                                    } elseif ($diff_time < NINE_HOUR && $diff_time > TWO_SECOND) {
+                                        $abnormal_type = 1; //異常需填寫異常單
+                                        $abnormal .= '特殊出勤日 異常，上班時數小於上班八小時';
+                                        $abnormal .= ' ' . $special_attendance_description;
+                                    } elseif ($diff_time == ZERO_SECOND) {
+                                        $abnormal_type = 1;
+                                        $abnormal .= '特殊出勤日 異常，僅一筆刷卡紀錄';
+                                        $abnormal .= ' ' . $special_attendance_description;
+                                    } else {
+                                        $abnormal_type = 1;
+                                        $abnormal .= '特殊出勤日 異常，沒有任何記錄';
+                                        $abnormal .= ' ' . $special_attendance_description;
+                                    }
+                                } else if ($this->get_chinese_weekday($day) == "星期六") {
+                                    if ($diff_time > NINE_HOUR && $diff_time <= TEN_HOUR) {
+                                        $abnormal_type = 0; //正常
+                                        $abnormal .= '特殊出勤日 上班八小時';
+                                        $abnormal .= ' ' . $special_attendance_description;
+                                    } elseif ($diff_time > NINE_HOUR && $diff_time > OVER_TEN_HOUR) {
+                                        $abnormal_type = 1; //正常
+                                        $abnormal .= '特殊出勤日 加班，上班時數超過十小時';
+                                        $abnormal .= ' ' . $special_attendance_description;
+                                    } elseif ($diff_time < NINE_HOUR && $diff_time > TWO_SECOND && $includingLeaveTime < 8) {
+                                        $abnormal_type = 1; //異常需填寫異常單
+                                        $abnormal .= '特殊出勤日 異常，上班時數小於上班八小時';
+                                        $abnormal .= ' ' . $special_attendance_description;
+                                    } elseif ($diff_time == ZERO_SECOND) {
+                                        $abnormal_type = 1;
+                                        $abnormal .= '特殊出勤日 異常，僅一筆刷卡紀錄';
+                                        $abnormal .= ' ' . $special_attendance_description;
+                                    } else {
+                                        $abnormal_type = 1;
+                                        $abnormal .= '特殊出勤日 異常，沒有任何記錄';
+                                        $abnormal .= ' ' . $special_attendance_description;
+                                    }
                                 }
-                            } else if ($this->get_chinese_weekday($day) == "星期一") {
-                                $diff_time = strtotime($last_time) - strtotime($first_time);//這個員工一整天上班時間
-                                if ($diff_time > NINE_HOUR && $diff_time <= TEN_HOUR) {
-                                    $abnormal_type = 0;//正常
-                                    $abnormal .= '特殊出勤日 上班八小時';
-                                    $abnormal .= ' ' . $special_attendance_description;
-                                } elseif ($diff_time > NINE_HOUR && $diff_time > OVER_TEN_HOUR) {
-                                    $abnormal_type = 1;//正常
-                                    $abnormal .= '特殊出勤日 加班，上班時數超過十小時';
-                                    $abnormal .= ' ' . $special_attendance_description;
-                                } elseif ($diff_time < NINE_HOUR && $diff_time > TWO_SECOND) {
-                                    $abnormal_type = 1;//異常需填寫異常單
-                                    $abnormal .= '特殊出勤日 異常，上班時數小於上班八小時';
-                                    $abnormal .= ' ' . $special_attendance_description;
-                                } elseif ($diff_time == ZERO_SECOND) {
-                                    $abnormal_type = 1;
-                                    $abnormal .= '特殊出勤日 異常，僅一筆刷卡紀錄';
-                                    $abnormal .= ' ' . $special_attendance_description;
-                                } else {
-                                    $abnormal_type = 1;
-                                    $abnormal .= '特殊出勤日 異常，沒有任何記錄';
-                                    $abnormal .= ' ' . $special_attendance_description;
-                                }
-                            } else if ($this->get_chinese_weekday($day) == "星期二") {
-                                $diff_time = strtotime($last_time) - strtotime($first_time);//這個員工一整天上班時間
-                                if ($diff_time > NINE_HOUR && $diff_time <= TEN_HOUR) {
-                                    $abnormal_type = 0;//正常
-                                    $abnormal .= '特殊出勤日 上班八小時';
-                                    $abnormal .= ' ' . $special_attendance_description;
-                                } elseif ($diff_time > NINE_HOUR && $diff_time > OVER_TEN_HOUR) {
-                                    $abnormal_type = 1;//正常
-                                    $abnormal .= '特殊出勤日 加班，上班時數超過十小時';
-                                    $abnormal .= ' ' . $special_attendance_description;
-                                } elseif ($diff_time < NINE_HOUR && $diff_time > TWO_SECOND) {
-                                    $abnormal_type = 1;//異常需填寫異常單
-                                    $abnormal .= '特殊出勤日 異常，上班時數小於上班八小時';
-                                    $abnormal .= ' ' . $special_attendance_description;
-                                } elseif ($diff_time == ZERO_SECOND) {
-                                    $abnormal_type = 1;
-                                    $abnormal .= '特殊出勤日 異常，僅一筆刷卡紀錄';
-                                    $abnormal .= ' ' . $special_attendance_description;
-                                } else {
-                                    $abnormal_type = 1;
-                                    $abnormal .= '特殊出勤日 異常，沒有任何記錄';
-                                    $abnormal .= ' ' . $special_attendance_description;
-                                }
-                            } else if ($this->get_chinese_weekday($day) == "星期三") {
-                                $diff_time = strtotime($last_time) - strtotime($first_time);//這個員工一整天上班時間
-                                if ($diff_time > NINE_HOUR && $diff_time <= TEN_HOUR) {
-                                    $abnormal_type = 0;//正常
-                                    $abnormal .= '特殊出勤日 上班八小時';
-                                    $abnormal .= ' ' . $special_attendance_description;
-                                } elseif ($diff_time > NINE_HOUR && $diff_time > OVER_TEN_HOUR) {
-                                    $abnormal_type = 1;//正常
-                                    $abnormal .= '特殊出勤日 加班，上班時數超過十小時';
-                                    $abnormal .= ' ' . $special_attendance_description;
-                                } elseif ($diff_time < NINE_HOUR && $diff_time > TWO_SECOND) {
-                                    $abnormal_type = 1;//異常需填寫異常單
-                                    $abnormal .= '特殊出勤日 異常，上班時數小於上班八小時';
-                                    $abnormal .= ' ' . $special_attendance_description;
-                                } elseif ($diff_time == ZERO_SECOND) {
-                                    $abnormal_type = 1;
-                                    $abnormal .= '特殊出勤日 異常，僅一筆刷卡紀錄';
-                                    $abnormal .= ' ' . $special_attendance_description;
-                                } else {
-                                    $abnormal_type = 1;
-                                    $abnormal .= '特殊出勤日 異常，沒有任何記錄';
-                                    $abnormal .= ' ' . $special_attendance_description;
-                                }
-                            } else if ($this->get_chinese_weekday($day) == "星期四") {
-                                $diff_time = strtotime($last_time) - strtotime($first_time);//這個員工一整天上班時間
-                                if ($diff_time > NINE_HOUR && $diff_time <= TEN_HOUR) {
-                                    $abnormal_type = 0;//正常
-                                    $abnormal .= '特殊出勤日 上班八小時';
-                                    $abnormal .= ' ' . $special_attendance_description;
-                                } elseif ($diff_time > NINE_HOUR && $diff_time > OVER_TEN_HOUR) {
-                                    $abnormal_type = 1;//正常
-                                    $abnormal .= '特殊出勤日 加班，上班時數超過十小時';
-                                    $abnormal .= ' ' . $special_attendance_description;
-                                } elseif ($diff_time < NINE_HOUR && $diff_time > TWO_SECOND) {
-                                    $abnormal_type = 1;//異常需填寫異常單
-                                    $abnormal .= '特殊出勤日 異常，上班時數小於上班八小時';
-                                    $abnormal .= ' ' . $special_attendance_description;
-                                } elseif ($diff_time == ZERO_SECOND) {
-                                    $abnormal_type = 1;
-                                    $abnormal .= '特殊出勤日 異常，僅一筆刷卡紀錄';
-                                    $abnormal .= ' ' . $special_attendance_description;
-                                } else {
-                                    $abnormal_type = 1;
-                                    $abnormal .= '特殊出勤日 異常，沒有任何記錄';
-                                    $abnormal .= ' ' . $special_attendance_description;
-                                }
-                            } else if ($this->get_chinese_weekday($day) == "星期五") {
-                                $diff_time = strtotime($last_time) - strtotime($first_time);//這個員工一整天上班時間
-                                if ($diff_time > NINE_HOUR && $diff_time <= TEN_HOUR) {
-                                    $abnormal_type = 0;//正常
-                                    $abnormal .= '特殊出勤日 上班八小時';
-                                    $abnormal .= ' ' . $special_attendance_description;
-                                } elseif ($diff_time > NINE_HOUR && $diff_time > OVER_TEN_HOUR) {
-                                    $abnormal_type = 1;//正常
-                                    $abnormal .= '特殊出勤日 加班，上班時數超過十小時';
-                                    $abnormal .= ' ' . $special_attendance_description;
-                                } elseif ($diff_time < NINE_HOUR && $diff_time > TWO_SECOND) {
-                                    $abnormal_type = 1;//異常需填寫異常單
-                                    $abnormal .= '特殊出勤日 異常，上班時數小於上班八小時';
-                                    $abnormal .= ' ' . $special_attendance_description;
-                                } elseif ($diff_time == ZERO_SECOND) {
-                                    $abnormal_type = 1;
-                                    $abnormal .= '特殊出勤日 異常，僅一筆刷卡紀錄';
-                                    $abnormal .= ' ' . $special_attendance_description;
-                                } else {
-                                    $abnormal_type = 1;
-                                    $abnormal .= '特殊出勤日 異常，沒有任何記錄';
-                                    $abnormal .= ' ' . $special_attendance_description;
-                                }
-                            } else if ($this->get_chinese_weekday($day) == "星期六") {
-                                $diff_time = strtotime($last_time) - strtotime($first_time);//這個員工一整天上班時間
-                                if ($diff_time > NINE_HOUR && $diff_time <= TEN_HOUR) {
-                                    $abnormal_type = 0;//正常
-                                    $abnormal .= '特殊出勤日 上班八小時';
-                                    $abnormal .= ' ' . $special_attendance_description;
-                                } elseif ($diff_time > NINE_HOUR && $diff_time > OVER_TEN_HOUR) {
-                                    $abnormal_type = 1;//正常
-                                    $abnormal .= '特殊出勤日 加班，上班時數超過十小時';
-                                    $abnormal .= ' ' . $special_attendance_description;
-                                } elseif ($diff_time < NINE_HOUR && $diff_time > TWO_SECOND) {
-                                    $abnormal_type = 1;//異常需填寫異常單
-                                    $abnormal .= '特殊出勤日 異常，上班時數小於上班八小時';
-                                    $abnormal .= ' ' . $special_attendance_description;
-                                } elseif ($diff_time == ZERO_SECOND) {
-                                    $abnormal_type = 1;
-                                    $abnormal .= '特殊出勤日 異常，僅一筆刷卡紀錄';
-                                    $abnormal .= ' ' . $special_attendance_description;
-                                } else {
-                                    $abnormal_type = 1;
-                                    $abnormal .= '特殊出勤日 異常，沒有任何記錄';
-                                    $abnormal .= ' ' . $special_attendance_description;
+                            } elseif ($special_attendance_type == 0) { //休假日
+                                if ($this->get_chinese_weekday($day) == "星期日") {
+                                    if ($diff_time > NINE_HOUR && $diff_time <= TEN_HOUR) {
+                                        $abnormal_type = 1;
+                                        $abnormal .= '特殊休假日 上班八小時';
+                                        $abnormal .= ' ' . $special_attendance_description;
+                                    } elseif ($diff_time > NINE_HOUR && $diff_time > OVER_TEN_HOUR) {
+                                        $abnormal_type = 1;
+                                        $abnormal .= '特殊休假日 加班，上班時數超過十小時';
+                                        $abnormal .= ' ' . $special_attendance_description;
+                                    } elseif ($diff_time < NINE_HOUR && $diff_time > TWO_SECOND && $includingLeaveTime < 8) {
+                                        $abnormal_type = 1;
+                                        $abnormal .= '特殊休假日 異常，上班時數小於上班八小時';
+                                        $abnormal .= ' ' . $special_attendance_description;
+                                    } elseif ($diff_time == ZERO_SECOND) {
+                                        $abnormal_type = 1;
+                                        $abnormal .= '特殊休假日 異常，僅一筆刷卡紀錄';
+                                        $abnormal .= ' ' . $special_attendance_description;
+                                    } else {
+                                        $abnormal_type = 0;
+                                        $abnormal .= '特殊休假日 正常，沒有任何記錄';
+                                        $abnormal .= ' ' . $special_attendance_description;
+                                    }
+                                } else if ($this->get_chinese_weekday($day) == "星期一") {
+                                    if ($diff_time > NINE_HOUR && $diff_time <= TEN_HOUR) {
+                                        $abnormal_type = 1;
+                                        $abnormal .= '特殊休假日 上班八小時';
+                                        $abnormal .= ' ' . $special_attendance_description;
+                                    } elseif ($diff_time > NINE_HOUR && $diff_time > OVER_TEN_HOUR) {
+                                        $abnormal_type = 1;
+                                        $abnormal .= '特殊休假日 加班，上班時數超過十小時';
+                                        $abnormal .= ' ' . $special_attendance_description;
+                                    } elseif ($diff_time < NINE_HOUR && $diff_time > TWO_SECOND && $includingLeaveTime < 8) {
+                                        $abnormal_type = 1; //異常需填寫異常單
+                                        $abnormal .= '特殊休假日 異常，上班時數小於上班八小時';
+                                        $abnormal .= ' ' . $special_attendance_description;
+                                    } elseif ($diff_time == ZERO_SECOND) {
+                                        $abnormal_type = 1;
+                                        $abnormal .= '特殊休假日 異常，僅一筆刷卡紀錄';
+                                        $abnormal .= ' ' . $special_attendance_description;
+                                    } else {
+                                        $abnormal_type = 0;
+                                        $abnormal .= '特殊休假日 正常，沒有任何記錄';
+                                        $abnormal .= ' ' . $special_attendance_description;
+                                    }
+                                } else if ($this->get_chinese_weekday($day) == "星期二") {
+                                    if ($diff_time > NINE_HOUR && $diff_time <= TEN_HOUR) {
+                                        $abnormal_type = 1;
+                                        $abnormal .= '特殊休假日 上班八小時';
+                                        $abnormal .= ' ' . $special_attendance_description;
+                                    } elseif ($diff_time > NINE_HOUR && $diff_time > OVER_TEN_HOUR) {
+                                        $abnormal_type = 1;
+                                        $abnormal .= '特殊休假日 加班，上班時數超過十小時';
+                                        $abnormal .= ' ' . $special_attendance_description;
+                                    } elseif ($diff_time < NINE_HOUR && $diff_time > TWO_SECOND && $includingLeaveTime < 8) {
+                                        $abnormal_type = 1; //異常需填寫異常單
+                                        $abnormal .= '特殊休假日 異常，上班時數小於上班八小時';
+                                        $abnormal .= ' ' . $special_attendance_description;
+                                    } elseif ($diff_time == ZERO_SECOND) {
+                                        $abnormal_type = 1;
+                                        $abnormal .= '特殊休假日 異常，僅一筆刷卡紀錄';
+                                        $abnormal .= ' ' . $special_attendance_description;
+                                    } else {
+                                        $abnormal_type = 0;
+                                        $abnormal .= '特殊休假日 正常，沒有任何記錄';
+                                        $abnormal .= ' ' . $special_attendance_description;
+                                    }
+                                } else if ($this->get_chinese_weekday($day) == "星期三") {
+                                    if ($diff_time > NINE_HOUR && $diff_time <= TEN_HOUR) {
+                                        $abnormal_type = 1;
+                                        $abnormal .= '特殊休假日 上班八小時';
+                                        $abnormal .= ' ' . $special_attendance_description;
+                                    } elseif ($diff_time > NINE_HOUR && $diff_time > OVER_TEN_HOUR) {
+                                        $abnormal_type = 1;
+                                        $abnormal .= '特殊休假日 加班，上班時數超過十小時';
+                                        $abnormal .= ' ' . $special_attendance_description;
+                                    } elseif ($diff_time < NINE_HOUR && $diff_time > TWO_SECOND && $includingLeaveTime < 8) {
+                                        $abnormal_type = 1;
+                                        $abnormal .= '特殊休假日 異常，上班時數小於上班八小時';
+                                        $abnormal .= ' ' . $special_attendance_description;
+                                    } elseif ($diff_time == ZERO_SECOND) {
+                                        $abnormal_type = 1;
+                                        $abnormal .= '特殊休假日 異常，僅一筆刷卡紀錄';
+                                        $abnormal .= ' ' . $special_attendance_description;
+                                    } else {
+                                        $abnormal_type = 0;
+                                        $abnormal .= '特殊休假日 正常';
+                                        $abnormal .= ' ' . $special_attendance_description;
+                                    }
+                                } else if ($this->get_chinese_weekday($day) == "星期四") {
+                                    if ($diff_time > NINE_HOUR && $diff_time <= TEN_HOUR) {
+                                        $abnormal_type = 1;
+                                        $abnormal .= '特殊休假日 上班八小時';
+                                        $abnormal .= ' ' . $special_attendance_description;
+                                    } elseif ($diff_time > NINE_HOUR && $diff_time > OVER_TEN_HOUR) {
+                                        $abnormal_type = 1;
+                                        $abnormal .= '特殊休假日 加班，上班時數超過十小時';
+                                        $abnormal .= ' ' . $special_attendance_description;
+                                    } elseif ($diff_time < NINE_HOUR && $diff_time > TWO_SECOND && $includingLeaveTime < 8) {
+                                        $abnormal_type = 1;
+                                        $abnormal .= '特殊休假日 異常，上班時數小於上班八小時';
+                                        $abnormal .= ' ' . $special_attendance_description;
+                                    } elseif ($diff_time == ZERO_SECOND) {
+                                        $abnormal_type = 1;
+                                        $abnormal .= '特殊休假日 異常，僅一筆刷卡紀錄';
+                                        $abnormal .= ' ' . $special_attendance_description;
+                                    } else {
+                                        $abnormal_type = 0;
+                                        $abnormal .= '特殊休假日 正常';
+                                        $abnormal .= ' ' . $special_attendance_description;
+                                    }
+                                } else if ($this->get_chinese_weekday($day) == "星期五") {
+                                    if ($diff_time > NINE_HOUR && $diff_time <= TEN_HOUR) {
+                                        $abnormal_type = 1;
+                                        $abnormal .= '特殊休假日 上班八小時';
+                                        $abnormal .= ' ' . $special_attendance_description;
+                                    } elseif ($diff_time > NINE_HOUR && $diff_time > OVER_TEN_HOUR) {
+                                        $abnormal_type = 1;
+                                        $abnormal .= '特殊休假日 加班，上班時數超過十小時';
+                                        $abnormal .= ' ' . $special_attendance_description;
+                                    } elseif ($diff_time < NINE_HOUR && $diff_time > TWO_SECOND && $includingLeaveTime < 8) {
+                                        $abnormal_type = 1;
+                                        $abnormal .= '特殊休假日 異常，上班時數小於上班八小時';
+                                        $abnormal .= ' ' . $special_attendance_description;
+                                    } elseif ($diff_time == ZERO_SECOND) {
+                                        $abnormal_type = 1;
+                                        $abnormal .= '特殊休假日 異常，僅一筆刷卡紀錄';
+                                        $abnormal .= ' ' . $special_attendance_description;
+                                    } else {
+                                        $abnormal_type = 0;
+                                        $abnormal .= '特殊休假日 正常';
+                                        $abnormal .= ' ' . $special_attendance_description;
+                                    }
+                                } else if ($this->get_chinese_weekday($day) == "星期六") {
+                                    if ($diff_time > NINE_HOUR && $diff_time <= TEN_HOUR) {
+                                        $abnormal_type = 1;
+                                        $abnormal .= '特殊休假日 上班八小時';
+                                        $abnormal .= ' ' . $special_attendance_description;
+                                    } elseif ($diff_time > NINE_HOUR && $diff_time > OVER_TEN_HOUR) {
+                                        $abnormal_type = 1;
+                                        $abnormal .= '特殊休假日 加班，上班時數超過十小時';
+                                        $abnormal .= ' ' . $special_attendance_description;
+                                    } elseif ($diff_time < NINE_HOUR && $diff_time > TWO_SECOND && $includingLeaveTime < 8) {
+                                        $abnormal_type = 1; //異常需填寫異常單
+                                        $abnormal .= '特殊休假日 異常，上班時數小於上班八小時';
+                                        $abnormal .= ' ' . $special_attendance_description;
+                                    } elseif ($diff_time == ZERO_SECOND) {
+                                        $abnormal_type = 1;
+                                        $abnormal .= '特殊休假日 異常，僅一筆刷卡紀錄';
+                                        $abnormal .= ' ' . $special_attendance_description;
+                                    } else {
+                                        $abnormal_type = 0;
+                                        $abnormal .= '特殊休假日 正常';
+                                        $abnormal .= ' ' . $special_attendance_description;
+                                    }
                                 }
                             }
-                        } elseif ($special_attendance_type == 0) {//休假日
+                        } elseif ($special_attendance == false) {
                             if ($this->get_chinese_weekday($day) == "星期日") {
-                                $diff_time = strtotime($last_time) - strtotime($first_time);//這個員工一整天上班時間
                                 if ($diff_time > NINE_HOUR && $diff_time <= TEN_HOUR) {
                                     $abnormal_type = 1;
-                                    $abnormal .= '特殊休假日 上班八小時';
-                                    $abnormal .= ' ' . $special_attendance_description;
+                                    $abnormal .= '休假日 異常上班八小時';
                                 } elseif ($diff_time > NINE_HOUR && $diff_time > OVER_TEN_HOUR) {
                                     $abnormal_type = 1;
-                                    $abnormal .= '特殊休假日 加班，上班時數超過十小時';
-                                    $abnormal .= ' ' . $special_attendance_description;
-                                } elseif ($diff_time < NINE_HOUR && $diff_time > TWO_SECOND) {
+                                    $abnormal .= '休假日 異常上班，上班時數超過十小時';
+                                } elseif ($diff_time < NINE_HOUR && $diff_time > TWO_SECOND && $includingLeaveTime < 8) {
                                     $abnormal_type = 1;
-                                    $abnormal .= '特殊休假日 異常，上班時數小於上班八小時';
-                                    $abnormal .= ' ' . $special_attendance_description;
+                                    $abnormal .= '休假日 異常上班，上班時數小於上班八小時';
                                 } elseif ($diff_time == ZERO_SECOND) {
                                     $abnormal_type = 1;
-                                    $abnormal .= '特殊休假日 異常，僅一筆刷卡紀錄';
-                                    $abnormal .= ' ' . $special_attendance_description;
+                                    $abnormal .= '休假日 異常，僅一筆刷卡紀錄';
                                 } else {
                                     $abnormal_type = 0;
-                                    $abnormal .= '特殊休假日 正常，沒有任何記錄';
-                                    $abnormal .= ' ' . $special_attendance_description;
+                                    $abnormal .= '休假日 正常';
                                 }
                             } else if ($this->get_chinese_weekday($day) == "星期一") {
-                                $diff_time = strtotime($last_time) - strtotime($first_time);//這個員工一整天上班時間
-                                if ($diff_time > NINE_HOUR && $diff_time <= TEN_HOUR) {
-                                    $abnormal_type = 1;
-                                    $abnormal .= '特殊休假日 上班八小時';
-                                    $abnormal .= ' ' . $special_attendance_description;
+                                if ($diff_time >= NINE_HOUR && $diff_time <= TEN_HOUR) {
+                                    $abnormal_type = 0;
+                                    $abnormal .= '出勤日 上班八小時';
                                 } elseif ($diff_time > NINE_HOUR && $diff_time > OVER_TEN_HOUR) {
                                     $abnormal_type = 1;
-                                    $abnormal .= '特殊休假日 加班，上班時數超過十小時';
-                                    $abnormal .= ' ' . $special_attendance_description;
-                                } elseif ($diff_time < NINE_HOUR && $diff_time > TWO_SECOND) {
-                                    $abnormal_type = 1;//異常需填寫異常單
-                                    $abnormal .= '特殊休假日 異常，上班時數小於上班八小時';
-                                    $abnormal .= ' ' . $special_attendance_description;
+                                    $abnormal .= '出勤日 異常，上班時數超過十小時';
+                                } elseif ($diff_time < NINE_HOUR && $diff_time > TWO_SECOND && $includingLeaveTime < 8) {
+                                    $abnormal_type = 1; //異常需填寫異常單
+                                    $abnormal .= '出勤日 異常，上班時數小於上班八小時';
                                 } elseif ($diff_time == ZERO_SECOND) {
                                     $abnormal_type = 1;
-                                    $abnormal .= '特殊休假日 異常，僅一筆刷卡紀錄';
-                                    $abnormal .= ' ' . $special_attendance_description;
+                                    $abnormal .= '出勤日 異常，僅一筆刷卡紀錄';
                                 } else {
-                                    $abnormal_type = 0;
-                                    $abnormal .= '特殊休假日 正常，沒有任何記錄';
-                                    $abnormal .= ' ' . $special_attendance_description;
+                                    $abnormal_type = 1;
+                                    $abnormal .= '出勤日 異常，缺席';
                                 }
                             } else if ($this->get_chinese_weekday($day) == "星期二") {
-                                $diff_time = strtotime($last_time) - strtotime($first_time);//這個員工一整天上班時間
-                                if ($diff_time > NINE_HOUR && $diff_time <= TEN_HOUR) {
-                                    $abnormal_type = 1;
-                                    $abnormal .= '特殊休假日 上班八小時';
-                                    $abnormal .= ' ' . $special_attendance_description;
+                                if ($diff_time >= NINE_HOUR && $diff_time <= TEN_HOUR) {
+                                    $abnormal_type = 0;
+                                    $abnormal .= '出勤日 上班八小時';
                                 } elseif ($diff_time > NINE_HOUR && $diff_time > OVER_TEN_HOUR) {
                                     $abnormal_type = 1;
-                                    $abnormal .= '特殊休假日 加班，上班時數超過十小時';
-                                    $abnormal .= ' ' . $special_attendance_description;
-                                } elseif ($diff_time < NINE_HOUR && $diff_time > TWO_SECOND) {
-                                    $abnormal_type = 1;//異常需填寫異常單
-                                    $abnormal .= '特殊休假日 異常，上班時數小於上班八小時';
-                                    $abnormal .= ' ' . $special_attendance_description;
+                                    $abnormal .= '出勤日 異常，上班時數超過十小時';
+                                } elseif ($diff_time < NINE_HOUR && $diff_time >= TWO_SECOND && $includingLeaveTime < 8) {
+                                    $abnormal_type = 1; //異常需填寫異常單
+                                    $abnormal .= '出勤日 異常，上班時數小於上班八小時';
                                 } elseif ($diff_time == ZERO_SECOND) {
                                     $abnormal_type = 1;
-                                    $abnormal .= '特殊休假日 異常，僅一筆刷卡紀錄';
-                                    $abnormal .= ' ' . $special_attendance_description;
+                                    $abnormal .= '出勤日 異常，僅一筆刷卡紀錄';
                                 } else {
-                                    $abnormal_type = 0;
-                                    $abnormal .= '特殊休假日 正常，沒有任何記錄';
-                                    $abnormal .= ' ' . $special_attendance_description;
+                                    $abnormal_type = 1;
+                                    $abnormal .= '出勤日 異常，缺席';
                                 }
                             } else if ($this->get_chinese_weekday($day) == "星期三") {
-                                $diff_time = strtotime($last_time) - strtotime($first_time);//這個員工一整天上班時間
-                                if ($diff_time > NINE_HOUR && $diff_time <= TEN_HOUR) {
-                                    $abnormal_type = 1;
-                                    $abnormal .= '特殊休假日 上班八小時';
-                                    $abnormal .= ' ' . $special_attendance_description;
+                                if ($diff_time >= NINE_HOUR && $diff_time <= TEN_HOUR) {
+                                    $abnormal_type = 0;
+                                    $abnormal .= '出勤日 上班八小時';
                                 } elseif ($diff_time > NINE_HOUR && $diff_time > OVER_TEN_HOUR) {
                                     $abnormal_type = 1;
-                                    $abnormal .= '特殊休假日 加班，上班時數超過十小時';
-                                    $abnormal .= ' ' . $special_attendance_description;
-                                } elseif ($diff_time < NINE_HOUR && $diff_time > TWO_SECOND) {
-                                    $abnormal_type = 1;
-                                    $abnormal .= '特殊休假日 異常，上班時數小於上班八小時';
-                                    $abnormal .= ' ' . $special_attendance_description;
+                                    $abnormal .= '出勤日 異常，上班時數超過十小時';
+                                } elseif ($diff_time < NINE_HOUR && $diff_time >= TWO_SECOND && $includingLeaveTime < 8) {
+                                    $abnormal_type = 1; //異常需填寫異常單
+                                    $abnormal .= '出勤日 異常，上班時數小於上班八小時';
                                 } elseif ($diff_time == ZERO_SECOND) {
                                     $abnormal_type = 1;
-                                    $abnormal .= '特殊休假日 異常，僅一筆刷卡紀錄';
-                                    $abnormal .= ' ' . $special_attendance_description;
+                                    $abnormal .= '出勤日 異常，僅一筆刷卡紀錄';
                                 } else {
-                                    $abnormal_type = 0;
-                                    $abnormal .= '特殊休假日 正常';
-                                    $abnormal .= ' ' . $special_attendance_description;
+                                    $abnormal_type = 1;
+                                    $abnormal .= '出勤日 異常，缺席';
                                 }
                             } else if ($this->get_chinese_weekday($day) == "星期四") {
-                                $diff_time = strtotime($last_time) - strtotime($first_time);//這個員工一整天上班時間
-                                if ($diff_time > NINE_HOUR && $diff_time <= TEN_HOUR) {
-                                    $abnormal_type = 1;
-                                    $abnormal .= '特殊休假日 上班八小時';
-                                    $abnormal .= ' ' . $special_attendance_description;
+                                if ($diff_time >= NINE_HOUR && $diff_time <= TEN_HOUR) {
+                                    $abnormal_type = 0;
+                                    $abnormal .= '出勤日 上班八小時';
                                 } elseif ($diff_time > NINE_HOUR && $diff_time > OVER_TEN_HOUR) {
                                     $abnormal_type = 1;
-                                    $abnormal .= '特殊休假日 加班，上班時數超過十小時';
-                                    $abnormal .= ' ' . $special_attendance_description;
-                                } elseif ($diff_time < NINE_HOUR && $diff_time > TWO_SECOND) {
-                                    $abnormal_type = 1;
-                                    $abnormal .= '特殊休假日 異常，上班時數小於上班八小時';
-                                    $abnormal .= ' ' . $special_attendance_description;
+                                    $abnormal .= '出勤日 異常，上班時數超過十小時';
+                                } elseif ($diff_time < NINE_HOUR && $diff_time >= TWO_SECOND && $includingLeaveTime < 8) {
+                                    $abnormal_type = 1; //異常需填寫異常單
+                                    $abnormal .= '出勤日 異常，上班時數小於上班八小時';
                                 } elseif ($diff_time == ZERO_SECOND) {
                                     $abnormal_type = 1;
-                                    $abnormal .= '特殊休假日 異常，僅一筆刷卡紀錄';
-                                    $abnormal .= ' ' . $special_attendance_description;
+                                    $abnormal .= '出勤日 異常，僅一筆刷卡紀錄';
                                 } else {
-                                    $abnormal_type = 0;
-                                    $abnormal .= '特殊休假日 正常';
-                                    $abnormal .= ' ' . $special_attendance_description;
+                                    $abnormal_type = 1;
+                                    $abnormal .= '出勤日 異常，缺席';
                                 }
                             } else if ($this->get_chinese_weekday($day) == "星期五") {
-                                $diff_time = strtotime($last_time) - strtotime($first_time);//這個員工一整天上班時間
-                                if ($diff_time > NINE_HOUR && $diff_time <= TEN_HOUR) {
-                                    $abnormal_type = 1;
-                                    $abnormal .= '特殊休假日 上班八小時';
-                                    $abnormal .= ' ' . $special_attendance_description;
+                                if ($diff_time >= NINE_HOUR && $diff_time <= TEN_HOUR) {
+                                    $abnormal_type = 0;
+                                    $abnormal .= '出勤日 上班八小時';
                                 } elseif ($diff_time > NINE_HOUR && $diff_time > OVER_TEN_HOUR) {
                                     $abnormal_type = 1;
-                                    $abnormal .= '特殊休假日 加班，上班時數超過十小時';
-                                    $abnormal .= ' ' . $special_attendance_description;
-                                } elseif ($diff_time < NINE_HOUR && $diff_time > TWO_SECOND) {
-                                    $abnormal_type = 1;
-                                    $abnormal .= '特殊休假日 異常，上班時數小於上班八小時';
-                                    $abnormal .= ' ' . $special_attendance_description;
+                                    $abnormal .= '出勤日 異常，上班時數超過十小時';
+                                } elseif ($diff_time < NINE_HOUR && $diff_time >= TWO_SECOND && $includingLeaveTime < 8) {
+                                    $abnormal_type = 1; //異常需填寫異常單
+                                    $abnormal .= '出勤日 異常，上班時數小於上班八小時';
                                 } elseif ($diff_time == ZERO_SECOND) {
                                     $abnormal_type = 1;
-                                    $abnormal .= '特殊休假日 異常，僅一筆刷卡紀錄';
-                                    $abnormal .= ' ' . $special_attendance_description;
+                                    $abnormal .= '出勤日 異常，僅一筆刷卡紀錄';
                                 } else {
-                                    $abnormal_type = 0;
-                                    $abnormal .= '特殊休假日 正常';
-                                    $abnormal .= ' ' . $special_attendance_description;
+                                    $abnormal_type = 1;
+                                    $abnormal .= '出勤日 異常，缺席';
                                 }
                             } else if ($this->get_chinese_weekday($day) == "星期六") {
-                                $diff_time = strtotime($last_time) - strtotime($first_time);//這個員工一整天上班時間
                                 if ($diff_time > NINE_HOUR && $diff_time <= TEN_HOUR) {
                                     $abnormal_type = 1;
-                                    $abnormal .= '特殊休假日 上班八小時';
-                                    $abnormal .= ' ' . $special_attendance_description;
+                                    $abnormal .= '休假日 異常上班八小時';
                                 } elseif ($diff_time > NINE_HOUR && $diff_time > OVER_TEN_HOUR) {
                                     $abnormal_type = 1;
-                                    $abnormal .= '特殊休假日 加班，上班時數超過十小時';
-                                    $abnormal .= ' ' . $special_attendance_description;
-                                } elseif ($diff_time < NINE_HOUR && $diff_time > TWO_SECOND) {
-                                    $abnormal_type = 1;//異常需填寫異常單
-                                    $abnormal .= '特殊休假日 異常，上班時數小於上班八小時';
-                                    $abnormal .= ' ' . $special_attendance_description;
+                                    $abnormal .= '休假日 異常上班，上班時數超過十小時';
+                                } elseif ($diff_time < NINE_HOUR && $diff_time > TWO_SECOND && $includingLeaveTime < 8) {
+                                    $abnormal_type = 1;
+                                    $abnormal .= '休假日 異常上班，上班時數小於上班八小時';
                                 } elseif ($diff_time == ZERO_SECOND) {
                                     $abnormal_type = 1;
-                                    $abnormal .= '特殊休假日 異常，僅一筆刷卡紀錄';
-                                    $abnormal .= ' ' . $special_attendance_description;
+                                    $abnormal .= '休假日 異常，僅一筆刷卡紀錄';
                                 } else {
                                     $abnormal_type = 0;
-                                    $abnormal .= '特殊休假日 正常';
-                                    $abnormal .= ' ' . $special_attendance_description;
+                                    $abnormal .= '休假日 正常，缺席';
+                                }
+                            };
+                        }
+
+                        if ($diff_time != 1) { //0 2~以上
+                            if ($diff_time != 0 && $leaveHours == 0) {
+                                //假如第一筆時間大於9:30 //加註 遲到
+                                if (strtotime($first_time) >= $this->getArriveLateTime($day) and $diff_time < NINE_HOUR) {
+                                    $abnormal_type = 1;
+                                    $abnormal .= '|遲到|';
+                                }
+
+
+                                //假如第一筆時間小於18:30 //加註 早退
+                                if (strtotime($first_time) < $this->getLeaveEarlyTime($day) and $diff_time < NINE_HOUR) {
+                                    $abnormal_type = 1;
+                                    $abnormal .= '|早退|';
                                 }
                             }
                         }
-                    } elseif ($special_attendance == false) {
-                        if ($this->get_chinese_weekday($day) == "星期日") {
-                            $diff_time = strtotime($last_time) - strtotime($first_time);//這個員工一整天上班時間
-                            if ($diff_time > NINE_HOUR && $diff_time <= TEN_HOUR) {
-                                $abnormal_type = 1;
-                                $abnormal .= '休假日 異常上班八小時';
-                            } elseif ($diff_time > NINE_HOUR && $diff_time > OVER_TEN_HOUR) {
-                                $abnormal_type = 1;
-                                $abnormal .= '休假日 異常上班，上班時數超過十小時';
-                            } elseif ($diff_time < NINE_HOUR && $diff_time > TWO_SECOND) {
-                                $abnormal_type = 1;
-                                $abnormal .= '休假日 異常上班，上班時數小於上班八小時';
-                            } elseif ($diff_time == ZERO_SECOND) {
-                                $abnormal_type = 1;
-                                $abnormal .= '休假日 異常，僅一筆刷卡紀錄';
-                            } else {
-                                $abnormal_type = 0;
-                                $abnormal .= '休假日 正常';
-                            }
-                        } else if ($this->get_chinese_weekday($day) == "星期一") {
-                            $diff_time = strtotime($last_time) - strtotime($first_time);//這個員工一整天上班時間
-                            if ($diff_time >= NINE_HOUR && $diff_time <= TEN_HOUR) {
-                                $abnormal_type = 0;
-                                $abnormal .= '出勤日 上班八小時';
-                            } elseif ($diff_time > NINE_HOUR && $diff_time > OVER_TEN_HOUR) {
-                                $abnormal_type = 1;
-                                $abnormal .= '出勤日 異常，上班時數超過十小時';
-                            } elseif ($diff_time < NINE_HOUR && $diff_time > TWO_SECOND) {
-                                $abnormal_type = 1;//異常需填寫異常單
-                                $abnormal .= '出勤日 異常，上班時數小於上班八小時';
-                            } elseif ($diff_time == ZERO_SECOND) {
-                                $abnormal_type = 1;
-                                $abnormal .= '出勤日 異常，僅一筆刷卡紀錄';
-                            } else {
-                                $abnormal_type = 1;
-                                $abnormal .= '出勤日 異常，缺席';
-                            }
-                        } else if ($this->get_chinese_weekday($day) == "星期二") {
-                            $diff_time = strtotime($last_time) - strtotime($first_time);//這個員工一整天上班時間
-                            if ($diff_time >= NINE_HOUR && $diff_time <= TEN_HOUR) {
-                                $abnormal_type = 0;
-                                $abnormal .= '出勤日 上班八小時';
-                            } elseif ($diff_time > NINE_HOUR && $diff_time > OVER_TEN_HOUR) {
-                                $abnormal_type = 1;
-                                $abnormal .= '出勤日 異常，上班時數超過十小時';
-                            } elseif ($diff_time < NINE_HOUR && $diff_time >= TWO_SECOND) {
-                                $abnormal_type = 1;//異常需填寫異常單
-                                $abnormal .= '出勤日 異常，上班時數小於上班八小時';
-                            } elseif ($diff_time == ZERO_SECOND) {
-                                $abnormal_type = 1;
-                                $abnormal .= '出勤日 異常，僅一筆刷卡紀錄';
-                            } else {
-                                $abnormal_type = 1;
-                                $abnormal .= '出勤日 異常，缺席';
-                            }
-                        } else if ($this->get_chinese_weekday($day) == "星期三") {
-                            $diff_time = strtotime($last_time) - strtotime($first_time);//這個員工一整天上班時間
-                            if ($diff_time >= NINE_HOUR && $diff_time <= TEN_HOUR) {
-                                $abnormal_type = 0;
-                                $abnormal .= '出勤日 上班八小時';
-                            } elseif ($diff_time > NINE_HOUR && $diff_time > OVER_TEN_HOUR) {
-                                $abnormal_type = 1;
-                                $abnormal .= '出勤日 異常，上班時數超過十小時';
-                            } elseif ($diff_time < NINE_HOUR && $diff_time >= TWO_SECOND) {
-                                $abnormal_type = 1;//異常需填寫異常單
-                                $abnormal .= '出勤日 異常，上班時數小於上班八小時';
-                            } elseif ($diff_time == ZERO_SECOND) {
-                                $abnormal_type = 1;
-                                $abnormal .= '出勤日 異常，僅一筆刷卡紀錄';
-                            } else {
-                                $abnormal_type = 1;
-                                $abnormal .= '出勤日 異常，缺席';
-                            }
-                        } else if ($this->get_chinese_weekday($day) == "星期四") {
-                            $diff_time = strtotime($last_time) - strtotime($first_time);//這個員工一整天上班時間
-                            if ($diff_time >= NINE_HOUR && $diff_time <= TEN_HOUR) {
-                                $abnormal_type = 0;
-                                $abnormal .= '出勤日 上班八小時';
-                            } elseif ($diff_time > NINE_HOUR && $diff_time > OVER_TEN_HOUR) {
-                                $abnormal_type = 1;
-                                $abnormal .= '出勤日 異常，上班時數超過十小時';
-                            } elseif ($diff_time < NINE_HOUR && $diff_time >= TWO_SECOND) {
-                                $abnormal_type = 1;//異常需填寫異常單
-                                $abnormal .= '出勤日 異常，上班時數小於上班八小時';
-                            } elseif ($diff_time == ZERO_SECOND) {
-                                $abnormal_type = 1;
-                                $abnormal .= '出勤日 異常，僅一筆刷卡紀錄';
-                            } else {
-                                $abnormal_type = 1;
-                                $abnormal .= '出勤日 異常，缺席';
-                            }
-                        } else if ($this->get_chinese_weekday($day) == "星期五") {
-                            $diff_time = strtotime($last_time) - strtotime($first_time);//這個員工一整天上班時間
-                            if ($diff_time >= NINE_HOUR && $diff_time <= TEN_HOUR) {
-                                $abnormal_type = 0;
-                                $abnormal .= '出勤日 上班八小時';
-                            } elseif ($diff_time > NINE_HOUR && $diff_time > OVER_TEN_HOUR) {
-                                $abnormal_type = 1;
-                                $abnormal .= '出勤日 異常，上班時數超過十小時';
-                            } elseif ($diff_time < NINE_HOUR && $diff_time >= TWO_SECOND) {
-                                $abnormal_type = 1;//異常需填寫異常單
-                                $abnormal .= '出勤日 異常，上班時數小於上班八小時';
-                            } elseif ($diff_time == ZERO_SECOND) {
-                                $abnormal_type = 1;
-                                $abnormal .= '出勤日 異常，僅一筆刷卡紀錄';
-                            } else {
-                                $abnormal_type = 1;
-                                $abnormal .= '出勤日 異常，缺席';
-                            }
-                        } else if ($this->get_chinese_weekday($day) == "星期六") {
-                            $diff_time = strtotime($last_time) - strtotime($first_time);//這個員工一整天上班時間
-                            if ($diff_time > NINE_HOUR && $diff_time <= TEN_HOUR) {
-                                $abnormal_type = 1;
-                                $abnormal .= '休假日 異常上班八小時';
-                            } elseif ($diff_time > NINE_HOUR && $diff_time > OVER_TEN_HOUR) {
-                                $abnormal_type = 1;
-                                $abnormal .= '休假日 異常上班，上班時數超過十小時';
-                            } elseif ($diff_time < NINE_HOUR && $diff_time > TWO_SECOND) {
-                                $abnormal_type = 1;
-                                $abnormal .= '休假日 異常上班，上班時數小於上班八小時';
-                            } elseif ($diff_time == ZERO_SECOND) {
-                                $abnormal_type = 1;
-                                $abnormal .= '休假日 異常，僅一筆刷卡紀錄';
-                            } else {
-                                $abnormal_type = 0;
-                                $abnormal .= '休假日 正常，缺席';
-                            }
-                        };
-                    }
 
-                    if ($diff_time != 1) {//0 2~以上
-                        if ($diff_time != 0) {
-                            //假如第一筆時間大於9:30 //加註 遲到
-                            if (strtotime($first_time) >= $this->getArriveLateTime($day) and $diff_time >= NINE_HOUR && $diff_time <= TEN_HOUR) {
-                                $abnormal_type = 0;
-                                $abnormal = '出勤日 上班八小時';
+                        if ($diff_time == ONE_SECOND) {
+                            $diff_time = 0;
+                        }
 
-                            }
-
-                            if (strtotime($first_time) >= $this->getArriveLateTime($day) and $diff_time < NINE_HOUR) {
-                                $abnormal_type = 1;
-                                $abnormal .= '|遲到|';
-                            }
+                        $abnormal .= ' 總時數：' . $this->get_second_to_his($diff_time);
 
 
-                            //假如第一筆時間小於18:30 //加註 早退
-                            if (strtotime($last_time) < $this->getLeaveEarlyTime($day) and $diff_time >= NINE_HOUR && $diff_time <= TEN_HOUR) {
-                                $abnormal_type = 0;
-                                $abnormal = '出勤日 上班八小時';
-                            }
+                        /*
+                        var_dump('----start----');
+                        var_dump($day);
+                        var_dump($abnormal);
+                        var_dump($abnormal_type);
+                        var_dump($special_attendance);
+                        var_dump($special_attendance_type);//出勤日
+                        var_dump($special_attendance_description);
+                        var_dump($first_time);
+                        var_dump($last_time);
+                        var_dump($diff_time);
+                        var_dump('----end-----');
+                        */
 
-                            if (strtotime($first_time) < $this->getLeaveEarlyTime($day) and $diff_time < NINE_HOUR) {
-                                $abnormal_type = 1;
-                                $abnormal .= '|早退|';
-                            }
+                        $attendance_record_service = new AttendancerecordService();
+                        $model = $attendance_record_service->create($employee_id, $day, $first_time, $last_time, $abnormal_type,     $abnormal);
+
+                        if ($send_mail == true) {
+                            $mail = new MailService();
+                            $mail_type = $mail->sendMail($abnormal_type, $employee_email, $abnormal, $model->id, $employee_name);
+                        }
+
+                        if (isset($mail_type)) {
+                            Yii::log(date("Y-m-d H:i:s") . 'Attendance Record RECORD ID' . $model->id, CLogger::LEVEL_INFO);
+                        } else {
+                            Yii::log(date("Y-m-d H:i:s") . 'Attendance Error Record RECORD ID' . $model->id, CLogger::LEVEL_INFO);
                         }
                     }
-
-                    if ($diff_time == ONE_SECOND) {
-                        $diff_time = 0;
-                    }
-
-                    $abnormal .= ' 總時數：' . $this->get_second_to_his($diff_time);
-
-
-                    /*
-                    var_dump('----start----');
-                    var_dump($day);
-                    var_dump($abnormal);
-                    var_dump($abnormal_type);
-                    var_dump($special_attendance);
-                    var_dump($special_attendance_type);//出勤日
-                    var_dump($special_attendance_description);
-                    var_dump($first_time);
-                    var_dump($last_time);
-                    var_dump($diff_time);
-                    var_dump('----end-----');
-                    */
-
-                    $attendance_record_service = new AttendancerecordService();
-                    $model = $attendance_record_service->create($employee_id, $day, $first_time, $last_time, $abnormal_type, $abnormal);
-
-                    if($send_mail == true){
-                        $mail = new MailService();
-                        $mail_type = $mail->sendMail($abnormal_type,$employee_email,$abnormal,$model->id,$employee_name);
-                    }
-
-                     if(isset($mail_type)){
-                         Yii::log(date("Y-m-d H:i:s").'Attendance Record RECORD ID'.$model->id, CLogger::LEVEL_INFO);
-                     }else{
-                        Yii::log(date("Y-m-d H:i:s").'Attendance Error Record RECORD ID'.$model->id, CLogger::LEVEL_INFO);
-                     }
-
-
                 } else {
 
                     $msg = date("Y-m-d H:i:s") . $value->id . "該員工卡號設定異常";
@@ -689,9 +664,7 @@ class AttendanceService
                     $mail = new MailService();
                     $mail->sendAdminMail(0, $msg);
                     continue;
-
                 }
-
             }
         } catch (Exception $e) {
             $msg = Yii::log("AttxendanceData write exception {$e->getTraceAsString()}", CLogger::LEVEL_INFO);
@@ -1334,13 +1307,14 @@ class AttendanceService
         try {
             $employee_service = new EmployeeService();
             $start_date = $day . ' 00:00:00';
-            $end_date = $day . ' 09:30:59';
+            $end_date = $day . ' 09:31:00';
             $pt_start_date = $day . ' 00:00:00';
             $pt_end_date = $day . ' 23:59:59';
             //找出所有的刷卡紀錄
             $data = $this->getAttxendanceAndCheckPT($start_date,$end_date,$pt_start_date,$pt_end_date);
-            foreach ($data as $key => $value) {                
-                if (empty($value['flashDate'])) {
+            foreach ($data as $key => $value) {
+                $checkattendancerecord = $this->checkAttendanceRecordStartTime($day . ' 09:30:00',$value['employee_id']);
+                if (empty($value['flashDate']) && empty($checkattendancerecord)) {
                     $abnormal_type = 2;
                     $employee_email = $value['email'];
                     $employee_name = $value['name'];
@@ -1359,7 +1333,11 @@ class AttendanceService
             $mail->sendAdminMail(0,$msg);
         }
     }
-
+    function checkAttendanceRecordStartTime($start_time,$employee_id){
+        $sql = "SELECT * FROM attendance_record WHERE '" . $start_time . "' BETWEEN start_time AND end_time AND employee_id='" . $employee_id . "'";
+        $data = Yii::app()->db->createCommand($sql)->queryAll();
+        return $data;
+    }
     function getAttxendanceAndCheckPT($start_date,$end_date,$pt_start_date,$pt_end_date){
         //37,38,39,40,43,44,45
         //檢查 pt 當天有沒有排班，有班的才列

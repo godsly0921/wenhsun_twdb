@@ -50,12 +50,14 @@ class PhotographService{
                 $data['image'] = Yii::app()->createUrl('/') . '/image_storage/S/' . $value['single_id'] . '.jpg';
                 $data['photograph_info'] = array(
                     'object_name' => $value['object_name'],
+                    'event_name' => $value['event_name'],
                     'photo_name' => $value['photo_name'],
                     'single_id' => $value['single_id'],
                     'description' => $value['description'],
                     'people_info' => $value['people_info'],
-                    'author' => $value['author'],
+                    // 'author' => $value['author'],
                     'filming_date' => $value['filming_date'],
+                    'filming_date_text' => $value['filming_date_text'],
                     'filming_location' => $value['filming_location'],
                     'filming_name' => $value['filming_name'],
                     'category_id' => explode(',', $value['category_id']),
@@ -90,6 +92,12 @@ class PhotographService{
         return $data;
     }
 
+    public function findSinglesize($single_id, $size_type){
+        $data = array();
+        $sql = "SELECT ss.* FROM `single` s JOIN single_size ss on s.single_id=ss.single_id where s.publish=1 and s.copyright=1 and s.single_id=" . $single_id . " and ss.size_type='" . $size_type . "'";
+        $data = Yii::app()->db->createCommand($sql)->queryAll();
+        return $data;
+    }
     //搜尋圖片原始檔名
     public function existPhotoNameExist($photo_name){
         $result = Single::model()->find(array(
@@ -168,7 +176,7 @@ class PhotographService{
     	}
     	if($single->save()){
             $update_find = array('single_id'=>$single_id);
-            $input['author'] = explode(',', $single->author);
+            // $input['author'] = explode(',', $single->author);
             $input['keyword'] = explode(',', $single->keyword);
             $input['category_id'] = explode(',', $single->category_id);
             $update_input = array('$set' => $input);
@@ -190,7 +198,7 @@ class PhotographService{
         $operationlogService = new OperationlogService();       
         Single::model()->updateAll($input, 'single_id in('.$single_id.')');
         $update_find = array('single_id'=> array('$in'=>explode(',',$single_id)));
-        $input['author'] = explode(',', $input['author']);
+        // $input['author'] = explode(',', $input['author']);
         $input['category_id'] = explode(',', $input['category_id']);
         $input['keyword'] = explode(',', $input['keyword']);
         $update_input = array('$set' => $input);
@@ -284,9 +292,11 @@ class PhotographService{
                 )
             ));
             $filename = $storeFolder . 'O' . $ds . $single_id . '.jpg';
-            unlink($filename);
+            if(file_exists($filename))
+                unlink($filename);
             $filename = $storeFolder . 'P' . $ds . $single_id . '.jpg';
-            unlink($filename);
+            if(file_exists($filename))
+                unlink($filename);
             if($single->ext != 'jpg'){
                 $filename = $storeFolder . 'source_to_jpg' . $ds . $single_id . '.jpg';
                 if(file_exists($filename))
@@ -342,6 +352,66 @@ class PhotographService{
  			$single_size['sale_point'] = $single_size_price['point'][$key];
     	}
     	return $single_size;
+    }
+
+    public function ConvertImage($result){
+        set_time_limit(0);
+        date_default_timezone_set("Asia/Taipei");
+        $storeFolder=PHOTOGRAPH_STORAGE_DIR;
+        $ds          = DIRECTORY_SEPARATOR;
+        $size_bound_settings = Imagemagick::$size_bound_settings;
+        foreach ($result as $key => $value) {
+            $update_single_size = array();       
+            $source_targetFile = '';
+
+            if($value['source_ext'] != 'jpg'){
+                $source_targetFile = $storeFolder . 'source_to_jpg' . $ds . $value['single_id'] . ".jpg";
+            }else{
+                $source_targetFile = $storeFolder . 'source' . $ds . $value['single_id'] . "." . $value['source_ext'];
+            }     
+            if(($value['size_type'] == 'source' && $value['source_ext'] != 'jpg') || ($value['source_ext'] == 'jpg' && ($value['dpi'] == '' || $value['color'] == '' || $value['direction'] == ''))){ 
+                if(file_exists($source_targetFile)){
+                    $single_size = $this->getPhotographData($source_targetFile);
+                    $single = array();
+                    $single['dpi'] = $single_size['resolution'];
+                    $single['color'] = $single_size['colorspace'];
+                    $single['direction'] = $single_size['direction'];
+                    $single = $this->updateSingle( $value['single_id'], $single );
+                    $file_size = filesize($source_targetFile);
+                    $update_single_size['dpi'] = $single_size['resolution'];
+                    $update_single_size['mp'] = $single_size['mp'];
+                    $update_single_size['w_h'] = $single_size['w_h'];
+                    $update_single_size['print_w_h'] = $single_size['print_w_h'];
+                    $update_single_size['file_size'] = $file_size;
+                    $update_single_size['ext'] = $value['size_type'] == 'source' ? $value['source_ext']:'jpg';
+                    $this->updateSingleSize( $value['single_id'], $update_single_size, $value['size_type'] );
+                    $this->updateImageQueue($value['single_id'],$value['size_type']);
+                }  
+            }else{
+                $targetPath = $storeFolder . $value['size_type'] . $ds;
+                $targetFile = $targetPath . $value['single_id'] . ".jpg";
+                if(file_exists($source_targetFile)){
+                    if($value['size_type'] != 'source'){
+                        Imagemagick::PhotographScaleConvert( $source_targetFile, $value['single_id'], $value['size_type'] );
+                    }
+                    list($width, $height) = getimagesize($targetFile);
+                    $getPhotographScale = $width . 'x' . $height;
+                    $getPhotographMP = Imagemagick::getPhotographMP( $width, $height );
+                    $dpi = $size_bound_settings[$value['size_type']]['dpi'];
+                    $print_w_h = Imagemagick::get_print_datas( $width/$dpi . 'x' . $height/$dpi, $value['dpi'] );
+                    
+                    $file_size = filesize($targetFile);
+                    $update_single_size['dpi'] = $dpi;
+                    $update_single_size['mp'] = $getPhotographMP;
+                    $update_single_size['w_h'] = $getPhotographScale;
+                    $update_single_size['print_w_h'] = $print_w_h;
+                    $update_single_size['file_size'] = $file_size;
+                    $update_single_size['ext'] = 'jpg';
+                    $this->updateSingleSize( $value['single_id'], $update_single_size, $value['size_type'] );
+                    $this->updateImageQueue( $value['single_id'],$value['size_type'] );
+                }
+            }  
+        }
     }
 }
 ?>

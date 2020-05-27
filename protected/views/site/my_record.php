@@ -26,25 +26,27 @@
     </div>
     <hr class="top">
     <div id="record1" style="padding-bottom: 30px">
-        <p class="record-title">最近購買記錄</p>
+        <p class="record-title">購買記錄</p>
         <table class="record col-sm-12">
             <thead>
                 <tr class="header">
-                    <th width="25%">產品編號</th>
+                    <th width="25%">訂單編號</th>
                     <th width="40%">產品名稱</th>
                     <th class="text-center" width="25%">產品訂價</th>
                 </tr>
             </thead>
             <tbody>
-                <tr class="tr-record">
-                    <td>3</td>
-                    <td>自由載 90 天 ( 50 張 )</td>
-                    <td class="text-center">5000.00</td>
-                </tr>
+                <?php foreach ($member_order_data as $key => $value) {?>
+                    <tr class="tr-record">
+                        <td><?=$value['order_id']?></td>
+                        <td><?=$value['product_name']?></td>
+                        <td class="text-center"><?=$value['cost_total']?></td>
+                    </tr>
+                <?php }?>
             </tbody>
         </table>
     </div>
-    <div class="record2" style="padding-bottom: 50px">
+    <!-- <div class="record2" style="padding-bottom: 50px">
         <p class="record-title">先前購買項目</p>
         <table class="record col-sm-12">
             <thead>
@@ -78,7 +80,7 @@
                 </tr>
             </tbody>
         </table>
-    </div>
+    </div> -->
 </div>
 
 <style type="text/css">

@@ -5,6 +5,7 @@
  *
  * The followings are the available columns in table 'img_download':
  * @property integer $img_download_id
+ * @property integer $member_id
  * @property integer $orders_item_id
  * @property integer $download_method
  * @property integer $single_id
@@ -32,15 +33,15 @@ class Imgdownload extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('orders_item_id, download_method, single_id, size_type, cost, authorization, authorization_no, download_datetime', 'required'),
-			array('orders_item_id, download_method, single_id', 'numerical', 'integerOnly'=>true),
+			array('member_id, orders_item_id, download_method, single_id, size_type, cost, download_datetime', 'required'),
+			array('member_id, orders_item_id, download_method, single_id', 'numerical', 'integerOnly'=>true),
 			array('size_type', 'length', 'max'=>20),
 			array('cost', 'length', 'max'=>4),
 			array('authorization', 'length', 'max'=>100),
 			array('authorization_no', 'length', 'max'=>50),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('img_download_id, orders_item_id, download_method, single_id, size_type, cost, authorization, authorization_no, download_datetime', 'safe', 'on'=>'search'),
+			array('img_download_id, member_id, orders_item_id, download_method, single_id, size_type, cost, authorization, authorization_no, download_datetime', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -62,6 +63,7 @@ class Imgdownload extends CActiveRecord
 	{
 		return array(
 			'img_download_id' => '流水號',
+			'member_id' => '會員編號',
 			'orders_item_id' => '訂單訂購項目 PK',
 			'download_method' => '下載方式 ( 1：點數 2：月方案 )',
 			'single_id' => '圖片編號',
@@ -92,6 +94,7 @@ class Imgdownload extends CActiveRecord
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('img_download_id',$this->img_download_id);
+		$criteria->compare('member_id',$this->member_id);
 		$criteria->compare('orders_item_id',$this->orders_item_id);
 		$criteria->compare('download_method',$this->download_method);
 		$criteria->compare('single_id',$this->single_id);

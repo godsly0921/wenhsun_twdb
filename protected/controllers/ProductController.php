@@ -50,7 +50,7 @@ class ProductController extends Controller{
     public function ActionUpdate($id){
         $couponService = new CouponService();
         $productService = new ProductService();
-        $operationlogService = new operationlogService();
+        $operationlogService = new OperationlogService();
         $coupon = $couponService->findAllCouponWithStatus(1);
         if( Yii::app()->request->isPostRequest ){
             if (!CsrfProtector::comparePost()) {

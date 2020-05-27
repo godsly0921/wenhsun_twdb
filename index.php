@@ -17,7 +17,8 @@ define ('ROOT_HTTP','http://203.69.216.186/wenhsun_hr');
 define ('IMAGES_STORAGE_DIR',$image);
 define ('IMAGES_SHOW_DIR','/assets/uploads/');
 define ('mysql_bak',dirname(__FILE__).'/assets/site/mysql_bak/');
-
+define('API_DOMAIN','https://api.twdb.com.tw');
+define('API_DOWNLOAD_PATH','/download/image/');
 //載入上傳圖片檔案路徑
 $file=dirname(__FILE__).'/assets/uploads/file/';
 define ('FILE_STORAGE_DIR',$file);
@@ -33,7 +34,7 @@ define('PICCOLUMN', dirname(__FILE__).'/assets/image/piccolumn/');
 define('PICCOLUMN_SHOW', '/assets/image/piccolumn/');
 define('HOMEAD', dirname(__FILE__).'/assets/AD/');
 define('PHOTOGRAPH_STORAGE_URL', 'image_storage/O/');
-define('DOMAIN', 'http://web.taiwanblacktea.com.tw/');
+define('DOMAIN', 'https://www.twdb.com.tw/');
 //define('DOMAIN', 'http://localhost:8080/wenhsun_hr/'); //測試環境
 define('ABOUT_IMAGE', '/assets/image/about/');
 define('ABOUT_IMAGE_UPLOAD', dirname(__FILE__) . '/assets/image/about/');
@@ -55,5 +56,6 @@ define("GOOGLE_CLINT_SECRET", "fglkDb5yLTSVwcl8QzVLbe_F");
 define("FB_APP_ID", "411928326084757");
 define("FB_APP_SECRET", "ebd2032b93bb163fbdc4f6d4f42a9a54");
 define("FB_GRAPH_VERSION", "v2.2");
+require_once("code.inc.php");
 require_once($yii);
 Yii::createWebApplication($config)->run();

@@ -1,0 +1,1 @@
+ALTER TABLE `single` ADD `filming_date_text` VARCHAR(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '攝影年份文字說明' AFTER `filming_date`;

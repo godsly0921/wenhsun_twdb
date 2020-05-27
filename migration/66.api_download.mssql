@@ -1,0 +1,63 @@
+-- phpMyAdmin SQL Dump
+-- version 4.8.5
+-- https://www.phpmyadmin.net/
+--
+-- 主機： localhost
+-- 產生時間： 2020 年 04 月 17 日 16:48
+-- 伺服器版本： 10.3.21-MariaDB
+-- PHP 版本： 7.2.26
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET AUTOCOMMIT = 0;
+START TRANSACTION;
+SET time_zone = "+00:00";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+
+--
+-- 資料庫： `wenhsun_new`
+--
+
+-- --------------------------------------------------------
+
+--
+-- 資料表結構 `api_download`
+--
+
+CREATE TABLE `api_download` (
+  `id` int(12) NOT NULL,
+  `api_manage_id` int(12) NOT NULL,
+  `image_id` int(12) NOT NULL,
+  `size_type` varchar(10) NOT NULL,
+  `filename` varchar(100) NOT NULL,
+  `createtime` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='api 下載記錄';
+
+--
+-- 已傾印資料表的索引
+--
+
+--
+-- 資料表索引 `api_download`
+--
+ALTER TABLE `api_download`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- 在傾印的資料表使用自動增長(AUTO_INCREMENT)
+--
+
+--
+-- 使用資料表自動增長(AUTO_INCREMENT) `api_download`
+--
+ALTER TABLE `api_download`
+  MODIFY `id` int(12) NOT NULL AUTO_INCREMENT;
+COMMIT;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
