@@ -4,8 +4,8 @@
         content: "";
         height: 1px;
         position: absolute;
-        top: 10px;
-        width: 10%;
+        top: 35px;
+        width: 100%;
     }
 </style>
 <div>
@@ -20,7 +20,7 @@
         <div class="animate form login_form">
             <section class="login_content">
                 <form role="form" action="<?php echo Yii::app()->createUrl('admin/auth'); ?>" method="post" accept-charset="utf-8">
-                    <h1>文訊雜誌社人資管理系統</h1>
+                    <h1>文訊雜誌社照片資料庫管理系統</h1>
 
                     <div>
                         <input type="text" id="user_account" class="form-control" name="user_account" placeholder="Username" required="required" autofocus/>
