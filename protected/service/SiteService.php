@@ -46,7 +46,7 @@ class SiteService
             $store_filter['object_name'] = $object_name;
         }
         // 圖片狀態是已上架且已通過著作權審核
-        $filter['$and'] = array(array('copyright' => '1'),array('publish' => '1'));
+        $filter['$and'] = array(array('copyright' => '1'),array('publish' => '1'),array('photo_limit' => '1'));
         // 組合所有搜尋條件
         foreach ($store_filter as $key => $value) {
             array_push($filter['$and'], array($key=>$value));
