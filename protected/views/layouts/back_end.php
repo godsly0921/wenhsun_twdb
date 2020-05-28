@@ -9,7 +9,7 @@ $config = $configService->findByConfigName('title');
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title><?=$config[0]['config_value']?></title>
+    <title>文訊雜誌社照片資料庫管理系統</title>
     <link href="<?php echo Yii::app()->request->baseUrl; ?>/assets/gentelella/vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="<?php echo Yii::app()->request->baseUrl; ?>/assets/gentelella/vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
     <link href="<?php echo Yii::app()->request->baseUrl; ?>/assets/gentelella/vendors/nprogress/nprogress.css" rel="stylesheet">
@@ -49,7 +49,7 @@ $config = $configService->findByConfigName('title');
             <div class="col-md-3 left_col">
                 <div class="left_col scroll-view">
                     <div class="navbar nav_title" style="border: 0;">
-                        <a href="<?php echo Yii::app()->createUrl('news/list'); ?>" class="site_title"><span><?=$config[0]['config_value']?></span></a>
+                        <a href="<?php echo Yii::app()->createUrl('news/list'); ?>" class="site_title"><span>文訊雜誌社照片資料庫管理系統</span></a>
                     </div>
 
                     <div class="clearfix"></div>
