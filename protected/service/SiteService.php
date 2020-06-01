@@ -45,7 +45,7 @@ class SiteService
         if( $object_name != '' ){
             $store_filter['object_name'] = $object_name;
         }
-        // 圖片狀態是已上架且已通過著作權審核
+        // 圖片狀態是已上架且已通過著作權審核 且為內外部都可以使用
         $filter['$and'] = array(array('copyright' => '1'),array('publish' => '1'),array('photo_limit' => '1'));
         // 組合所有搜尋條件
         foreach ($store_filter as $key => $value) {
@@ -88,7 +88,7 @@ class SiteService
         $store_filter['category_id'] = array( '$all' => $category_id );
         $store_filter['single_id'] = array('$ne' => $single_id);
         // 圖片狀態是已上架且已通過著作權審核
-        $filter['$and'] = array(array('copyright' => '1'),array('publish' => '1'));
+        $filter['$and'] = array(array('copyright' => '1'),array('publish' => '1'),array('photo_limit' => '1'));
         // 組合所有搜尋條件
         foreach ($store_filter as $key => $value) {
             array_push($filter['$and'], array($key=>$value));
@@ -101,11 +101,26 @@ class SiteService
     public function findPhotoFilmingRange(){
         $filming_date_range = array();
         $min_year = $max_year = 0;
-        $filming_date_range = Yii::app()->db->createCommand()
-        ->select('DATE_FORMAT(MAX(filming_date),"%Y") as max_filming_date,DATE_FORMAT(MIN(filming_date),"%Y") as min_filming_date')
-        ->from('single')
-        ->where('copyright=:copyright and publish=:publish and photo_limit=:photo_limit', array(':copyright'=>1,':publish'=>1,':photo_limit'=>1))
-        ->queryAll();
+      
+        //0 不開放(都不提供) 1開放(文訊跟外部使用) 2(文訊使用)
+        if(IpService::ipCheck()){//表示可以查詢到內部使用的圖片
+            //var_dump('內部用戶');
+            $filming_date_range = Yii::app()->db->createCommand()
+            ->select('DATE_FORMAT(MAX(filming_date),"%Y") as max_filming_date,DATE_FORMAT(MIN(filming_date),"%Y") as min_filming_date')
+            ->from('single')
+            ->where('copyright=:copyright and publish=:publish and photo_limit= :photo_limit_1 or photo_limit=:photo_limit_2', array(':copyright'=>1,':publish'=>1,':photo_limit_1'=>1,':photo_limit_2'=>2))
+            ->queryAll(); 
+        }else{//僅限內部使用  photo_limit 1 表示不可以查詢到內部使用的圖片
+            var_dump('外部用戶');
+            $filming_date_range = Yii::app()->db->createCommand()
+            ->select('DATE_FORMAT(MAX(filming_date),"%Y") as max_filming_date,DATE_FORMAT(MIN(filming_date),"%Y") as min_filming_date')
+            ->from('single')
+            ->where('copyright=:copyright and publish=:publish and photo_limit=:photo_limit', array(':copyright'=>1,':publish'=>1,':photo_limit'=>1))
+            ->queryAll();
+        }
+             
+        
+        
         if($filming_date_range && $filming_date_range[0]['min_filming_date'] != NULL && $filming_date_range[0]['max_filming_date'] != NULL){
             if(($filming_date_range[0]['min_filming_date']%10)!=0){
                 $min_year = $filming_date_range[0]['min_filming_date']-($filming_date_range[0]['min_filming_date']%10);
