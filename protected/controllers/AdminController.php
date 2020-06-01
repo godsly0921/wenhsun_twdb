@@ -10,10 +10,7 @@ class AdminController extends CController
 
 	public $layout = "//layouts/admin";
     //223.136.185.9 alanpan 36.226.151.159 amber
-
-
     public function actions() {
-
         return array (
             // captcha action renders the CAPTCHA image displayed on the user registration page
             'captcha' => array (
