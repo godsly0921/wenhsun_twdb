@@ -28,7 +28,7 @@
 		border-bottom: 2px solid #66370e;
 	}
 	.thumbnail{
-		max-width: 500px;
+		max-width: 100%;
 		max-height: 500px;
 	}
 	.size_color,#size_info{
