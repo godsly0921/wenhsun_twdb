@@ -134,6 +134,7 @@
                                 <option value="0" <?=$photograph_data['photograph_info']['photo_limit'] == 0?"selected":""?>>不開放</option>
                                 <option value="1" <?=$photograph_data['photograph_info']['photo_limit'] == 1?"selected":""?>>開放</option>
                                 <option value="2" <?=$photograph_data['photograph_info']['photo_limit'] == 2?"selected":""?>>限文訊內部使用</option>
+                                <option value="2" <?=$photograph_data['photograph_info']['photo_limit'] == 3?"selected":""?>>供API使用</option>
                             </select>
                           </div>
                         </div>
