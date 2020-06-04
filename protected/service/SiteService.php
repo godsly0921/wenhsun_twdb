@@ -48,10 +48,11 @@ class SiteService
         // 圖片狀態是已上架且已通過著作權審核 且為內外部都可以使用
         if(IpService::ipCheck()){//內部使用的圖片
             //var_dump('內部使用圖片');
-            $filter['$and'] = array(array('copyright' => '1'),array('publish' => '1'));
+            $filter['$and'] = array(array('copyright' => '1'),array('publish' => '1'),array('photo_limit'=>array( '$in' => array('1','2','3'))));
+           
         }else{//僅限外部使用
             //var_dump('外部使用圖片');
-            $filter['$and'] = array(array('copyright' => '1'),array('publish' => '1'),array('photo_limit' => '1')); 
+            $filter['$and'] = array(array('copyright' => '1'),array('publish' => '1'),array('photo_limit'=>array( '$in' => array('1','3'))));
         }
         //$filter['$and'] = array(array('copyright' => '1'),array('publish' => '1'),array('photo_limit' => '1'));
         // 組合所有搜尋條件
@@ -116,20 +117,19 @@ class SiteService
         $filming_date_range = array();
         $min_year = $max_year = 0;
       
-        //0 不開放(都不提供) 1開放(文訊跟外部使用) 2(文訊使用)
-        if(IpService::ipCheck()){//表示可以查詢到內部使用的圖片
-            //var_dump('內部用戶');
+        //0 不開放(都不提供) 1開放 2文訊使用 3API
+        if(IpService::ipCheck()){//內部用戶
+            
             $filming_date_range = Yii::app()->db->createCommand()
             ->select('DATE_FORMAT(MAX(filming_date),"%Y") as max_filming_date,DATE_FORMAT(MIN(filming_date),"%Y") as min_filming_date')
             ->from('single')
-            ->where('copyright=:copyright and publish=:publish and photo_limit in(:photo_limit)', array(':copyright'=>1,':publish'=>1,':photo_limit'=>'1,2'))
+            ->where('copyright=:copyright and publish=:publish and photo_limit in(:photo_limit)', array(':copyright'=>1,':publish'=>1,':photo_limit'=>'1,2,3'))
             ->queryAll(); 
-        }else{//僅限內部使用  photo_limit 1 表示不可以查詢到內部使用的圖片
-            //var_dump('外部用戶');
+        }else{//外部使用 
             $filming_date_range = Yii::app()->db->createCommand()
             ->select('DATE_FORMAT(MAX(filming_date),"%Y") as max_filming_date,DATE_FORMAT(MIN(filming_date),"%Y") as min_filming_date')
             ->from('single')
-            ->where('copyright=:copyright and publish=:publish and photo_limit = :photo_limit', array(':copyright'=>1,':publish'=>1,':photo_limit'=>1))
+            ->where('copyright=:copyright and publish=:publish and photo_limit in(:photo_limit)', array(':copyright'=>1,':publish'=>1,':photo_limit'=>'1,3'))
             ->queryAll();
         }
              
