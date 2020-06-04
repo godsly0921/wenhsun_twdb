@@ -317,7 +317,7 @@ class ApiController extends CController{
 				$data = array();
 				if(isset($params['body']['image_id'])){
 					$id = $params['body']['image_id'];
-					$sql = "SELECT * FROM `single` s LEFT JOIN single_size ss ON s.single_id = ss.single_id WHERE s.single_id =" . $id . " AND ss.size_type <> 'source' AND publish='1' AND copyright='1' AND photo_limit IN('1','3') order by ss.single_size_id asc";
+				$sql = "SELECT * FROM `single` s LEFT JOIN single_size ss ON s.single_id = ss.single_id WHERE s.single_id =" . $id . " AND ss.size_type <> 'source' AND publish='1' AND copyright='1' AND photo_limit in('1','3') order by ss.single_size_id asc";
 			        $result = Yii::app()->db->createCommand($sql)->queryAll();
 			        $data['image_info'] = $data['size'] = array();
 			        if(!empty($result)){
