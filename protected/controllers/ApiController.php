@@ -208,9 +208,11 @@ class ApiController extends CController{
 		        	//$filter =  array('keyword'=>array( '$in' => $explode_keyword ));
 		        	$explode_keyword = explode(",",$params['body']['keyword']);
 		        	if(empty($params['body']['keyword'])){
-		        		$filter['$and'] = array(array('copyright' => '1'),array('publish' => '1'));
+						$filter['$and'] = array(array('photo_limit'=>array( '$in' => array('3'))),array('copyright' => '1'),array('publish' => '1'));
+						//array('photo_limit'=>array( '$in' => array('1','3'));//通通開放 僅限API使用
 		        	}else{
-		        		$filter['$and'] = array(array('copyright' => '1'),array('publish' => '1'),array('keyword'=>array( '$in' => $explode_keyword )));
+						$filter['$and'] = array(array('photo_limit'=>array( '$in' => array('3'))),array('copyright' => '1'),array('publish' => '1'),array('keyword'=>array( '$in' => $explode_keyword )));
+						//$filter['$and'] = array(array('photo_limit' => '3'));//通通開放 僅限API使用
 		        	}
 		        	
 		        	$select_limit = (isset($params['body']['limit']) && $params['body']['limit']>0) ? $params['body']['limit'] :$this->limit;
@@ -315,7 +317,7 @@ class ApiController extends CController{
 				$data = array();
 				if(isset($params['body']['image_id'])){
 					$id = $params['body']['image_id'];
-					$sql = "SELECT * FROM `single` s LEFT JOIN single_size ss ON s.single_id = ss.single_id WHERE s.single_id =" . $id . " AND ss.size_type <> 'source' AND publish='1' AND copyright='1' order by ss.single_size_id asc";
+					$sql = "SELECT * FROM `single` s LEFT JOIN single_size ss ON s.single_id = ss.single_id WHERE s.single_id =" . $id . " AND ss.size_type <> 'source' AND publish='1' AND copyright='1' AND photo_limit IN('3') order by ss.single_size_id asc";
 			        $result = Yii::app()->db->createCommand($sql)->queryAll();
 			        $data['image_info'] = $data['size'] = array();
 			        if(!empty($result)){

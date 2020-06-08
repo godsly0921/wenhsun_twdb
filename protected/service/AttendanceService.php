@@ -1309,7 +1309,7 @@ class AttendanceService
             $start_date = $day . ' 00:00:00';
             $end_date = $day . ' 09:31:00';
             $pt_start_date = $day . ' 00:00:00';
-            $pt_end_date = $day . ' 23:59:59';
+            $pt_end_date = $day . ' 09:31:00';
             //找出所有的刷卡紀錄
             $data = $this->getAttxendanceAndCheckPT($start_date,$end_date,$pt_start_date,$pt_end_date);
             foreach ($data as $key => $value) {
@@ -1348,7 +1348,6 @@ class AttendanceService
         ->leftjoin('record r', "SUBSTRING(e.door_card_num,1,5) = r.start_five and SUBSTRING(e.door_card_num,6)=r.end_five and r.flashDate BETWEEN '".$start_date."' and '".$end_date."'")
         ->where('e.role=7 and e.role!=37 and e.role!=38 and e.role!=39 and e.role!=40 and e.role!=43 and e.role!=44 and e.role!=45')
         ->getText();
-
         $data = Yii::app()->db->createCommand()
         ->select('e.name,e.id as employee_id,e.email,e.user_name,e.door_card_num,r.flashDate,r.memol,r.id')
         ->from('employee e')

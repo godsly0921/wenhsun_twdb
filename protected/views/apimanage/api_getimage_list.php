@@ -24,12 +24,13 @@ unset( Yii::app()->session['success_msg'] );
         <table id="specialcaseTable" width="100%" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid">
             <thead>
             <tr role="row">
-                <th>API名稱</th>
-                <th>API token</th>
-                <th>API KEY</th>
-                <th>request</th>
-                <th>呼叫時間</th>
-                <th>操作</th>
+                <th>Name<br/>功能名稱</th>
+                <th>API Token<br/>數據令牌</th>
+                <th>API Key<br/>金鑰</th>
+                <th>Request<br/>用戶請求資訊</th>
+                <!-- <th>respond</th> -->
+                <th>Call Time<br/>呼叫時間</th>
+                <th>Respond<br/>查看</th>
             </tr>
             </thead>
             <tbody>
@@ -42,11 +43,13 @@ unset( Yii::app()->session['success_msg'] );
                         <td><?=$value['request']?></td>
                         <td><?=$value['start_time']?></td>
                         <td>
-                            <a class="oprate-right oprate-search" data-mem-id="<?= $value['id'] ?>"><i class="fa fa-search fa-lg"></i></a>
+                            <a class="oprate-right oprate-search" data-mem-id="<?= $value['id'] ?>">
+                                <i class="fa fa-search fa-lg" style="cursor: pointer"><span style="font-size:15px;">查看</span></i>
+                            </a>
                             <?php foreach ($session_jsons as $jsons) : ?>
                                 <?php if ($jsons["power_controller"] == 'apimanage/api_getimage_delete') : ?>
                                 <a class="oprate-right oprate-del" data-mem-id="<?= $value['id'] ?>" data-api_key="<?= $value['api_key'] ?>">
-                                    <i class="fa fa-times fa-lg"></i>
+                                    <i class="fa fa-times fa-lg" style="cursor: pointer"><span style="font-size:15px;">刪除</span></i>
                                 </a>
                                 <?php endif; ?>
                             <?php endforeach; ?>

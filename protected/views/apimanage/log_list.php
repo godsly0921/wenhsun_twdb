@@ -1,7 +1,7 @@
 <?php $session_jsons = CJSON::decode(Yii::app()->session['power_session_jsons']); ?>
 <div class="row">
     <div class="title-wrap col-lg-12">
-        <h3 class="title-left">API調用異常查詢</h3>
+        <h3 class="title-left">API調用查詢</h3>
     </div>
 </div>
 <?php if(isset(Yii::app()->session['error_msg']) && Yii::app()->session['error_msg'] !== ''): ?>
@@ -24,13 +24,13 @@ unset( Yii::app()->session['success_msg'] );
         <table id="specialcaseTable" width="100%" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid">
             <thead>
             <tr role="row">
-                <th>API名稱</th>
-                <th>API token</th>
-                <th>API KEY</th>
-                <th>request</th>
+                <th>Name<br/>功能名稱</th>
+                <th>API Token<br/>數據令牌</th>
+                <th>API Key<br/>金鑰</th>
+                <th>Request<br/>用戶請求資訊</th>
                 <!-- <th>respond</th> -->
-                <th>呼叫時間</th>
-                <th>查看 respond</th>
+                <th>Call Time<br/>呼叫時間</th>
+                <th>Respond<br/>查看</th>
             </tr>
             </thead>
             <tbody>
@@ -44,7 +44,9 @@ unset( Yii::app()->session['success_msg'] );
                         <!-- <td><?#=$value['respond']?></td> -->
                         <td><?=$value['start_time']?></td>
                         <td>
-                            <a class="oprate-right oprate-search" onclick="check_respond('<?= $value['id'] ?>')"><i class="fa fa-search fa-lg"></i></a>
+                            <a class="oprate-right oprate-search" onclick="check_respond('<?= $value['id'] ?>')">
+                                <i class="fa fa-search fa-lg" style="cursor: pointer"><span style="font-size:15px;">查看</span></i>
+                            </a>
                         </td>
                     </tr>
                 <?php }?> 

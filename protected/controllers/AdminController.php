@@ -10,48 +10,7 @@ class AdminController extends CController
 
 	public $layout = "//layouts/admin";
     //223.136.185.9 alanpan 36.226.151.159 amber
-    private $ipFilters = '111.250.87.245,220.135.48.168,220.135.48.164,114.32.137.240,39.9.67.254,223.137.144.231,111.71.47.168,125.227.187.55,203.69.216.186,180.218.14.225,118.150.168.122,114.136.189.102,27.52.7.219,119.77.208.243,203.69.216.186,49.158.23.126,36.226.151.159';
-
-    public function ipCheck(){
-        $ip = Yii::app()->request->getUserHostAddress();
-        $filters = explode(',',$this->ipFilters);
-        if(in_array($ip,$filters)){
-            return true;
-        }else{
-            if($this->ipIsPrivate($ip)==true){
-                return true;
-
-            }
-            return false;
-        }
-
-    }
-
-    public function ipIsPrivate ($ip) {
-        $pri_addrs = array (
-            '10.0.0.0|10.255.255.255', // single class A network
-            '172.16.0.0|172.31.255.255', // 16 contiguous class B network
-            '192.168.0.0|192.168.255.255', // 256 contiguous class C network
-            '127.0.0.0|127.255.255.255' // localhost
-        );
-
-        $long_ip = ip2long ($ip);
-        if ($long_ip != -1) {
-
-            foreach ($pri_addrs AS $pri_addr) {
-                list ($start, $end) = explode('|', $pri_addr);
-
-                // IF IS PRIVATE
-                if ($long_ip >= ip2long ($start) && $long_ip <= ip2long ($end)) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
     public function actions() {
-
         return array (
             // captcha action renders the CAPTCHA image displayed on the user registration page
             'captcha' => array (
@@ -79,7 +38,7 @@ class AdminController extends CController
 	public function actionIndex()
     {
         $ip = Yii::app()->request->getUserHostAddress();
-        if($this->ipCheck()){
+        if(IpService::ipCheck()){
             Yii::log("login::ip ".$ip." yes");
             $this->redirect(Yii::app()->createUrl('admin/login'));
         }else{
@@ -91,7 +50,7 @@ class AdminController extends CController
     public function actionLogin()
     {
         $ip = Yii::app()->request->getUserHostAddress();
-        if($this->ipCheck()){
+        if(IpService::ipCheck()){
             if(isset($_COOKIE['login_auth'])){
                 if($_COOKIE['login_auth']===Yii::app()->session['auth_check']) {
                     Yii::log("login::cookie and session check ok");
