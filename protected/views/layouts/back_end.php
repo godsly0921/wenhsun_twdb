@@ -49,7 +49,7 @@ $config = $configService->findByConfigName('title');
             <div class="col-md-3 left_col">
                 <div class="left_col scroll-view">
                     <div class="navbar nav_title" style="border: 0;">
-                        <a href="<?php echo Yii::app()->createUrl('news/list'); ?>" class="site_title"><span>文訊雜誌社照片資料庫管理系統</span></a>
+                        <a href="<?php echo Yii::app()->createUrl('news/list'); ?>" class="site_title"><span><?=$config[0]['config_value']?></span></a>
                     </div>
 
                     <div class="clearfix"></div>
