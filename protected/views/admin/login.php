@@ -25,8 +25,8 @@ $config = $configService->findByConfigName('title');
             <section class="login_content">
                 <form role="form" action="<?php echo Yii::app()->createUrl('admin/auth'); ?>" method="post" accept-charset="utf-8">
 
-                    <h1>文訊雜誌社照片資料庫管理系統</h1>
-                    <!--<h1><?#=$config[0]['config_value']?></h1>-->
+                    <!--<h1>文訊雜誌社照片資料庫管理系統</h1>-->
+                    <h1><?=$config[0]['config_value']?></h1>
 
                     <div>
                         <input type="text" id="user_account" class="form-control" name="user_account" placeholder="Username" required="required" autofocus/>
