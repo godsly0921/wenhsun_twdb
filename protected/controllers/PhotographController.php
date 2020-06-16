@@ -148,6 +148,7 @@ class PhotographController extends Controller{
         $single_data['category_id'] = implode(',', $single_data['category_id']);
         $single_id = $_POST['single_id'];
         $single_data['filming_date'] = $single_data['filming_date']==''?NULL:$single_data['filming_date'];
+        var_dump($single_data);exit();
         $result = $photographService->updateSingle( $single_id, $single_data );
         echo json_encode($result);exit();
     }
@@ -179,6 +180,52 @@ class PhotographController extends Controller{
         if($id != '')
             $photograph_delete = $photographService->deletePhotograph($id);
         $this->redirect(Yii::app()->createUrl('photograph/list'));
+    }
+
+    public function ActionUpdateMongoAll(){
+        $sql = "SELECT * FROM `single`";
+        $row = array();
+        $datas = Yii::app()->db->createCommand($sql)->queryAll();
+        $mongo = new Mongo();
+        $i = 0;
+        foreach ($datas as $key => $value) {
+            $row = array(
+                "single_id"=>$value["single_id"],
+                "photo_name"=>$value["photo_name"],
+                "ext"=>$value["ext"],
+                "dpi"=>$value["dpi"],
+                "color"=>$value["color"],
+                "direction"=>$value["direction"],
+                "author"=>$value["author"],
+                "photo_source"=>$value["photo_source"],
+                "category_id"=>explode(',', $value["category_id"]),
+                "filming_date"=>$value["filming_date"],
+                "filming_date_text"=>$value["filming_date_text"],
+                "filming_location"=>$value["filming_location"],
+                "filming_name"=>$value["filming_name"],
+                "store_status"=>$value["store_status"],
+                "people_info"=>$value["people_info"],
+                "object_name"=>$value["object_name"],
+                "event_name"=>$value["event_name"],
+                "keyword"=>explode(',', $value["keyword"]),
+                "index_limit"=>$value["index_limit"],
+                "original_limit"=>$value["original_limit"],
+                "photo_limit"=>$value["photo_limit"],
+                "description"=>$value["description"],
+                "publish"=>$value["publish"],
+                "copyright"=>$value["copyright"],
+                "authorization_status"=>$value["authorization_status"],
+                "memo1"=>$value["memo1"],
+                "memo2"=>$value["memo2"],
+                "create_time"=>$value["create_time"],
+                "create_account_id"=>$value["create_account_id"]
+            );
+            $update_find = array('single_id'=>$value["single_id"]);
+            $update_input = array('$set' => $row);
+            $mongo->update_record('wenhsun', 'single', $update_find, $update_input);
+            $i++;
+        }
+        echo "已完成更新，共更新 " .$i . "筆";
     }
 }
 ?>
