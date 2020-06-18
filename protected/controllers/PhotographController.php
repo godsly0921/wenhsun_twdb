@@ -32,7 +32,7 @@ class PhotographController extends Controller{
                 if(!$exist_filename){
                     $single_data['photo_name'] = $fileName;
                     $ext = explode('.', $fileName)[1];
-                    $ext = strtolower($ext);
+                    $ext = strtolower(end($ext));
                     $single_data['ext'] = $ext;
                     $single = $photographService->createSingleBase($single_data); // 先存圖片檔名、檔案格式進資料庫
                     if($single['status']){
@@ -57,6 +57,7 @@ class PhotographController extends Controller{
                             );
                             $time = microtime(true) - $time_start;
                             $return_data['runtime'] = $time;
+                            echo json_encode($return_data);exit();
                         }else{
                             $return_data[] = array(
                                 'fileName' => $fileName,
