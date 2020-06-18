@@ -31,7 +31,7 @@ class PhotographController extends Controller{
                 $exist_filename = $photographService->existPhotoNameExist($fileName); // 查詢此張圖片是否有上傳過，用原始檔名判斷
                 if(!$exist_filename){
                     $single_data['photo_name'] = $fileName;
-                    $ext = explode('.', $fileName)[1];
+                    $ext = explode('.', $fileName);
                     $ext = strtolower(end($ext));
                     $single_data['ext'] = $ext;
                     $single = $photographService->createSingleBase($single_data); // 先存圖片檔名、檔案格式進資料庫
