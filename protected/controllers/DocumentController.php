@@ -8,23 +8,32 @@ use Wenhsun\Tool\Uuid;
 class DocumentController extends Controller
 {
     private $filePath = DATA_PATH . 'document';
-
+    private $document_department = [1=>"文訊",2=>"基金會",3=>"紀州庵"];
     protected function needLogin(): bool
     {
         return true;
     }
 
     public function actionIndex()
-    {
-        $list = Document::model()->byUpdateAt()->findAll();
-        $this->render('list', ['list' => $list]);
+    {   
+        $document_department = 1;
+        if(isset($_GET['document_department'])){
+            if(!empty($_GET['document_department'])){
+                $document_department = $_GET['document_department'];
+            }
+        }
+        $list = Document::model()->byUpdateAt()->findAll(
+            'document_department=:document_department',
+            [':document_department' => $document_department]
+        );
+        $this->render('list', ['list' => $list, "document_department"=>$this->document_department]);
     }
 
     public function actionNew()
     {
         $documentTypes = DocumentType::model()->findAll();
 
-        $this->render('new', ['documentTypes' => $documentTypes]);
+        $this->render('new', ['documentTypes' => $documentTypes, "document_department"=>$this->document_department]);
     }
 
     public function actionCreate()
@@ -41,6 +50,7 @@ class DocumentController extends Controller
             $document = new Document();
             $document->receiver = trim($_POST['receiver']);
             $document->title = trim($_POST['title']);
+            $document->document_department = $_POST['document_department'];
             $document->document_type = $_POST['document_type'];
             $document->file_name = $_FILES['document_file']['name'];
             $document->send_text_number = trim($_POST['send_text_number']);
@@ -85,7 +95,7 @@ class DocumentController extends Controller
 
         $documentTypes = DocumentType::model()->findAll();
 
-        $this->render('edit', ['data' => $document, 'documentTypes' => $documentTypes]);
+        $this->render('edit', ['data' => $document, 'documentTypes' => $documentTypes, "document_department"=>$this->document_department]);
     }
 
     public function actionUpdate()
@@ -104,6 +114,7 @@ class DocumentController extends Controller
             $now = Common::now();
             $document->receiver = trim($_POST['receiver']);
             $document->title = trim($_POST['title']);
+            $document->document_department = $_POST['document_department'];
             $document->document_type = $_POST['document_type'];
             $document->send_text_number = trim($_POST['send_text_number']);
             $document->send_text_date = trim($_POST['send_text_date']);

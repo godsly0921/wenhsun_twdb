@@ -12,7 +12,7 @@
                     <div class="title_right">
                         <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
                             <div class="input-group">
-                                <a href="<?php echo Yii::app()->createUrl('/document/new'); ?>">
+                                <a href="<?php echo Yii::app()->createUrl('/document/new'); ?>?document_department=<?=isset($_GET['document_department'])?$_GET['document_department']:'1'?>">
                                     <button class="btn btn-primary" type="button">新增公文</button>
                                 </a>
                             </div>
@@ -34,6 +34,7 @@
                             <th>公文主旨</th>
                             <th>發文字號</th>
                             <th>受文者</th>
+                            <th>所屬部門</th>
                             <th>公文類型</th>
                             <th>承辦人</th>
                             <th>存檔代號</th>
@@ -51,6 +52,7 @@
                                     <td><?= $data->title ?></td>
                                     <td><?= $data->send_text_number ?></td>
                                     <td><?= $data->receiver ?></td>
+                                    <td><?= $document_department[$data->document_department] ?></td>
                                     <td><?= $data->d_type->name ?></td>
                                     <td><?= $data->case_officer ?></td>
                                     <td><?= $data->saved_code ?></td>

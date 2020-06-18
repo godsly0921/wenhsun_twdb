@@ -25,7 +25,20 @@
                                     <input type="text" id="receiver" name="receiver" required="required" class="form-control col-md-7 col-xs-12">
                                 </div>
                             </div>
-
+                            <div class="form-group">
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12">所屬部門</label>
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    <select class="form-control" id="document_department" name="document_department">
+                                        <?php if(!empty($document_department)):?>
+                                            <?php foreach ($document_department as $key=>$type):?>
+                                                <option value="<?=$key?>" <?=(isset($_GET['document_department']) && $_GET['document_department'] == $key)?'selected':''?>><?=$type?></option>
+                                            <?php endforeach;?>
+                                        <?php else:?>
+                                            <option value="">無</option>
+                                        <?php endif;?>
+                                    </select>
+                                </div>
+                            </div>
                             <div class="form-group">
                                 <label class="control-label col-md-3 col-sm-3 col-xs-12">公文類型</label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">

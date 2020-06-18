@@ -1,0 +1,1 @@
+ALTER TABLE `document` ADD `document_department` INT(1) NOT NULL DEFAULT '1' COMMENT '公文部門(1:文訊 2:基金會 3:紀州庵)' AFTER `update_at`;
