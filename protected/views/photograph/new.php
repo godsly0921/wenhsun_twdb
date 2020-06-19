@@ -201,6 +201,7 @@
                           <option value="0">不開放</option>
                           <option value="1">開放</option>
                           <option value="2">限文訊內部使用</option>
+                          <option value="3">供API使用</option>
                         </select>
                       </div>
                     </div>
