@@ -24,6 +24,10 @@ class SiteService
                 array('event_name'=>array( '$regex' => $keyword )),
                 array('filming_location'=>array( '$regex' => $keyword )),
                 array('filming_date'=>array( '$regex' => $keyword )),
+                array('filming_name'=>array( '$regex' => $keyword )),
+                array('object_name'=>array( '$regex' => $keyword )),
+                array('people_info'=>array( '$regex' => $keyword )),
+                array('description'=>array( '$regex' => $keyword )),
                 array('filming_date_text'=>array( '$regex' => $keyword ))
             );
         }
