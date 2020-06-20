@@ -321,6 +321,7 @@
                 },
                 success:function(data){
                     result = JSON.parse(data)
+		    console.log(result);
                     if(result.status == true){
                         window.location = '<?= Yii::app()->createUrl('photograph/list'); ?>';
                     }else{

@@ -149,7 +149,7 @@ class PhotographController extends Controller{
         $single_data['category_id'] = implode(',', $single_data['category_id']);
         $single_id = $_POST['single_id'];
         $single_data['filming_date'] = $single_data['filming_date']==''?NULL:$single_data['filming_date'];
-        var_dump($single_data);exit();
+        //var_dump($single_data);exit();
         $result = $photographService->updateSingle( $single_id, $single_data );
         echo json_encode($result);exit();
     }
