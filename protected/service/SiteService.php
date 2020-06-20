@@ -28,6 +28,7 @@ class SiteService
                 array('object_name'=>array( '$regex' => $keyword )),
                 array('people_info'=>array( '$regex' => $keyword )),
                 array('description'=>array( '$regex' => $keyword )),
+                array('photo_source'=>array( '$regex' => $keyword )),
                 array('filming_date_text'=>array( '$regex' => $keyword ))
             );
         }
