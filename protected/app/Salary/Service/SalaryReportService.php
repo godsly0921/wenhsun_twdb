@@ -118,7 +118,7 @@ class SalaryReportService
                 $salaryReportModel->status = SalaryReportEmployee::NOT_SET_SALARY_YET;
                 $salaryReportModel->create_at = $now;
                 $salaryReportModel->update_at = $now;
-
+                $salaryReportModel->AnnualLeaveFiscalYear = $employeeEnt->AnnualLeaveFiscalYear();
                 $salaryReportModel->save();
 
                 if ($salaryReportModel->hasErrors()) {

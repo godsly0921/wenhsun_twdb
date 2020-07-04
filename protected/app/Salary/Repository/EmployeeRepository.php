@@ -17,7 +17,7 @@ class EmployeeRepository
         return Yii::app()->db->createCommand(
             '
               SELECT 
-                e.id employee_id, e.name, e.user_name, e.department, e.position,
+                e.id employee_id, e.name, e.user_name, e.department, e.position, e.role,
                 s.salary, s.health_insurance, s.labor_insurance, s.pension
               FROM employee e
               LEFT JOIN salary_employee s ON e.id = s.employee_id

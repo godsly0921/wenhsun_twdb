@@ -30,6 +30,7 @@ class SalaryReportEmployee
     private $otherPlus;
     private $otherMinus;
     private $leaveSalary;
+    private $AnnualLeaveFiscalYear;
 
     public function getLeaveSalary()
     {
@@ -164,7 +165,8 @@ class SalaryReportEmployee
         $memo,
         $otherPlus,
         $otherMinus,
-        $leaveSalary
+        $leaveSalary,
+        $AnnualLeaveFiscalYear
     ) {
         $this->id = $id;
         $this->batchId = $batchId;
@@ -186,6 +188,7 @@ class SalaryReportEmployee
         $this->otherPlus = $otherPlus;
         $this->otherMinus = $otherMinus;
         $this->leaveSalary = $leaveSalary;
+        $this->AnnualLeaveFiscalYear = $AnnualLeaveFiscalYear;
     }
 
     /**
@@ -270,7 +273,7 @@ class SalaryReportEmployee
      */
     public function calcSalaryTotal()
     {
-        return $this->calcTaxableSalaryTotal() + $this->taxFreeOvertimeWage + $this->otherPlus;
+        return $this->calcTaxableSalaryTotal() + $this->taxFreeOvertimeWage + $this->otherPlus + $this->AnnualLeaveFiscalYear;
     }
 
     /**
@@ -319,5 +322,12 @@ class SalaryReportEmployee
     public function getStatus()
     {
         return $this->status;
+    }
+    /**
+     * @return mixed
+     */
+    public function AnnualLeaveFiscalYear()
+    {
+        return $this->AnnualLeaveFiscalYear;
     }
 }

@@ -123,7 +123,12 @@
                                     <input type="text" id="other_plus" name="other_plus" value="<?=$data->getOtherPlus()?>" required="required" class="form-control col-md-7 col-xs-12">
                                 </div>
                             </div>
-
+                            <div class="form-group">
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="other_plus">特休換薪(+)</label>
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    <input type="text" id="AnnualLeaveFiscalYear" name="AnnualLeaveFiscalYear" value="<?=$data->AnnualLeaveFiscalYear()?>" disabled class="form-control col-md-7 col-xs-12">
+                                </div>
+                            </div>
                             <div class="form-group">
                                 <label class="control-label col-md-3 col-sm-3 col-xs-12 red" for="salary_total">薪資合計(+)</label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">

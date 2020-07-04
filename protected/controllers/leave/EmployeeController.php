@@ -62,11 +62,20 @@ class EmployeeController extends Controller
             $this->redirect( Yii::app()->createUrl('/news/list'));
             exit;
         }
+        $configService = new ConfigService();
+        $AnnualLeaveType = $configService->findByConfigName("AnnualLeaveType");
+        if(!empty($AnnualLeaveType)){
+            $AnnualLeaveType = $AnnualLeaveType[0]['config_value'];
+        }else{
+            $AnnualLeaveType = 1;
+        }
+        // $employee = new Employee(new EmployeeId($employeeOrmEnt->id), $employeeOrmEnt->onboard_date);
+        $leaveService = new LeaveService();
 
         $employee = new Employee(new EmployeeId($employeeOrmEnt->id), $employeeOrmEnt->onboard_date);
 
         $employeeLeaveCalculator = new EmployeeLeaveCalculator();
-        $annualLeaveMinutes = $employeeLeaveCalculator->calcAnnualLeaveSummaryOnBoardDate(new DateTime(), $employee);
+        
 
         $attendanceRecordServ = new AttendancerecordService();
         $tomorrow = new DateTime();
@@ -81,13 +90,39 @@ class EmployeeController extends Controller
         $commonLeaveEndDateTime->add(DateInterval::createFromDateString('1 year'));
         $commonLeaveEndDate = $commonLeaveEndDateTime->format('Y/m/d H:i:s');
 
-        $appliedAnnualLeave = $attendanceRecordServ->summaryMinutesByPeriodOfTimeAndLeaveType(
-            $employee->getEmployeeId()->value(),
-            $commonLeaveStartDate,
-            $commonLeaveEndDate,
-            '5'
-        );
+        $serv = new AttendancerecordService();
 
+        if($AnnualLeaveType==2){
+            $holidayList = $serv->getEmployeeLeaveListHoliday($employee->getEmployeeId()->value(), $year);
+            $annualLeaveMinutes = $employeeLeaveCalculator->calcAnnualLeaveSummaryOnBoardDate(new DateTime(), $employee);
+            // $annualLeaveMinutes = $leaveService->calcAnnualLeaveSummaryOnBoardDate(new DateTime(), $employee);
+            $appliedAnnualLeave = $attendanceRecordServ->summaryMinutesByPeriodOfTimeAndLeaveType(
+                $employee->getEmployeeId()->value(),
+                $commonLeaveStartDate,
+                $commonLeaveEndDate,
+                '5'
+            );
+            $annualLeaveMinutes = $annualLeaveMinutes->minutesValue();
+        }else{
+            // 該年度可請特休數
+            $annualLeaveMinutes = $leaveService->calcAnnualLeaveSummaryYear_FiscalYear($employee->getEmployeeId()->value(), $year);
+            $holidayList = array();
+            if(!empty($annualLeaveMinutes)){
+                $annualLeaveMinutes = $annualLeaveMinutes[0];
+                $holidayList = $leaveService->getYearLeaves_FiscalYear($year,$annualLeaveMinutes["id"], $employee->getEmployeeId()->value());
+                // 該年度已請且審核通過特休數
+                $appliedAnnualLeave = $leaveService->getEmployeeLeaves_FiscalYear(
+                    $annualLeaveMinutes["id"],
+                    $employee->getEmployeeId()->value()
+                );
+                $annualLeaveMinutes = $annualLeaveMinutes["special_leave"];
+            }else{
+                $appliedAnnualLeave = 0;
+                $annualLeaveMinutes = 0;
+            }
+        }
+        
+        
         $personalLeavedMinutes = $attendanceRecordServ->summaryMinutesByPeriodOfTimeAndLeaveType(
             $employee->getEmployeeId()->value(),
             $commonLeaveStartDate,
@@ -113,7 +148,7 @@ class EmployeeController extends Controller
             [
                 'category' => '年假(特別休假)',
                 'leave_applied' => $appliedAnnualLeave / 60,
-                'leave_available' => $annualLeaveMinutes->minutesValue() / 60 - $appliedAnnualLeave / 60,
+                'leave_available' => $annualLeaveMinutes / 60 - $appliedAnnualLeave / 60,
             ],
             [
                 'category' => '事假',
@@ -133,17 +168,7 @@ class EmployeeController extends Controller
 
         ];
 
-        $serv = new AttendancerecordService();
-        $holidayList = $serv->getEmployeeLeaveListHoliday($employee->getEmployeeId()->value(), $year);
         $overtimeList = $serv->getEmployeeLeaveListOvertime($employee->getEmployeeId()->value(), $year);
-
-        if (!empty($holidayList)) {
-            foreach ($holidayList as $idx => $row) {
-                if (isset($this->leaveMap[$row['take']])) {
-                    $holidayList[$idx]['take'] = $this->leaveMap[$row['take']];
-                }
-            }
-        }
 
         if (!empty($overtimeList)) {
             foreach ($overtimeList as $idx => $row) {
@@ -152,8 +177,15 @@ class EmployeeController extends Controller
                 }
             }
         }
-
+        if (!empty($holidayList)) {
+            foreach ($holidayList as $idx => $row) {
+                if (isset($this->leaveMap[$row['take']])) {
+                    $holidayList[$idx]['take'] = $this->leaveMap[$row['take']];
+                }
+            }
+        }
         $this->render('list', [
+            'leaveMap' => $this->leaveMap,
             'holidayList' => $holidayList,
             'overtimeList' => $overtimeList,
             'sum' => $sum,

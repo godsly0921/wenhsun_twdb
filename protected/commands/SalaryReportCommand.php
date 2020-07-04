@@ -34,6 +34,31 @@ class SalaryReportCommand extends CConsoleCommand
         foreach ($employees as $employee) {
 
             if (!empty($employee['salary'])) {
+                $configService = new ConfigService();
+                $AnnualLeaveType = $configService->findByConfigName("AnnualLeaveType");
+                if(!empty($AnnualLeaveType)){
+                    $AnnualLeaveType = $AnnualLeaveType[0]['config_value'];
+                }else{
+                    $AnnualLeaveType = 1;
+                }
+                $check_role = [2,5,26];
+                $AnnualLeaveFiscalYear = 0;
+                if($AnnualLeaveType == 1 && in_array($employee['role'], $check_role)){
+                    $leaveService = new LeaveService();
+                    $annualLeaveMinutes = $leaveService->calcAnnualLeaveSummaryYear_FiscalYear($employee['employee_id'], $year);
+                    if(!empty($annualLeaveMinutes)){
+                        if($annualLeaveMinutes[0]["is_close"] == '1'){
+                            $appliedAnnualLeave = $leaveService->getEmployeeLeaves_FiscalYear(
+                                $annualLeaveMinutes["id"],
+                                $employee['employee_id']
+                            );
+                            $annualLeaveMinutes = $annualLeaveMinutes["special_leave"];
+                            $AnnualLeaveFiscalYear = round(
+                                ($employee['salary']/30/8) * (($annualLeaveMinutes-$appliedAnnualLeave)/60)
+                            );
+                        }
+                    }
+                }
                 $salaryReportEmployee = new SalaryReportEmployee(
                     Uuid::gen(),
                     $batchId,
@@ -51,6 +76,7 @@ class SalaryReportCommand extends CConsoleCommand
                     (float)$employee['health_insurance'],
                     (float)$employee['labor_insurance'],
                     (float)$employee['pension']
+                    $AnnualLeaveFiscalYear,
                 );
 
                 $batchReportBatch->addEmployee($salaryReportEmployee);

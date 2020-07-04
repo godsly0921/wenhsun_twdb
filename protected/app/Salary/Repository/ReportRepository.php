@@ -50,7 +50,6 @@ class ReportRepository
         if (!$model) {
             return null;
         }
-
         return new SalaryReportEmployee(
             $model->id,
             $model->batch_id,
@@ -71,7 +70,8 @@ class ReportRepository
             $model->memo,
             $model->other_plus,
             $model->other_minus,
-            $model->leave_salary
+            $model->leave_salary,
+            $model->AnnualLeaveFiscalYear
         );
     }
 

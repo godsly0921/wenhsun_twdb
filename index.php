@@ -56,6 +56,8 @@ define("GOOGLE_CLINT_SECRET", "fglkDb5yLTSVwcl8QzVLbe_F");
 define("FB_APP_ID", "411928326084757");
 define("FB_APP_SECRET", "ebd2032b93bb163fbdc4f6d4f42a9a54");
 define("FB_GRAPH_VERSION", "v2.2");
+
+define("AnnualLeaveFiscalYearClose", "04");
 require_once("code.inc.php");
 require_once($yii);
 Yii::createWebApplication($config)->run();
