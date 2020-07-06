@@ -61,7 +61,80 @@ class ManagerController extends Controller
 
         $this->render('index', ['userNameSearchWord' => $userNameSearchWord, 'nameSearchWord' => $nameSearchWord]);
     }
+    // Ajax 批次結算
+    public function actionbatchCloseAnnualLeave() {
+        $ids = $_POST['ids'];
 
+        if(empty($ids) || !isset($ids)){
+            throw new Exception('傳入的歷史特休假有誤,請聯絡系統管理員。');
+        }
+
+        try {
+            foreach ($ids as $id) {
+                $leaveService = new LeaveService();
+                //$result = $leaveService->approveLeave($id, Yii::app()->session['uid']);
+                $specialleaveyear = Specialleaveyear::model()->findByPk($id);
+                if(!empty($specialleaveyear)) {
+                    $specialleaveyear->is_close = 1;
+                    $specialleaveyear->save();
+                }else{
+                    throw new Exception('ID:'.$id.',傳入的歷史特休假找不到記錄。');
+                }
+            }
+        } catch (Exception $e) {
+            echo 'Caught exception: ',  $e->getMessage(), "\n";
+            return;
+        }
+        echo json_encode('ok');
+        return;
+    }
+    // 歷史特休管理
+    public function actionhistory_annualLeave_manage(){
+        $employeeUserName = isset($_GET['user_name']) ? $_GET['user_name'] : '';
+        $name = isset($_GET['name']) ? $_GET['name'] : '';
+        $type = isset($_GET['type']) ? $_GET['type'] : 1;
+        $leaveService = new LeaveService();
+        $configService = new ConfigService();
+        $employees = EmployeeORM::model()->findAll();
+        $userNameSearchWord = $this->buildUsernameSearchWord($employees);
+        $nameSearchWord = $this->buildNameSearchWord($employees);
+        $id = '';
+        $empName = '';
+        $userName = '';
+        $AnnualLeaveType = $configService->findByConfigName("AnnualLeaveType");
+        if(!empty($AnnualLeaveType)){
+            $AnnualLeaveType = $AnnualLeaveType[0]['config_value'];
+        }else{
+            $AnnualLeaveType = 1;
+        }
+        if(isset($_GET['name']) || isset($_GET['user_name'])){
+            if ($type == 1) {
+                $emp = Employee::model()->find(
+                    'user_name=:user_name',
+                    [':user_name' => $employeeUserName]
+                );
+            } elseif ($type == 2) {
+                $emp = Employee::model()->find(
+                    'name=:name',
+                    [':name' => $name]
+                );
+            }
+
+            if ($emp === null) {
+                Yii::app()->session[Controller::ERR_MSG_KEY] = '查無員工';
+                $this->redirect('index');
+            }
+            $data = $leaveService->findEmployeeHistoryLeave($emp,$AnnualLeaveType);
+        }else{
+            $data = $leaveService->findAllEmployeeHistoryLeave($AnnualLeaveType);
+        }
+        $this->render('history_annualLeave_manage', [
+            'AnnualLeaveType' => $AnnualLeaveType,
+            'userNameSearchWord' => $userNameSearchWord,
+            'nameSearchWord' => $nameSearchWord,
+            'data' => $data,
+        ]);
+    }
     private function buildUsernameSearchWord($employees): string
     {
         $loginIds = [];

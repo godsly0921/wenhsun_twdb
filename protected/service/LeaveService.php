@@ -213,5 +213,140 @@ class LeaveService
         $result = Yii::app()->db->createCommand($sql)->queryAll();
         return $result;
     }
+    // 歷史特休管理 - 查詢全部在職正職員工
+    public function findAllEmployeeHistoryLeave($AnnualLeaveType){
+        $empService = new EmployeeService();
+        $leaveService = new LeaveService();
+        $emp = $empService->findEmployeeInRolesListObject([2,5,26]);//列出文訊正職員工狀態為啟用中的
+        $sumary = array();
+        if($AnnualLeaveType == "2"){
+            if($emp){
+                foreach($emp as $key => $value) {
+                    $employee = Employee::model()->findByPk($value["id"]);
+                    $onBoardDate = new DateTime($employee->onboard_date);
+                    $nowDate->setTime(0, 0, 0);
+                    $onBoardDate->setTime(0, 0, 0);
+                    $Year_Diff = $nowDate->diff($onBoardDate);
+                    $Year_Diff = $Year_Diff->format('%y');
+                    for ($i=1; $i <= $Year_Diff; $i++) {
+                        $onBoardDate = new DateTime($employee->onboard_date);
+                        $onBoardDate->setTime(0, 0, 0);
+                        $runDate = $onBoardDate->modify('+' . $i . ' year');
+                        $runDate = new DateTime($runDate->format('Y').'-01-01'); //yyyy-mm-dd 
+                        $annualLeaveMinutes = $leaveService->calcAnnualLeaveSummaryOnBoardDate($runDate, $employee);
+                        $commonLeaveStartDateTime = new DateTime("{$runDate->format('Y')}/01/01 00:00:00");
+                        $commonLeaveStartDate = $commonLeaveStartDateTime->format('Y/m/d H:i:s');
+                        $commonLeaveEndDateTime = new DateTime("{$runDate->format('Y')}/01/01 00:00:00");
+                        $commonLeaveEndDateTime->add(DateInterval::createFromDateString('1 year'));
+                        $commonLeaveEndDate = $commonLeaveEndDateTime->format('Y/m/d H:i:s');
+                        $appliedAnnualLeave = $leaveService->summaryMinutesByPeriodOfTimeAndLeaveType(
+                            $employee->id,
+                            $commonLeaveStartDate,
+                            $commonLeaveEndDate,
+                            Attendance::ANNUAL_LEAVE
+                        );
+                        $sumary[] = array(
+                            "AnnualLeaveType" => $AnnualLeaveType,
+                            "employee_id" => $id,
+                            "employee_name" => $empName,
+                            "start_date" => $commonLeaveStartDateTime->format('Y-m-d'),
+                            "end_date" => $commonLeaveEndDateTime->format('Y-m-d'),
+                            "leave_applied" => $appliedAnnualLeave / 60,
+                            "leave_available" => $annualLeaveMinutes / 60 - $appliedAnnualLeave / 60,
+                        );
+                    }
+                }
+            }    
+        }else{
+            if($emp){
+                foreach($emp as $key => $value) {
+                    $employee = Employee::model()->findByPk($value["id"]);
+                    $annualLeaveMinutes = $leaveService->calcHistoryAnnualLeaveSummaryOnBoardDate_FiscalYear($employee->id);
+                    foreach ($annualLeaveMinutes as $annualLeave_key => $annualLeave_value) {
+                        $appliedAnnualLeave = $leaveService->getEmployeeLeaves_FiscalYear(
+                            $annualLeave_value["id"],
+                            $employee->id
+                        );
+                        $sumary[] = array(
+                            "id" => $annualLeave_value["id"],
+                            "AnnualLeaveType" => $AnnualLeaveType,
+                            "is_close" => $annualLeave_value["is_close"],
+                            "employee_id" => $employee->id,
+                            "employee_name" => $employee->name,
+                            "start_date" => $annualLeave_value["start_date"],
+                            "end_date" => $annualLeave_value["end_date"],
+                            "leave_applied" => $appliedAnnualLeave / 60,
+                            "leave_available" => $annualLeave_value["special_leave"] / 60 - $appliedAnnualLeave / 60,
+                        );
+                    }  
+                }
+            }
+        }
+        return $sumary;
+    }
+    // 歷史特休管理 - 查詢指定員工
+    public function findEmployeeHistoryLeave($emp,$AnnualLeaveType){
+        $empService = new EmployeeService();
+        $leaveService = new LeaveService();
+        $employee = Employee::model()->findByPk($emp->id);
+        $id = $emp->id;
+        $empName = $emp->name;
+        $userName = $emp->user_name;
+        $sumary = array();
+        if($AnnualLeaveType == "2"){
+            $onBoardDate = new DateTime($employee->onboard_date);
+            $nowDate->setTime(0, 0, 0);
+            $onBoardDate->setTime(0, 0, 0);
+            $Year_Diff = $nowDate->diff($onBoardDate);
+            $Year_Diff = $Year_Diff->format('%y');
+            for ($i=1; $i <= $Year_Diff; $i++) {
+                $onBoardDate = new DateTime($employee->onboard_date);
+                $onBoardDate->setTime(0, 0, 0);
+                $runDate = $onBoardDate->modify('+' . $i . ' year');
+                $runDate = new DateTime($runDate->format('Y').'-01-01'); //yyyy-mm-dd 
+                $annualLeaveMinutes = $leaveService->calcAnnualLeaveSummaryOnBoardDate($runDate, $employee);
+                $commonLeaveStartDateTime = new DateTime("{$runDate->format('Y')}/01/01 00:00:00");
+                $commonLeaveStartDate = $commonLeaveStartDateTime->format('Y/m/d H:i:s');
+                $commonLeaveEndDateTime = new DateTime("{$runDate->format('Y')}/01/01 00:00:00");
+                $commonLeaveEndDateTime->add(DateInterval::createFromDateString('1 year'));
+                $commonLeaveEndDate = $commonLeaveEndDateTime->format('Y/m/d H:i:s');
+                $appliedAnnualLeave = $leaveService->summaryMinutesByPeriodOfTimeAndLeaveType(
+                    $employee->id,
+                    $commonLeaveStartDate,
+                    $commonLeaveEndDate,
+                    Attendance::ANNUAL_LEAVE
+                );
+                $sumary[] = array(
+                    "AnnualLeaveType" => $AnnualLeaveType,
+                    "employee_id" => $id,
+                    "employee_name" => $empName,
+                    "start_date" => $commonLeaveStartDateTime->format('Y-m-d'),
+                    "end_date" => $commonLeaveEndDateTime->format('Y-m-d'),
+                    "leave_applied" => $appliedAnnualLeave / 60,
+                    "leave_available" => $annualLeaveMinutes / 60 - $appliedAnnualLeave / 60,
+                );
+            }            
+        }else{
+            $annualLeaveMinutes = $leaveService->calcHistoryAnnualLeaveSummaryOnBoardDate_FiscalYear($id);
+            foreach ($annualLeaveMinutes as $key => $value) {
+                $appliedAnnualLeave = $leaveService->getEmployeeLeaves_FiscalYear(
+                    $value["id"],
+                    $employee->id
+                );
+                $sumary[] = array(
+                    "id" => $value["id"],
+                    "AnnualLeaveType" => $AnnualLeaveType,
+                    "is_close" => $value["is_close"],
+                    "employee_id" => $id,
+                    "employee_name" => $empName,
+                    "start_date" => $value["start_date"],
+                    "end_date" => $value["end_date"],
+                    "leave_applied" => $appliedAnnualLeave / 60,
+                    "leave_available" => $value["special_leave"] / 60 - $appliedAnnualLeave / 60,
+                );
+            }  
+        }
+        return $sumary;
+    }
 }
 ?>
