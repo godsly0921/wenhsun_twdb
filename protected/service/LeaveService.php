@@ -183,24 +183,27 @@ class LeaveService
         }
     }
 
-    public function getYearLeaves_FiscalYear($year, $special_leave_year_id, $uid) {
+    public function getYearLeaves_FiscalYear($year, $special_leave_year_id="", $uid="") {
         $start = $year . "-01-01";
         $end = $year . "-12-31";
         $sql = "(
-            SELECT * FROM `attendance_record` WHERE 
-            employee_id='".$uid."' 
-            AND leave_time >= '".$start."'
+            SELECT * FROM `attendance_record` WHERE ";
+        if(!empty($uid))
+            $sql .= "   employee_id='".$uid."' AND ";
+        $sql .= "  leave_time >= '".$start."'
             AND leave_time <= '".$end."'
             AND status <> '"  . LeaveService::STATUS_DELETE . "'
             AND take <> '"  . Attendance::ANNUAL_LEAVE . "'
         ) UNION 
         (
-            SELECT * FROM `attendance_record` WHERE 
-            employee_id='".$uid."' 
-            AND (
-                (
-                    special_leave_year_id = '".$special_leave_year_id."'
-                    AND status <> '"  . LeaveService::STATUS_DELETE . "'
+            SELECT * FROM `attendance_record` WHERE ";
+        if(!empty($uid))
+            $sql .= "   employee_id='".$uid."' AND ";
+        $sql .= " (
+                (";
+        if(!empty($special_leave_year_id))
+            $sql .= "   special_leave_year_id = '".$special_leave_year_id."' AND ";
+        $sql .= "   status <> '"  . LeaveService::STATUS_DELETE . "'
                     AND take = '" . Attendance::ANNUAL_LEAVE . "'
                 ) OR (
                     leave_time >= '".$start."'
@@ -210,6 +213,7 @@ class LeaveService
                 )
             )
         )";
+        
         $result = Yii::app()->db->createCommand($sql)->queryAll();
         return $result;
     }

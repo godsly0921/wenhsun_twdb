@@ -325,7 +325,6 @@ class AttendancerecordService{
         $yearEndDT = new DateTime($startDateTime);
         $yearEndDT->add(DateInterval::createFromDateString('1 year'));
         $endDateTime = $yearEndDT->format('Y-m-d') . ' 00:00:00';
-
         $list = Yii::app()->db->createCommand(
             '
               SELECT * FROM attendance_record
@@ -340,6 +339,25 @@ class AttendancerecordService{
             ':start_time' => $startDateTime,
             ':end_time' => $endDateTime,
         ])->queryAll();
+
+        $listArr = array();
+        foreach ($list as $value) {
+           $listArr[$value['id']] = $value;
+        }
+
+        return $listArr;
+    }
+
+    public function getAllEmployeeLeaveListHoliday($date_start, $date_end)
+    {
+        $sql = '
+          SELECT * FROM attendance_record WHERE 
+          leave_time >= "' . $date_start . '"
+          AND leave_time < "' . $date_end . '"
+          AND take != 11
+          ORDER BY leave_time DESC
+        ';
+        $list = Yii::app()->db->createCommand($sql)->queryAll();
 
         $listArr = array();
         foreach ($list as $value) {
