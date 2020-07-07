@@ -16,7 +16,29 @@
                 <?php endif; ?>
                 <div class="x_panel">
                     <div class="x_title">
-                        <h2>修改公文</h2><button id="delete-btn" class="btn btn-danger pull-right">刪除</button>
+                        <h2>
+                            修改
+                            <?php if(isset($_GET['document_department'])){
+                                switch ($_GET['document_department']) {
+                                    case '1':
+                                        echo "文訊";
+                                        break;
+                                    case '2':
+                                        echo "基金會";
+                                        break;
+                                    case '3':
+                                        echo "紀州庵";
+                                        break;
+                                    default:
+                                        echo "全部";
+                                        break;
+                                }
+                            }else{
+                                echo "全部";
+                            }?>
+                            公文
+                        </h2>
+                        <button id="delete-btn" class="btn btn-danger pull-right">刪除</button>
                         <div class="clearfix"></div>
                     </div>
                     <div class="x_content">
@@ -33,7 +55,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="control-label col-md-3 col-sm-3 col-xs-12">所屬部門</label>
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12">發文部門</label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
                                     <select class="form-control" id="document_department" name="document_department">
                                         <?php if(!empty($document_department)):?>
