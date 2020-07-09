@@ -17,15 +17,16 @@ class DocumentController extends Controller
     public function actionIndex()
     {   
         $document_department = 1;
-        if(isset($_GET['document_department'])){
-            if(!empty($_GET['document_department'])){
-                $document_department = $_GET['document_department'];
-            }
+        if(isset($_GET['document_department']) && !empty($_GET['document_department'])){
+            $document_department = $_GET['document_department'];
+            $list = Document::model()->byUpdateAt()->findAll(
+                'document_department=:document_department',
+                [':document_department' => $document_department]
+            );
+        }else{
+            $list = Document::model()->byUpdateAt()->findAll();
         }
-        $list = Document::model()->byUpdateAt()->findAll(
-            'document_department=:document_department',
-            [':document_department' => $document_department]
-        );
+        
         $this->render('list', ['list' => $list, "document_department"=>$this->document_department]);
     }
 

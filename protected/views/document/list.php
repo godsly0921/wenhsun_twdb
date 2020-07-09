@@ -4,7 +4,27 @@
     <div class="">
         <div class="page-title">
             <div class="title_left">
-                <h3>公文列表</h3>
+                <h3>
+                    <?php if(isset($_GET['document_department'])){
+                        switch ($_GET['document_department']) {
+                            case '1':
+                                echo "文訊";
+                                break;
+                            case '2':
+                                echo "基金會";
+                                break;
+                            case '3':
+                                echo "紀州庵";
+                                break;
+                            default:
+                                echo "全部";
+                                break;
+                        }
+                    }else{
+                        echo "全部";
+                    }?>
+                    公文列表
+                </h3>
             </div>
 
             <?php foreach ($session_jsons as $jsons):?>
@@ -34,7 +54,7 @@
                             <th>公文主旨</th>
                             <th>發文字號</th>
                             <th>受文者</th>
-                            <th>所屬部門</th>
+                            <th>發文部門</th>
                             <th>公文類型</th>
                             <th>承辦人</th>
                             <th>存檔代號</th>

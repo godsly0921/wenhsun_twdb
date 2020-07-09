@@ -62,6 +62,90 @@ class ManagerController extends Controller
         $this->render('index', ['userNameSearchWord' => $userNameSearchWord, 'nameSearchWord' => $nameSearchWord]);
     }
 
+    public function actionAll_Index(): void
+    {
+        $employees = EmployeeORM::model()->findAll();
+
+        $userNameSearchWord = $this->buildUsernameSearchWord($employees);
+
+        $nameSearchWord = $this->buildNameSearchWord($employees);
+
+        $this->render('all_index', ['userNameSearchWord' => $userNameSearchWord, 'nameSearchWord' => $nameSearchWord]);
+    }
+    // Ajax 批次結算
+    public function actionbatchCloseAnnualLeave() {
+        $ids = $_POST['ids'];
+
+        if(empty($ids) || !isset($ids)){
+            throw new Exception('傳入的歷史特休假有誤,請聯絡系統管理員。');
+        }
+
+        try {
+            foreach ($ids as $id) {
+                $leaveService = new LeaveService();
+                //$result = $leaveService->approveLeave($id, Yii::app()->session['uid']);
+                $specialleaveyear = Specialleaveyear::model()->findByPk($id);
+                if(!empty($specialleaveyear)) {
+                    $specialleaveyear->is_close = 1;
+                    $specialleaveyear->save();
+                }else{
+                    throw new Exception('ID:'.$id.',傳入的歷史特休假找不到記錄。');
+                }
+            }
+        } catch (Exception $e) {
+            echo 'Caught exception: ',  $e->getMessage(), "\n";
+            return;
+        }
+        echo json_encode('ok');
+        return;
+    }
+    // 歷史特休管理
+    public function actionhistory_annualLeave_manage(){
+        $employeeUserName = isset($_GET['user_name']) ? $_GET['user_name'] : '';
+        $name = isset($_GET['name']) ? $_GET['name'] : '';
+        $type = isset($_GET['type']) ? $_GET['type'] : 1;
+        $leaveService = new LeaveService();
+        $configService = new ConfigService();
+        $employees = EmployeeORM::model()->findAll();
+        $userNameSearchWord = $this->buildUsernameSearchWord($employees);
+        $nameSearchWord = $this->buildNameSearchWord($employees);
+        $id = '';
+        $empName = '';
+        $userName = '';
+        $AnnualLeaveType = $configService->findByConfigName("AnnualLeaveType");
+        if(!empty($AnnualLeaveType)){
+            $AnnualLeaveType = $AnnualLeaveType[0]['config_value'];
+        }else{
+            $AnnualLeaveType = 1;
+        }
+        if(isset($_GET['name']) || isset($_GET['user_name'])){
+            if ($type == 1) {
+                $emp = Employee::model()->find(
+                    'user_name=:user_name',
+                    [':user_name' => $employeeUserName]
+                );
+            } elseif ($type == 2) {
+                $emp = Employee::model()->find(
+                    'name=:name',
+                    [':name' => $name]
+                );
+            }
+
+            if ($emp === null) {
+                Yii::app()->session[Controller::ERR_MSG_KEY] = '查無員工';
+                $this->redirect('index');
+            }
+            $data = $leaveService->findEmployeeHistoryLeave($emp,$AnnualLeaveType);
+        }else{
+            $data = $leaveService->findAllEmployeeHistoryLeave($AnnualLeaveType);
+        }
+        $this->render('history_annualLeave_manage', [
+            'AnnualLeaveType' => $AnnualLeaveType,
+            'userNameSearchWord' => $userNameSearchWord,
+            'nameSearchWord' => $nameSearchWord,
+            'data' => $data,
+        ]);
+    }
     private function buildUsernameSearchWord($employees): string
     {
         $loginIds = [];
@@ -86,6 +170,23 @@ class ManagerController extends Controller
         return '"' . $userNameSearchWord . '"';
     }
 
+    public function actionAll_Hist(): void{
+        $date_start = isset($_GET['date_start']) ? $_GET['date_start'] : '';
+        $date_end = isset($_GET['date_end']) ? $_GET['date_end'] : '';
+        if(!empty($date_start) && !empty($date_end)){
+            $serv = new AttendancerecordService();
+            $holidayList = $serv->getAllEmployeeLeaveListHoliday($date_start, $date_end);
+        }else{
+            Yii::app()->session[Controller::ERR_MSG_KEY] = '時間區間請確實選擇';
+            $this->redirect('all_index');
+        }
+        $this->render('all_hist', [
+            'holidayList' => $holidayList,
+            'date_start' => $date_start,
+            'date_end' => $date_end
+        ]);
+    }
+    
     public function actionHist(): void
     {
         $employeeUserName = $_GET['user_name'];
@@ -100,45 +201,85 @@ class ManagerController extends Controller
         $userName = '';
 
         if ($type == 1) {
-            $employeeOrmEnt = EmployeeORM::model()->find(
+            $emp = EmployeeORM::model()->find(
                 'user_name=:user_name',
                 [':user_name' => $employeeUserName]
             );
-
-            if ($employeeOrmEnt === null) {
-                Yii::app()->session[Controller::ERR_MSG_KEY] = '查無員工';
-                $this->redirect('index');
-            }
-
-            $holidayList = $serv->getEmployeeLeaveListHoliday($employeeOrmEnt->id, $year);
-            $overtimeList = $serv->getEmployeeLeaveListOvertime($employeeOrmEnt->id, $year);
-
-            $employee = new Employee(new EmployeeId($employeeOrmEnt->id), $employeeOrmEnt->onboard_date);
-
-            $id = $employeeOrmEnt->id;
-            $empName = $employeeOrmEnt->name;
-            $userName = $employeeOrmEnt->user_name;
         } elseif ($type == 2) {
             $emp = EmployeeORM::model()->find(
                 'name=:name',
                 [':name' => $name]
             );
-
-            if ($emp === null) {
-                Yii::app()->session[Controller::ERR_MSG_KEY] = '查無員工';
-                $this->redirect('index');
-            }
-
-            $holidayList = $serv->getEmployeeLeaveListHoliday($emp->id, $year);
-            $overtimeList = $serv->getEmployeeLeaveListOvertime($emp->id, $year);
-
-            $employee = new Employee(new EmployeeId($emp->id), $emp->onboard_date);
-
-            $id = $emp->id;
-            $empName = $emp->name;
-            $userName = $emp->user_name;
+        }
+        if ($emp === null) {
+            Yii::app()->session[Controller::ERR_MSG_KEY] = '查無員工';
+            $this->redirect('index');
         }
 
+        $holidayList = $serv->getEmployeeLeaveListHoliday($emp->id, $year);
+        $overtimeList = $serv->getEmployeeLeaveListOvertime($emp->id, $year);
+
+        $employee = new Employee(new EmployeeId($emp->id), $emp->onboard_date);
+
+        $id = $emp->id;
+        $empName = $emp->name;
+        $userName = $emp->user_name;
+
+        $configService = new ConfigService();
+        $AnnualLeaveType = $configService->findByConfigName("AnnualLeaveType");
+        if(!empty($AnnualLeaveType)){
+            $AnnualLeaveType = $AnnualLeaveType[0]['config_value'];
+        }else{
+            $AnnualLeaveType = 1;
+        }
+        // $employee = new Employee(new EmployeeId($employeeOrmEnt->id), $employeeOrmEnt->onboard_date);
+        $leaveService = new LeaveService();
+        $employeeLeaveCalculator = new EmployeeLeaveCalculator();
+
+        $attendanceRecordServ = new AttendancerecordService();
+        $tomorrow = new DateTime();
+        $tomorrow->add(DateInterval::createFromDateString('1 day'));
+
+        $personalLeaveAnnualMinutes = $employeeLeaveCalculator->personalLeaveAnnualMinutes();
+        $sickLeaveAnnualMinutes = $employeeLeaveCalculator->sickLeaveAnnualMinutes();
+
+        $commonLeaveStartDateTime = new DateTime("{$year}/01/01 00:00:00");
+        $commonLeaveStartDate = $commonLeaveStartDateTime->format('Y/m/d H:i:s');
+        $commonLeaveEndDateTime = new DateTime("{$year}/01/01 00:00:00");
+        $commonLeaveEndDateTime->add(DateInterval::createFromDateString('1 year'));
+        $commonLeaveEndDate = $commonLeaveEndDateTime->format('Y/m/d H:i:s');
+
+        if($AnnualLeaveType==2){
+            $holidayList = $serv->getEmployeeLeaveListHoliday($emp->id, $year);
+            $annualLeaveMinutes = $employeeLeaveCalculator->calcAnnualLeaveSummaryOnBoardDate(new DateTime(), $employee);
+            // $annualLeaveMinutes = $leaveService->calcAnnualLeaveSummaryOnBoardDate(new DateTime(), $employee);
+            $appliedAnnualLeave = $attendanceRecordServ->summaryMinutesByPeriodOfTimeAndLeaveType(
+                $employee->getEmployeeId()->value(),
+                $commonLeaveStartDate,
+                $commonLeaveEndDate,
+                Attendance::ANNUAL_LEAVE
+            );
+            $annualLeaveMinutes = $annualLeaveMinutes->minutesValue();
+        }else{
+            // 該年度可請特休數
+            $annualLeaveMinutes = $leaveService->calcAnnualLeaveSummaryYear_FiscalYear($emp->id, $year);
+            $holidayList = array();
+            if(!empty($annualLeaveMinutes)){
+                $annualLeaveMinutes = $annualLeaveMinutes[0];
+                $holidayList = $leaveService->getYearLeaves_FiscalYear($year,$annualLeaveMinutes["id"], $emp->id);
+                // 該年度已請且審核通過特休數
+                $appliedAnnualLeave = $leaveService->getEmployeeLeaves_FiscalYear(
+                    $annualLeaveMinutes["id"],
+                    $emp->id
+                );
+                $annualLeaveMinutes = $annualLeaveMinutes["special_leave"];
+            }else{
+                $holidayList = $leaveService->getYearLeaves_FiscalYear($year,"", $emp->id);
+                $appliedAnnualLeave = 0;
+                $annualLeaveMinutes = 0;
+            }
+        }
+        
         if (!empty($holidayList)) {
             foreach ($holidayList as $idx => $row) {
                 if (isset($this->leaveMap[$row['take']])) {
@@ -154,29 +295,7 @@ class ManagerController extends Controller
                 }
             }
         }
-
-        $employeeLeaveCalculator = new EmployeeLeaveCalculator();
-        $annualLeaveMinutes = $employeeLeaveCalculator->calcAnnualLeaveSummaryOnBoardDate(new DateTime(), $employee);
-
-        $attendanceRecordServ = new AttendancerecordService();
-        $tomorrow = new DateTime();
-        $tomorrow->add(DateInterval::createFromDateString('1 day'));
-
-        $personalLeaveAnnualMinutes = $employeeLeaveCalculator->personalLeaveAnnualMinutes();
-        $sickLeaveAnnualMinutes = $employeeLeaveCalculator->sickLeaveAnnualMinutes();
-
-        $commonLeaveStartDateTime = new DateTime("{$year}/01/01 00:00:00");
-        $commonLeaveStartDate = $commonLeaveStartDateTime->format('Y/m/d H:i:s');
-        $commonLeaveEndDateTime = new DateTime("{$year}/01/01 00:00:00");
-        $commonLeaveEndDateTime->add(DateInterval::createFromDateString('1 year'));
-        $commonLeaveEndDate = $commonLeaveEndDateTime->format('Y/m/d H:i:s');
-
-        $appliedAnnualLeave = $attendanceRecordServ->summaryMinutesByPeriodOfTimeAndLeaveType(
-            $employee->getEmployeeId()->value(),
-            $commonLeaveStartDate,
-            $commonLeaveEndDate,
-            Attendance::ANNUAL_LEAVE
-        );
+        
 
         $sickLeavedMins = $attendanceRecordServ->summaryMinutesByPeriodOfTimeAndLeaveType(
             $employee->getEmployeeId()->value(),
@@ -286,7 +405,7 @@ class ManagerController extends Controller
             [
                 'category' => '年假(特別休假)',
                 'leave_applied' => $appliedAnnualLeave / 60,
-                'leave_available' => $annualLeaveMinutes->minutesValue() / 60 - $appliedAnnualLeave / 60,
+                'leave_available' => $annualLeaveMinutes / 60 - $appliedAnnualLeave / 60,
             ],
             [
                 'category' => '分娩假含例假日',
@@ -347,7 +466,7 @@ class ManagerController extends Controller
         $employee = EmployeeORM::model()->findByPk(Yii::app()->session['uid']);
         $userNameSearchWord = $this->buildUsernameSearchWord($employees);
         $nameSearchWord = $this->buildNameSearchWord($employees);
-
+        
         $this->render('new', [
             'userNameSearchWord' => $userNameSearchWord,
             'leaveMap' => $this->leaveMap,
@@ -362,7 +481,6 @@ class ManagerController extends Controller
         $employee = EmployeeORM::model()->findByPk(Yii::app()->session['uid']);
         $userNameSearchWord = $this->buildUsernameSearchWord($employees);
         $nameSearchWord = $this->buildNameSearchWord($employees);
-
         $this->render('overtime', [
             'userNameSearchWord' => $userNameSearchWord,
             'leaveMap' => $this->leaveMap,
@@ -409,6 +527,63 @@ class ManagerController extends Controller
             $start_time = filter_input(INPUT_POST, 'start_date') . ' ' . filter_input(INPUT_POST, 'start_time') . ':00';
             $end_time = filter_input(INPUT_POST, 'end_date') . ' ' . filter_input(INPUT_POST, 'end_time') . ':00';
 
+            $leaveService = new LeaveService();
+            $configService = new ConfigService();
+            $AnnualLeaveType = $configService->findByConfigName("AnnualLeaveType");
+            $annual_leave_available = 0; // 特休假可請分鐘數
+            if(!empty($AnnualLeaveType)){
+                $AnnualLeaveType = $AnnualLeaveType[0]['config_value'];
+            }else{
+                $AnnualLeaveType = 1;
+            }
+            $can_apply_annual_last = $can_apply_annual_now = false;
+            $special_leave_year_id = null;
+            $check_role = [2,5,26];
+            if($AnnualLeaveType == 1 && $_POST['leave_type'] == 5 && in_array($employeeOrmEnt->role, $check_role) ){
+                $now_year = new DateTime($start_time);
+                $now_year->setTime(0, 0, 0);
+                if($now_year->format("m")<=3){
+                    $last_year = $now_year->modify('-1 year');
+                    $last_year->setTime(0, 0, 0);
+                    $last_annualLeaveMinutes = $leaveService->calcAnnualLeaveSummaryYear_FiscalYear($employeeOrmEnt->id, $last_year->format('Y'));
+                    $last_annual_leave_available = 0;
+                    if(!empty($last_annualLeaveMinutes)){
+                        $last_annualLeaveMinutes = $last_annualLeaveMinutes[0];
+                        $appliedAnnualLeave = $leaveService->getEmployeeLeaves_FiscalYear(
+                            $last_annualLeaveMinutes["id"],
+                            $employeeOrmEnt->id
+                        );
+                        $last_annual_leave_available = $last_annualLeaveMinutes["special_leave"] - $appliedAnnualLeave;
+                    }
+                    if($last_annual_leave_available > (float)(filter_input(INPUT_POST, 'leave_minutes') * 60) && $last_annualLeaveMinutes["is_close"] == '0'){
+                        $special_leave_year_id = $last_annualLeaveMinutes["id"];
+                        $can_apply_annual_last = true;
+                    }
+                }
+                if($can_apply_annual_last == false){
+                    $now_year = new DateTime($start_time);
+                    $now_year->setTime(0, 0, 0);
+                    $now_annualLeaveMinutes = $leaveService->calcAnnualLeaveSummaryYear_FiscalYear($employeeOrmEnt->id, $now_year->format('Y'));
+                    $now_annual_leave_available = 0;
+                    if(!empty($now_annualLeaveMinutes)){
+                        $now_annualLeaveMinutes = $now_annualLeaveMinutes[0];
+                        $appliedAnnualLeave = $leaveService->getEmployeeLeaves_FiscalYear(
+                            $now_annualLeaveMinutes["id"],
+                            $employeeOrmEnt->id
+                        );
+                        $now_annual_leave_available = $now_annualLeaveMinutes["special_leave"] - $appliedAnnualLeave;
+
+                        if($now_annual_leave_available > (float)(filter_input(INPUT_POST, 'leave_minutes') * 60) && $now_annualLeaveMinutes["is_close"] == '0'){
+                            $special_leave_year_id = $now_annualLeaveMinutes["id"];
+                            $can_apply_annual_now = true;
+                        }
+                    }
+                }
+                if($can_apply_annual_now == false && $can_apply_annual_last == false){
+                    echo "<script>alert('你擁有的特休假分鐘數不足喔，無法用特休假申請');history.go(-1);</script>";
+                    exit;
+                }
+            }
             if ($_POST['leave_type'] == 11) {
                 if ($days == 1) {
                     $attendanceRecord = new Attendancerecord();
@@ -506,6 +681,9 @@ class ManagerController extends Controller
                     $attendanceRecord->manager = $manager->id;
                     $attendanceRecord->agent = isset($_POST['agent']) ? $agent->id : '';
                     $attendanceRecord->status = 0;
+                    if($_POST['leave_type'] == 5){
+                        $attendanceRecord->special_leave_year_id = $special_leave_year_id;
+                    }
                     $attendanceRecord->save();
                 } else {
                     $date = date(filter_input(INPUT_POST, 'start_date'));
@@ -539,6 +717,9 @@ class ManagerController extends Controller
                         $attendanceRecord->manager = $manager->id;
                         $attendanceRecord->agent = isset($_POST['agent']) ? $agent->id : '';
                         $attendanceRecord->status = 0;
+                        if($_POST['leave_type'] == 5){
+                            $attendanceRecord->special_leave_year_id = $special_leave_year_id;
+                        }
                         $attendanceRecord->save();
                         $date = date(date("Y-m-d", strtotime("+1 day", strtotime($date))));
                     }
@@ -565,6 +746,9 @@ class ManagerController extends Controller
                     $attendanceRecord->manager = $manager->id;
                     $attendanceRecord->agent = isset($_POST['agent']) ? $agent->id : '';
                     $attendanceRecord->status = 0;
+                    if($_POST['leave_type'] == 5){
+                        $attendanceRecord->special_leave_year_id = $special_leave_year_id;
+                    }
                     $attendanceRecord->save();
                 }
             }
@@ -640,6 +824,90 @@ class ManagerController extends Controller
         ]);
     }
 
+    // Ajax 批次結算
+    public function actionAjaxupdate() {
+        $id = $_POST['id'];
+        $attendanceRecord = Attendancerecord::model()->findByPk($id);
+        if(empty($attendanceRecord)){
+            throw new Exception('找不到此筆請假記錄');
+        }
+
+        try {
+            $leaveService = new LeaveService();
+            $configService = new ConfigService();
+            $AnnualLeaveType = $configService->findByConfigName("AnnualLeaveType");
+            $annual_leave_available = 0; // 特休假可請分鐘數
+            if(!empty($AnnualLeaveType)){
+                $AnnualLeaveType = $AnnualLeaveType[0]['config_value'];
+            }else{
+                $AnnualLeaveType = 1;
+            }
+            $can_apply_annual_last = $can_apply_annual_now = false;
+            $special_leave_year_id = null;
+            $employeeOrmEnt = EmployeeORM::model()->find(
+                'id=:id',
+                [':id' => $attendanceRecord->employee_id]
+            );
+            $check_role = [2,5,26];
+            if($AnnualLeaveType == 1 && $attendanceRecord->take == 5 && in_array($employeeOrmEnt->role, $check_role)){
+                $now_year = new DateTime($attendanceRecord->day);
+                $now_year->setTime(0, 0, 0);
+                if($now_year->format("m")<=3){
+                    $last_year = $now_year->modify('-1 year');
+                    $last_year->setTime(0, 0, 0);
+                    $last_annualLeaveMinutes = $leaveService->calcAnnualLeaveSummaryYear_FiscalYear($attendanceRecord->employee_id, $last_year->format('Y'));
+                    $last_annual_leave_available = 0;
+                    if(!empty($last_annualLeaveMinutes)){
+                        $last_annualLeaveMinutes = $last_annualLeaveMinutes[0];
+                        $appliedAnnualLeave = $leaveService->getEmployeeLeaves_FiscalYear(
+                            $last_annualLeaveMinutes["id"],
+                            $attendanceRecord->employee_id
+                        );
+                        $last_annual_leave_available = $last_annualLeaveMinutes["special_leave"] - $appliedAnnualLeave;
+                    }
+
+                    if($last_annual_leave_available >= (FLOAT)(filter_input(INPUT_POST, 'leave_minutes') * 60) && $last_annualLeaveMinutes["is_close"] == '0'){
+                        $special_leave_year_id = $last_annualLeaveMinutes["id"];
+                        $can_apply_annual_last = true;
+                    }
+                }
+
+                if($can_apply_annual_last == false){
+                    $now_year = new DateTime($attendanceRecord->day);
+                    $now_year->setTime(0, 0, 0);
+                    $now_annualLeaveMinutes = $leaveService->calcAnnualLeaveSummaryYear_FiscalYear($attendanceRecord->employee_id, $now_year->format('Y'));
+                    $now_annual_leave_available = 0;
+                    if(!empty($now_annualLeaveMinutes)){
+                        $now_annualLeaveMinutes = $now_annualLeaveMinutes[0];
+                        $appliedAnnualLeave = $leaveService->getEmployeeLeaves_FiscalYear(
+                            $now_annualLeaveMinutes["id"],
+                            $attendanceRecord->employee_id
+                        );
+                        $now_annual_leave_available = $now_annualLeaveMinutes["special_leave"] - $appliedAnnualLeave;
+                        if($now_annual_leave_available >= (FLOAT) (filter_input(INPUT_POST, 'leave_minutes') * 60) && $now_annualLeaveMinutes["is_close"] == '0'){
+                            $special_leave_year_id = $now_annualLeaveMinutes["id"];
+                            $can_apply_annual_now = true;
+                        }
+                    }
+                }
+                if($can_apply_annual_now == false && $can_apply_annual_last == false){
+                    echo json_encode(array("status"=>false,"msg"=>"擁有的特休假分鐘數不足喔，無法用特休假申請"));
+                    exit;
+                }
+            }
+            $attendanceRecord->status = 1;
+            if($attendanceRecord->take){
+                $attendanceRecord->special_leave_year_id = $special_leave_year_id;
+            }
+            $attendanceRecord->update();
+        } catch (Exception $e) {
+            echo json_encode(array("status"=>false,"msg"=>"核準失敗\nCaught exception: " . $e->getMessage()));
+            return;
+        }
+        echo json_encode(array("status"=>true,"msg"=>'核準成功'));
+        return;
+    }
+
     public function actionUpdate(): void
     {
         $this->checkCSRF('index');
@@ -662,10 +930,71 @@ class ManagerController extends Controller
         }
 
         try {
-
             $id = $_POST['id'];
+            $leaveService = new LeaveService();
+            $configService = new ConfigService();
+            $AnnualLeaveType = $configService->findByConfigName("AnnualLeaveType");
+            $annual_leave_available = 0; // 特休假可請分鐘數
+            if(!empty($AnnualLeaveType)){
+                $AnnualLeaveType = $AnnualLeaveType[0]['config_value'];
+            }else{
+                $AnnualLeaveType = 1;
+            }
+            $can_apply_annual_last = $can_apply_annual_now = false;
+            $special_leave_year_id = null;
 
             $attendanceRecord = Attendancerecord::model()->findByPk($id);
+            $employeeOrmEnt = EmployeeORM::model()->find(
+                'id=:id',
+                [':id' => $attendanceRecord->employee_id]
+            );
+            $check_role = [2,5,26];
+            if($AnnualLeaveType == 1 && $_POST['leave_type'] == 5 && in_array($employeeOrmEnt->role, $check_role)){
+                $now_year = new DateTime($_POST['leave_date']);
+                $now_year->setTime(0, 0, 0);
+                if($now_year->format("m")<=3){
+                    $last_year = $now_year->modify('-1 year');
+                    $last_year->setTime(0, 0, 0);
+                    $last_annualLeaveMinutes = $leaveService->calcAnnualLeaveSummaryYear_FiscalYear($attendanceRecord->employee_id, $last_year->format('Y'));
+                    $last_annual_leave_available = 0;
+                    if(!empty($last_annualLeaveMinutes)){
+                        $last_annualLeaveMinutes = $last_annualLeaveMinutes[0];
+                        $appliedAnnualLeave = $leaveService->getEmployeeLeaves_FiscalYear(
+                            $last_annualLeaveMinutes["id"],
+                            $attendanceRecord->employee_id
+                        );
+                        $last_annual_leave_available = $last_annualLeaveMinutes["special_leave"] - $appliedAnnualLeave;
+                    }
+
+                    if($last_annual_leave_available >= (FLOAT)(filter_input(INPUT_POST, 'leave_minutes') * 60) && $last_annualLeaveMinutes["is_close"] == '0'){
+                        $special_leave_year_id = $last_annualLeaveMinutes["id"];
+                        $can_apply_annual_last = true;
+                    }
+                }
+
+                if($can_apply_annual_last == false){
+                    $now_year = new DateTime($_POST['leave_date']);
+                    $now_year->setTime(0, 0, 0);
+                    $now_annualLeaveMinutes = $leaveService->calcAnnualLeaveSummaryYear_FiscalYear($attendanceRecord->employee_id, $now_year->format('Y'));
+                    $now_annual_leave_available = 0;
+                    if(!empty($now_annualLeaveMinutes)){
+                        $now_annualLeaveMinutes = $now_annualLeaveMinutes[0];
+                        $appliedAnnualLeave = $leaveService->getEmployeeLeaves_FiscalYear(
+                            $now_annualLeaveMinutes["id"],
+                            $attendanceRecord->employee_id
+                        );
+                        $now_annual_leave_available = $now_annualLeaveMinutes["special_leave"] - $appliedAnnualLeave;
+                        if($now_annual_leave_available >= (FLOAT) (filter_input(INPUT_POST, 'leave_minutes') * 60) && $now_annualLeaveMinutes["is_close"] == '0'){
+                            $special_leave_year_id = $now_annualLeaveMinutes["id"];
+                            $can_apply_annual_now = true;
+                        }
+                    }
+                }
+                if($can_apply_annual_now == false && $can_apply_annual_last == false){
+                    echo "<script>alert('擁有的特休假分鐘數不足喔，無法用特休假申請');history.go(-1);</script>";
+                    exit;
+                }
+            }
             $now = Common::now();
             $attendanceRecord->update_at = $now;
             $attendanceRecord->day = $_POST['leave_date'];
@@ -679,6 +1008,9 @@ class ManagerController extends Controller
             $attendanceRecord->manager = $manager->id;
             $attendanceRecord->agent = $_POST['agent'] == '' ? '' : $agent->id;
             $attendanceRecord->status = 1;
+            if($_POST['leave_type'] == 5){
+                $attendanceRecord->special_leave_year_id = $special_leave_year_id;
+            }
             $attendanceRecord->update();
 
             Yii::app()->session[Controller::SUCCESS_MSG_KEY] = '修改成功';
