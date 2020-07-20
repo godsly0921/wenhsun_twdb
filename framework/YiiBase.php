@@ -40,7 +40,10 @@ defined('YII_PATH') or define('YII_PATH',dirname(__FILE__));
  * Defines the Zii library installation path.
  */
 defined('YII_ZII_PATH') or define('YII_ZII_PATH',YII_PATH.DIRECTORY_SEPARATOR.'zii');
-
+/**
+ * Defines the luckywave library installation path.
+ */
+defined('YII_LUCKYWAVE_PATH') or define('YII_LUCKYWAVE_PATH',YII_PATH.DIRECTORY_SEPARATOR.'luckywave');
 /**
  * YiiBase is a helper class serving common framework functionalities.
  *
@@ -67,7 +70,7 @@ class YiiBase
 	 */
 	public static $enableIncludePath=true;
 
-	private static $_aliases=array('system'=>YII_PATH,'zii'=>YII_ZII_PATH); // alias => path
+	private static $_aliases=array('system'=>YII_PATH,'zii'=>YII_ZII_PATH,'luckywave'=>YII_LUCKYWAVE_PATH); // alias => path
 	private static $_imports=array();					// alias => class name or directory
 	private static $_includePaths;						// list of include paths
 	private static $_app;
