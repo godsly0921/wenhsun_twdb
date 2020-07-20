@@ -76,6 +76,7 @@ $('.search-form form').submit(function(){
 			'id'=>'<?php echo $this->class2id($this->modelClass); ?>-grid',
 			'dataProvider'=>$model->search(),
 			'filter'=>$model,
+			'emptyText' => '目前沒有任何資料',
 			'columns'=>array(
 		<?php
 		$count=0;
