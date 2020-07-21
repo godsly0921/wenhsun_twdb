@@ -1,4 +1,4 @@
-<?php
+<?php $session_jsons = CJSON::decode(Yii::app()->session['power_session_jsons']); ?><?php
 /* @var $this BookauthorController */
 /* @var $model BookAuthor */
 
@@ -15,9 +15,14 @@ $this->menu=array(
 	array('label'=>'Manage BookAuthor', 'url'=>array('admin')),
 );
 ?>
+<?php
+	foreach ($session_jsons as $jsons) {
+		if ($jsons["power_controller"] == $this->getId() . "/" . $this->getAction()->getId()){
+			echo "<h1>".$jsons["power_name"]."</h1>";
+		}
+	}
 
-<h1>檢視 BookAuthor #<?php echo $model->author_id; ?></h1>
-
+?>
 <?php $this->widget('luckywave.widgets.CDetailView', array(
 	'data'=>$model,
 	'attributes'=>array(

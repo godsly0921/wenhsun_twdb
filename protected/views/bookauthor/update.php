@@ -1,4 +1,4 @@
-<?php
+<?php $session_jsons = CJSON::decode(Yii::app()->session['power_session_jsons']); ?><?php
 /* @var $this BookauthorController */
 /* @var $model BookAuthor */
 
@@ -14,9 +14,14 @@ $this->menu=array(
 	array('label'=>'Manage BookAuthor', 'url'=>array('admin')),
 );
 ?>
+<?php
+	foreach ($session_jsons as $jsons) {
+		if ($jsons["power_controller"] == $this->getId() . "/" . $this->getAction()->getId()){
+			echo "<h1>".$jsons["power_name"]."</h1>";
+		}
+	}
 
-<h1>更新 BookAuthor <?php echo $model->author_id; ?> </h1>
-<div class='panel panel-default' style='width=100%; overflow-y:scroll;'>
+?><div class='panel panel-default' style='width=100%; overflow-y:scroll;'>
     <div class='panel-body'>
 		<?php $this->renderPartial('_form', array('model'=>$model)); ?>	
 </div>

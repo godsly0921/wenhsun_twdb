@@ -3,6 +3,7 @@
  * The following variables are available in this template:
  * - $this: the CrudCode object
  */
+echo "<?php \$session_jsons = CJSON::decode(Yii::app()->session['power_session_jsons']); ?>";
 ?>
 <?php echo "<?php\n"; ?>
 /* @var $this <?php echo $this->getControllerClass(); ?> */
@@ -25,8 +26,13 @@ $this->menu=array(
 	array('label'=>'Manage <?php echo $this->modelClass; ?>', 'url'=>array('admin')),
 );
 ?>
-
-<h1>檢視 <?php echo $this->modelClass." #<?php echo \$model->{$this->tableSchema->primaryKey}; ?>"; ?></h1>
+<?php echo "<?php\n";?>
+	foreach ($session_jsons as $jsons) {
+		if ($jsons["power_controller"] == $this->getId() . "/" . $this->getAction()->getId()){
+			echo "<h1>".$jsons["power_name"]."</h1>";
+		}
+	}
+<?php echo "\n?>"?>
 
 <?php echo "<?php"; ?> $this->widget('luckywave.widgets.CDetailView', array(
 	'data'=>$model,

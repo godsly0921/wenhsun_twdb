@@ -82,31 +82,6 @@ $gender = array(
 		</div>
 		<?php echo $form->error($model,'memo'); ?>
 	</div>
-	<?php if($model->isNewRecord){?>
-		<div class="form-group">
-			<?php echo $form->labelEx($model,'create_at', array('class'=>'col-sm-3 control-label')); ?>
-			<div class="col-sm-8">
-				<?php echo $form->textField($model,'create_at', array('class'=>'form-control')); ?>
-			</div>
-			<?php echo $form->error($model,'create_at'); ?>
-		</div>
-	<?php }?>
-	<?php if(!$model->isNewRecord){?>
-		<div class="form-group">
-			<?php echo $form->labelEx($model,'update_at', array('class'=>'col-sm-3 control-label')); ?>
-			<div class="col-sm-8">
-				<?php echo $form->textField($model,'update_at', array('class'=>'form-control')); ?>
-			</div>
-			<?php echo $form->error($model,'update_at'); ?>
-		</div>
-	<?php }?>
-	<div class="form-group">
-		<?php echo $form->labelEx($model,'delete_at', array('class'=>'col-sm-3 control-label')); ?>
-		<div class="col-sm-8">
-			<?php echo $form->textField($model,'delete_at', array('class'=>'form-control')); ?>
-		</div>
-		<?php echo $form->error($model,'delete_at'); ?>
-	</div>
 
 	<div class="form-group buttons">
 		<div class="col-sm-offset-3 col-sm-8">

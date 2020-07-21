@@ -36,11 +36,13 @@ $('.search-form form').submit(function(){
 ");
 ?>
 
-<h1><?php echo $this->pluralize($this->class2name($this->modelClass)); ?> 管理</h1>
 <?php echo "<?php\n";?>
 	foreach ($session_jsons as $jsons) {
+		if ($jsons["power_controller"] == $this->getId() . "/" . $this->getAction()->getId()){
+			echo "<h1>".$jsons["power_name"]."</h1>";
+		}
 		if ($jsons["power_controller"] == Yii::app()->controller->id . "/create"){
-			echo "<a href='".Yii::app()->createUrl(Yii::app()->controller->id."/create")."' class='btn btn-default btn-right'>新增<?php echo $this->pluralize($this->class2name($this->modelClass));?></a>";
+			echo "<a href='".Yii::app()->createUrl(Yii::app()->controller->id."/create")."' class='btn btn-default btn-right'>" . $jsons["power_name"] . "</a>";
 		}
 	}
 <?php echo "\n?>"?>
@@ -62,13 +64,13 @@ $('.search-form form').submit(function(){
 		<?php echo "<?php"; ?> 
 		$button_column_template = "";
 		foreach ($session_jsons as $jsons) {
-			if (strtolower($jsons["power_controller"]) == '<?php echo Yii::app()->controller->id; ?>/view'){
+			if (strtolower($jsons["power_controller"]) == $this->getId() . '/view'){
 				$button_column_template .= " {view}";
 			}
-			if (strtolower($jsons["power_controller"]) == '<?php echo Yii::app()->controller->id; ?>/update'){
+			if (strtolower($jsons["power_controller"]) == $this->getId() . '/update'){
 				$button_column_template .= " {update}";
 			}
-			if (strtolower($jsons["power_controller"]) == '<?php echo Yii::app()->controller->id; ?>/delete'){
+			if (strtolower($jsons["power_controller"]) == $this->getId() . '/delete'){
 				$button_column_template .= " {delete}";
 			}
 		}

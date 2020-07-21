@@ -1,0 +1,1 @@
+ALTER TABLE `book_author` CHANGE `gender` `gender` VARCHAR(1) NULL DEFAULT NULL COMMENT '作者性別', CHANGE `create_at` `create_at` DATETIME NULL DEFAULT NULL COMMENT '建立時間', CHANGE `update_at` `update_at` DATETIME NULL DEFAULT NULL COMMENT '更新時間', CHANGE `delete_at` `delete_at` DATETIME NULL DEFAULT NULL COMMENT '刪除時間';

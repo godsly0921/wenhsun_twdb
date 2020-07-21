@@ -74,7 +74,9 @@ class BookauthorController extends Controller
 
 		if(isset($_POST['BookAuthor']))
 		{
-			$model->attributes=$_POST['BookAuthor'];
+			$inputs = $_POST['BookAuthor'];
+			$inputs['create_at'] = date("Y-m-d H:i:s");
+			$model->attributes = $inputs;
 			if($model->save())
 				$this->redirect(array('view','id'=>$model->author_id));
 		}
@@ -97,8 +99,10 @@ class BookauthorController extends Controller
 		// $this->performAjaxValidation($model);
 
 		if(isset($_POST['BookAuthor']))
-		{
-			$model->attributes=$_POST['BookAuthor'];
+		{	
+			$inputs = $_POST['BookAuthor'];
+			$inputs['update_at'] = date("Y-m-d H:i:s");
+			$model->attributes = $inputs;
 			if($model->save())
 				$this->redirect(array('view','id'=>$model->author_id));
 		}
