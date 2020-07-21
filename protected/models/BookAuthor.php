@@ -7,7 +7,7 @@
  * @property integer $author_id
  * @property string $name
  * @property string $birthday
- * @property integer $gender
+ * @property string $gender
  * @property string $summary
  * @property string $memo
  * @property string $create_at
@@ -32,10 +32,10 @@ class BookAuthor extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('name, birthday, summary, delete_at', 'required'),
-			array('gender', 'numerical', 'integerOnly'=>true),
+			array('name, birthday, summary', 'required'),
 			array('name', 'length', 'max'=>128),
-			array('memo, create_at, update_at', 'safe'),
+			array('gender', 'length', 'max'=>1),
+			array('memo, create_at, update_at, delete_at', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
 			array('author_id, name, birthday, gender, summary, memo, create_at, update_at, delete_at', 'safe', 'on'=>'search'),
@@ -62,7 +62,7 @@ class BookAuthor extends CActiveRecord
 			'author_id' => '索引編號',
 			'name' => '作者姓名',
 			'birthday' => '作者生日',
-			'gender' => '作者性別',
+			'gender' => '作者性別(F：小姐 M：先生)',
 			'summary' => '作者簡介',
 			'memo' => 'Memo',
 			'create_at' => '建立時間',
@@ -92,7 +92,7 @@ class BookAuthor extends CActiveRecord
 		$criteria->compare('author_id',$this->author_id);
 		$criteria->compare('name',$this->name,true);
 		$criteria->compare('birthday',$this->birthday,true);
-		$criteria->compare('gender',$this->gender);
+		$criteria->compare('gender',$this->gender,true);
 		$criteria->compare('summary',$this->summary,true);
 		$criteria->compare('memo',$this->memo,true);
 		$criteria->compare('create_at',$this->create_at,true);

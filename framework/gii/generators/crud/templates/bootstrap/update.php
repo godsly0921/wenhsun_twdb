@@ -25,7 +25,7 @@ $this->menu=array(
 );
 ?>
 
-<h1><?php echo $this->modelClass." <?php echo \$model->{$this->tableSchema->primaryKey}; ?>"; ?> 更新</h1>
+<h1>更新 <?php echo $this->modelClass." <?php echo \$model->{$this->tableSchema->primaryKey}; ?>"; ?> </h1>
 <?php echo "<div class='panel panel-default' style='width=100%; overflow-y:scroll;'>\n"?>
     <?php echo "<div class='panel-body'>\n"?>
 		<?php echo "<?php \$this->renderPartial('_form', array('model'=>\$model)); ?>"; ?>

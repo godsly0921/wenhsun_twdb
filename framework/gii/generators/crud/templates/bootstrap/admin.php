@@ -62,13 +62,13 @@ $('.search-form form').submit(function(){
 		<?php echo "<?php"; ?> 
 		$button_column_template = "";
 		foreach ($session_jsons as $jsons) {
-			if ($jsons["power_controller"] == '<?php echo $this->modelClass; ?>/view'){
+			if (strtolower($jsons["power_controller"]) == '<?php echo Yii::app()->controller->id; ?>/view'){
 				$button_column_template .= " {view}";
 			}
-			if ($jsons["power_controller"] == '<?php echo $this->modelClass; ?>/update'){
+			if (strtolower($jsons["power_controller"]) == '<?php echo Yii::app()->controller->id; ?>/update'){
 				$button_column_template .= " {update}";
 			}
-			if ($jsons["power_controller"] == '<?php echo $this->modelClass; ?>/delete'){
+			if (strtolower($jsons["power_controller"]) == '<?php echo Yii::app()->controller->id; ?>/delete'){
 				$button_column_template .= " {delete}";
 			}
 		}

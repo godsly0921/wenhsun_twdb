@@ -59,7 +59,7 @@ class BookPublishPlace extends CActiveRecord
 		return array(
 			'publish_place_id' => '索引編號',
 			'name' => '出版地點',
-			'status' => '狀態 0:刪除 1:啟用',
+			'status' => '狀態 ( 0:刪除 1:啟用 )	',
 			'create_at' => '建立時間',
 			'update_at' => '更新時間',
 			'delete_at' => '刪除時間',

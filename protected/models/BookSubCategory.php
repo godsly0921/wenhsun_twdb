@@ -63,7 +63,7 @@ class BookSubCategory extends CActiveRecord
 			'name' => '次文類名稱',
 			'isroot' => '是否為根文類',
 			'parents' => '根文類編號',
-			'status' => '文類狀態',
+			'status' => '文類狀態 ( 0:刪除 1:啟用 )',
 			'create_at' => '建立時間',
 			'update_at' => '更新時間',
 			'delete_at' => '刪除時間',

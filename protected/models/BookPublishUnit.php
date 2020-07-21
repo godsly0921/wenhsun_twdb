@@ -59,7 +59,7 @@ class BookPublishUnit extends CActiveRecord
 		return array(
 			'publish_unit_id' => '索引編號',
 			'name' => '出版單位',
-			'status' => '狀態',
+			'status' => '狀態( 0:刪除 1:啟用 )',
 			'create_at' => '建立時間',
 			'update_at' => '更新時間',
 			'delete_at' => '刪除時間',
