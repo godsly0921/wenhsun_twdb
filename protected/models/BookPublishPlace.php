@@ -14,6 +14,11 @@
  */
 class BookPublishPlace extends CActiveRecord
 {
+	public $StatusText = array(
+		"-1" => "刪除",
+		"0" => "停用",
+		"1" => "啟用",
+	);
 	/**
 	 * @return string the associated database table name
 	 */
@@ -30,10 +35,10 @@ class BookPublishPlace extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('name, delete_at, last_updated_user', 'required'),
+			array('name, last_updated_user', 'required'),
 			array('status, last_updated_user', 'numerical', 'integerOnly'=>true),
 			array('name', 'length', 'max'=>100),
-			array('create_at, update_at', 'safe'),
+			array('create_at, update_at, delete_at', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
 			array('publish_place_id, name, status, create_at, update_at, delete_at, last_updated_user', 'safe', 'on'=>'search'),
@@ -98,6 +103,13 @@ class BookPublishPlace extends CActiveRecord
 		));
 	}
 
+	public function getMYStatusText($status) {
+		if(isset($this->StatusText[$status])){
+			return $this->StatusText[$status];
+		}else{
+			return $status;
+		}	
+	}
 	/**
 	 * Returns the static model of the specified AR class.
 	 * Please note that you should have this exact method in all your CActiveRecord descendants!

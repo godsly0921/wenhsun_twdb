@@ -27,13 +27,19 @@ $('.search-form form').submit(function(){
 ?>
 
 <?php
+	$create_permission = false;
+	$create_html="";
 	foreach ($session_jsons as $jsons) {
 		if ($jsons["power_controller"] == $this->getId() . "/" . $this->getAction()->getId()){
 			echo "<h1>".$jsons["power_name"]."</h1>";
 		}
 		if ($jsons["power_controller"] == Yii::app()->controller->id . "/create"){
-			echo "<a href='".Yii::app()->createUrl(Yii::app()->controller->id."/create")."' class='btn btn-default btn-right'>" . $jsons["power_name"] . "</a>";
+			$create_permission = true;
+			$create_html = "<a href='".Yii::app()->createUrl(Yii::app()->controller->id."/create")."' class='btn btn-default btn-right'>" . $jsons["power_name"] . "</a>";
 		}
+	}
+	if($create_permission){
+		echo $create_html;
 	}
 
 ?><div class="panel panel-default" style="width=100%; overflow-y:scroll;">

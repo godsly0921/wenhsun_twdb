@@ -26,12 +26,20 @@ $('.search-form form').submit(function(){
 ");
 ?>
 
-<h1>Book Publish Places 管理</h1>
 <?php
+	$create_permission = false;
+	$create_html="";
 	foreach ($session_jsons as $jsons) {
-		if ($jsons["power_controller"] == Yii::app()->controller->id . "/create"){
-			echo "<a href='".Yii::app()->createUrl(Yii::app()->controller->id."/create")."' class='btn btn-default btn-right'>新增Book Publish Places</a>";
+		if ($jsons["power_controller"] == $this->getId() . "/" . $this->getAction()->getId()){
+			echo "<h1>".$jsons["power_name"]."</h1>";
 		}
+		if ($jsons["power_controller"] == Yii::app()->controller->id . "/create"){
+			$create_permission = true;
+			$create_html = "<a href='".Yii::app()->createUrl(Yii::app()->controller->id."/create")."' class='btn btn-default btn-right'>" . $jsons["power_name"] . "</a>";
+		}
+	}
+	if($create_permission){
+		echo $create_html;
 	}
 
 ?><div class="panel panel-default" style="width=100%; overflow-y:scroll;">
@@ -51,13 +59,13 @@ $('.search-form form').submit(function(){
 		<?php 
 		$button_column_template = "";
 		foreach ($session_jsons as $jsons) {
-			if (strtolower($jsons["power_controller"]) == 'crud/view'){
+			if (strtolower($jsons["power_controller"]) == $this->getId() . '/view'){
 				$button_column_template .= " {view}";
 			}
-			if (strtolower($jsons["power_controller"]) == 'crud/update'){
+			if (strtolower($jsons["power_controller"]) == $this->getId() . '/update'){
 				$button_column_template .= " {update}";
 			}
-			if (strtolower($jsons["power_controller"]) == 'crud/delete'){
+			if (strtolower($jsons["power_controller"]) == $this->getId() . '/delete'){
 				$button_column_template .= " {delete}";
 			}
 		}
@@ -69,7 +77,11 @@ $('.search-form form').submit(function(){
 			'columns'=>array(
 				'publish_place_id',
 		'name',
-		'status',
+		array(  
+			'name' => 'status',
+			'type' => 'raw',
+			'value' => $this->getMYStatusText($this->status),
+		),
 		'create_at',
 		'update_at',
 		'delete_at',

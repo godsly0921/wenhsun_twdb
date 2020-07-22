@@ -7,17 +7,21 @@ class BookpublishplaceController extends Controller
 	 * using two-column layout. See 'protected/views/layouts/column2.php'.
 	 */
 	public $layout='//layouts/back_end';
-
+	public $StatusText = array(
+		"-1" => "刪除",
+		"0" => "停用",
+		"1" => "啟用",
+	);
 	/**
 	 * @return array action filters
 	 */
-	public function filters()
-	{
-		return array(
-			'accessControl', // perform access control for CRUD operations
-			'postOnly + delete', // we only allow deletion via POST request
-		);
-	}
+	// public function filters()
+	// {
+	// 	return array(
+	// 		'accessControl', // perform access control for CRUD operations
+	// 		'postOnly + delete', // we only allow deletion via POST request
+	// 	);
+	// }
 	protected function needLogin(): bool
     {
         return true;
@@ -74,7 +78,10 @@ class BookpublishplaceController extends Controller
 
 		if(isset($_POST['BookPublishPlace']))
 		{
-			$model->attributes=$_POST['BookPublishPlace'];
+			$inputs = $_POST['BookPublishPlace'];
+			$inputs['create_at'] = date("Y-m-d H:i:s");
+			$inputs['last_updated_user'] = Yii::app()->session['uid'];
+			$model->attributes = $inputs;
 			if($model->save())
 				$this->redirect(array('view','id'=>$model->publish_place_id));
 		}
@@ -98,7 +105,10 @@ class BookpublishplaceController extends Controller
 
 		if(isset($_POST['BookPublishPlace']))
 		{
-			$model->attributes=$_POST['BookPublishPlace'];
+			$inputs = $_POST['BookPublishPlace'];
+			$inputs['update_at'] = date("Y-m-d H:i:s");
+			$inputs['last_updated_user'] = Yii::app()->session['uid'];
+			$model->attributes = $inputs;
 			if($model->save())
 				$this->redirect(array('view','id'=>$model->publish_place_id));
 		}
@@ -115,8 +125,15 @@ class BookpublishplaceController extends Controller
 	 */
 	public function actionDelete($id)
 	{
-		$this->loadModel($id)->delete();
-
+		// $this->loadModel($id)->delete();
+		$model=$this->loadModel($id);
+		$inputs = array();
+		$inputs['status'] = -1;
+		$inputs['update_at'] = date("Y-m-d H:i:s");
+		$inputs['delete_at'] = date("Y-m-d H:i:s");
+		$inputs['last_updated_user'] = Yii::app()->session['uid'];
+		$model->attributes = $inputs;
+		$model->save();
 		// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
 		if(!isset($_GET['ajax']))
 			$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
@@ -142,12 +159,20 @@ class BookpublishplaceController extends Controller
 		$model->unsetAttributes();  // clear any default values
 		if(isset($_GET['BookPublishPlace']))
 			$model->attributes=$_GET['BookPublishPlace'];
-
 		$this->render('admin',array(
 			'model'=>$model,
 		));
 	}
 
+	
+
+	public function getMYStatusText($status) {
+		if(isset($this->StatusText[$status])){
+			return $this->StatusText[$status];
+		}else{
+			return $status;
+		}	
+	}
 	/**
 	 * Returns the data model based on the primary key given in the GET variable.
 	 * If the data model is not found, an HTTP exception will be raised.

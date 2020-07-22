@@ -18,6 +18,7 @@ $this->menu=array(
 	foreach ($session_jsons as $jsons) {
 		if ($jsons["power_controller"] == $this->getId() . "/" . $this->getAction()->getId()){
 			echo "<h1>".$jsons["power_name"]."</h1>";
+			echo "<a href='".Yii::app()->createUrl(Yii::app()->controller->id."/admin")."' class='btn btn-default btn-right'>返回管理頁</a>";
 		}
 	}
 
