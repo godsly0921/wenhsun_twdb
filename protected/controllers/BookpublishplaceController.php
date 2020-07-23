@@ -8,47 +8,10 @@ class BookpublishplaceController extends Controller
 	 */
 	public $layout='//layouts/back_end';
 
-	/**
-	 * @return array action filters
-	 */
-	// public function filters()
-	// {
-	// 	return array(
-	// 		'accessControl', // perform access control for CRUD operations
-	// 		'postOnly + delete', // we only allow deletion via POST request
-	// 	);
-	// }
 	protected function needLogin(): bool
     {
         return true;
     }
-	/**
-	 * Specifies the access control rules.
-	 * This method is used by the 'accessControl' filter.
-	 * @return array access control rules
-	 */
-	/**
-	public function accessRules()
-	{
-		return array(
-			array('allow',  // allow all users to perform 'index' and 'view' actions
-				'actions'=>array('index','view'),
-				'users'=>array('*'),
-			),
-			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('create','update'),
-				'users'=>array('@'),
-			),
-			array('allow', // allow admin user to perform 'admin' and 'delete' actions
-				'actions'=>array('admin','delete'),
-				'users'=>array('admin'),
-			),
-			array('deny',  // deny all users
-				'users'=>array('*'),
-			),
-		);
-	}
-	 */
 	 
 	/**
 	 * Displays a particular model.
@@ -122,13 +85,15 @@ class BookpublishplaceController extends Controller
 	{
 		// $this->loadModel($id)->delete();
 		$model=$this->loadModel($id);
-		$inputs = array();
-		$inputs['status'] = -1;
-		$inputs['update_at'] = date("Y-m-d H:i:s");
-		$inputs['delete_at'] = date("Y-m-d H:i:s");
-		$inputs['last_updated_user'] = Yii::app()->session['uid'];
-		$model->attributes = $inputs;
-		$model->save();
+		if($model){
+			$inputs = array();
+			$inputs['status'] = -1;
+			$inputs['update_at'] = date("Y-m-d H:i:s");
+			$inputs['delete_at'] = date("Y-m-d H:i:s");
+			$inputs['last_updated_user'] = Yii::app()->session['uid'];
+			$model->attributes = $inputs;
+			$model->save();
+		}
 		// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
 		if(!isset($_GET['ajax']))
 			$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));

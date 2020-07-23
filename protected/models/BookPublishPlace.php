@@ -85,7 +85,7 @@ class Bookpublishplace extends CActiveRecord
 		// @todo Please modify the following code to remove attributes that should not be searched.
 
 		$criteria=new CDbCriteria;
-
+		$criteria->addCondition("status<>-1");
 		$criteria->compare('publish_place_id',$this->publish_place_id);
 		$criteria->compare('name',$this->name,true);
 		$criteria->compare('status',$this->status);

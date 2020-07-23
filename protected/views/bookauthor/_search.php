@@ -41,7 +41,12 @@
 			<?php echo $form->textField($model,'gender', array('class'=>'form-control')); ?>
 		</div>
 	</div>
-
+	<div class="form-group">
+		<?php echo $form->label($model,'status', array('class'=>'col-sm-3 control-label')); ?>
+		<div class="col-sm-8">
+			<?php echo $form->textField($model,'status', array('class'=>'form-control')); ?>
+		</div>
+	</div>
 	<div class="form-group">
 		<?php echo $form->label($model,'summary', array('class'=>'col-sm-3 control-label')); ?>
 		<div class="col-sm-8">

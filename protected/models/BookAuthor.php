@@ -13,6 +13,8 @@
  * @property string $create_at
  * @property string $update_at
  * @property string $delete_at
+ * @property integer $status
+ * @property integer $last_updated_user
  */
 class BookAuthor extends CActiveRecord
 {
@@ -32,13 +34,14 @@ class BookAuthor extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('name, birthday, summary', 'required'),
+			array('name, birthday, summary, last_updated_user', 'required'),
+			array('status, last_updated_user', 'numerical', 'integerOnly'=>true),
 			array('name', 'length', 'max'=>128),
 			array('gender', 'length', 'max'=>1),
 			array('memo, create_at, update_at, delete_at', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('author_id, name, birthday, gender, summary, memo, create_at, update_at, delete_at', 'safe', 'on'=>'search'),
+			array('author_id, name, birthday, gender, summary, memo, create_at, update_at, delete_at, status, last_updated_user', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -50,6 +53,7 @@ class BookAuthor extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
+			'_Account' => array(self::BELONGS_TO, 'Account', 'last_updated_user'),
 		);
 	}
 
@@ -62,12 +66,14 @@ class BookAuthor extends CActiveRecord
 			'author_id' => '索引編號',
 			'name' => '作者姓名',
 			'birthday' => '作者生日',
-			'gender' => '作者性別(F：小姐 M：先生)',
+			'gender' => '作者性別 ( M:男 F:女 )',
 			'summary' => '作者簡介',
 			'memo' => 'Memo',
 			'create_at' => '建立時間',
 			'update_at' => '更新時間',
 			'delete_at' => '刪除時間',
+			'status' => '	狀態 ( -1:刪除 0:停用 1:啟用 )',
+			'last_updated_user' => '最後異動的人',
 		);
 	}
 
@@ -88,7 +94,7 @@ class BookAuthor extends CActiveRecord
 		// @todo Please modify the following code to remove attributes that should not be searched.
 
 		$criteria=new CDbCriteria;
-
+		$criteria->addCondition("status<>-1");
 		$criteria->compare('author_id',$this->author_id);
 		$criteria->compare('name',$this->name,true);
 		$criteria->compare('birthday',$this->birthday,true);
@@ -98,6 +104,8 @@ class BookAuthor extends CActiveRecord
 		$criteria->compare('create_at',$this->create_at,true);
 		$criteria->compare('update_at',$this->update_at,true);
 		$criteria->compare('delete_at',$this->delete_at,true);
+		$criteria->compare('status',$this->status);
+		$criteria->compare('last_updated_user',$this->last_updated_user);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,

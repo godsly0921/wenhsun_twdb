@@ -34,10 +34,18 @@ $this->menu=array(
 			"name" => "gender",
 			"value" => Common::getGenderText($model->gender),
 		),
+		array(  
+			"name" => "status",
+			"value" => Common::getStatusText($model->status),
+		),
 		'summary',
 		'memo',
 		'create_at',
 		'update_at',
 		'delete_at',
+		array(
+        	'name'=>'last_updated_user',
+        	'value'=>$model->_Account->account_name,
+        ),
 	),
 )); ?>

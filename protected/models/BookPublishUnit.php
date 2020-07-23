@@ -30,10 +30,10 @@ class BookPublishUnit extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('name, status, delete_at, last_updated_user', 'required'),
+			array('name, status, last_updated_user', 'required'),
 			array('status, last_updated_user', 'numerical', 'integerOnly'=>true),
 			array('name', 'length', 'max'=>100),
-			array('create_at, update_at', 'safe'),
+			array('create_at, update_at, delete_at', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
 			array('publish_unit_id, name, status, create_at, update_at, delete_at, last_updated_user', 'safe', 'on'=>'search'),
@@ -48,6 +48,7 @@ class BookPublishUnit extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
+		   '_Account' => array(self::BELONGS_TO, 'Account', 'last_updated_user'),
 		);
 	}
 
@@ -59,7 +60,7 @@ class BookPublishUnit extends CActiveRecord
 		return array(
 			'publish_unit_id' => '索引編號',
 			'name' => '出版單位',
-			'status' => '狀態( 0:刪除 1:啟用 )',
+			'status' => '狀態( 0:停用 1:啟用 )',
 			'create_at' => '建立時間',
 			'update_at' => '更新時間',
 			'delete_at' => '刪除時間',

@@ -82,8 +82,16 @@ $('.search-form form').submit(function(){
 			"name" => "gender",
 			"value" => 'Common::getGenderText($data->gender)', // ** 很重要 ** 一定要用單引號不然吃不到變數 $data (地雷)
 		),
+		array(  
+			"name" => "status",
+			"value" => 'Common::getStatusText($data->status)', // ** 很重要 ** 一定要用單引號不然吃不到變數 $data (地雷)
+		),
 		'summary',
 		'memo',
+		array(  
+			"name" => "last_updated_user",
+			"value" => '$data->_Account->account_name', // ** 很重要 ** 一定要用單引號不然吃不到變數 $data (地雷)
+		),
 		/*
 		'create_at',
 		'update_at',
