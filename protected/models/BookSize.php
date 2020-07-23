@@ -47,6 +47,7 @@ class BookSize extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
+			'_Account' => array(self::BELONGS_TO, 'Account', 'last_updated_user'),
 		);
 	}
 
@@ -58,7 +59,7 @@ class BookSize extends CActiveRecord
 		return array(
 			'book_size_id' => '索引編號',
 			'name' => '開本規格',
-			'status' => '狀態 0:刪除 1:啟用',
+			'status' => '狀態( 0:停用 1:啟用 )',
 			'create_at' => '建立時間',
 			'update_at' => '更新時間',
 			'delete_at' => '刪除時間',
