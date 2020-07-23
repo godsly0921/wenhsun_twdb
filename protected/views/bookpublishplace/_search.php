@@ -12,7 +12,12 @@
 	'htmlOptions'=>array(
 		'class'=>'form-horizontal',
     )
-)); ?>
+)); 
+$status = array(
+	"1" => "啟用",
+	"0" => "停用",
+);
+?>
 
 	<div class="form-group">
 		<?php echo $form->label($model,'publish_place_id', array('class'=>'col-sm-3 control-label')); ?>
@@ -31,38 +36,10 @@
 	<div class="form-group">
 		<?php echo $form->label($model,'status', array('class'=>'col-sm-3 control-label')); ?>
 		<div class="col-sm-8">
-			<?php echo $form->textField($model,'status', array('class'=>'form-control')); ?>
+			<?php echo $form->dropDownList($model,'status',$status, array('class'=>'form-control')); ?>
 		</div>
 	</div>
-
-	<div class="form-group">
-		<?php echo $form->label($model,'create_at', array('class'=>'col-sm-3 control-label')); ?>
-		<div class="col-sm-8">
-			<?php echo $form->textField($model,'create_at', array('class'=>'form-control')); ?>
-		</div>
-	</div>
-
-	<div class="form-group">
-		<?php echo $form->label($model,'update_at', array('class'=>'col-sm-3 control-label')); ?>
-		<div class="col-sm-8">
-			<?php echo $form->textField($model,'update_at', array('class'=>'form-control')); ?>
-		</div>
-	</div>
-
-	<div class="form-group">
-		<?php echo $form->label($model,'delete_at', array('class'=>'col-sm-3 control-label')); ?>
-		<div class="col-sm-8">
-			<?php echo $form->textField($model,'delete_at', array('class'=>'form-control')); ?>
-		</div>
-	</div>
-
-	<div class="form-group">
-		<?php echo $form->label($model,'last_updated_user', array('class'=>'col-sm-3 control-label')); ?>
-		<div class="col-sm-8">
-			<?php echo $form->textField($model,'last_updated_user', array('class'=>'form-control')); ?>
-		</div>
-	</div>
-
+	
 	<div class="form-group buttons">
 		<div class="col-sm-offset-3 col-sm-8">
 			<?php echo CHtml::submitButton('搜尋', array('class'=>'btn btn-primary')); ?>

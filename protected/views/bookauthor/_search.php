@@ -12,7 +12,17 @@
 	'htmlOptions'=>array(
 		'class'=>'form-horizontal',
     )
-)); ?>
+)); 
+$gender = array(
+	"F" => "小姐",
+	"M" => "先生",
+);
+$status = array(
+	// "-1" => "刪除",
+	"1" => "啟用",
+	"0" => "停用",
+);
+?>
 
 	<div class="form-group">
 		<?php echo $form->label($model,'author_id', array('class'=>'col-sm-3 control-label')); ?>
@@ -38,13 +48,27 @@
 	<div class="form-group">
 		<?php echo $form->label($model,'gender', array('class'=>'col-sm-3 control-label')); ?>
 		<div class="col-sm-8">
-			<?php echo $form->textField($model,'gender', array('class'=>'form-control')); ?>
+			<?php
+				$this->widget('luckywave.widgets.jui.CJuiDatePicker', array(
+					'model'=>$model,
+					'attribute'=>'birthday',
+			        'value'=>$model->birthday,
+					//additional javascript options for the date picker plugin
+					'options'=>array(
+						'dateFormat'=>'yy-mm-dd',
+						'showAnim'=>'fold',
+			            'debug'=>true,
+						'datepickerOptions'=>array('changeMonth'=>true, 'changeYear'=>true),
+					),
+					'htmlOptions'=>array('class'=>'form-control'),
+				)); 
+			?>
 		</div>
 	</div>
 	<div class="form-group">
 		<?php echo $form->label($model,'status', array('class'=>'col-sm-3 control-label')); ?>
 		<div class="col-sm-8">
-			<?php echo $form->textField($model,'status', array('class'=>'form-control')); ?>
+			<?php echo $form->dropDownList($model,'status', $status, array('class'=>'form-control')); ?>
 		</div>
 	</div>
 	<div class="form-group">
@@ -53,35 +77,6 @@
 			<?php echo $form->textArea($model,'summary',array('rows'=>6, 'cols'=>50,'class'=>'form-control')); ?>
 		</div>
 	</div>
-
-	<div class="form-group">
-		<?php echo $form->label($model,'memo', array('class'=>'col-sm-3 control-label')); ?>
-		<div class="col-sm-8">
-			<?php echo $form->textArea($model,'memo',array('rows'=>6, 'cols'=>50,'class'=>'form-control')); ?>
-		</div>
-	</div>
-
-	<div class="form-group">
-		<?php echo $form->label($model,'create_at', array('class'=>'col-sm-3 control-label')); ?>
-		<div class="col-sm-8">
-			<?php echo $form->textField($model,'create_at', array('class'=>'form-control')); ?>
-		</div>
-	</div>
-
-	<div class="form-group">
-		<?php echo $form->label($model,'update_at', array('class'=>'col-sm-3 control-label')); ?>
-		<div class="col-sm-8">
-			<?php echo $form->textField($model,'update_at', array('class'=>'form-control')); ?>
-		</div>
-	</div>
-
-	<div class="form-group">
-		<?php echo $form->label($model,'delete_at', array('class'=>'col-sm-3 control-label')); ?>
-		<div class="col-sm-8">
-			<?php echo $form->textField($model,'delete_at', array('class'=>'form-control')); ?>
-		</div>
-	</div>
-
 	<div class="form-group buttons">
 		<div class="col-sm-offset-3 col-sm-8">
 			<?php echo CHtml::submitButton('搜尋', array('class'=>'btn btn-primary')); ?>
