@@ -41,7 +41,7 @@ $status = array(
 	<div class="form-group">
 		<?php echo $form->labelEx($model,'status', array('class'=>'col-sm-3 control-label')); ?>
 		<div class="col-sm-8">
-			<?php echo $form->textField($model,'status',$status, array('class'=>'form-control')); ?>
+			<?php echo $form->dropDownList($model,'status',$status, array('class'=>'form-control')); ?>
 		</div>
 		<?php echo $form->error($model,'status'); ?>
 	</div>

@@ -42,7 +42,7 @@ $this->menu=array(
 		'memo',
 		'create_at',
 		'update_at',
-		'delete_at',
+		// 'delete_at',
 		array(
         	'name'=>'last_updated_user',
         	'value'=>$model->_Account->account_name,
