@@ -78,7 +78,10 @@ $('.search-form form').submit(function(){
 				'author_id',
 		'name',
 		'birthday',
-		'gender',
+		array(  
+			"name" => "gender",
+			"value" => 'Common::getGenderText($data->gender)', // ** 很重要 ** 一定要用單引號不然吃不到變數 $data (地雷)
+		),
 		'summary',
 		'memo',
 		/*

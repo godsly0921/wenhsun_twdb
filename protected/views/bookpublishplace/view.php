@@ -29,10 +29,16 @@ $this->menu=array(
 	'attributes'=>array(
 		'publish_place_id',
 		'name',
-		'status',
+		array(  
+			"name" => "status",
+			"value" => Common::getStatusText($model->status),
+		),
 		'create_at',
 		'update_at',
 		'delete_at',
-		'last_updated_user',
+		array(
+        	'name'=>'last_updated_user',
+        	'value'=>$model->_Account->account_name,
+        ),
 	),
 )); ?>

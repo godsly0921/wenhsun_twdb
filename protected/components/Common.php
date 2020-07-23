@@ -119,4 +119,29 @@ class Common
         return ($w_percent > $h_percent) ? $h_percent : $w_percent;
     }
 
+    public static function getStatusText($status)
+    {
+        $status_define = array(
+            "-1" => "刪除",
+            "0" => "停用",
+            "1" => "啟用",
+        );
+        if(isset($status_define[$status])){
+            return $status_define[$status];
+        }else{
+            return $status;
+        }   
+    }
+    public static function getGenderText($gender)
+    {
+        $gender_define = array(
+            "F" => "小姐",
+            "M" => "先生",
+        );
+        if(isset($gender_define[$gender])){
+            return $gender_define[$gender];
+        }else{
+            return $gender;
+        }   
+    }
 }

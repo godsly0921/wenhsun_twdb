@@ -12,13 +12,8 @@
  * @property string $delete_at
  * @property integer $last_updated_user
  */
-class BookPublishPlace extends CActiveRecord
+class Bookpublishplace extends CActiveRecord
 {
-	public $StatusText = array(
-		"-1" => "刪除",
-		"0" => "停用",
-		"1" => "啟用",
-	);
 	/**
 	 * @return string the associated database table name
 	 */
@@ -53,6 +48,7 @@ class BookPublishPlace extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
+		   '_Account' => array(self::BELONGS_TO, 'Account', 'last_updated_user'),
 		);
 	}
 
@@ -64,7 +60,7 @@ class BookPublishPlace extends CActiveRecord
 		return array(
 			'publish_place_id' => '索引編號',
 			'name' => '出版地點',
-			'status' => '狀態 ( 0:刪除 1:啟用 )	',
+			'status' => '狀態 ( -1:刪除 0:停用 1:啟用 )',
 			'create_at' => '建立時間',
 			'update_at' => '更新時間',
 			'delete_at' => '刪除時間',
@@ -103,18 +99,11 @@ class BookPublishPlace extends CActiveRecord
 		));
 	}
 
-	public function getMYStatusText($status) {
-		if(isset($this->StatusText[$status])){
-			return $this->StatusText[$status];
-		}else{
-			return $status;
-		}	
-	}
 	/**
 	 * Returns the static model of the specified AR class.
 	 * Please note that you should have this exact method in all your CActiveRecord descendants!
 	 * @param string $className active record class name.
-	 * @return BookPublishPlace the static model class
+	 * @return Bookpublishplace the static model class
 	 */
 	public static function model($className=__CLASS__)
 	{

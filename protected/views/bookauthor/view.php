@@ -30,7 +30,10 @@ $this->menu=array(
 		'author_id',
 		'name',
 		'birthday',
-		'gender',
+		array(  
+			"name" => "gender",
+			"value" => Common::getGenderText($model->gender),
+		),
 		'summary',
 		'memo',
 		'create_at',

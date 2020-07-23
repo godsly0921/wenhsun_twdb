@@ -7,11 +7,7 @@ class BookpublishplaceController extends Controller
 	 * using two-column layout. See 'protected/views/layouts/column2.php'.
 	 */
 	public $layout='//layouts/back_end';
-	public $StatusText = array(
-		"-1" => "刪除",
-		"0" => "停用",
-		"1" => "啟用",
-	);
+
 	/**
 	 * @return array action filters
 	 */
@@ -75,10 +71,9 @@ class BookpublishplaceController extends Controller
 
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
-
-		if(isset($_POST['BookPublishPlace']))
+		if(isset($_POST['Bookpublishplace']))
 		{
-			$inputs = $_POST['BookPublishPlace'];
+			$inputs = $_POST['Bookpublishplace'];
 			$inputs['create_at'] = date("Y-m-d H:i:s");
 			$inputs['last_updated_user'] = Yii::app()->session['uid'];
 			$model->attributes = $inputs;
@@ -103,9 +98,9 @@ class BookpublishplaceController extends Controller
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
 
-		if(isset($_POST['BookPublishPlace']))
+		if(isset($_POST['Bookpublishplace']))
 		{
-			$inputs = $_POST['BookPublishPlace'];
+			$inputs = $_POST['Bookpublishplace'];
 			$inputs['update_at'] = date("Y-m-d H:i:s");
 			$inputs['last_updated_user'] = Yii::app()->session['uid'];
 			$model->attributes = $inputs;
@@ -144,7 +139,7 @@ class BookpublishplaceController extends Controller
 	 */
 	public function actionIndex()
 	{
-		$dataProvider=new CActiveDataProvider('BookPublishPlace');
+		$dataProvider=new CActiveDataProvider('Bookpublishplace');
 		$this->render('index',array(
 			'dataProvider'=>$dataProvider,
 		));
@@ -157,22 +152,13 @@ class BookpublishplaceController extends Controller
 	{
 		$model=new BookPublishPlace('search');
 		$model->unsetAttributes();  // clear any default values
-		if(isset($_GET['BookPublishPlace']))
-			$model->attributes=$_GET['BookPublishPlace'];
+		if(isset($_GET['Bookpublishplace']))
+			$model->attributes=$_GET['Bookpublishplace'];
 		$this->render('admin',array(
 			'model'=>$model,
 		));
 	}
 
-	
-
-	public function getMYStatusText($status) {
-		if(isset($this->StatusText[$status])){
-			return $this->StatusText[$status];
-		}else{
-			return $status;
-		}	
-	}
 	/**
 	 * Returns the data model based on the primary key given in the GET variable.
 	 * If the data model is not found, an HTTP exception will be raised.
@@ -182,7 +168,8 @@ class BookpublishplaceController extends Controller
 	 */
 	public function loadModel($id)
 	{
-		$model=BookPublishPlace::model()->findByPk($id);
+		$model=BookPublishPlace::model()->with('_Account')->findByPk($id);
+		// var_dump($model);exit();
 		if($model===null)
 			throw new CHttpException(404,'The requested page does not exist.');
 		return $model;

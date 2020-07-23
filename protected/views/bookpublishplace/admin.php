@@ -78,16 +78,16 @@ $('.search-form form').submit(function(){
 				'publish_place_id',
 		'name',
 		array(  
-			'name' => 'status',
-			'type' => 'raw',
-			'value' => $this->getMYStatusText($this->status),
+			"name" => "status",
+			"value" => 'Common::getStatusText($data->status)', // ** 很重要 ** 一定要用單引號不然吃不到變數 $data (地雷)
 		),
 		'create_at',
 		'update_at',
-		'delete_at',
-		/*
-		'last_updated_user',
-		*/
+		// 'delete_at',
+		array(  
+			"name" => "last_updated_user",
+			"value" => '$data->_Account->account_name', // ** 很重要 ** 一定要用單引號不然吃不到變數 $data (地雷)
+		),
 				array(
 					'class'=>'CButtonColumn',
 					'template'=>$button_column_template,
