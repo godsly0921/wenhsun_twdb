@@ -1,6 +1,6 @@
 <?php
-/* @var $this BooksubcategoryController */
-/* @var $model BookSubCategory */
+/* @var $this BookcategoryController */
+/* @var $model BookCategory */
 /* @var $form CActiveForm */
 ?>
 
@@ -15,9 +15,9 @@
 )); ?>
 
 	<div class="form-group">
-		<?php echo $form->label($model,'sub_category_id', array('class'=>'col-sm-3 control-label')); ?>
+		<?php echo $form->label($model,'category_id', array('class'=>'col-sm-3 control-label')); ?>
 		<div class="col-sm-8">
-			<?php echo $form->textField($model,'sub_category_id', array('class'=>'form-control')); ?>
+			<?php echo $form->textField($model,'category_id', array('class'=>'form-control')); ?>
 		</div>
 	</div>
 
@@ -39,6 +39,13 @@
 		<?php echo $form->label($model,'parents', array('class'=>'col-sm-3 control-label')); ?>
 		<div class="col-sm-8">
 			<?php echo $form->textField($model,'parents', array('class'=>'form-control')); ?>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<?php echo $form->label($model,'sort', array('class'=>'col-sm-3 control-label')); ?>
+		<div class="col-sm-8">
+			<?php echo $form->textField($model,'sort', array('class'=>'form-control')); ?>
 		</div>
 	</div>
 

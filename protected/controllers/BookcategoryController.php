@@ -1,6 +1,6 @@
 <?php
 
-class BooksubcategoryController extends Controller
+class BookcategoryController extends Controller
 {
 	/**
 	 * @var string the default layout for the views. Defaults to '//layouts/column2', meaning
@@ -8,47 +8,10 @@ class BooksubcategoryController extends Controller
 	 */
 	public $layout='//layouts/back_end';
 
-	/**
-	 * @return array action filters
-	 */
-	public function filters()
-	{
-		return array(
-			'accessControl', // perform access control for CRUD operations
-			'postOnly + delete', // we only allow deletion via POST request
-		);
-	}
 	protected function needLogin(): bool
     {
         return true;
     }
-	/**
-	 * Specifies the access control rules.
-	 * This method is used by the 'accessControl' filter.
-	 * @return array access control rules
-	 */
-	/**
-	public function accessRules()
-	{
-		return array(
-			array('allow',  // allow all users to perform 'index' and 'view' actions
-				'actions'=>array('index','view'),
-				'users'=>array('*'),
-			),
-			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('create','update'),
-				'users'=>array('@'),
-			),
-			array('allow', // allow admin user to perform 'admin' and 'delete' actions
-				'actions'=>array('admin','delete'),
-				'users'=>array('admin'),
-			),
-			array('deny',  // deny all users
-				'users'=>array('*'),
-			),
-		);
-	}
-	 */
 	 
 	/**
 	 * Displays a particular model.
@@ -67,20 +30,31 @@ class BooksubcategoryController extends Controller
 	 */
 	public function actionCreate()
 	{
-		$model=new BookSubCategory;
-
+		$model=new BookCategory;
+		$category = array();
+		$categoryService = new BookcategoryService();
+        $category = $categoryService->findAllCategory();
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
 
-		if(isset($_POST['BookSubCategory']))
+		if(isset($_POST['BookCategory']))
 		{
-			$model->attributes=$_POST['BookSubCategory'];
+			$inputs = $_POST['BookCategory'];
+			$inputs['create_at'] = date("Y-m-d H:i:s");
+			$inputs['last_updated_user'] = Yii::app()->session['uid'];
+			if($inputs['parents'] == '0'){
+				$inputs['isroot'] = 1;
+			}else{
+				$inputs['isroot'] = 0;
+			}
+			$model->attributes=$inputs;
 			if($model->save())
-				$this->redirect(array('view','id'=>$model->sub_category_id));
+				$this->redirect(array('view','id'=>$model->category_id));
 		}
 
 		$this->render('create',array(
-			'model'=>$model,
+			'model' => $model,
+			'category' => $category
 		));
 	}
 
@@ -96,11 +70,19 @@ class BooksubcategoryController extends Controller
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
 
-		if(isset($_POST['BookSubCategory']))
+		if(isset($_POST['BookCategory']))
 		{
-			$model->attributes=$_POST['BookSubCategory'];
+			$inputs = $_POST['BookCategory'];
+			$inputs['create_at'] = date("Y-m-d H:i:s");
+			$inputs['last_updated_user'] = Yii::app()->session['uid'];
+			if($inputs['parents'] == '0'){
+				$inputs['isroot'] = 1;
+			}else{
+				$inputs['isroot'] = 0;
+			}
+			$model->attributes=$inputs;
 			if($model->save())
-				$this->redirect(array('view','id'=>$model->sub_category_id));
+				$this->redirect(array('view','id'=>$model->category_id));
 		}
 
 		$this->render('update',array(
@@ -127,7 +109,7 @@ class BooksubcategoryController extends Controller
 	 */
 	public function actionIndex()
 	{
-		$dataProvider=new CActiveDataProvider('BookSubCategory');
+		$dataProvider=new CActiveDataProvider('BookCategory');
 		$this->render('index',array(
 			'dataProvider'=>$dataProvider,
 		));
@@ -138,13 +120,11 @@ class BooksubcategoryController extends Controller
 	 */
 	public function actionAdmin()
 	{
-		$model=new BookSubCategory('search');
-		$model->unsetAttributes();  // clear any default values
-		if(isset($_GET['BookSubCategory']))
-			$model->attributes=$_GET['BookSubCategory'];
-
+		$categoryService = new BookcategoryService();
+        $category_data = $categoryService->findAllDetailCategory();
+        var_dump($category_data);exit();
 		$this->render('admin',array(
-			'model'=>$model,
+			'model'=>$category_data,
 		));
 	}
 
@@ -152,12 +132,12 @@ class BooksubcategoryController extends Controller
 	 * Returns the data model based on the primary key given in the GET variable.
 	 * If the data model is not found, an HTTP exception will be raised.
 	 * @param integer $id the ID of the model to be loaded
-	 * @return BookSubCategory the loaded model
+	 * @return BookCategory the loaded model
 	 * @throws CHttpException
 	 */
 	public function loadModel($id)
 	{
-		$model=BookSubCategory::model()->findByPk($id);
+		$model=BookCategory::model()->findByPk($id);
 		if($model===null)
 			throw new CHttpException(404,'The requested page does not exist.');
 		return $model;
@@ -165,11 +145,11 @@ class BooksubcategoryController extends Controller
 
 	/**
 	 * Performs the AJAX validation.
-	 * @param BookSubCategory $model the model to be validated
+	 * @param BookCategory $model the model to be validated
 	 */
 	protected function performAjaxValidation($model)
 	{
-		if(isset($_POST['ajax']) && $_POST['ajax']==='book-sub-category-form')
+		if(isset($_POST['ajax']) && $_POST['ajax']==='book-category-form')
 		{
 			echo CActiveForm::validate($model);
 			Yii::app()->end();

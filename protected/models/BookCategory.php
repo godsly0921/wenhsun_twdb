@@ -1,25 +1,27 @@
 <?php
 
 /**
- * This is the model class for table "book_main_category".
+ * This is the model class for table "book_category".
  *
- * The followings are the available columns in table 'book_main_category':
- * @property integer $main_category_id
+ * The followings are the available columns in table 'book_category':
+ * @property integer $category_id
  * @property string $name
+ * @property integer $isroot
+ * @property integer $parents
  * @property integer $status
  * @property string $create_at
  * @property string $update_at
  * @property string $delete_at
  * @property integer $last_updated_user
  */
-class BookMainCategory extends CActiveRecord
+class BookCategory extends CActiveRecord
 {
 	/**
 	 * @return string the associated database table name
 	 */
 	public function tableName()
 	{
-		return 'book_main_category';
+		return 'book_category';
 	}
 
 	/**
@@ -30,13 +32,13 @@ class BookMainCategory extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('name, last_updated_user', 'required'),
-			array('status, last_updated_user', 'numerical', 'integerOnly'=>true),
+			array('name, isroot, parents, status, last_updated_user', 'required'),
+			array('isroot, parents, status, last_updated_user', 'numerical', 'integerOnly'=>true),
 			array('name', 'length', 'max'=>100),
 			array('create_at, update_at, delete_at', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('main_category_id, name, status, create_at, update_at, delete_at, last_updated_user', 'safe', 'on'=>'search'),
+			array('category_id, name, isroot, parents, status, create_at, update_at, delete_at, last_updated_user', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -57,9 +59,11 @@ class BookMainCategory extends CActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'main_category_id' => '索引編號',
-			'name' => '文類名稱',
-			'status' => '文類狀態1啟用0關閉',
+			'category_id' => '索引編號',
+			'name' => '次文類名稱',
+			'isroot' => '是否為根文類',
+			'parents' => '根文類編號',
+			'status' => '文類狀態 ( -1:刪除 0:停用 1:啟用 )',
 			'create_at' => '建立時間',
 			'update_at' => '更新時間',
 			'delete_at' => '刪除時間',
@@ -85,8 +89,10 @@ class BookMainCategory extends CActiveRecord
 
 		$criteria=new CDbCriteria;
 
-		$criteria->compare('main_category_id',$this->main_category_id);
+		$criteria->compare('category_id',$this->category_id);
 		$criteria->compare('name',$this->name,true);
+		$criteria->compare('isroot',$this->isroot);
+		$criteria->compare('parents',$this->parents);
 		$criteria->compare('status',$this->status);
 		$criteria->compare('create_at',$this->create_at,true);
 		$criteria->compare('update_at',$this->update_at,true);
@@ -102,7 +108,7 @@ class BookMainCategory extends CActiveRecord
 	 * Returns the static model of the specified AR class.
 	 * Please note that you should have this exact method in all your CActiveRecord descendants!
 	 * @param string $className active record class name.
-	 * @return BookMainCategory the static model class
+	 * @return BookCategory the static model class
 	 */
 	public static function model($className=__CLASS__)
 	{

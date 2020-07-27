@@ -1,12 +1,12 @@
 <?php
-/* @var $this BooksubcategoryController */
-/* @var $data BookSubCategory */
+/* @var $this BookcategoryController */
+/* @var $data BookCategory */
 ?>
 
 <div class="view">
 
-	<b><?php echo CHtml::encode($data->getAttributeLabel('sub_category_id')); ?>:</b>
-	<?php echo CHtml::link(CHtml::encode($data->sub_category_id), array('view', 'id'=>$data->sub_category_id)); ?>
+	<b><?php echo CHtml::encode($data->getAttributeLabel('category_id')); ?>:</b>
+	<?php echo CHtml::link(CHtml::encode($data->category_id), array('view', 'id'=>$data->category_id)); ?>
 	<br />
 
 	<b><?php echo CHtml::encode($data->getAttributeLabel('name')); ?>:</b>
@@ -21,6 +21,10 @@
 	<?php echo CHtml::encode($data->parents); ?>
 	<br />
 
+	<b><?php echo CHtml::encode($data->getAttributeLabel('sort')); ?>:</b>
+	<?php echo CHtml::encode($data->sort); ?>
+	<br />
+
 	<b><?php echo CHtml::encode($data->getAttributeLabel('status')); ?>:</b>
 	<?php echo CHtml::encode($data->status); ?>
 	<br />
@@ -29,11 +33,11 @@
 	<?php echo CHtml::encode($data->create_at); ?>
 	<br />
 
+	<?php /*
 	<b><?php echo CHtml::encode($data->getAttributeLabel('update_at')); ?>:</b>
 	<?php echo CHtml::encode($data->update_at); ?>
 	<br />
 
-	<?php /*
 	<b><?php echo CHtml::encode($data->getAttributeLabel('delete_at')); ?>:</b>
 	<?php echo CHtml::encode($data->delete_at); ?>
 	<br />
