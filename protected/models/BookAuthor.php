@@ -42,6 +42,7 @@ class BookAuthor extends CActiveRecord
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
 			array('author_id, name, birthday, gender, summary, memo, create_at, update_at, delete_at, status, last_updated_user', 'safe', 'on'=>'search'),
+			array('birthday', 'type', 'type' => 'date', 'message' => '{attribute}: is not a date!', 'dateFormat' => 'yyyy-MM-dd')
 		);
 	}
 
@@ -106,7 +107,7 @@ class BookAuthor extends CActiveRecord
 		$criteria->compare('delete_at',$this->delete_at,true);
 		$criteria->compare('status',$this->status);
 		$criteria->compare('last_updated_user',$this->last_updated_user);
-
+		// var_dump($criteria);exit();
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
 		));
