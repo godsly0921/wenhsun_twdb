@@ -85,13 +85,13 @@ $('.search-form form').submit(function(){
                     <td><?= $value["last_updated_user"] ?></td>
                     <td>
                     	<?php if($view_power){?>
-							<a class="oprate-right" href="<?php echo Yii::app()->createUrl('bookcategory/update') ?>/<?= $value["category_id"] ?>"><div class="row"><i class="fa fa-search fa-lg">檢視</i></div></a>
+							<a class="oprate-right row" href="<?php echo Yii::app()->createUrl('bookcategory/update') ?>/<?= $value["category_id"] ?>"><div><i class="fa fa-search fa-lg">檢視</i></div></a><br/>
                     	<?php  }?>
                     	<?php if($update_power){?>
-							<a class="update" title="Update" href="<?php echo Yii::app()->createUrl('bookcategory/update') ?>/<?= $value["category_id"] ?>"><div class="row"><i class="fa fa-pencil-square-o fa-lg">更新</i></div></a>
+							<a class="update row" title="Update" href="<?php echo Yii::app()->createUrl('bookcategory/update') ?>/<?= $value["category_id"] ?>"><div><i class="fa fa-pencil-square-o fa-lg">更新</i></div></a><br/>
                     	<?php  }?>
                         <?php if($delete_power){?>
-							<a class="delete" title="Delete" href="<?php echo Yii::app()->createUrl('bookcategory/delete') ?>/<?= $value["category_id"] ?>"><div class="row"><i class="fa fa-times fa-lg">刪除</i></div></a>
+							<a class="delete row" title="Delete" href="<?php echo Yii::app()->createUrl('bookcategory/delete') ?>/<?= $value["category_id"] ?>"><div><i class="fa fa-times fa-lg">刪除</i></div></a>
                     	<?php  }?>
                     </td>
                 </tr>

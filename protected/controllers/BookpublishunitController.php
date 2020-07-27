@@ -19,9 +19,14 @@ class BookpublishunitController extends Controller
 	 */
 	public function actionView($id)
 	{
-		$this->render('view',array(
-			'model'=>$this->loadModel($id),
-		));
+		$model = $this->loadModel($id);
+		if($model->status ==-1){
+			echo "<script>alert('此 id = " . $id . " 已不存在');window.location.href = '".Yii::app()->createUrl(Yii::app()->controller->id.'/admin')."';</script>";
+		}else{
+			$this->render('view',array(
+				'model'=>$model,
+			));
+		}
 	}
 
 	/**
@@ -138,7 +143,7 @@ class BookpublishunitController extends Controller
 	{
 		$model=BookPublishUnit::model()->with('_Account')->findByPk($id);
 		if($model===null)
-			throw new CHttpException(404,'The requested page does not exist.');
+			echo "<script>alert('此 id = " . $id . " 已不存在');window.location.href = '".Yii::app()->createUrl(Yii::app()->controller->id.'/admin')."';</script>";
 		return $model;
 	}
 

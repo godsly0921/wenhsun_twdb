@@ -19,9 +19,15 @@ class BookauthorController extends Controller
 	 */
 	public function actionView($id)
 	{
-		$this->render('view',array(
-			'model'=>$this->loadModel($id),
-		));
+		$model = $this->loadModel($id);
+		if($model->status ==-1){
+			echo "<script>alert('此 id = " . $id . " 已不存在');window.location.href = '".Yii::app()->createUrl(Yii::app()->controller->id.'/admin')."';</script>";
+		}else{
+			$this->render('view',array(
+				'model'=>$model,
+			));
+		}
+		
 	}
 
 	/**
@@ -44,7 +50,6 @@ class BookauthorController extends Controller
 			if($model->save())
 				$this->redirect(array('view','id'=>$model->author_id));
 		}
-
 		$this->render('create',array(
 			'model'=>$model,
 		));
@@ -136,7 +141,8 @@ class BookauthorController extends Controller
 	{
 		$model=BookAuthor::model()->with('_Account')->findByPk($id);
 		if($model===null)
-			throw new CHttpException(404,'The requested page does not exist.');
+			echo "<script>alert('此 id = " . $id . " 已不存在');window.location.href = '".Yii::app()->createUrl(Yii::app()->controller->id.'/admin')."';</script>";
+			// throw new CHttpException(404,'The requested page does not exist.');
 		return $model;
 	}
 

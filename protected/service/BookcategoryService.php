@@ -6,15 +6,15 @@ class BookcategoryService
             FROM ( 
                 SELECT 
                     @r AS _id, 
-                    (SELECT @r := parents FROM category WHERE category_id = _id) AS unit, 
+                    (SELECT @r := parents FROM book_category WHERE category_id = _id) AS unit, 
                     @l := @l + 1 AS lvl,
                     sort,
                     status
                 FROM 
                     (SELECT @r := " . $parents_id . ", @l := 0) vars, 
-                    category h 
+                    book_category h 
                 WHERE @r <> 0) T1 
-            JOIN category T2 
+            JOIN book_category T2 
             ON T1._id = T2.category_id 
             ORDER BY T2.sort ASC";
         $root_name = Yii::app()->db->createCommand($sql)->queryAll();
@@ -35,16 +35,22 @@ class BookcategoryService
 		$categoryService = new CategoryService();
         $accountService = new AccountService();
 		$category_data = array();
+
 		foreach ($all_data as $key => $value) {
 			$account = $accountService -> findAccountData($value->last_updated_user);
 			$root ='';
             $root_category_id = "";
+
             if($value->isroot == 0){
-                $root_name = $this->findParents($value->category_id);      
+
+                $root_name = $this->findParents($value->parents);      
+
                 $root_category_id = $root_name?$root_name["category_id"]:"";
                 $root_name = $root_name?$root_name["category_name"]:"";
                 $explode_root_name = explode(">", $root_name);
-                unset($explode_root_name[count($explode_root_name)-1]);
+                if(count($explode_root_name)>1){
+                    unset($explode_root_name[count($explode_root_name)-1]);
+                }
                 $root = $root_name?implode(">", $explode_root_name):'';
             }else{
                 $root_name = $value->name;

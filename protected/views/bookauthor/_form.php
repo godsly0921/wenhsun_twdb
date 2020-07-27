@@ -48,16 +48,18 @@ $status = array(
 			<?php
 				$this->widget('luckywave.widgets.jui.CJuiDatePicker', array(
 					'model'=>$model,
+
 					'attribute'=>'birthday',
 			        'value'=>$model->birthday,
 					//additional javascript options for the date picker plugin
 					'options'=>array(
 						'dateFormat'=>'yy-mm-dd',
 						'showAnim'=>'fold',
-			            'debug'=>true,
+			            'debug'=>false,
 						'datepickerOptions'=>array('changeMonth'=>true, 'changeYear'=>true),
 					),
-					'htmlOptions'=>array('class'=>'form-control'),
+					'htmlOptions'=>array('class'=>'form-control date'),
+
 				)); 
 			?>
 		</div>

@@ -19,9 +19,14 @@ class BookcategoryController extends Controller
 	 */
 	public function actionView($id)
 	{
-		$this->render('view',array(
-			'model'=>$this->loadModel($id),
-		));
+		$model = $this->loadModel($id);
+		if($model->status ==-1){
+			echo "<script>alert('此 id = " . $id . " 已不存在');window.location.href = '".Yii::app()->createUrl(Yii::app()->controller->id.'/admin')."';</script>";
+		}else{
+			$this->render('view',array(
+				'model'=>$model,
+			));
+		}
 	}
 
 	/**
@@ -66,7 +71,9 @@ class BookcategoryController extends Controller
 	public function actionUpdate($id)
 	{
 		$model=$this->loadModel($id);
-
+		$category = array();
+		$categoryService = new BookcategoryService();
+        $category = $categoryService->findAllCategory();
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
 
@@ -84,9 +91,9 @@ class BookcategoryController extends Controller
 			if($model->save())
 				$this->redirect(array('view','id'=>$model->category_id));
 		}
-
 		$this->render('update',array(
 			'model'=>$model,
+			'category' => $category
 		));
 	}
 
@@ -122,7 +129,7 @@ class BookcategoryController extends Controller
 	{
 		$categoryService = new BookcategoryService();
         $category_data = $categoryService->findAllDetailCategory();
-        var_dump($category_data);exit();
+        // var_dump($category_data);exit();
 		$this->render('admin',array(
 			'model'=>$category_data,
 		));
@@ -139,7 +146,7 @@ class BookcategoryController extends Controller
 	{
 		$model=BookCategory::model()->findByPk($id);
 		if($model===null)
-			throw new CHttpException(404,'The requested page does not exist.');
+			echo "<script>alert('此 id = " . $id . " 已不存在');window.location.href = '".Yii::app()->createUrl(Yii::app()->controller->id.'/admin')."';</script>";
 		return $model;
 	}
 
