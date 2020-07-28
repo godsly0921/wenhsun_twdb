@@ -1,0 +1,8 @@
+ALTER TABLE `book_author` CHANGE `gender` `gender` VARCHAR(1) NULL DEFAULT NULL COMMENT '作者性別', CHANGE `create_at` `create_at` DATETIME NULL DEFAULT NULL COMMENT '建立時間', CHANGE `update_at` `update_at` DATETIME NULL DEFAULT NULL COMMENT '更新時間', CHANGE `delete_at` `delete_at` DATETIME NULL DEFAULT NULL COMMENT '刪除時間';
+ALTER TABLE `book_publish_place` CHANGE `create_at` `create_at` DATETIME NULL DEFAULT NULL COMMENT '建立時間', CHANGE `update_at` `update_at` DATETIME NULL DEFAULT NULL COMMENT '更新時間', CHANGE `delete_at` `delete_at` DATETIME NULL DEFAULT NULL COMMENT '刪除時間';
+ALTER TABLE `book_author` CHANGE `birthday` `birthday` DATE NOT NULL COMMENT '作者生日';
+ALTER TABLE `book_author` ADD `status` INT(1) NOT NULL DEFAULT '1' COMMENT ' 狀態 ( -1:刪除 0:停用 1:啟用 )' AFTER `delete_at`;
+ALTER TABLE `book_publish_unit` ADD `status` INT(1) NOT NULL DEFAULT '1' COMMENT ' 狀態 ( -1:刪除 0:停用 1:啟用 )' AFTER `name`;
+ALTER TABLE `book_publish_unit` CHANGE `create_at` `create_at` DATETIME NULL DEFAULT NULL COMMENT '建立時間', CHANGE `update_at` `update_at` DATETIME NULL DEFAULT NULL COMMENT '更新時間', CHANGE `delete_at` `delete_at` DATETIME NULL DEFAULT NULL COMMENT '刪除時間';
+ALTER TABLE `book_author` ADD `last_updated_user` INT(8) NOT NULL COMMENT '最後異動的人' AFTER `status`;
+ALTER TABLE `book_category` ADD `sort` INT(12) NOT NULL DEFAULT '1' COMMENT '排序' AFTER `last_updated_user`;
