@@ -1,6 +1,6 @@
 <?php
 
-class BookpublishunitController extends Controller
+class BookseriesController extends Controller
 {
 	/**
 	 * @var string the default layout for the views. Defaults to '//layouts/column2', meaning
@@ -35,19 +35,19 @@ class BookpublishunitController extends Controller
 	 */
 	public function actionCreate()
 	{
-		$model=new BookPublishUnit;
+		$model=new BookSeries;
 
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
 
-		if(isset($_POST['BookPublishUnit']))
+		if(isset($_POST['BookSeries']))
 		{
-			$inputs = $_POST['BookPublishUnit'];
+			$inputs = $_POST['BookSeries'];
 			$inputs['create_at'] = date("Y-m-d H:i:s");
 			$inputs['last_updated_user'] = Yii::app()->session['uid'];
 			$model->attributes = $inputs;
 			if($model->save())
-				$this->redirect(array('view','id'=>$model->publish_unit_id));
+				$this->redirect(array('view','id'=>$model->book_series_id));
 		}
 
 		$this->render('create',array(
@@ -67,14 +67,14 @@ class BookpublishunitController extends Controller
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
 
-		if(isset($_POST['BookPublishUnit']))
+		if(isset($_POST['BookSeries']))
 		{
-			$inputs = $_POST['BookPublishUnit'];
+			$inputs = $_POST['BookSeries'];
 			$inputs['update_at'] = date("Y-m-d H:i:s");
 			$inputs['last_updated_user'] = Yii::app()->session['uid'];
 			$model->attributes = $inputs;
 			if($model->save())
-				$this->redirect(array('view','id'=>$model->publish_unit_id));
+				$this->redirect(array('view','id'=>$model->book_series_id));
 		}
 
 		$this->render('update',array(
@@ -99,7 +99,7 @@ class BookpublishunitController extends Controller
 			$model->attributes = $inputs;
 			$model->save();
 		}
-		
+
 		// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
 		if(!isset($_GET['ajax']))
 			$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
@@ -110,7 +110,7 @@ class BookpublishunitController extends Controller
 	 */
 	public function actionIndex()
 	{
-		$dataProvider=new CActiveDataProvider('BookPublishUnit');
+		$dataProvider=new CActiveDataProvider('BookSeries');
 		$this->render('index',array(
 			'dataProvider'=>$dataProvider,
 		));
@@ -121,10 +121,10 @@ class BookpublishunitController extends Controller
 	 */
 	public function actionAdmin()
 	{
-		$model=new BookPublishUnit('search');
+		$model=new BookSeries('search');
 		$model->unsetAttributes();  // clear any default values
-		if(isset($_GET['BookPublishUnit']))
-			$model->attributes=$_GET['BookPublishUnit'];
+		if(isset($_GET['BookSeries']))
+			$model->attributes=$_GET['BookSeries'];
 
 		$this->render('admin',array(
 			'model'=>$model,
@@ -135,12 +135,12 @@ class BookpublishunitController extends Controller
 	 * Returns the data model based on the primary key given in the GET variable.
 	 * If the data model is not found, an HTTP exception will be raised.
 	 * @param integer $id the ID of the model to be loaded
-	 * @return BookPublishUnit the loaded model
+	 * @return BookSeries the loaded model
 	 * @throws CHttpException
 	 */
 	public function loadModel($id)
 	{
-		$model=BookPublishUnit::model()->with('_Account')->findByPk($id);
+		$model=BookSeries::model()->findByPk($id);
 		if($model===null)
 			echo "<script>alert('此 id = " . $id . " 已不存在');window.location.href = '".Yii::app()->createUrl(Yii::app()->controller->id.'/admin')."';</script>";
 		return $model;
@@ -148,11 +148,11 @@ class BookpublishunitController extends Controller
 
 	/**
 	 * Performs the AJAX validation.
-	 * @param BookPublishUnit $model the model to be validated
+	 * @param BookSeries $model the model to be validated
 	 */
 	protected function performAjaxValidation($model)
 	{
-		if(isset($_POST['ajax']) && $_POST['ajax']==='book-publish-unit-form')
+		if(isset($_POST['ajax']) && $_POST['ajax']==='book-series-form')
 		{
 			echo CActiveForm::validate($model);
 			Yii::app()->end();
