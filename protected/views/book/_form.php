@@ -33,26 +33,26 @@
 		</div>
 	</div>
 	<?php echo $form->errorSummary($model); ?>
-	<div class="form-group">
+	<!-- <div class="form-group">
         <label for="adv_id" class="col-sm-2 control-label">書本圖片</label>
         <div class="col-sm-5">
-            <?php if ($model->book_image !== ""):; ?>
+            <?php #if ($model->book_image !== ""):; ?>
                 <input class="form-control" name="book_image" type="text"
-                       value="<?= $model->book_image ?>" readonly="readonly">
+                       value="<?#= $model->book_image ?>" readonly="readonly">
                 <input type="file" class="form-control-file" id="book_image_new" name="book_image_new" placeholder="書本圖片" value="" onchange="checkImage(this)">
-                <img src="<?=Yii::app()->createUrl('/') . "/" . $model->book_image ?>" width="200">
-            <?php else:; ?>
+                <img src="<?#=Yii::app()->createUrl('/') . "/" . $model->book_image ?>" width="200">
+            <?php #else:; ?>
                 <input type="file" class="form-control-file" id="book_image" name="book_image" placeholder="書本圖片" value="" required onchange="checkImage(this)">
-            <?php endif; ?>
+            <?php #endif; ?>
         </div>
         <div class="col-sm-4"><span style="color:red;">圖片長寬需為 975 * 370</span></div>
-    </div>
+    </div> -->
     <div class="form-group">
 		<label class="col-sm-3 control-label required" for="book_num">書本編號 
 			<span class="required">*</span>
 		</label>
 		<div class="col-sm-8">
-			<input type="text" id="book_num" name="book_num" required="required" class="form-control">
+			<input type="text" id="book_num" name="book_num" required="required" class="form-control" value="<?=$model->book_num?>">
 		</div>
 		<?php echo $form->error($model,'book_num'); ?>
 	</div>
@@ -61,7 +61,7 @@
 			<span class="required">*</span>
 		</label>
 		<div class="col-sm-8">
-			<input type="text" id="book_name" name="book_name" required="required" class="form-control">
+			<input type="text" id="book_name" name="book_name" required="required" class="form-control" value="<?=$model->book_name?>">
 		</div>
 		<?php echo $form->error($model,'book_name'); ?>
 	</div>	
@@ -70,7 +70,7 @@
 			<span class="required">*</span>
 		</label>
 		<div class="col-sm-8">
-			<input type="text" id="book_version" name="book_version" required="required" class="form-control">
+			<input type="text" id="book_version" name="book_version" required="required" class="form-control" value="<?=$model->book_version?>">
 		</div>
 		<?php echo $form->error($model,'book_version'); ?>
 	</div>
@@ -79,7 +79,7 @@
 			<span class="required">*</span>
 		</label>
 		<div class="col-sm-8">
-			<input type="text" id="book_pages" name="book_pages" required="required" class="form-control">
+			<input type="text" id="book_pages" name="book_pages" required="required" class="form-control" value="<?=$model->book_pages?>">
 		</div>
 		<?php echo $form->error($model,'book_pages'); ?>
 	</div>
@@ -88,7 +88,7 @@
 			<span class="required">*</span>
 		</label>
 		<div class="col-sm-8">
-			<input type="text" id="publish_year" name="publish_year" required="required" data-date-format="yyyy" class="form-control datepicker">
+			<input type="text" id="publish_year" name="publish_year" required="required" data-date-format="yyyy" class="form-control datepicker" value="<?=$model->publish_year?>">
 		</div>
 		<?php echo $form->error($model,'publish_year'); ?>
 	</div>
@@ -97,7 +97,7 @@
 			<span class="required"></span>
 		</label>
 		<div class="col-sm-8">
-			<input type="text" id="publish_month" name="publish_month" required="required" data-date-format="mm" class="form-control datepicker">
+			<input type="text" id="publish_month" name="publish_month" required="required" data-date-format="mm" class="form-control datepicker" value="<?=$model->publish_month?>">
 		</div>
 		<?php echo $form->error($model,'publish_month'); ?>
 	</div>
@@ -106,7 +106,7 @@
 			<span class="required"></span>
 		</label>
 		<div class="col-sm-8">
-			<input type="text" id="publish_day" name="publish_day" required="required" data-date-format="dd" class="form-control datepicker">
+			<input type="text" id="publish_day" name="publish_day" required="required" data-date-format="dd" class="form-control datepicker" value="<?=$model->publish_day?>">
 		</div>
 		<?php echo $form->error($model,'publish_day'); ?>
 	</div>
@@ -141,7 +141,7 @@
                 	if(!empty($value['photo_source'])) array_push($data_tokens, $value['photo_source']);
                 	if(!empty($value['filming_date_text'])) array_push($data_tokens, $value['filming_date_text']);
                 ?>
-                    <option value="<?=$value['single_id']?>" data-tokens="<?=implode(",",$data_tokens)?>" data-content="<img class='data_thumbnail' src='<?=DOMAIN.PHOTOGRAPH_STORAGE_URL.$value['single_id']?>.jpg'></img> <?=$value['single_id']?>" <?=$model->single_id==$value['single_id']?'selected':''?>><?=$value['single_id']?></option>
+                    <option value="<?=$value['single_id']?>" data-tokens="<?=implode(",",$data_tokens)?>" data-content="<img class='data_thumbnail' src='<?=DOMAIN."image_storage/P/".$value['single_id']?>.jpg'></img> <?=$value['single_id']?>" <?=$model->single_id==$value['single_id']?'selected':''?> <?=$model->single_id==$value['single_id']?'selected':''?>><?=$value['single_id']?></option>
                 <?php }?>
             </select>
 		</div>
@@ -235,7 +235,7 @@
 			<span class="required">*</span>
 		</label>		
 		<div class="col-sm-8">
-			<textarea rows="6" cols="50" class="form-control" name="summary" id="summary"></textarea>		
+			<textarea rows="6" cols="50" class="form-control" name="summary" id="summary" value="<?=$model->summary?>"><?=$model->summary?></textarea>		
 		</div>
 		<?php echo $form->error($model,'summary'); ?>
 	</div>
@@ -244,7 +244,7 @@
 			<span class="required">*</span>
 		</label>		
 		<div class="col-sm-8">
-			<textarea rows="6" cols="50" class="form-control" name="memo" id="memo"></textarea>		
+			<textarea rows="6" cols="50" class="form-control" name="memo" id="memo" value="<?=$model->memo?>"><?=$model->memo?></textarea>		
 		</div>
 		<?php echo $form->error($model,'memo'); ?>
 	</div>
