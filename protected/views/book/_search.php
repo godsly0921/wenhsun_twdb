@@ -36,16 +36,9 @@
 	</div>
 
 	<div class="form-group">
-		<?php echo $form->label($model,'main_category', array('class'=>'col-sm-3 control-label')); ?>
+		<?php echo $form->label($model,'category', array('class'=>'col-sm-3 control-label')); ?>
 		<div class="col-sm-8">
-			<?php echo $form->textField($model,'main_category', array('class'=>'form-control')); ?>
-		</div>
-	</div>
-
-	<div class="form-group">
-		<?php echo $form->label($model,'sub_category', array('class'=>'col-sm-3 control-label')); ?>
-		<div class="col-sm-8">
-			<?php echo $form->textField($model,'sub_category', array('class'=>'form-control')); ?>
+			<?php echo $form->textField($model,'category', array('class'=>'form-control')); ?>
 		</div>
 	</div>
 
@@ -66,7 +59,7 @@
 	<div class="form-group">
 		<?php echo $form->label($model,'sub_author_id', array('class'=>'col-sm-3 control-label')); ?>
 		<div class="col-sm-8">
-			<?php echo $form->textField($model,'sub_author_id', array('class'=>'form-control')); ?>
+			<?php echo $form->textField($model,'sub_author_id',array('size'=>60,'maxlength'=>100,'class'=>'form-control')); ?>
 		</div>
 	</div>
 
@@ -85,16 +78,30 @@
 	</div>
 
 	<div class="form-group">
-		<?php echo $form->label($model,'publish_date', array('class'=>'col-sm-3 control-label')); ?>
+		<?php echo $form->label($model,'publish_year', array('class'=>'col-sm-3 control-label')); ?>
 		<div class="col-sm-8">
-			<?php echo $form->textField($model,'publish_date',array('size'=>4,'maxlength'=>4,'class'=>'form-control')); ?>
+			<?php echo $form->textField($model,'publish_year', array('class'=>'form-control')); ?>
 		</div>
 	</div>
 
 	<div class="form-group">
-		<?php echo $form->label($model,'book_version_id', array('class'=>'col-sm-3 control-label')); ?>
+		<?php echo $form->label($model,'publish_month', array('class'=>'col-sm-3 control-label')); ?>
 		<div class="col-sm-8">
-			<?php echo $form->textField($model,'book_version_id', array('class'=>'form-control')); ?>
+			<?php echo $form->textField($model,'publish_month', array('class'=>'form-control')); ?>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<?php echo $form->label($model,'publish_day', array('class'=>'col-sm-3 control-label')); ?>
+		<div class="col-sm-8">
+			<?php echo $form->textField($model,'publish_day', array('class'=>'form-control')); ?>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<?php echo $form->label($model,'book_version', array('class'=>'col-sm-3 control-label')); ?>
+		<div class="col-sm-8">
+			<?php echo $form->textField($model,'book_version',array('size'=>60,'maxlength'=>100,'class'=>'form-control')); ?>
 		</div>
 	</div>
 
@@ -134,30 +141,30 @@
 	</div>
 
 	<div class="form-group">
-		<?php echo $form->label($model,'create_datetime', array('class'=>'col-sm-3 control-label')); ?>
+		<?php echo $form->label($model,'create_at', array('class'=>'col-sm-3 control-label')); ?>
 		<div class="col-sm-8">
-			<?php echo $form->textField($model,'create_datetime', array('class'=>'form-control')); ?>
+			<?php echo $form->textField($model,'create_at', array('class'=>'form-control')); ?>
 		</div>
 	</div>
 
 	<div class="form-group">
-		<?php echo $form->label($model,'update_datetime', array('class'=>'col-sm-3 control-label')); ?>
+		<?php echo $form->label($model,'update_at', array('class'=>'col-sm-3 control-label')); ?>
 		<div class="col-sm-8">
-			<?php echo $form->textField($model,'update_datetime', array('class'=>'form-control')); ?>
+			<?php echo $form->textField($model,'update_at', array('class'=>'form-control')); ?>
 		</div>
 	</div>
 
 	<div class="form-group">
-		<?php echo $form->label($model,'delete_datetime', array('class'=>'col-sm-3 control-label')); ?>
+		<?php echo $form->label($model,'delete_at', array('class'=>'col-sm-3 control-label')); ?>
 		<div class="col-sm-8">
-			<?php echo $form->textField($model,'delete_datetime', array('class'=>'form-control')); ?>
+			<?php echo $form->textField($model,'delete_at', array('class'=>'form-control')); ?>
 		</div>
 	</div>
 
 	<div class="form-group">
-		<?php echo $form->label($model,'last_operator', array('class'=>'col-sm-3 control-label')); ?>
+		<?php echo $form->label($model,'last_updated_user', array('class'=>'col-sm-3 control-label')); ?>
 		<div class="col-sm-8">
-			<?php echo $form->textField($model,'last_operator', array('class'=>'form-control')); ?>
+			<?php echo $form->textField($model,'last_updated_user', array('class'=>'form-control')); ?>
 		</div>
 	</div>
 

@@ -26,12 +26,20 @@ $('.search-form form').submit(function(){
 ");
 ?>
 
-<h1>Books 管理</h1>
 <?php
+	$create_permission = false;
+	$create_html="";
 	foreach ($session_jsons as $jsons) {
-		if ($jsons["power_controller"] == Yii::app()->controller->id . "/create"){
-			echo "<a href='".Yii::app()->createUrl(Yii::app()->controller->id."/create")."' class='btn btn-default btn-right'>新增Books</a>";
+		if ($jsons["power_controller"] == $this->getId() . "/" . $this->getAction()->getId()){
+			echo "<h1>".$jsons["power_name"]."</h1>";
 		}
+		if ($jsons["power_controller"] == Yii::app()->controller->id . "/create"){
+			$create_permission = true;
+			$create_html = "<a href='".Yii::app()->createUrl(Yii::app()->controller->id."/create")."' class='btn btn-default btn-right'>" . $jsons["power_name"] . "</a>";
+		}
+	}
+	if($create_permission){
+		echo $create_html;
 	}
 
 ?><div class="panel panel-default" style="width=100%; overflow-y:scroll;">
@@ -51,13 +59,13 @@ $('.search-form form').submit(function(){
 		<?php 
 		$button_column_template = "";
 		foreach ($session_jsons as $jsons) {
-			if (strtolower($jsons["power_controller"]) == 'crud/view'){
+			if (strtolower($jsons["power_controller"]) == $this->getId() . '/view'){
 				$button_column_template .= " {view}";
 			}
-			if (strtolower($jsons["power_controller"]) == 'crud/update'){
+			if (strtolower($jsons["power_controller"]) == $this->getId() . '/update'){
 				$button_column_template .= " {update}";
 			}
-			if (strtolower($jsons["power_controller"]) == 'crud/delete'){
+			if (strtolower($jsons["power_controller"]) == $this->getId() . '/delete'){
 				$button_column_template .= " {delete}";
 			}
 		}
@@ -70,25 +78,26 @@ $('.search-form form').submit(function(){
 				'book_id',
 		'single_id',
 		'book_num',
-		'main_category',
-		'sub_category',
+		'category',
 		'book_name',
-		/*
 		'author_id',
+		/*
 		'sub_author_id',
 		'publish_place',
 		'publish_organization',
-		'publish_date',
-		'book_version_id',
+		'publish_year',
+		'publish_month',
+		'publish_day',
+		'book_version',
 		'book_pages',
 		'book_size',
 		'series',
 		'summary',
 		'memo',
-		'create_datetime',
-		'update_datetime',
-		'delete_datetime',
-		'last_operator',
+		'create_at',
+		'update_at',
+		'delete_at',
+		'last_updated_user',
 		*/
 				array(
 					'class'=>'CButtonColumn',

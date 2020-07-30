@@ -1,4 +1,4 @@
-<?php
+<?php $session_jsons = CJSON::decode(Yii::app()->session['power_session_jsons']); ?><?php
 /* @var $this BookController */
 /* @var $model Book */
 
@@ -15,32 +15,39 @@ $this->menu=array(
 	array('label'=>'Manage Book', 'url'=>array('admin')),
 );
 ?>
+<?php
+	foreach ($session_jsons as $jsons) {
+		if ($jsons["power_controller"] == $this->getId() . "/" . $this->getAction()->getId()){
+			echo "<h1>".$jsons["power_name"]."</h1>";
+			echo "<a href='".Yii::app()->createUrl(Yii::app()->controller->id."/admin")."' class='btn btn-default btn-right'>返回管理頁</a>";
+		}
+	}
 
-<h1>View Book #<?php echo $model->book_id; ?></h1>
-
+?>
 <?php $this->widget('luckywave.widgets.CDetailView', array(
 	'data'=>$model,
 	'attributes'=>array(
 		'book_id',
 		'single_id',
 		'book_num',
-		'main_category',
-		'sub_category',
+		'category',
 		'book_name',
 		'author_id',
 		'sub_author_id',
 		'publish_place',
 		'publish_organization',
-		'publish_date',
-		'book_version_id',
+		'publish_year',
+		'publish_month',
+		'publish_day',
+		'book_version',
 		'book_pages',
 		'book_size',
 		'series',
 		'summary',
 		'memo',
-		'create_datetime',
-		'update_datetime',
-		'delete_datetime',
-		'last_operator',
+		'create_at',
+		'update_at',
+		'delete_at',
+		'last_updated_user',
 	),
 )); ?>

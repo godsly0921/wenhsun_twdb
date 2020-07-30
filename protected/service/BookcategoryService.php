@@ -79,5 +79,57 @@ class BookcategoryService
         ));
         return $data;
     }
+
+    public function findCategoryTreeString($category_id = null){
+        ini_set('memory_limit','1024M');
+        $category_tree = array();
+        $all_data = $this->findAllCategory();
+        if($category_id){
+            $category_id = str_replace("'", "", $category_id);
+            $category_id = explode(",", $category_id);
+            foreach ($category_id as $key => $value) {
+                $category_id[$key] = (int)$value;
+            }
+        }else{
+            $category_id = array();
+        }
+        foreach ($all_data as $key => $value) {
+            $category_tree[] = array(
+                'category_id' => $value['category_id'],
+                'parents' => $value['parents'],
+                'text' => $value['name'],
+                'multiSelect' => true,
+                'checkable' => true,
+                'checkedIcon' => '',
+                'selectable' => true,
+                'hideCheckbox' => false,
+                'state' => array('checked'=>in_array($value['category_id'], $category_id)?true:false,'disabled'=>false,'expanded'=>true,'selected'=>in_array($value['category_id'], $category_id)?true:false),
+                'dataAttr' => array('target'=>'#tree'),
+            );
+        }
+        $category_html_ul = "";
+        if($category_tree){
+            $category_tree = $this->treeview($category_tree);
+        }
+
+        $category_tree = json_encode($category_tree);
+        return $category_tree;
+    }
+    
+    public function treeview($tree, $rootId = 0) {
+        $return = array();
+        foreach($tree as $leaf) {
+            if($leaf['parents'] == $rootId) {
+                foreach($tree as $subleaf) {
+                    if($subleaf['parents'] == $leaf['category_id']) {
+                        $leaf['nodes'] = $this->treeview($tree, $leaf['category_id']);
+                        break;
+                    }
+                }
+                $return[] = $leaf;
+            }
+        }
+        return $return;
+    }
 }
 ?>
