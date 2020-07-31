@@ -348,22 +348,23 @@ class AttendancerecordService{
         return $listArr;
     }
 
-    public function getAllEmployeeLeaveListHoliday($date_start, $date_end)
+    public function getAllEmployeeLeaveListHoliday($date_start,$date_end)
     {
-        $sql = '
-          SELECT * FROM attendance_record WHERE 
-          leave_time >= "' . $date_start . '"
-          AND leave_time < "' . $date_end . '"
-          AND take != 11
-          ORDER BY leave_time DESC
-        ';
-        $list = Yii::app()->db->createCommand($sql)->queryAll();
+        $list = Yii::app()->db->createCommand()
+        ->select('a.*,e.*')
+        ->from('attendance_record a')
+        ->where('1=1')
+        ->leftjoin("employee e","a.employee_id = e.id")
+        ->andWhere("a.leave_time >= '$date_start'")
+        ->andWhere("a.leave_time < '$date_end'")
+        ->andWhere("a.take != 11")
+        ->order("leave_time DESC")
+        ->queryAll();
 
         $listArr = array();
         foreach ($list as $value) {
            $listArr[$value['id']] = $value;
         }
-
         return $listArr;
     }
 

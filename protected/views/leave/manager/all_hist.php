@@ -17,6 +17,8 @@
                     <table id="datatable1" class="table table-striped table-bordered">
                         <thead>
                             <tr>
+                                <th>員工帳號</th>
+                                <th>員工姓名</th>
                                 <th>申請日期</th>
                                 <th>假別</th>
                                 <th>事由</th>
@@ -30,6 +32,8 @@
                         <tbody>
                             <?php foreach ($holidayList as $row) : ?>
                                 <tr role="row" id="<?= $row['id'] ?>">
+                                    <td><?= $row['user_name']?></td>
+                                    <td><?= $row['name']?></td>
                                     <td><?= substr($row['create_at'], 0, 10) ?></td>
                                     <td><?= $row['take'] ?></td>
                                     <td><?= $row['reason'] ?></td>
