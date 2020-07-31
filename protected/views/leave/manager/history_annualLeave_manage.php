@@ -2,7 +2,7 @@
     <div>
         <div class="page-title">
             <div class="title_left">
-                <h3>查詢員工休假</h3>
+                <h3>歷史特休管理</h3>
             </div>
         </div>
         <div class="clearfix"></div>
