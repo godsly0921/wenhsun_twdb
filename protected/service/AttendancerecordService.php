@@ -6,36 +6,37 @@ use Wenhsun\Leave\Domain\Model\EmployeeId;
 use Wenhsun\Leave\Domain\Service\EmployeeLeaveCalculator;
 use PHPUnit\Framework\Exception;
 
-class AttendancerecordService{
+class AttendancerecordService
+{
 
-    public $normal_take = [3,4,5,6,7,8,9,10,16,17,18]; // 不扣全勤的假
+    public $normal_take = [3, 4, 5, 6, 7, 8, 9, 10, 16, 17, 18]; // 不扣全勤的假
 
     // 新增一筆紀錄
-    public function create($employee_id , $day , $first_time , $last_time ,$abnormal_type,$abnormal){
-      $transaction = Yii::app()->db->beginTransaction();
-      try {
-        $post = new Attendancerecord();
-        $post->employee_id   = $employee_id;
-        $post->day       = $day;
-        $post->first_time      = $first_time;
-        $post->last_time     = $last_time;
-        $post->abnormal_type     = $abnormal_type;
-        $post->abnormal = $abnormal;
-        $post->take = 0;
-        $post->reply_description = '';
-        $post->reply_update_at = date("Y-m-d H:i:s");
-        $post->create_at =  date("Y-m-d H:i:s");
-        $post->update_at =  date("Y-m-d H:i:s");
-        $post->save();
+    public function create($employee_id, $day, $first_time, $last_time, $abnormal_type, $abnormal)
+    {
+        $transaction = Yii::app()->db->beginTransaction();
+        try {
+            $post = new Attendancerecord();
+            $post->employee_id   = $employee_id;
+            $post->day       = $day;
+            $post->first_time      = $first_time;
+            $post->last_time     = $last_time;
+            $post->abnormal_type     = $abnormal_type;
+            $post->abnormal = $abnormal;
+            $post->take = 0;
+            $post->reply_description = '';
+            $post->reply_update_at = date("Y-m-d H:i:s");
+            $post->create_at =  date("Y-m-d H:i:s");
+            $post->update_at =  date("Y-m-d H:i:s");
+            $post->save();
 
 
-        $transaction->commit();
-          return $post;
-      }
-      catch (Exception $e) {
-        $transaction->rollback();
-        Yii::log("Attendance write exception {$e->getTraceAsString()}", CLogger::LEVEL_INFO);
-      }
+            $transaction->commit();
+            return $post;
+        } catch (Exception $e) {
+            $transaction->rollback();
+            Yii::log("Attendance write exception {$e->getTraceAsString()}", CLogger::LEVEL_INFO);
+        }
     }
 
     /**
@@ -47,19 +48,19 @@ class AttendancerecordService{
         $model = Attendancerecord::model()->findByPk($inputs["id"]);
 
 
-       /* Yii::app()->session['uid'] = $sys_account->id;//使用者帳號ID
+        /* Yii::app()->session['uid'] = $sys_account->id;//使用者帳號ID
         Yii::app()->session['pid'] = $sys_account->user_name;//使用者帳號
         Yii::app()->session['personal'] = true;*/
 
 
-        if($model->employee_id != Yii::app()->session['uid'] && Yii::app()->session['personal'] == true){
-            $model->addErrors(['employee_id'=>'You can\'t change this record.']);
+        if ($model->employee_id != Yii::app()->session['uid'] && Yii::app()->session['personal'] == true) {
+            $model->addErrors(['employee_id' => 'You can\'t change this record.']);
             return $model;
         }
 
         $model->id = $model->id;
         $model->take = $inputs['take'];
-        $model->abnormal_type = 2;//員工回覆後 自動改為正常
+        $model->abnormal_type = 2; //員工回覆後 自動改為正常
         $model->reply_description    = $inputs['reply_description'];
         $model->reply_update_at = date('Y-m-d H:i:s');
         $model->leave_minutes = $inputs['leave_minutes'];
@@ -71,20 +72,20 @@ class AttendancerecordService{
         }
 
         return $model;
-
     }
 
     // 全取
-    public function getall(){
+    public function getall()
+    {
 
         $data = Yii::app()->db->createCommand()
-        ->select('b.*,m.name as mname,d.use_date as in,d2.use_date as out,dv.name as dvname')
-        ->from('bill b')
-        ->leftjoin('member m', 'b.member_id = m.id')
-        ->leftjoin('device_record d', 'b.in_id = d.id')
-        ->leftjoin('device_record d2','b.out_id = d2.id')
-        ->leftjoin('device dv','b.dev_id = dv.id')
-        ->queryAll();
+            ->select('b.*,m.name as mname,d.use_date as in,d2.use_date as out,dv.name as dvname')
+            ->from('bill b')
+            ->leftjoin('member m', 'b.member_id = m.id')
+            ->leftjoin('device_record d', 'b.in_id = d.id')
+            ->leftjoin('device_record d2', 'b.out_id = d2.id')
+            ->leftjoin('device dv', 'b.dev_id = dv.id')
+            ->queryAll();
 
         return $data;
         //return ( Bill::model()->findAll() );
@@ -96,54 +97,57 @@ class AttendancerecordService{
      |
      |
      */
-    public function get_by_mid_and_month($mid , $start , $end ){
+    public function get_by_mid_and_month($mid, $start, $end)
+    {
         $data = Yii::app()->db->createCommand()
-        ->select('b.*,
+            ->select('b.*,
                  r.flashDate as usedate,
                  d.position as dposition,
                  d.name as doorname')
-        ->from('bill_door b')
-        ->leftjoin('record r', 'b.in_id  = r.id')
-        ->leftjoin('door d', 'r.reader_num  = d.station')
-        ->where("r.flashDate >= '$start'")
-        ->andWhere("r.flashDate <= '$end'")
-        ->andwhere('b.member_id=:id', array(':id'=>$mid))
-        ->order('r.flashDate asc')
-        ->queryAll();
+            ->from('bill_door b')
+            ->leftjoin('record r', 'b.in_id  = r.id')
+            ->leftjoin('door d', 'r.reader_num  = d.station')
+            ->where("r.flashDate >= '$start'")
+            ->andWhere("r.flashDate <= '$end'")
+            ->andwhere('b.member_id=:id', array(':id' => $mid))
+            ->order('r.flashDate asc')
+            ->queryAll();
 
         return $data;
     }
-    public function get_by_mid_in_and_month($mid , $end ){
-      $data = Yii::app()->db->createCommand()
-      ->select('b.*,
+    public function get_by_mid_in_and_month($mid, $end)
+    {
+        $data = Yii::app()->db->createCommand()
+            ->select('b.*,
                r.flashDate as usedate,
                d.position as dposition,
                d.name as doorname')
-      ->from('bill_door b')
-      ->leftjoin('record r', 'b.in_id  = r.id')
-      ->leftjoin('door d', 'r.reader_num  = d.station')
-      ->where("r.flashDate <= '$end'")
-      ->andWhere(array('in', 'b.member_id', $mid))
-      ->order('r.flashDate asc')
-      ->queryAll();
+            ->from('bill_door b')
+            ->leftjoin('record r', 'b.in_id  = r.id')
+            ->leftjoin('door d', 'r.reader_num  = d.station')
+            ->where("r.flashDate <= '$end'")
+            ->andWhere(array('in', 'b.member_id', $mid))
+            ->order('r.flashDate asc')
+            ->queryAll();
 
-      return $data;
-  }
-  public function update_bill_door_status($checkout_time,$member_id,$bill_record_id){
-    //$doorBill_sql = 'SELECT b.* from bill_door b LEFT JOIN record r on b.in_id=r.id where b.member_id in('.$member_id.') and r.flashDate <="'.$checkout_time.'" and b.status = 0';
+        return $data;
+    }
+    public function update_bill_door_status($checkout_time, $member_id, $bill_record_id)
+    {
+        //$doorBill_sql = 'SELECT b.* from bill_door b LEFT JOIN record r on b.in_id=r.id where b.member_id in('.$member_id.') and r.flashDate <="'.$checkout_time.'" and b.status = 0';
 
-    $update_sql = 'update bill_door b LEFT JOIN record r on b.in_id=r.id set b.status=1,b.bill_record_id='.$bill_record_id.' where r.flashDate <="'.$checkout_time.'" and b.status = 0 and b.member_id in('.$member_id.')';
-    //update bill_door b LEFT JOIN record r on b.in_id=r.id set b.status=1,b.bill_record_id=1 where b.member_id in(208,209,210,211) and r.flashDate <="2019-03-22 00:14:14" and b.status = 0
-    $doorBills = Yii::app()->db->createCommand($update_sql)->query();
-    $update_status = true;
-    // foreach ($doorBills as $doorBillk => $doorBill) {
-    //   $bill = Bill_door::model()->findByPk($doorBill['id']);
-    //   $bill->status = 1;
-    //   $bill->bill_record_id = $bill_record_id;
-    //   if(!$bill->save()) $update_status = false;
-    // }
-    return $update_status;
-  }
+        $update_sql = 'update bill_door b LEFT JOIN record r on b.in_id=r.id set b.status=1,b.bill_record_id=' . $bill_record_id . ' where r.flashDate <="' . $checkout_time . '" and b.status = 0 and b.member_id in(' . $member_id . ')';
+        //update bill_door b LEFT JOIN record r on b.in_id=r.id set b.status=1,b.bill_record_id=1 where b.member_id in(208,209,210,211) and r.flashDate <="2019-03-22 00:14:14" and b.status = 0
+        $doorBills = Yii::app()->db->createCommand($update_sql)->query();
+        $update_status = true;
+        // foreach ($doorBills as $doorBillk => $doorBill) {
+        //   $bill = Bill_door::model()->findByPk($doorBill['id']);
+        //   $bill->status = 1;
+        //   $bill->bill_record_id = $bill_record_id;
+        //   if(!$bill->save()) $update_status = false;
+        // }
+        return $update_status;
+    }
 
 
     /*----------------------------------------------------------------
@@ -180,67 +184,64 @@ class AttendancerecordService{
                 $temp['att_create_at'] = $value['att_create_at'];
                 $temp['update_at'] = $value['update_at'];
      */
-    public function get_by_condition($keyword_selected,$keyword,$key_column, $choose_start, $choose_end ){
-        if($keyword_selected == 1){
+    public function get_by_condition($keyword_selected, $keyword, $key_column, $choose_start, $choose_end)
+    {
+        if ($keyword_selected == 1) {
             //echo '1';
-            if($key_column == 0){
+            if ($key_column == 0) {
                 echo '2';
                 $data = Yii::app()->db->createCommand()
                     ->select('e.*,a.*,a.create_at as att_create_at,a.id as attendance_record_id')
                     ->from('employee e')
-                    ->leftjoin('attendance_record a','a.employee_id = e.id')
+                    ->leftjoin('attendance_record a', 'a.employee_id = e.id')
                     ->where(array('like', 'e.name', "%$keyword%"))
                     ->andWhere("a.day >= '$choose_start'")
                     ->andWhere("a.day <= '$choose_end'")
                     ->order('e.user_name DESC,CONVERT(e.name using big5) ASC,a.day ASC')
                     ->queryAll();
                 return $data;
-
-
-            }else if($key_column == 1){ //卡號
+            } else if ($key_column == 1) { //卡號
                 //echo '2';
                 $data = Yii::app()->db->createCommand()
                     ->select('a.*,e.*,a.create_at as att_create_at,a.id as attendance_record_id')
                     ->from('employee e')
-                    ->leftjoin('attendance_record a','a.employee_id = e.id')
-                    ->where('e.door_card_num = :door_card_num', array(':door_card_num'=>$keyword))
+                    ->leftjoin('attendance_record a', 'a.employee_id = e.id')
+                    ->where('e.door_card_num = :door_card_num', array(':door_card_num' => $keyword))
                     ->andWhere("a.day >= '$choose_start'")
                     ->andWhere("a.day <= '$choose_end'")
                     ->order('e.user_name DESC,CONVERT(e.name using big5) ASC,a.day ASC')
                     ->queryAll();
                 return $data;
-
-            }else if($key_column == 2){ //帳號
+            } else if ($key_column == 2) { //帳號
                 //echo '3';
                 $data = Yii::app()->db->createCommand()
                     ->select('a.*,e.*,a.create_at as att_create_at,a.id as attendance_record_id')
                     ->from('employee e')
-                    ->leftjoin('attendance_record a','a.employee_id = e.id')
-                    ->where('e.user_name = :user_name', array(':user_name'=>$keyword))
+                    ->leftjoin('attendance_record a', 'a.employee_id = e.id')
+                    ->where('e.user_name = :user_name', array(':user_name' => $keyword))
                     ->andWhere("a.day >= '$choose_start'")
                     ->andWhere("a.day <= '$choose_end'")
                     ->order('e.user_name DESC,CONVERT(e.name using big5) ASC,a.day ASC')
                     ->queryAll();
                 return $data;
-            }else if($key_column == 3){ //個人查詢
+            } else if ($key_column == 3) { //個人查詢
                 //echo '3';
                 $data = Yii::app()->db->createCommand()
                     ->select('a.*,e.*,a.create_at as att_create_at,a.id as attendance_record_id')
                     ->from('employee e')
-                    ->leftjoin('attendance_record a','a.employee_id = e.id')
-                    ->where('e.id = :employee_id', array(':employee_id'=>$keyword))
+                    ->leftjoin('attendance_record a', 'a.employee_id = e.id')
+                    ->where('e.id = :employee_id', array(':employee_id' => $keyword))
                     ->andWhere("a.day >= '$choose_start'")
                     ->andWhere("a.day <= '$choose_end'")
                     ->order('e.user_name DESC,CONVERT(e.name using big5) ASC,a.day ASC')
                     ->queryAll();
                 return $data;
             }
-
-        }else{
+        } else {
             $data = Yii::app()->db->createCommand()
                 ->select('a.*,e.*,a.create_at as att_create_at,a.id as attendance_record_id')
                 ->from('employee e')
-                ->leftjoin('attendance_record a','a.employee_id = e.id')
+                ->leftjoin('attendance_record a', 'a.employee_id = e.id')
                 ->andWhere("a.day >= '$choose_start'")
                 ->andWhere("a.day <= '$choose_end'")
                 ->order('e.user_name DESC,CONVERT(e.name using big5) ASC,a.day ASC')
@@ -258,7 +259,8 @@ class AttendancerecordService{
      | $end  - 結束時間
      |
      */
-    public function get_by_condition_total($memid,$star,$end){
+    public function get_by_condition_total($memid, $star, $end)
+    {
 
         $data = Yii::app()->db->createCommand()
             ->select('b.*,sum(o_price) as total_count')
@@ -270,10 +272,9 @@ class AttendancerecordService{
             ->queryAll();
 
         return $data;
-
     }
 
-    public function summaryMinutesByPeriodOfTimeAndLeaveType(string $employeeId,string $startDateTime,string $endDateTime,string $leaveType)
+    public function summaryMinutesByPeriodOfTimeAndLeaveType(string $employeeId, string $startDateTime, string $endDateTime, string $leaveType)
     {
         $r = Yii::app()->db->createCommand(
             '
@@ -342,28 +343,28 @@ class AttendancerecordService{
 
         $listArr = array();
         foreach ($list as $value) {
-           $listArr[$value['id']] = $value;
+            $listArr[$value['id']] = $value;
         }
 
         return $listArr;
     }
 
-    public function getAllEmployeeLeaveListHoliday($date_start,$date_end)
+    public function getAllEmployeeLeaveListHoliday($date_start, $date_end)
     {
         $list = Yii::app()->db->createCommand()
-        ->select('a.*,e.*')
-        ->from('attendance_record a')
-        ->where('1=1')
-        ->leftjoin("employee e","a.employee_id = e.id")
-        ->andWhere("a.leave_time >= '$date_start'")
-        ->andWhere("a.leave_time < '$date_end'")
-        ->andWhere("a.take != 11")
-        ->order("leave_time DESC")
-        ->queryAll();
+            ->select('a.*,e.*')
+            ->from('attendance_record a')
+            ->where('1=1')
+            ->leftjoin("employee e", "a.employee_id = e.id")
+            ->andWhere("a.leave_time >= '$date_start'")
+            ->andWhere("a.leave_time < '$date_end'")
+            ->andWhere("a.take != 11")
+            ->order("leave_time DESC")
+            ->queryAll();
 
         $listArr = array();
         foreach ($list as $value) {
-           $listArr[$value['id']] = $value;
+            $listArr[$value['id']] = $value;
         }
         return $listArr;
     }
@@ -392,7 +393,7 @@ class AttendancerecordService{
 
         $listArr = array();
         foreach ($list as $value) {
-           $listArr[$value['id']] = $value;
+            $listArr[$value['id']] = $value;
         }
 
         return $listArr;
@@ -716,9 +717,9 @@ class AttendancerecordService{
 
                 $body .= "</tbody></table>";
             }
-            $body .=  '<a href="'.'http://192.168.0.160/wenhsun_hr/leave/manager/hist?type=1&user_name='.$emp->user_name.'&name=&year='.$year.'">內網請點擊審核</a>';
+            $body .=  '<a href="' . 'http://192.168.0.160/wenhsun_hr/leave/manager/hist?type=1&user_name=' . $emp->user_name . '&name=&year=' . $year . '">內網請點擊審核</a>';
             $body .= '<hr size="8px" align="center" width="100%">';
-            $body .=  '<a href="'.'http://203.69.216.186/wenhsun_hr/leave/manager/hist?type=1&user_name='.$emp->user_name.'&name=&year='.$year.'">外網請點擊審核</a>';
+            $body .=  '<a href="' . 'http://203.69.216.186/wenhsun_hr/leave/manager/hist?type=1&user_name=' . $emp->user_name . '&name=&year=' . $year . '">外網請點擊審核</a>';
 
             $inputs = array();
             $inputs['subject'] = $subject;
@@ -740,7 +741,8 @@ class AttendancerecordService{
         }
     }
 
-    public function getLeaveHoursByDate($date) {
+    public function getLeaveHoursByDate($date)
+    {
         $start_time = $date . ' 00:00:00';
         $end_time = $date . ' 23:59:59';
         $list = Yii::app()->db->createCommand(
@@ -758,146 +760,153 @@ class AttendancerecordService{
 
         $listArr = array();
         foreach ($list as $value) {
-           $listArr[$value['employee_id']] = (float) $value['minutes'] / 60;
+            $listArr[$value['employee_id']] = (float) $value['minutes'] / 60;
         }
 
         return $listArr;
     }
 
-    public function queryFullAttendanceRecord($startDate, $endDate) {
+    public function queryFullAttendanceRecord($startDate, $endDate)
+    {
         $start_time = $startDate;
         $end_time = $endDate;
         // 計算名單：文訊主管(2)、文訊正職(5)、文訊人事主管／會計(26)、社長(27)、文訊企畫編輯(33)
-        $roleList = array(2,5,26,27,33);
+        $roleList = array(2, 5, 26, 27, 33);
         $list = Yii::app()->db->createCommand(
             '
-              SELECT a.id, a.name, b.day, b.first_time, b.last_time, b.abnormal_type, b.take FROM employee a, attendance_record b
+              SELECT a.id,a.user_name, a.name, b.day, b.first_time, b.last_time, b.abnormal_type, b.take FROM employee a, attendance_record b
                WHERE b.day >= :start_time
                  AND b.day <= :end_time
                  AND a.id = b.employee_id
-                 AND a.role IN ('. implode(',',$roleList) . ')
+                 AND a.role IN (' . implode(',', $roleList) . ')
             '
         )->bindValues([
             ':start_time' => date('Y-m-d', strtotime($start_time)),
             ':end_time' => date('Y-m-d', strtotime($end_time))
         ])->queryAll();
+
+
         $attendanceDays = $this->getAttendanceDayList($start_time, $end_time);
         $resultList = $this->organizeFullAttendanceRecord($list, $attendanceDays);
+
+
         return $resultList;
     }
 
-    private function organizeFullAttendanceRecord($list, $attendanceDays) {
+    private function organizeFullAttendanceRecord($list, $attendanceDays)
+    {
         $resultList = array();
         foreach ($list as $record) {
-          if(array_key_exists($record["id"], $resultList)) { // 個人第二筆之後出勤
-              $r = $resultList[$record["id"]];
-              if(strtotime($record["day"]) < $r->start_date) {
-                  $r->start_date = strtotime($record["day"]);
-              }
-              if(strtotime($record["day"]) > $r->end_date) {
-                  $r->end_date = strtotime($record["day"]);
-              }
-              if($this->isAttendanceDay($record["day"], $attendanceDays)) { // 是出勤日
-                  if ("1" == $record["take"] || "2" == $record["take"]) { // 普通傷病假 or 事假
-                      $r->absence = true;
-                  } else if (in_array((int)$record["take"], $this->normal_take)){ // 不扣全勤的假
-                      array_push($r->leaveDays, $record["day"]);
-                  } else {
-                      if(strtotime($record["first_time"]) >= 0){ //有出勤
-                          $diff_time = strtotime($record["last_time"]) - strtotime($record["first_time"]);
-                          if($diff_time < (60 * 60 * 8)) {
-                              if(in_array($record["day"], $r->leaveDays)) {
-                                  // 有請假, do nothing
-                              } else {
-                                  $r->absenceDays[$record["day"]] = true;
-                              }
-                          }
-                          $fullAttendanceType = $this->getFullAttendanceType($record["day"], $record["first_time"]);
-                          if("A" == $fullAttendanceType) {
-                              $r->a_normal_take += 1;
-                          } else if("B" == $fullAttendanceType) {
-                              $r->b_normal_take += 1;
-                          } else {
-                              if(in_array($record["day"], $r->leaveDays)) {
-                                  // 有請假, do nothing
-                              } else {
-                                  $r->absenceDays[$record["day"]] = true;
-                              }
-                          }
-                      } else {
-                          if(in_array($record["day"], $r->leaveDays) || "11" == $record["take"]) {
-                              // 有請假或是加班(take == 11),do nothing
-                          } else {
-                              $r->absenceDays[$record["day"]] = true;
-                          }
-                      }
-                  }
-              }
-          } else { // 個人第一筆出勤
-              $r = new stdClass();
-              $r->id = $record["id"];
-              $r->name = $record["name"];
-              $r->start_date = strtotime($record["day"]);
-              $r->end_date = strtotime($record["day"]);
-              $r->a_normal_take = 0;
-              $r->b_normal_take = 0;
-              $r->absence = false;
-              $r->leaveDays = array(); // 記錄有請假的日子
-              $r->absenceDays = array(); //記錄有缺勤的日子，缺勤為 true ，有補請假為 false
-              if($this->isAttendanceDay($record["day"], $attendanceDays)) { // 是出勤日
-                  if ("1" == $record["take"] || "2" == $record["take"]) { // 普通傷病假 or 事假
-                      $r->absence = true;
-                  } else if (in_array((int)$record["take"], $this->normal_take)){ // 不扣全勤的假
-                      // 記錄於 leaveDays array
-                      array_push($r->leaveDays, $record["day"]);
-                  } else {
-                      if(strtotime($record["first_time"]) >= 0){ //有出勤
-                          $diff_time = strtotime($record["last_time"]) - strtotime($record["first_time"]);
-                          if($diff_time < (60 * 60 * 8)) {
-                              // 工作未滿並八小時
-                              if(in_array($record["day"], $r->leaveDays)) {
-                                  // 有請假, do nothing
-
-                              } else {
-                                  $r->absenceDays[$record["day"]] = true;
-                              }
-                          }
-                          $fullAttendanceType = $this->getFullAttendanceType($record["day"], $record["first_time"]);
-                          if("A" == $fullAttendanceType) {
-                              $r->a_normal_take = 1;
-                          } else if("B" == $fullAttendanceType) {
-                              $r->b_normal_take = 1;
-                          } else {
-                              $r->absenceDays[$record["day"]] = true;
-                          }
-
-                      } else {
-                            if(in_array($record["day"], $r->leaveDays) || "11" == $record["take"]) {
+            if (array_key_exists($record["id"], $resultList)) { // 個人第二筆之後出勤
+                $r = $resultList[$record["id"]];
+                if (strtotime($record["day"]) < $r->start_date) {
+                    $r->start_date = strtotime($record["day"]);
+                }
+                if (strtotime($record["day"]) > $r->end_date) {
+                    $r->end_date = strtotime($record["day"]);
+                }
+                if ($this->isAttendanceDay($record["day"], $attendanceDays)) { // 是出勤日
+                    if ("1" == $record["take"] || "2" == $record["take"]) { // 普通傷病假 or 事假
+                        $r->absence = true;
+                    } else if (in_array((int)$record["take"], $this->normal_take)) { // 不扣全勤的假
+                        array_push($r->leaveDays, $record["day"]);
+                    } else {
+                        if (strtotime($record["first_time"]) >= 0) { //有出勤
+                            $diff_time = strtotime($record["last_time"]) - strtotime($record["first_time"]);
+                            if ($diff_time < (60 * 60 * 8)) {
+                                if (in_array($record["day"], $r->leaveDays)) {
+                                    // 有請假, do nothing
+                                } else {
+                                    $r->absenceDays[$record["day"]] = true;
+                                }
+                            }
+                            $fullAttendanceType = $this->getFullAttendanceType($record["day"], $record["first_time"]);
+                            if ("A" == $fullAttendanceType) {
+                                $r->a_normal_take += 1;
+                            } else if ("B" == $fullAttendanceType) {
+                                $r->b_normal_take += 1;
+                            } else {
+                                if (in_array($record["day"], $r->leaveDays)) {
+                                    // 有請假, do nothing
+                                } else {
+                                    $r->absenceDays[$record["day"]] = true;
+                                }
+                            }
+                        } else {
+                            if (in_array($record["day"], $r->leaveDays) || "11" == $record["take"]) {
                                 // 有請假或是加班(take == 11),do nothing
                             } else {
                                 $r->absenceDays[$record["day"]] = true;
+                            }
                         }
-                      }
-                  }
-              }
-              $resultList[$record["id"]] = $r;
+                    }
+                }
+            } else { // 個人第一筆出勤
+                $r = new stdClass();
+                $r->user_name = $record["user_name"];
+                $r->id = $record["id"];
+                $r->name = $record["name"];
+                $r->start_date = strtotime($record["day"]);
+                $r->end_date = strtotime($record["day"]);
+                $r->a_normal_take = 0;
+                $r->b_normal_take = 0;
+                $r->absence = false;
+                $r->leaveDays = array(); // 記錄有請假的日子
+                $r->absenceDays = array(); //記錄有缺勤的日子，缺勤為 true ，有補請假為 false
+                if ($this->isAttendanceDay($record["day"], $attendanceDays)) { // 是出勤日
+                    if ("1" == $record["take"] || "2" == $record["take"]) { // 普通傷病假 or 事假
+                        $r->absence = true;
+                    } else if (in_array((int)$record["take"], $this->normal_take)) { // 不扣全勤的假
+                        // 記錄於 leaveDays array
+                        array_push($r->leaveDays, $record["day"]);
+                    } else {
+                        if (strtotime($record["first_time"]) >= 0) { //有出勤
+                            $diff_time = strtotime($record["last_time"]) - strtotime($record["first_time"]);
+                            if ($diff_time < (60 * 60 * 8)) {
+                                // 工作未滿並八小時
+                                if (in_array($record["day"], $r->leaveDays)) {
+                                    // 有請假, do nothing
+
+                                } else {
+                                    $r->absenceDays[$record["day"]] = true;
+                                }
+                            }
+                            $fullAttendanceType = $this->getFullAttendanceType($record["day"], $record["first_time"]);
+                            if ("A" == $fullAttendanceType) {
+                                $r->a_normal_take = 1;
+                            } else if ("B" == $fullAttendanceType) {
+                                $r->b_normal_take = 1;
+                            } else {
+                                $r->absenceDays[$record["day"]] = true;
+                            }
+                        } else {
+                            if (in_array($record["day"], $r->leaveDays) || "11" == $record["take"]) {
+                                // 有請假或是加班(take == 11),do nothing
+                            } else {
+                                $r->absenceDays[$record["day"]] = true;
+                            }
+                        }
+                    }
+                }
+                $resultList[$record["id"]] = $r;
             }
         }
         foreach ($resultList as $result) {
             foreach ($result->leaveDays as $leaveDay) {
-                if(array_key_exists($leaveDay, $result->absenceDays)) {
+                if (array_key_exists($leaveDay, $result->absenceDays)) {
                     $result->absenceDays[$leaveDay] = false;
                 }
             }
             foreach ($result->absenceDays as $absenceDay) {
-                if($absenceDay) {
+                if ($absenceDay) {
                     $result->absence = true;
                 }
             }
         }
         return $resultList;
     }
-    public function getAttendanceDayList($start_time, $end_time) {
+    public function getAttendanceDayList($start_time, $end_time)
+    {
         $list = Yii::app()->db->createCommand(
             '
               SELECT day, type FROM attendance
@@ -915,24 +924,26 @@ class AttendancerecordService{
         return $resultList;
     }
 
-    public function isAttendanceDay($day, $attendanceDayList) {
-        if(array_key_exists($day, $attendanceDayList)) {
-            if($attendanceDayList[$day] == "0") {
-               return false;
+    public function isAttendanceDay($day, $attendanceDayList)
+    {
+        if (array_key_exists($day, $attendanceDayList)) {
+            if ($attendanceDayList[$day] == "0") {
+                return false;
             }
             return true;
         }
         $weekday = date('w', strtotime($day));
-        if(6 == $weekday || 0 == $weekday) {
+        if (6 == $weekday || 0 == $weekday) {
             return false;
         }
         return true;
     }
 
-    public function getFullAttendanceType($day, $first_time) {
+    public function getFullAttendanceType($day, $first_time)
+    {
         $a_period = strtotime($day . ' 09:01:00');
         $b_period = strtotime($day . ' 09:31:00');
-        if(strtotime($first_time) <= $a_period) {
+        if (strtotime($first_time) <= $a_period) {
             return "A";
         } else if (strtotime($first_time) >= $a_period && strtotime($first_time) <= $b_period) {
             return "B";
@@ -940,7 +951,8 @@ class AttendancerecordService{
         return "C";
     }
 
-    public function getDayCount($start_date, $end_date) {
+    public function getDayCount($start_date, $end_date)
+    {
         $attendanceDayList = $this->getAttendanceDayList($start_date, $end_date);
         $period = new DatePeriod(
             new DateTime($start_date),
@@ -949,7 +961,7 @@ class AttendancerecordService{
         );
         $count = 0;
         foreach ($period as $day) {
-            if($this->isAttendanceDay($day->format('Y-m-d'), $attendanceDayList)) {
+            if ($this->isAttendanceDay($day->format('Y-m-d'), $attendanceDayList)) {
                 $count += 1;
             }
         }
