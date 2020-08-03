@@ -84,7 +84,7 @@
                                 <?php if ($value->absence == false): ?>
                                 <tr class="gradeC" role="row">
                                    <!-- <td><?/*=$value['position_name']*/?></td>-->
-                                    <td><?=$value->id?></td>
+                                    <td><?=$value->user_name?></td>
                                     <td><?=$value->name?></td>
                                     <td><?=date('m/d/Y', $value->start_date)?></td>
                                     <td><?=date('m/d/Y', $value->end_date)?></td>
