@@ -45,11 +45,11 @@ class Book extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('single_id, book_num, category, book_name, author_id, sub_author_id, publish_place, publish_organization, publish_year, book_version, book_pages, book_size, series', 'required'),
-			array('single_id, category, author_id, publish_place, publish_organization, publish_year, publish_month, publish_day, book_pages, series, last_updated_user', 'numerical', 'integerOnly'=>true),
+			array('single_id, book_num, category, book_name, author_id, sub_author_id, publish_place, publish_organization, publish_year, book_version, book_pages, book_size, series, status', 'required'),
+			array('single_id, author_id, publish_place, publish_organization, publish_year, publish_month, publish_day, book_pages, series, last_updated_user, status', 'numerical', 'integerOnly'=>true),
 			array('book_num', 'length', 'max'=>128),
 			array('book_name, book_size', 'length', 'max'=>32),
-			array('sub_author_id, book_version', 'length', 'max'=>100),
+			array('sub_author_id, book_version, category', 'length', 'max'=>100),
 			array('summary, memo, create_at, update_at, delete_at', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
@@ -92,6 +92,7 @@ class Book extends CActiveRecord
 			'series' => '叢書名 FK. book_series.book_series_id',
 			'summary' => '簡介',
 			'memo' => '備註',
+			'status' => '	狀態 ( 0:停用 1:啟用 )',
 			'create_at' => '建立時間',
 			'update_at' => '更新時間',
 			'delete_at' => '刪除時間 軟刪除',

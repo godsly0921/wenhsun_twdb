@@ -16,7 +16,7 @@ class BookcategoryService
                 WHERE @r <> 0) T1 
             JOIN book_category T2 
             ON T1._id = T2.category_id 
-            ORDER BY T2.sort ASC";
+            ORDER BY T2.sort,T2.parents ASC";
         $root_name = Yii::app()->db->createCommand($sql)->queryAll();
         $category_name = $category_id = $category_statu = array();
         $data = array();
@@ -80,6 +80,28 @@ class BookcategoryService
         return $data;
     }
 
+    public function findAllRootCategory(){
+        $data = array();
+        $data = BookCategory::model()->findAll(array(
+            'condition'=>'status=1 AND isroot=1',
+            'order'=>'sort ASC'
+        ));
+        return $data;
+    }
+
+    public function get_Allcategory_data(){
+        ini_set('memory_limit','1024M');
+        $category_data = array();
+        $all_data = $this->findAllCategory();
+        foreach ($all_data as $key => $value) {
+            $parents = $this->findParents($value['category_id']);
+            if(!empty($parents) && $parents['category_status'] !=0){
+                $category_data[$value['category_id']] = $parents['category_name'];
+            }
+        }
+        return $category_data;
+    }
+
     public function findCategoryTreeString($category_id = null){
         ini_set('memory_limit','1024M');
         $category_tree = array();
@@ -88,6 +110,7 @@ class BookcategoryService
             $category_id = str_replace("'", "", $category_id);
             $category_id = explode(",", $category_id);
             foreach ($category_id as $key => $value) {
+
                 $category_id[$key] = (int)$value;
             }
         }else{

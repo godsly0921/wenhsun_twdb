@@ -38,7 +38,7 @@ class BookcategoryController extends Controller
 		$model=new BookCategory;
 		$category = array();
 		$categoryService = new BookcategoryService();
-        $category = $categoryService->findAllCategory();
+        $category = $categoryService->findAllRootCategory();
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
 
@@ -104,7 +104,16 @@ class BookcategoryController extends Controller
 	 */
 	public function actionDelete($id)
 	{
-		$this->loadModel($id)->delete();
+		$model=$this->loadModel($id);
+		if($model){
+			$inputs = array();
+			$inputs['status'] = -1;
+			$inputs['update_at'] = date("Y-m-d H:i:s");
+			$inputs['delete_at'] = date("Y-m-d H:i:s");
+			$inputs['last_updated_user'] = Yii::app()->session['uid'];
+			$model->attributes = $inputs;
+			$model->save();
+		}
 
 		// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
 		if(!isset($_GET['ajax']))
