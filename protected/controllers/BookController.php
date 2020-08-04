@@ -54,7 +54,7 @@ class BookController extends Controller
 		$FK_data = $bookService->getAllFK_data();
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
-
+		$model->sub_author_id = explode(",",$model->sub_author_id);
 		if(isset($_POST['Book']))
 		{
 			$inputs = $_POST['Book'];
@@ -66,7 +66,7 @@ class BookController extends Controller
 			if($model->save())
 				$this->redirect(array('view','id'=>$model->book_id));
 		}
-
+		
 		$this->render('create',array(
 			'model'=>$model,
 			'FK_data'=>$FK_data,
