@@ -184,7 +184,7 @@ $status = array(
 		<div class="col-sm-8">
 			<select multiple class="form-control selectpicker" title="請選擇" id="sub_author_id" name="Book[sub_author_id][]" data-live-search="true">
                 <?php foreach ($FK_data['book_author'] as $value){?>
-                    <option value="<?=$value['author_id']?>" data-tokens="<?=$value['author_id'] . '-' . $value['name']?>" <?= in_array(explode(',',$model->sub_author_id),$value['author_id'])?'selected':''?>><?=$value['author_id'] . '-' . $value['name']?></option>
+                    <option value="<?=$value['author_id']?>" data-tokens="<?=$value['author_id'] . '-' . $value['name']?>" <?= in_array($value['author_id'],explode(',',$model->sub_author_id))?'selected':''?>><?=$value['author_id'] . '-' . $value['name']?></option>
                 <?php }?>
             </select>
 		</div>
