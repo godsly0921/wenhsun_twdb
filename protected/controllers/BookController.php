@@ -62,7 +62,7 @@ class BookController extends Controller
 			$inputs['create_at'] = date("Y-m-d H:i:s");
 			$inputs['last_updated_user'] = Yii::app()->session['uid'];
 			$model->attributes = $inputs;
-			$model->attributes=$_POST['Book'];
+			// $model->attributes=$_POST['Book'];
 			if($model->save())
 				$this->redirect(array('view','id'=>$model->book_id));
 		}
