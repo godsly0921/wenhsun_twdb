@@ -17,7 +17,13 @@
 		'class'=>'form-horizontal',
 		"enctype"=>"multipart/form-data"
     )
-)); ?>
+)); 
+$status = array(
+    // "-1" => "刪除",
+    "1" => "啟用",
+    "0" => "停用",
+);
+?>
 	<div class="form-group">
 		<div class="col-sm-offset-3 col-sm-8">
 			<p class="note"><span class="required">*</span>表示為必填欄位</p>
@@ -49,12 +55,12 @@
 	</div>
 
 	<div class="form-group">
-		<?php echo $form->labelEx($model,'status', array('class'=>'col-sm-3 control-label')); ?>
-		<div class="col-sm-8">
-			<?php echo $form->textField($model,'status', array('class'=>'form-control')); ?>
-		</div>
-		<?php echo $form->error($model,'status'); ?>
-	</div>
+        <?php echo $form->labelEx($model,'status', array('class'=>'col-sm-3 control-label')); ?>
+        <div class="col-sm-8">
+            <?php echo $form->dropDownList($model,'status',$status, array('class'=>'form-control')); ?>
+        </div>
+        <?php echo $form->error($model,'status'); ?>
+    </div>
 
 	<div class="form-group">
 		<?php echo $form->labelEx($model,'description', array('class'=>'col-sm-3 control-label')); ?>

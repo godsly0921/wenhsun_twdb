@@ -67,7 +67,7 @@ class Video extends CActiveRecord
 		return array(
 			'video_id' => 'Video',
 			'name' => '影片名稱',
-			'status' => '狀態( 0：停用 1：啟用 99：刪除 )',
+			'status' => '狀態( 0：停用 1：啟用 )',
 			'extension' => '副檔名',
 			'length' => '影片長度(秒)',
 			'file_size' => '檔案大小(KB)',
