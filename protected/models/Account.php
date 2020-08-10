@@ -58,6 +58,8 @@ class Account extends CActiveRecord
 		   	'_BookPublishUnit' => array(self::BELONGS_TO, 'BookPublishUnit', 'id'),
 		   	'_BookSize' => array(self::BELONGS_TO, 'BookSize', 'id'),
 		   	'_BookSeries' => array(self::BELONGS_TO, 'BookSeries', 'id'),
+		   	'_BookCategory' => array(self::BELONGS_TO, 'BookCategory', 'id'),
+		   	'_Video' => array(self::BELONGS_TO, 'Video', 'id'),
 		);
 	}
 

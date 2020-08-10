@@ -1,6 +1,6 @@
 <?php
 
-class BookcategoryController extends Controller
+class VideoController extends Controller
 {
 	/**
 	 * @var string the default layout for the views. Defaults to '//layouts/column2', meaning
@@ -35,34 +35,48 @@ class BookcategoryController extends Controller
 	 */
 	public function actionCreate()
 	{
-		$model=new BookCategory;
-		$category = array();
+		$model=new Video;
+		$category_data = array();
 		$categoryService = new BookcategoryService();
-        $category = $categoryService->findAllRootCategory();
+		$category_data = $categoryService->findCategoryTreeString("2");
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
 
-		if(isset($_POST['BookCategory']))
+		if(isset($_POST['Video']))
 		{
-			$inputs = $_POST['BookCategory'];
+			$inputs = $_POST['Video'];
 			$inputs['create_at'] = date("Y-m-d H:i:s");
 			$inputs['last_updated_user'] = Yii::app()->session['uid'];
-			if($inputs['parents'] == '0'){
-				$inputs['isroot'] = 1;
-			}else{
-				$inputs['isroot'] = 0;
-			}
-			$model->attributes=$inputs;
+			$video = $_FILES["m3u8_url"];
+	        if($video['name']!==""){
+	            $uuid_name = date("YmdHis").uniqid();
+	            $tmp = explode('.',$video['name']);
+	            $ext = end($tmp);
+	            $inputs['file_size'] = round($video['size'] / 1024);
+	        	$inputs['extension'] = $ext;
+	            move_uploaded_file($video['tmp_name'],PHOTOGRAPH_STORAGE_DIR."video/source/".$uuid_name.'.'.$ext);
+	            $video_show_path = PHOTOGRAPH_STORAGE_DIR."video/source/".$uuid_name.'.'.$ext;
+	            $cmd_string = 'ffprobe -i "' . $video_show_path . '" -show_entries format=duration -v quiet -of csv="p=0"';
+	            exec($cmd_string,$output,$return);
+	            if ($return == 0) {
+	            	$inputs['length'] = round($output[0]);
+	            	$inputs['m3u8_url'] = $this->m3u8_url_create($video_show_path);
+	            }
+	        }
+			$model->attributes = $inputs;
 			if($model->save())
-				$this->redirect(array('view','id'=>$model->category_id));
+				$this->redirect(array('view','id'=>$model->video_id));
 		}
 
 		$this->render('create',array(
-			'model' => $model,
-			'category' => $category
+			'model'=>$model,
+			'category_data'=>$category_data,
 		));
 	}
 
+	public function m3u8_url_create($path){
+		return "test";
+	}
 	/**
 	 * Updates a particular model.
 	 * If update is successful, the browser will be redirected to the 'view' page.
@@ -71,29 +85,22 @@ class BookcategoryController extends Controller
 	public function actionUpdate($id)
 	{
 		$model=$this->loadModel($id);
-		$category = array();
-		$categoryService = new BookcategoryService();
-        $category = $categoryService->findAllCategory();
+
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
 
-		if(isset($_POST['BookCategory']))
+		if(isset($_POST['Video']))
 		{
-			$inputs = $_POST['BookCategory'];
-			$inputs['create_at'] = date("Y-m-d H:i:s");
+			$inputs = $_POST['Video'];
+			$inputs['update_at'] = date("Y-m-d H:i:s");
 			$inputs['last_updated_user'] = Yii::app()->session['uid'];
-			if($inputs['parents'] == '0'){
-				$inputs['isroot'] = 1;
-			}else{
-				$inputs['isroot'] = 0;
-			}
-			$model->attributes=$inputs;
+			$model->attributes = $inputs;
 			if($model->save())
-				$this->redirect(array('view','id'=>$model->category_id));
+				$this->redirect(array('view','id'=>$model->video_id));
 		}
+
 		$this->render('update',array(
 			'model'=>$model,
-			'category' => $category
 		));
 	}
 
@@ -125,7 +132,7 @@ class BookcategoryController extends Controller
 	 */
 	public function actionIndex()
 	{
-		$dataProvider=new CActiveDataProvider('BookCategory');
+		$dataProvider=new CActiveDataProvider('Video');
 		$this->render('index',array(
 			'dataProvider'=>$dataProvider,
 		));
@@ -136,11 +143,15 @@ class BookcategoryController extends Controller
 	 */
 	public function actionAdmin()
 	{
+		$model=new Video('search');
+		$model->unsetAttributes();  // clear any default values
+		if(isset($_GET['Video']))
+			$model->attributes=$_GET['Video'];
 		$categoryService = new BookcategoryService();
-        $category_data = $categoryService->findAllDetailCategory();
-        // var_dump($category_data);exit();
+		$category_data = $categoryService->get_Allcategory_data("2");
 		$this->render('admin',array(
-			'model'=>$category_data,
+			'model'=>$model,
+			'category_data'=>$category_data
 		));
 	}
 
@@ -148,24 +159,26 @@ class BookcategoryController extends Controller
 	 * Returns the data model based on the primary key given in the GET variable.
 	 * If the data model is not found, an HTTP exception will be raised.
 	 * @param integer $id the ID of the model to be loaded
-	 * @return BookCategory the loaded model
+	 * @return Video the loaded model
 	 * @throws CHttpException
 	 */
 	public function loadModel($id)
 	{
-		$model=BookCategory::model()->with('_Account')->findByPk($id);
+		$model=Video::model()->with('_Account')->findByPk($id);
 		if($model===null)
 			echo "<script>alert('此 id = " . $id . " 已不存在');window.location.href = '".Yii::app()->createUrl(Yii::app()->controller->id.'/admin')."';</script>";
+		// if($model===null)
+		// 	throw new CHttpException(404,'The requested page does not exist.');
 		return $model;
 	}
 
 	/**
 	 * Performs the AJAX validation.
-	 * @param BookCategory $model the model to be validated
+	 * @param Video $model the model to be validated
 	 */
 	protected function performAjaxValidation($model)
 	{
-		if(isset($_POST['ajax']) && $_POST['ajax']==='book-category-form')
+		if(isset($_POST['ajax']) && $_POST['ajax']==='video-form')
 		{
 			echo CActiveForm::validate($model);
 			Yii::app()->end();

@@ -106,7 +106,7 @@ class BookService
 	public function getFK_Category_data($category=''){
 		$data = array();
 		$categoryService = new BookcategoryService();
-		$data = $categoryService->findCategoryTreeString($category);
+		$data = $categoryService->findCategoryTreeString("1", $category);
 		return $data;
 	}
 	public function getFK_PublishPlace_data(){

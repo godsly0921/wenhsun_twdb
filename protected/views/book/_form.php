@@ -164,7 +164,7 @@ $status = array(
 		<?php echo $form->error($model,'single_id'); ?>
 	</div>
 	<div class="form-group">
-		<label class="col-sm-3 control-label required" for="author_id">主作家 
+		<label class="col-sm-3 control-label required" for="author_id">作家 
 			<span class="required">*</span>
 		</label>
 		<div class="col-sm-8">

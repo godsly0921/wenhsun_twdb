@@ -26,7 +26,7 @@ class BookController extends Controller
 		if(empty($data) || $data['status'] ==-1){
 			echo "<script>alert('此 id = " . $id . " 已不存在');window.location.href = '".Yii::app()->createUrl(Yii::app()->controller->id.'/admin')."';</script>";
 		}
-		$category_data = $categoryService->get_Allcategory_data();
+		$category_data = $categoryService->get_Allcategory_data("1");
 		// $data = $this->loadModel($id);
 		$data = (object)$data;
 		$category = explode(',',$data->category);
@@ -145,7 +145,7 @@ class BookController extends Controller
 		$bookService = new BookService();
 		$categoryService = new BookcategoryService();
 		$data = $bookService->getAll_data();
-		$category_data = $categoryService->get_Allcategory_data();
+		$category_data = $categoryService->get_Allcategory_data("1");
 		$this->render('admin',array(
 			'model'=>$data,
 			'category_data'=>$category_data

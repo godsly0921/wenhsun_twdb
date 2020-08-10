@@ -1,27 +1,31 @@
 <?php
 
 /**
- * This is the model class for table "book_category".
+ * This is the model class for table "video".
  *
- * The followings are the available columns in table 'book_category':
- * @property integer $category_id
+ * The followings are the available columns in table 'video':
+ * @property integer $video_id
  * @property string $name
- * @property integer $isroot
- * @property integer $parents
  * @property integer $status
+ * @property string $extension
+ * @property integer $length
+ * @property integer $file_size
+ * @property string $m3u8_url
+ * @property string $description
+ * @property integer $category
  * @property string $create_at
  * @property string $update_at
  * @property string $delete_at
  * @property integer $last_updated_user
  */
-class BookCategory extends CActiveRecord
+class Video extends CActiveRecord
 {
 	/**
 	 * @return string the associated database table name
 	 */
 	public function tableName()
 	{
-		return 'book_category';
+		return 'video';
 	}
 
 	/**
@@ -32,13 +36,14 @@ class BookCategory extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('name, isroot, parents, status, last_updated_user', 'required'),
-			array('isroot, parents, status, type, last_updated_user', 'numerical', 'integerOnly'=>true),
-			array('name', 'length', 'max'=>100),
+			array('extension, length, file_size, m3u8_url, description', 'required'),
+			array('status, length, file_size, category, last_updated_user', 'numerical', 'integerOnly'=>true),
+			array('name, m3u8_url', 'length', 'max'=>100),
+			array('extension', 'length', 'max'=>4),
 			array('create_at, update_at, delete_at', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('category_id, name, isroot, parents, status, type, create_at, update_at, delete_at, last_updated_user', 'safe', 'on'=>'search'),
+			array('video_id, name, status, extension, length, file_size, m3u8_url, description, category, create_at, update_at, delete_at, last_updated_user', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -60,12 +65,15 @@ class BookCategory extends CActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'category_id' => '索引編號',
-			'name' => '次分類名稱',
-			'isroot' => '是否為根分類',
-			'parents' => '根分類編號',
-			'status' => '分類狀態 ( -1:刪除 0:停用 1:啟用 )',
-			'type' => '分類屬性 ( 1:書本 2:影片 )',
+			'video_id' => 'Video',
+			'name' => '影片名稱',
+			'status' => '狀態( 0：停用 1：啟用 99：刪除 )',
+			'extension' => '副檔名',
+			'length' => '影片長度(秒)',
+			'file_size' => '檔案大小(KB)',
+			'm3u8_url' => '影音碎檔',
+			'description' => '影片描述',
+			'category' => '分類',
 			'create_at' => '建立時間',
 			'update_at' => '更新時間',
 			'delete_at' => '刪除時間',
@@ -90,13 +98,16 @@ class BookCategory extends CActiveRecord
 		// @todo Please modify the following code to remove attributes that should not be searched.
 
 		$criteria=new CDbCriteria;
-
-		$criteria->compare('category_id',$this->category_id);
+		$criteria->addCondition("status<>-1");
+		$criteria->compare('video_id',$this->video_id);
 		$criteria->compare('name',$this->name,true);
-		$criteria->compare('isroot',$this->isroot);
-		$criteria->compare('parents',$this->parents);
 		$criteria->compare('status',$this->status);
-		$criteria->compare('type',$this->type);
+		$criteria->compare('extension',$this->extension,true);
+		$criteria->compare('length',$this->length);
+		$criteria->compare('file_size',$this->file_size);
+		$criteria->compare('m3u8_url',$this->m3u8_url,true);
+		$criteria->compare('description',$this->description,true);
+		$criteria->compare('category',$this->category);
 		$criteria->compare('create_at',$this->create_at,true);
 		$criteria->compare('update_at',$this->update_at,true);
 		$criteria->compare('delete_at',$this->delete_at,true);
@@ -111,7 +122,7 @@ class BookCategory extends CActiveRecord
 	 * Returns the static model of the specified AR class.
 	 * Please note that you should have this exact method in all your CActiveRecord descendants!
 	 * @param string $className active record class name.
-	 * @return BookCategory the static model class
+	 * @return Video the static model class
 	 */
 	public static function model($className=__CLASS__)
 	{
