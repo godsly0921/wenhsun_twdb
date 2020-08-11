@@ -37,8 +37,8 @@ class Video extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('extension, length, file_size, m3u8_url, description', 'required'),
-			array('status, length, file_size, category, last_updated_user', 'numerical', 'integerOnly'=>true),
-			array('name, m3u8_url', 'length', 'max'=>100),
+			array('status, length, file_size, last_updated_user', 'numerical', 'integerOnly'=>true),
+			array('name, m3u8_url, category', 'length', 'max'=>100),
 			array('extension', 'length', 'max'=>4),
 			array('create_at, update_at, delete_at', 'safe'),
 			// The following rule is used by search().

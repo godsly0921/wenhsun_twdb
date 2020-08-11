@@ -20,9 +20,19 @@ class VideoController extends Controller
 	public function actionView($id)
 	{
 		$model = $this->loadModel($id);
+		$categoryService = new BookcategoryService();
 		if($model->status ==-1){
 			echo "<script>alert('此 id = " . $id . " 已不存在');window.location.href = '".Yii::app()->createUrl(Yii::app()->controller->id.'/admin')."';</script>";
 		}else{
+			$category_data = $categoryService->get_Allcategory_data("2");
+			$category = explode(',',$model->category);
+			$category_name = array();
+			foreach ($category as $key => $value) {
+				if(isset($category_data[$value])){
+					array_push($category_name,$category_data[$value]);
+				}
+			}
+			$model->category = implode('，',$category_name);
 			$this->render('view',array(
 				'model'=>$model,
 			));
@@ -60,7 +70,7 @@ class VideoController extends Controller
 	            exec($cmd_string,$output,$return);
 	            if ($return == 0) {
 	            	$inputs['length'] = round($output[0]);
-	            	$inputs['m3u8_url'] = $this->m3u8_url_create($video_show_path);
+	            	$inputs['m3u8_url'] = $this->m3u8_url_create($video_show_path,$uuid_name);
 	            }
 	        }
 			$model->attributes = $inputs;
@@ -74,8 +84,14 @@ class VideoController extends Controller
 		));
 	}
 
-	public function m3u8_url_create($path){
-		return "test";
+	public function m3u8_url_create($path,$uuid_name){
+		$m3u8_path = PHOTOGRAPH_STORAGE_DIR."video/m3u8/".$uuid_name;
+		if(!is_dir($m3u8_path)) {
+			mkdir($m3u8_path, 0777, true);
+		}
+		$cmd_string = "ffmpeg -i '" . $path . "' -c:v libx264 -c:a aac -strict -2 -f hls -hls_list_size 0 -hls_time 2 '" . $m3u8_path . "/" . $uuid_name . ".m3u8'";
+		exec($cmd_string,$output,$return);
+		return $uuid_name . "/" . $uuid_name . ".m3u8";
 	}
 	/**
 	 * Updates a particular model.
@@ -85,13 +101,31 @@ class VideoController extends Controller
 	public function actionUpdate($id)
 	{
 		$model=$this->loadModel($id);
-
+		$category_data = array();
+		$categoryService = new BookcategoryService();
+		$category_data = $categoryService->findCategoryTreeString("2",$model->category);
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
 
 		if(isset($_POST['Video']))
 		{
 			$inputs = $_POST['Video'];
+			$video = $_FILES["m3u8_url_new"];
+	        if($video['name']!==""){
+	            $uuid_name = date("YmdHis").uniqid();
+	            $tmp = explode('.',$video['name']);
+	            $ext = end($tmp);
+	            $inputs['file_size'] = round($video['size'] / 1024);
+	        	$inputs['extension'] = $ext;
+	            move_uploaded_file($video['tmp_name'],PHOTOGRAPH_STORAGE_DIR."video/source/".$uuid_name.'.'.$ext);
+	            $video_show_path = PHOTOGRAPH_STORAGE_DIR."video/source/".$uuid_name.'.'.$ext;
+	            $cmd_string = 'ffprobe -i "' . $video_show_path . '" -show_entries format=duration -v quiet -of csv="p=0"';
+	            exec($cmd_string,$output,$return);
+	            if ($return == 0) {
+	            	$inputs['length'] = round($output[0]);
+	            	$inputs['m3u8_url'] = $this->m3u8_url_create($video_show_path,$uuid_name);
+	            }
+	        }
 			$inputs['update_at'] = date("Y-m-d H:i:s");
 			$inputs['last_updated_user'] = Yii::app()->session['uid'];
 			$model->attributes = $inputs;
@@ -101,6 +135,7 @@ class VideoController extends Controller
 
 		$this->render('update',array(
 			'model'=>$model,
+			'category_data'=>$category_data,
 		));
 	}
 

@@ -3,7 +3,7 @@
 /* @var $model Video */
 /* @var $form CActiveForm */
 ?>
-
+<link href="https://cdnjs.cloudflare.com/ajax/libs/video.js/5.10.2/alt/video-js-cdn.css" rel="stylesheet">
 <div class="form">
 
 <?php $form=$this->beginWidget('CActiveForm', array(
@@ -37,9 +37,9 @@ $status = array(
                 <input class="form-control" name="m3u8_url" type="text"
                        value="<?= $model->m3u8_url ?>" readonly="readonly">
                 <input type="file" class="form-control-file" id="m3u8_url_new" name="m3u8_url_new" placeholder="影片" value="" accept=".mp4,.MP4">
-                <video width="200" controls>
-					<source src="<?= $model->m3u8_url ?>" type="video/mp4">
-				</video>
+                <video id="video" class="video-js vjs-default-skin" controls preload="auto" crossorigin="true" width="320" height="240">
+                    <source src="<?=Yii::app()->createUrl('/')?>/image_storage/video/m3u8/<?=$model->m3u8_url?>" type="application/x-mpegURL">
+                </video>
             <?php else:; ?>
                 <input type="file" class="form-control-file" id="m3u8_url" name="m3u8_url" placeholder="影片" value="" required accept=".mp4,.MP4">
             <?php endif; ?>
@@ -89,8 +89,14 @@ $status = array(
 
 </div><!-- form -->
 <script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/bootstrap-treeview.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/video.js/5.10.2/video.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/videojs-contrib-hls/3.0.2/videojs-contrib-hls.js"></script>
 <script type="text/javascript">
+    <?php if (!empty($model->m3u8_url)){ ?>
+        var myPlayer = videojs('video');
+    <?php }?>
 	$(function () {
+        
 		function getCheckedItems(treeview){
             var nodes = $('#tree').treeview('getChecked', treeview);
             var checkedNodes = [];
