@@ -58,13 +58,20 @@ class BookController extends Controller
 		if(isset($_POST['Book']))
 		{
 			$inputs = $_POST['Book'];
+			$inputs['book_num'] = "B" . $inputs['book_num'];
 			$inputs['sub_author_id'] = implode(",",$inputs['sub_author_id']);
 			$inputs['create_at'] = date("Y-m-d H:i:s");
 			$inputs['last_updated_user'] = Yii::app()->session['uid'];
 			$model->attributes = $inputs;
 			// $model->attributes=$_POST['Book'];
-			if($model->save())
+			if($model->save()){
+				$mongo = new Mongo();
+				$inputs['book_id'] = $model->book_id;
+				$inputs['sub_author_id'] = explode(",",$inputs['sub_author_id']);
+				$inputs['category'] = explode(",",$inputs['category']);
+				$mongo->insert_record('wenhsun', 'book', $inputs);
 				$this->redirect(array('view','id'=>$model->book_id));
+			}
 		}
 		
 		$this->render('create',array(
@@ -93,8 +100,15 @@ class BookController extends Controller
 			$inputs['update_at'] = date("Y-m-d H:i:s");
 			$inputs['last_updated_user'] = Yii::app()->session['uid'];
 			$model->attributes = $inputs;
-			if($model->save())
+			if($model->save()){
+				$mongo = new Mongo();
+				$update_find = array('book_id'=>$id);
+				$inputs['sub_author_id'] = explode(",",$inputs['sub_author_id']);
+				$inputs['category'] = explode(",",$inputs['category']);
+				$update_input = array('$set' => $inputs);
+            	$mongo->update_record('wenhsun', 'book', $update_find, $update_input);
 				$this->redirect(array('view','id'=>$model->book_id));
+			}
 		}
 		$model->sub_author_id = explode(',',$model->sub_author_id);
 		$this->render('update',array(
@@ -118,7 +132,12 @@ class BookController extends Controller
 			$inputs['delete_at'] = date("Y-m-d H:i:s");
 			$inputs['last_updated_user'] = Yii::app()->session['uid'];
 			$model->attributes = $inputs;
-			$model->save();
+			if($model->save()){
+				$mongo = new Mongo();
+				$update_find = array('book_id'=>$id);
+				$update_input = array('$set' => $inputs);
+            	$mongo->update_record('wenhsun', 'book', $update_find, $update_input);
+			}
 		}
 
 		// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser

@@ -42,7 +42,7 @@ CREATE TABLE `video` (
   `update_at` datetime DEFAULT NULL COMMENT '更新時間',
   `delete_at` datetime DEFAULT NULL COMMENT '刪除時間',
   `last_updated_user` int(8) DEFAULT NULL COMMENT '最後異動的人'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='video 影片管理 預設播放器video.js							';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='video 影片管理 預設播放器video.js';
 
 --
 -- 已傾印資料表的索引

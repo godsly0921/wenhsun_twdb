@@ -1,3 +1,4 @@
+<link href="https://cdnjs.cloudflare.com/ajax/libs/video.js/5.10.2/alt/video-js-cdn.css" rel="stylesheet">
 <?php $session_jsons = CJSON::decode(Yii::app()->session['power_session_jsons']); ?><?php
 /* @var $this VideoController */
 /* @var $model Video */
@@ -33,7 +34,13 @@ $this->menu=array(
 		'extension',
 		'length',
 		'file_size',
-		'm3u8_url',
+		array(
+			'type' => 'raw',
+			'name' => 'm3u8_url',
+			'value'=>'<video id="video" class="video-js vjs-default-skin" controls preload="auto" crossorigin="true" width="320" height="240">
+                    <source src="'.Yii::app()->createUrl('/') .'/image_storage/video/m3u8/'.$model->m3u8_url.'" type="application/x-mpegURL">
+                </video>'
+		),
 		'description',
 		'category',
 		'create_at',
@@ -42,3 +49,10 @@ $this->menu=array(
 		'last_updated_user',
 	),
 )); ?>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/video.js/5.10.2/video.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/videojs-contrib-hls/3.0.2/videojs-contrib-hls.js"></script>
+<script type="text/javascript">
+ <?php if (!empty($model->m3u8_url)){ ?>
+    var myPlayer = videojs('video');
+<?php }?>
+</script>

@@ -46,8 +46,12 @@ class BookpublishunitController extends Controller
 			$inputs['create_at'] = date("Y-m-d H:i:s");
 			$inputs['last_updated_user'] = Yii::app()->session['uid'];
 			$model->attributes = $inputs;
-			if($model->save())
+			if($model->save()){
+				$mongo = new Mongo();
+				$inputs['publish_unit_id'] = $model->publish_unit_id;
+				$mongo->insert_record('wenhsun', 'book_publish_unit', $inputs);
 				$this->redirect(array('view','id'=>$model->publish_unit_id));
+			}
 		}
 
 		$this->render('create',array(
@@ -73,8 +77,13 @@ class BookpublishunitController extends Controller
 			$inputs['update_at'] = date("Y-m-d H:i:s");
 			$inputs['last_updated_user'] = Yii::app()->session['uid'];
 			$model->attributes = $inputs;
-			if($model->save())
+			if($model->save()){
+				$mongo = new Mongo();
+				$update_find = array('publish_unit_id'=>$id);
+				$update_input = array('$set' => $inputs);
+            	$mongo->update_record('wenhsun', 'book_publish_unit', $update_find, $update_input);
 				$this->redirect(array('view','id'=>$model->publish_unit_id));
+			}
 		}
 
 		$this->render('update',array(
@@ -97,7 +106,12 @@ class BookpublishunitController extends Controller
 			$inputs['delete_at'] = date("Y-m-d H:i:s");
 			$inputs['last_updated_user'] = Yii::app()->session['uid'];
 			$model->attributes = $inputs;
-			$model->save();
+			if($model->save()){
+				$mongo = new Mongo();
+				$update_find = array('publish_unit_id'=>$id);
+				$update_input = array('$set' => $inputs);
+            	$mongo->update_record('wenhsun', 'book_publish_unit', $update_find, $update_input);
+			}
 		}
 		
 		// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
