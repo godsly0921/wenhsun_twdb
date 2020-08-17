@@ -8,56 +8,38 @@ class BookController extends Controller
 	 */
 	public $layout='//layouts/back_end';
 
-	/**
-	 * @return array action filters
-	 */
-	public function filters()
-	{
-		return array(
-			'accessControl', // perform access control for CRUD operations
-			'postOnly + delete', // we only allow deletion via POST request
-		);
-	}
 	protected function needLogin(): bool
     {
         return true;
     }
-	/**
-	 * Specifies the access control rules.
-	 * This method is used by the 'accessControl' filter.
-	 * @return array access control rules
-	 */
-	/**
-	public function accessRules()
-	{
-		return array(
-			array('allow',  // allow all users to perform 'index' and 'view' actions
-				'actions'=>array('index','view'),
-				'users'=>array('*'),
-			),
-			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('create','update'),
-				'users'=>array('@'),
-			),
-			array('allow', // allow admin user to perform 'admin' and 'delete' actions
-				'actions'=>array('admin','delete'),
-				'users'=>array('admin'),
-			),
-			array('deny',  // deny all users
-				'users'=>array('*'),
-			),
-		);
-	}
-	 */
-	 
+
 	/**
 	 * Displays a particular model.
 	 * @param integer $id the ID of the model to be displayed
 	 */
 	public function actionView($id)
 	{
+		$bookService = new BookService();
+		$categoryService = new BookcategoryService();
+		$data = $bookService->getBookPK_data($id);
+		// var_dump($data);exit();
+		if(empty($data) || $data['status'] ==-1){
+			echo "<script>alert('此 id = " . $id . " 已不存在');window.location.href = '".Yii::app()->createUrl(Yii::app()->controller->id.'/admin')."';</script>";
+		}
+		$category_data = $categoryService->get_Allcategory_data("1");
+		// $data = $this->loadModel($id);
+		$data = (object)$data;
+		$category = explode(',',$data->category);
+		$category_name = array();
+		foreach ($category as $key => $value) {
+			if(isset($category_data[$value])){
+				array_push($category_name,$category_data[$value]);
+			}
+		}
+		$data->category = implode('，',$category_name);
+		// var_dump($data);exit();
 		$this->render('view',array(
-			'model'=>$this->loadModel($id),
+			'model'=>$data,
 		));
 	}
 
@@ -68,19 +50,33 @@ class BookController extends Controller
 	public function actionCreate()
 	{
 		$model=new Book;
-
+		$bookService = new BookService();
+		$FK_data = $bookService->getAllFK_data();
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
-
+		$model->sub_author_id = explode(",",$model->sub_author_id);
 		if(isset($_POST['Book']))
 		{
-			$model->attributes=$_POST['Book'];
-			if($model->save())
+			$inputs = $_POST['Book'];
+			$inputs['book_num'] = "B" . $inputs['book_num'];
+			$inputs['sub_author_id'] = implode(",",$inputs['sub_author_id']);
+			$inputs['create_at'] = date("Y-m-d H:i:s");
+			$inputs['last_updated_user'] = Yii::app()->session['uid'];
+			$model->attributes = $inputs;
+			// $model->attributes=$_POST['Book'];
+			if($model->save()){
+				$mongo = new Mongo();
+				$inputs['book_id'] = $model->book_id;
+				$inputs['sub_author_id'] = explode(",",$inputs['sub_author_id']);
+				$inputs['category'] = explode(",",$inputs['category']);
+				$mongo->insert_record('wenhsun', 'book', $inputs);
 				$this->redirect(array('view','id'=>$model->book_id));
+			}
 		}
-
+		
 		$this->render('create',array(
 			'model'=>$model,
+			'FK_data'=>$FK_data,
 		));
 	}
 
@@ -92,19 +88,32 @@ class BookController extends Controller
 	public function actionUpdate($id)
 	{
 		$model=$this->loadModel($id);
-
+		$bookService = new BookService();
+		$FK_data = $bookService->getAllFK_data($model->category);
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
-
+		// var_dump($model);exit();
 		if(isset($_POST['Book']))
 		{
-			$model->attributes=$_POST['Book'];
-			if($model->save())
+			$inputs = $_POST['Book'];
+			$inputs['sub_author_id'] = implode(",",$inputs['sub_author_id']);
+			$inputs['update_at'] = date("Y-m-d H:i:s");
+			$inputs['last_updated_user'] = Yii::app()->session['uid'];
+			$model->attributes = $inputs;
+			if($model->save()){
+				$mongo = new Mongo();
+				$update_find = array('book_id'=>$id);
+				$inputs['sub_author_id'] = explode(",",$inputs['sub_author_id']);
+				$inputs['category'] = explode(",",$inputs['category']);
+				$update_input = array('$set' => $inputs);
+            	$mongo->update_record('wenhsun', 'book', $update_find, $update_input);
 				$this->redirect(array('view','id'=>$model->book_id));
+			}
 		}
-
+		$model->sub_author_id = explode(',',$model->sub_author_id);
 		$this->render('update',array(
 			'model'=>$model,
+			'FK_data'=>$FK_data,
 		));
 	}
 
@@ -115,7 +124,21 @@ class BookController extends Controller
 	 */
 	public function actionDelete($id)
 	{
-		$this->loadModel($id)->delete();
+		$model=$this->loadModel($id);
+		if($model){
+			$inputs = array();
+			$inputs['status'] = -1;
+			$inputs['update_at'] = date("Y-m-d H:i:s");
+			$inputs['delete_at'] = date("Y-m-d H:i:s");
+			$inputs['last_updated_user'] = Yii::app()->session['uid'];
+			$model->attributes = $inputs;
+			if($model->save()){
+				$mongo = new Mongo();
+				$update_find = array('book_id'=>$id);
+				$update_input = array('$set' => $inputs);
+            	$mongo->update_record('wenhsun', 'book', $update_find, $update_input);
+			}
+		}
 
 		// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
 		if(!isset($_GET['ajax']))
@@ -138,16 +161,26 @@ class BookController extends Controller
 	 */
 	public function actionAdmin()
 	{
-		$model=new Book('search');
-		$model->unsetAttributes();  // clear any default values
-		if(isset($_GET['Book']))
-			$model->attributes=$_GET['Book'];
-
+		$bookService = new BookService();
+		$categoryService = new BookcategoryService();
+		$data = $bookService->getAll_data();
+		$category_data = $categoryService->get_Allcategory_data("1");
 		$this->render('admin',array(
-			'model'=>$model,
+			'model'=>$data,
+			'category_data'=>$category_data
 		));
 	}
 
+	public function findSubAuthorName($sub_author_id){
+		$data = array();
+		$sql = "SELECT GROUP_CONCAT(name) as sub_author_name FROM book_author WHERE author_id IN(" . $sub_author_id . ")";
+		$data = Yii::app()->db->createCommand($sql)->queryAll();
+        if(!empty($data)){
+        	return $data[0]['sub_author_name'];
+        }else{
+        	return '';
+        }
+	}
 	/**
 	 * Returns the data model based on the primary key given in the GET variable.
 	 * If the data model is not found, an HTTP exception will be raised.

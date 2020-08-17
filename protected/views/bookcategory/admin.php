@@ -69,6 +69,7 @@ $('.search-form form').submit(function(){
                 <th>更新時間</th>
                 <th>最後異動的人</th>
                 <th>狀態</th>
+                <th>屬性</th>
                 <th>操作</th>
             </tr>
             </thead>
@@ -81,17 +82,32 @@ $('.search-form form').submit(function(){
                     <td class="sort"><?= $value["sort"] ?></td>
                     <td><?= $value["create_at"] ?></td>
                     <td><?= $value["update_at"] ?></td>
-                    <td><?= ($value["status"]==0) ? "停用" : "啟用" ?></td>
                     <td><?= $value["last_updated_user"] ?></td>
+                    <td><?php 
+                        switch ($value["status"]) {
+                            case '0':
+                                echo "停用";
+                                break;
+                            case '1':
+                                echo "啟用";
+                                break;
+                            default:
+                                 echo "刪除";
+                                break;
+                        }
+                        ?>    
+                    </td>
+                    <td><?= ($value["type"]==1) ? "書本" : "影片" ?></td>
+                    
                     <td>
                     	<?php if($view_power){?>
-							<a class="oprate-right row" href="<?php echo Yii::app()->createUrl('bookcategory/update') ?>/<?= $value["category_id"] ?>"><div><i class="fa fa-search fa-lg">檢視</i></div></a><br/>
+							<a class="oprate-right row" href="<?php echo Yii::app()->createUrl('bookcategory/view') ?>/<?= $value["category_id"] ?>"><div><i class="fa fa-search fa-lg">檢視</i></div></a><br/>
                     	<?php  }?>
                     	<?php if($update_power){?>
 							<a class="update row" title="Update" href="<?php echo Yii::app()->createUrl('bookcategory/update') ?>/<?= $value["category_id"] ?>"><div><i class="fa fa-pencil-square-o fa-lg">更新</i></div></a><br/>
                     	<?php  }?>
                         <?php if($delete_power){?>
-							<a class="delete row" title="Delete" href="<?php echo Yii::app()->createUrl('bookcategory/delete') ?>/<?= $value["category_id"] ?>"><div><i class="fa fa-times fa-lg">刪除</i></div></a>
+							<a class="delete row oprate-del" title="Delete"  data-acc-id="<?=$value["category_id"]?>"><div><i class="fa fa-times fa-lg">刪除</i></div></a>
                     	<?php  }?>
                     </td>
                 </tr>
@@ -111,6 +127,18 @@ $('.search-form form').submit(function(){
                 "oPaginate": {"sFirst": "第一頁", "sPrevious": "上一頁", "sNext": "下一頁", "sLast": "最後一頁"},
                 "sEmptyTable": "無任何資料"
             }
-        } );
+        });
+        $(".oprate-del").on('click', function(){
+            var answer = confirm("你確定要刪除此項目嗎?");
+            var accId = $(this).data("acc-id");
+            if (answer == true) {
+                var form = document.createElement("form");
+                form.setAttribute('method',"post");
+                form.setAttribute('action', "<?php echo Yii::app()->createUrl('bookcategory/delete'); ?>/"+accId);
+                document.body.appendChild(form);
+
+                form.submit();
+            }
+        });
     });
 </script>

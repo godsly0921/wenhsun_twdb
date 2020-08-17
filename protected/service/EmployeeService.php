@@ -171,15 +171,24 @@ class EmployeeService
         return $result;
     }
 
-    public function getEmailByEmployeeId($employeeId): ?string
+
+    public static function getEmployeeName($name)
     {
-        $employeeModel = Employee::model()->findByPk($employeeId);
 
-        if (!$employeeModel || empty($employeeModel['email'])) {
-            return null;
-        }
+        $emp = Employee::model()->find(
+            'name=:name',
+            [':name' => $name]
+        );
+        return $emp;
+    }
 
-        return $employeeModel['email'];
+    public static function getEmployeeUserName($user_name)
+    {
+        $emp = Employee::model()->find(
+            'user_name=:user_name',
+            [':user_name' => $user_name]
+        );
+        return $emp;
     }
 
     public function getEmployeeNameArray() {

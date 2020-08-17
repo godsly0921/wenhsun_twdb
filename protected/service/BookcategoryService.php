@@ -16,7 +16,7 @@ class BookcategoryService
                 WHERE @r <> 0) T1 
             JOIN book_category T2 
             ON T1._id = T2.category_id 
-            ORDER BY T2.sort ASC";
+            ORDER BY T2.sort,T2.parents ASC";
         $root_name = Yii::app()->db->createCommand($sql)->queryAll();
         $category_name = $category_id = $category_statu = array();
         $data = array();
@@ -31,7 +31,10 @@ class BookcategoryService
         return $data;    
     }
     public function findAllDetailCategory(){
-		$all_data = BookCategory::model()->findAll(array('order'=>'sort ASC'));
+		$all_data = BookCategory::model()->findAll(array(
+            'condition'=>'status <> -1',
+            'order'=>'sort ASC'
+        ));
 		$categoryService = new CategoryService();
         $accountService = new AccountService();
 		$category_data = array();
@@ -66,18 +69,97 @@ class BookcategoryService
                 'create_at' => $value->create_at,
                 'update_at' => $value->update_at,
                 'status' => $value->status,
+                'type' => $value->type,
                 'sort' => $value->sort,
             );
 		}
         return $category_data;
     }
-    public function findAllCategory(){
+    public function findAllCategory($type = '1'){
         $data = array();
         $data = BookCategory::model()->findAll(array(
-            'condition'=>'status=1',
+            'condition'=>'status=1 AND type=:type',
+            'params'=>array(
+                ':type' => $type,
+            ),
             'order'=>'sort ASC'
         ));
         return $data;
+    }
+
+    public function findAllRootCategory(){
+        $data = array();
+        $data = BookCategory::model()->findAll(array(
+            'condition'=>'status=1 AND isroot=1',
+            'order'=>'sort ASC,type ASC'
+        ));
+        return $data;
+    }
+
+    public function get_Allcategory_data($type = '1'){
+        ini_set('memory_limit','1024M');
+        $category_data = array();
+        $all_data = $this->findAllCategory($type);
+        foreach ($all_data as $key => $value) {
+            $parents = $this->findParents($value['category_id']);
+            if(!empty($parents) && $parents['category_status'] !=0){
+                $category_data[$value['category_id']] = $parents['category_name'];
+            }
+        }
+        return $category_data;
+    }
+
+    public function findCategoryTreeString($type = '1', $category_id = null){
+        ini_set('memory_limit','1024M');
+        $category_tree = array();
+        $all_data = $this->findAllCategory($type);
+        if($category_id){
+            $category_id = str_replace("'", "", $category_id);
+            $category_id = explode(",", $category_id);
+            foreach ($category_id as $key => $value) {
+
+                $category_id[$key] = (int)$value;
+            }
+        }else{
+            $category_id = array();
+        }
+        foreach ($all_data as $key => $value) {
+            $category_tree[] = array(
+                'category_id' => $value['category_id'],
+                'parents' => $value['parents'],
+                'text' => $value['name'],
+                'multiSelect' => true,
+                'checkable' => true,
+                'checkedIcon' => '',
+                'selectable' => true,
+                'hideCheckbox' => false,
+                'state' => array('checked'=>in_array($value['category_id'], $category_id)?true:false,'disabled'=>false,'expanded'=>true,'selected'=>in_array($value['category_id'], $category_id)?true:false),
+                'dataAttr' => array('target'=>'#tree'),
+            );
+        }
+        $category_html_ul = "";
+        if($category_tree){
+            $category_tree = $this->treeview($category_tree);
+        }
+
+        $category_tree = json_encode($category_tree);
+        return $category_tree;
+    }
+    
+    public function treeview($tree, $rootId = 0) {
+        $return = array();
+        foreach($tree as $leaf) {
+            if($leaf['parents'] == $rootId) {
+                foreach($tree as $subleaf) {
+                    if($subleaf['parents'] == $leaf['category_id']) {
+                        $leaf['nodes'] = $this->treeview($tree, $leaf['category_id']);
+                        break;
+                    }
+                }
+                $return[] = $leaf;
+            }
+        }
+        return $return;
     }
 }
 ?>

@@ -33,12 +33,12 @@ class BookCategory extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('name, isroot, parents, status, last_updated_user', 'required'),
-			array('isroot, parents, status, last_updated_user', 'numerical', 'integerOnly'=>true),
+			array('isroot, parents, status, type, last_updated_user', 'numerical', 'integerOnly'=>true),
 			array('name', 'length', 'max'=>100),
 			array('create_at, update_at, delete_at', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('category_id, name, isroot, parents, status, create_at, update_at, delete_at, last_updated_user', 'safe', 'on'=>'search'),
+			array('category_id, name, isroot, parents, status, type, create_at, update_at, delete_at, last_updated_user', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -50,6 +50,7 @@ class BookCategory extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
+			'_Account' => array(self::BELONGS_TO, 'Account', 'last_updated_user'),
 		);
 	}
 
@@ -60,10 +61,11 @@ class BookCategory extends CActiveRecord
 	{
 		return array(
 			'category_id' => '索引編號',
-			'name' => '次文類名稱',
-			'isroot' => '是否為根文類',
-			'parents' => '根文類編號',
-			'status' => '文類狀態 ( -1:刪除 0:停用 1:啟用 )',
+			'name' => '次分類名稱',
+			'isroot' => '是否為根分類',
+			'parents' => '根分類編號',
+			'status' => '分類狀態 ( -1:刪除 0:停用 1:啟用 )',
+			'type' => '分類屬性 ( 1:書本 2:影片 )',
 			'create_at' => '建立時間',
 			'update_at' => '更新時間',
 			'delete_at' => '刪除時間',
@@ -94,6 +96,7 @@ class BookCategory extends CActiveRecord
 		$criteria->compare('isroot',$this->isroot);
 		$criteria->compare('parents',$this->parents);
 		$criteria->compare('status',$this->status);
+		$criteria->compare('type',$this->type);
 		$criteria->compare('create_at',$this->create_at,true);
 		$criteria->compare('update_at',$this->update_at,true);
 		$criteria->compare('delete_at',$this->delete_at,true);

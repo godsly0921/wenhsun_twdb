@@ -30,7 +30,7 @@ class BookSize extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('name, create_at, update_at, delete_at, last_updated_user', 'required'),
+			array('name', 'required'),
 			array('status, last_updated_user', 'numerical', 'integerOnly'=>true),
 			array('name', 'length', 'max'=>100),
 			// The following rule is used by search().

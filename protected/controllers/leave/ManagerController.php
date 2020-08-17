@@ -7,6 +7,7 @@ use Wenhsun\Leave\Domain\Model\Employee;
 use Wenhsun\Leave\Domain\Model\EmployeeId;
 use Wenhsun\Leave\Domain\Service\EmployeeLeaveCalculator;
 
+
 class ManagerController extends Controller
 {
     // private $leaveMap = [
@@ -100,40 +101,54 @@ class ManagerController extends Controller
         return;
     }
     // 歷史特休管理
-    public function actionhistory_annualLeave_manage(){
-        $employeeUserName = isset($_GET['user_name']) ? $_GET['user_name'] : '';
-        $name = isset($_GET['name']) ? $_GET['name'] : '';
-        $type = isset($_GET['type']) ? $_GET['type'] : 1;
-        $leaveService = new LeaveService();
-        $configService = new ConfigService();
-        $employees = EmployeeORM::model()->findAll();
-        $userNameSearchWord = $this->buildUsernameSearchWord($employees);
-        $nameSearchWord = $this->buildNameSearchWord($employees);
-        $id = '';
-        $empName = '';
-        $userName = '';
-        $AnnualLeaveType = $configService->findByConfigName("AnnualLeaveType");
-        if(!empty($AnnualLeaveType)){
-            $AnnualLeaveType = $AnnualLeaveType[0]['config_value'];
-        }else{
-            $AnnualLeaveType = 1;
-        }
-        if(isset($_GET['name']) || isset($_GET['user_name'])){
-            if ($type == 1) {
-                $emp = Employee::model()->find(
-                    'user_name=:user_name',
-                    [':user_name' => $employeeUserName]
-                );
-            } elseif ($type == 2) {
-                $emp = Employee::model()->find(
-                    'name=:name',
-                    [':name' => $name]
-                );
+    public function actionHistory_annualLeave_manage(){
+        try {
+          
+            $parameter['user_name'] = isset($_GET['user_name']) ? $_GET['user_name'] : '';
+            $parameter['name'] = isset($_GET['name']) ? $_GET['name'] : '';
+            $parameter['type'] = isset($_GET['type']) ? $_GET['type'] : 1;
+
+            $leaveService = new LeaveService();
+            $configService = new ConfigService();
+            $employees = EmployeeORM::model()->findAll();
+            $userNameSearchWord = $this->buildUsernameSearchWord($employees);
+            $nameSearchWord = $this->buildNameSearchWord($employees);
+            $AnnualLeaveType = $configService->findByConfigName("AnnualLeaveType");
+            if(!empty($AnnualLeaveType)){
+                $AnnualLeaveType = $AnnualLeaveType[0]['config_value'];
+            }else{
+                $AnnualLeaveType = 1;
+            }
+
+        if(isset($parameter['name']) || isset($parameter['user_name'])){
+            if (  $parameter['type']  == 1) {
+
+                $emp =  EmployeeService::getEmployeeUserName($parameter['user_name']);
+
+            } elseif (  $parameter['type']  == 2) {
+
+                $emp =  EmployeeService::getEmployeeName($parameter['name']);
+              
             }
 
             if ($emp === null) {
-                Yii::app()->session[Controller::ERR_MSG_KEY] = '查無員工';
-                $this->redirect('index');
+
+                $AnnualLeaveType = '';
+                $userNameSearchWord = '';
+                $nameSearchWord = '';
+                $data = [];
+
+                $this->render('history_annualLeave_manage', [
+                    'AnnualLeaveType' => $AnnualLeaveType,
+                    'userNameSearchWord' => $userNameSearchWord,
+                    'nameSearchWord' => $nameSearchWord,
+                    'data' => $data,
+                ]);
+                exit();
+
+                //$this->redirect(Yii::app()->createUrl('labset/new'));
+               // Yii::app()->session[Controller::ERR_MSG_KEY] = '查無員工';
+               // $this->redirect('index');
             }
             $data = $leaveService->findEmployeeHistoryLeave($emp,$AnnualLeaveType);
         }else{
@@ -145,7 +160,13 @@ class ManagerController extends Controller
             'nameSearchWord' => $nameSearchWord,
             'data' => $data,
         ]);
+       
+        
+        } catch (Exception $e) {
+            echo 'Caught exception: ',  $e->getMessage(), "\n";
+        }
     }
+
     private function buildUsernameSearchWord($employees): string
     {
         $loginIds = [];

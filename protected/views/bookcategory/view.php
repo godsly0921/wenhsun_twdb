@@ -29,13 +29,26 @@ $this->menu=array(
 	'attributes'=>array(
 		'category_id',
 		'name',
-		'isroot',
+		array(  
+			"name" => "isroot",
+			"value" => $model->isroot == 1 ? '是':'否',
+		),
 		'parents',
 		'sort',
-		'status',
+		array(  
+			"name" => "status",
+			"value" => Common::getStatusText($model->status),
+		),
+		array(  
+			"name" => "type",
+			"value" => Common::getBookCategoryTypeText($model->type),
+		),
 		'create_at',
 		'update_at',
 		'delete_at',
-		'last_updated_user',
+		array(
+        	'name'=>'last_updated_user',
+        	'value'=>$model->_Account->account_name,
+        ),
 	),
 )); ?>

@@ -2,7 +2,7 @@
     <div>
         <div class="page-title">
             <div class="title_left">
-                <h3>查詢員工休假</h3>
+                <h3>歷史特休管理</h3>
             </div>
         </div>
         <div class="clearfix"></div>
@@ -15,7 +15,7 @@
                     </div>
                 <?php endif; ?>
                 <div class="x_panel">
-                    <form id="form" method="get" action="<?php echo Yii::app()->createUrl('/leave/history_annualLeave_manage'); ?>" data-parsley-validate class="form-horizontal form-label-left" novalidate>
+                    <form id="form" method="get" action="<?php echo Yii::app()->createUrl('/leave/manager/history_annualLeave_manage'); ?>" data-parsley-validate class="form-horizontal form-label-left" novalidate>
                         <div class="form-group">
                             <div class="col-md-offset-1 col-md-2">
                                 <select name="type" id="type" class="form-control" onChange="checkType();">

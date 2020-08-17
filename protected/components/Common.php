@@ -132,6 +132,18 @@ class Common
             return $status;
         }   
     }
+    public static function getBookCategoryTypeText($type)
+    {
+        $type_define = array(
+            "1" => "書本",
+            "2" => "影片",
+        );
+        if(isset($type_define[$type])){
+            return $type_define[$type];
+        }else{
+            return $type;
+        }   
+    }
     public static function getGenderText($gender)
     {
         $gender_define = array(
