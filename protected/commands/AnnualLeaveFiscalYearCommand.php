@@ -34,9 +34,6 @@ class AnnualLeaveFiscalYearCommand extends CConsoleCommand
                         $onBoardDate->setTime(0, 0, 0);
 
                         $Year_Diff = date("Y") - $onBoardDate->format('Y');
-                        if($value["id"] =='EP2019050012'){
-                            var_dump($Year_Diff);exit();
-                        }
                         for ($i=1; $i <= $Year_Diff; $i++) {
                             $onBoardDate = new DateTime($employee->onboard_date);
                             $onBoardDate->setTime(0, 0, 0);
