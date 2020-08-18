@@ -264,7 +264,7 @@ class AdminController extends CController
                 $userName = $input['user_account'];
 
                 $model = Employee::model()->find([
-                    'condition' => 'user_name = :user_name',
+                    'condition' => 'user_name = :user_name AND delete_status<>1',
                     'params' => [
                         ':user_name' => $userName,
                     ]
