@@ -1,0 +1,1 @@
+ALTER TABLE `employee` ADD `delete_status` INT(1) NOT NULL DEFAULT '0' COMMENT '是否刪除(0:否 1:是)' AFTER `update_at`;
