@@ -17,7 +17,7 @@ class ManagementController extends Controller
 
     public function actionIndex()
     {
-        $list = EmployeeModel::model()->byUsernameAsc()->findAll();
+        $list = EmployeeModel::model()->byUsernameAsc()->findAll(array('condition'=>'delete_status<>1'));
         $this->render('list', ['list' => $list]);
     }
 
@@ -33,7 +33,7 @@ class ManagementController extends Controller
         foreach ($roles as $key => $value) {
             $roles_map[$value['id']] = $value['group_name'];
         }
-        $list = EmployeeModel::model()->byUsernameAsc()->findAll();
+        $list = EmployeeModel::model()->byUsernameAsc()->findAll(array('condition'=>'delete_status<>1'));
 
         if (empty($list)) {
             $this->redirect('index');
@@ -252,7 +252,8 @@ class ManagementController extends Controller
                 $this->sendErrAjaxRsp(404, "資料不存在");
             }
 
-            $employee->delete();
+            $employee->delete_status = 1;
+            $employee->save();
             $this->sendSuccAjaxRsp();
 
         } catch (Throwable $ex) {

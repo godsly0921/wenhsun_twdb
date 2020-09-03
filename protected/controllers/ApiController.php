@@ -343,7 +343,7 @@ class ApiController extends CController{
 				                    array_push($category, $txt);
 				                }
 				                $data['image_info'] = array(
-				                	"img_url" => DOMAIN . "image_storage/O/" . $value['single_id'] . ".jpg",
+				                	"img_url" => DOMAIN . "image_storage/M/" . $value['single_id'] . ".jpg",
 									"filming_name" => $value['filming_name'],
 									"description" => $value['description'],
 									"website_url" => DOMAIN . "site/ImageInfo/" . $value['single_id'],
