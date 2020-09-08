@@ -71,12 +71,12 @@ class LeaveService
                         $diffEndTime = $now_endTime->diff($onBoardDate);
                         if($diffEndTime->format('%m') >= 6 || $diffEndTime->format('%y')> 0){
                             $seniority_month = $onBoardDate->format('m')-1;
-                            $special_leave = floor(
+                            $special_leave = round(
                                 (3 + 
                                 (
                                     $this->leaveMap[1]-
                                     (floor((($seniority_month+(($onBoardDate->format('d')-1)/$month_day))/12 * $this->leaveMap[1])*100)/100)
-                                ))*10)/10 * 8 * 60;
+                                )),1) * 8 * 60;
                             $this->create_Specialleaveyear($employee, $now->format('Y')."-01-01", $now->format('Y')."-12-31", ($dDiff->format('%y')*12 + $dDiff->format('%m')),  $special_leave);
                         }
                     }
@@ -86,28 +86,28 @@ class LeaveService
                         $onBoardDateYear = new DateTime($onBoardDate->format('Y-m-d'));
                         $diffHalfYear = $onBoardDateYear->diff($halfyear);
                         // 到職日當年滿 半年的特休
-                        $special_leave = floor((3 - (floor((($seniority_month->format('m')+(($onBoardDate->format('d')-1)/$month_day))/6 * 3)*100)/100))*10)/10  * 8 * 60;
+                        $special_leave = round((3 - (floor((($seniority_month->format('m')+(($onBoardDate->format('d')-1)/$month_day))/6 * 3)*100)/100)),1)  * 8 * 60;
                         $this->create_Specialleaveyear($employee, $halfyear->format('Y-m-d'), $halfyear->format('Y')."-12-31", ($dDiff->format('%y')*12 + $dDiff->format('%m')),  $special_leave);
                         // 到職日滿 半年未滿 1 年的特休
-                        $special_leave = floor((
+                        $special_leave = round((
                             floor((($seniority_month->format('m') + ($onBoardDate->format('d')-1)/$month_day)/6 * 3)*100)/100 + 
                             ($this->leaveMap[1]-floor((($seniority_month->format('m')+($onBoardDate->format('d')-1)/$month_day)/12 * $this->leaveMap[1])*100)/100)
-                            )*10)/10 * 8 * 60;
+                            ),1) * 8 * 60;
                         $this->create_Specialleaveyear($employee, $now->format('Y')."-01-01", $now->format('Y')."-12-31", ($dDiff->format('%y')*12 + $dDiff->format('%m')),  $special_leave);
                     }
                 }else{
                     // 到職日滿 1 年 不滿 25 年
                     if (isset($this->leaveMap[$diffYear])) {
-                        $special_leave = floor((
+                        $special_leave = round((
                             floor((($seniority_month->format('m') + ($onBoardDate->format('d')-1)/$month_day)/12 * $this->leaveMap[$diffYear])*100)/100 + 
                             ($this->leaveMap[($diffYear+1)]-floor((($seniority_month->format('m')+($onBoardDate->format('d')-1)/$month_day)/12 * $this->leaveMap[($diffYear+1)])*100)/100)
-                            )*10)/10 * 8 * 60;
+                            ),1) * 8 * 60;
                         $this->create_Specialleaveyear($employee, $now->format('Y')."-01-01", $now->format('Y')."-12-31", ($dDiff->format('%y')*12 + $dDiff->format('%m')),  $special_leave);
                     }else{// 到職日滿 25 年
-                        $special_leave = floor((
+                        $special_leave = round((
                             floor((($seniority_month->format('m') + ($onBoardDate->format('d')-1)/$month_day)/12 * 30)*100)/100 + 
                             (30-floor((($seniority_month->format('m')+($onBoardDate->format('d')-1)/$month_day)/12 * 30)*100)/100)
-                            )*10)/10 * 8 * 60;
+                            ),1) * 8 * 60;
                         $this->create_Specialleaveyear($employee, $now->format('Y')."-01-01", $now->format('Y')."-12-31", ($dDiff->format('%y')*12 + $dDiff->format('%m')),  $special_leave);
                     }
                 }
