@@ -73,6 +73,13 @@
                                         <?php endif; ?>
                                     </td>
                                     <td>
+                                        <?php if ($row['status'] == 0){ ?>
+                                            <button type="button" class="btn btn-link" onclick="approve('<?=$row['id']?>')" style="margin:0;padding:0">
+                                                <i class="fa fa-check-square-o" style="font-size:18px"></i>
+                                                核準
+                                            </button>
+                                            <br/>
+                                        <?php }?>
                                         <a href="<?= Yii::app()->createUrl('/leave/manager/edit?id=' . $row['id']); ?>"><i class="fa fa-edit" style="font-size:18px"></i>
                                         </a>
                                         &nbsp;
@@ -222,6 +229,31 @@
         }
     }
 
+    function approve(id) {
+        var values = [];
+        values.push(id);
+        $.ajax({
+            url: "<?= Yii::app()->createUrl('/leave/manager/AjaxUpdate') ?>",
+            type: "POST",
+            dataType: "json",
+            data: {
+                id: id
+            },
+            success: function(response) {
+                if (response.status) {
+                    alert(response.msg);
+                    window.location.reload();
+                } else {
+                    alert(response.msg);
+                }
+            },
+            error: function(xhr) {
+                console.log(xhr.responseText);
+                alert(response.msg);
+            }
+        });
+    }
+    
     $(document).ready(function() {
         $("#datatable1").DataTable({
             "scrollX": true,

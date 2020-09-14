@@ -352,7 +352,7 @@ class AttendancerecordService
     public function getAllEmployeeLeaveListHoliday($date_start, $date_end)
     {
         $list = Yii::app()->db->createCommand()
-            ->select('a.*,e.*')
+            ->select('a.create_at,a.id,a.employee_id,a.take,a.reason,a.leave_time,a.start_time,a.end_time,a.leave_minutes,a.status,e.user_name,e.name')
             ->from('attendance_record a')
             ->where('1=1')
             ->leftjoin("employee e", "a.employee_id = e.id")
