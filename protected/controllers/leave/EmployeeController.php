@@ -200,10 +200,18 @@ class EmployeeController extends Controller
         $employeeService = new EmployeeService();
         $empArr = $employeeService->getEmployeeNameArray();
         if ($attendanceRecord->agent != '') {
-            $attendanceRecord->agent = $empArr[$attendanceRecord->agent];
+            if(isset($empArr[$attendanceRecord->agent])){
+                $attendanceRecord->agent = $empArr[$attendanceRecord->agent];
+            }else{
+                $attendanceRecord->agent = "";
+            }  
         }
         if ($attendanceRecord->manager != '') {
-            $attendanceRecord->manager = $empArr[$attendanceRecord->manager];
+            if(isset($empArr[$attendanceRecord->manager])){
+                $attendanceRecord->manager = $empArr[$attendanceRecord->manager];
+            }else{
+                $attendanceRecord->manager = "";
+            }
         }
 
         $emp = EmployeeORM::model()->findByPk($attendanceRecord->employee_id);

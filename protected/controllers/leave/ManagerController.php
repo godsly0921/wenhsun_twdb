@@ -202,6 +202,7 @@ class ManagerController extends Controller
             $this->redirect('all_index');
         }
         $this->render('all_hist', [
+            'leaveMap'=>$this->leaveMap,
             'holidayList' => $holidayList,
             'date_start' => $date_start,
             'date_end' => $date_end
@@ -822,12 +823,21 @@ class ManagerController extends Controller
 
         if ($attendanceRecord->agent != '') {
             $agent = EmployeeORM::model()->findByPk($attendanceRecord->agent);
-            $attendanceRecord->agent = $agent->name;
+            if($agent){
+                $attendanceRecord->agent = $agent->name;
+            }else{
+                $attendanceRecord->agent = "";
+            }
         }
 
         if ($attendanceRecord->manager != '') {
             $manager = EmployeeORM::model()->findByPk($attendanceRecord->manager);
-            $attendanceRecord->manager = $manager->name;
+            if($manager){
+                $attendanceRecord->manager = $manager->name;
+            }else{
+                $attendanceRecord->manager = "";
+            }
+            
         }
 
         $employeeOrmEnt = EmployeeORM::model()->findByPk($attendanceRecord->employee_id);

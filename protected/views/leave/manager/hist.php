@@ -10,7 +10,7 @@
         <div class="row">
             <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="x_panel">
-                    <p>注意: 年假計算為到職至今可請時數</p>
+                    <p>注意: 年假計算為當年度可請時數</p>
                     <table id="table" class="table table-striped table-bordered">
                         <thead>
                             <tr>

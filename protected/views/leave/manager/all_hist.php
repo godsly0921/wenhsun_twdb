@@ -35,7 +35,7 @@
                                     <td><?= $row['user_name']?></td>
                                     <td><?= $row['name']?></td>
                                     <td><?= substr($row['create_at'], 0, 10) ?></td>
-                                    <td><?= $row['take'] ?></td>
+                                    <td><?= isset($leaveMap[$row['take']])?$leaveMap[$row['take']]:$row['take'] ?></td>
                                     <td><?= $row['reason'] ?></td>
                                     <td><?= date('Y-m-d', strtotime($row['leave_time'])) ?></td>
                                     <td><?= substr($row['start_time'], 11, 8) . ' - ' . substr($row['end_time'], 11, 8) ?></td>
