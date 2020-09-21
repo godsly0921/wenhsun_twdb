@@ -227,7 +227,7 @@
 				</div>
 				<!-- Tips content -->
 	        </div>
-	        <div class="my-4 mt_45">
+	        <div class="my-4 mt_45 d-none">
 	        	<span id="download_cost"> <span id="sale_point"><?=(int)$photograph_data['size'][0]['sale_point']?>個下載點數從您的</span>
 	        	<div class="dropdown d-inline-block">
 				  	<button class="btn btn-outline-secondary dropdown-toggle" type="button" id="download_method" data-toggle="dropdown" data-download_method="1" aria-haspopup="true" aria-expanded="false">
@@ -240,7 +240,8 @@
 				</div>
 	        </div>
 	        <div class="mt_45 d-inline-block">
-	        	<form id="download_image_form" action="<?= Yii::app()->createUrl('site/download_image');?>" method="post" target="my_iframe" class="d-inline-block">
+	        	<!-- <form id="download_image_form" action="<?#= Yii::app()->createUrl('site/download_image');?>" method="post" target="my_iframe" class="d-inline-block d-none"> -->
+	        	<form id="download_image_form" action="<?= Yii::app()->createUrl('site/download_image');?>" method="post" target="my_iframe" class="d-none">
 	        		<input type="hidden" name="single_id" value="<?=$photograph_data['photograph_info']['single_id']?>">
 	        		<input type="hidden" name="size_type" id="size_type" value="<?=$photograph_data['size'][0]['size_type']?>">
 	        		<input type="hidden" name="download_method" id="download_image_method" value="1">
