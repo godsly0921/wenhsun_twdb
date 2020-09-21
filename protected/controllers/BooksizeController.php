@@ -46,6 +46,8 @@ class BooksizeController extends Controller
 			$inputs['create_at'] = date("Y-m-d H:i:s");
 			$inputs['last_updated_user'] = Yii::app()->session['uid'];
 			$model->attributes = $inputs;
+			$model->create_at= date("Y-m-d H:i:s");
+			$model->last_updated_user= Yii::app()->session['uid'];
 			if($model->save()){
 				$mongo = new Mongo();
 				$inputs['book_size_id'] = $model->book_size_id;
@@ -77,6 +79,8 @@ class BooksizeController extends Controller
 			$inputs['update_at'] = date("Y-m-d H:i:s");
 			$inputs['last_updated_user'] = Yii::app()->session['uid'];
 			$model->attributes = $inputs;
+			$model->update_at = $inputs['update_at'];
+			$model->last_updated_user = $inputs['last_updated_user'];
 			if($model->save()){
 				$mongo = new Mongo();
 				$update_find = array('book_size_id'=>$id);
@@ -106,6 +110,9 @@ class BooksizeController extends Controller
 			$inputs['delete_at'] = date("Y-m-d H:i:s");
 			$inputs['last_updated_user'] = Yii::app()->session['uid'];
 			$model->attributes = $inputs;
+			$model->update_at = $inputs['update_at'];
+			$model->delete_at = $inputs['delete_at'];
+			$model->last_updated_user = $inputs['last_updated_user'];
 			if($model->save()){
 				$mongo = new Mongo();
 				$update_find = array('book_size_id'=>$id);

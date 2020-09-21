@@ -84,7 +84,7 @@ class BookSize extends CActiveRecord
 		// @todo Please modify the following code to remove attributes that should not be searched.
 
 		$criteria=new CDbCriteria;
-
+		$criteria->addCondition("status<>-1");
 		$criteria->compare('book_size_id',$this->book_size_id);
 		$criteria->compare('name',$this->name,true);
 		$criteria->compare('status',$this->status);
