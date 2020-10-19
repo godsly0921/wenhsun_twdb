@@ -67,8 +67,18 @@ class BookController extends Controller
 			if($model->save()){
 				$mongo = new Mongo();
 				$inputs['book_id'] = $model->book_id;
+				$sub_author_id = $inputs['sub_author_id'];
 				$inputs['sub_author_id'] = explode(",",$inputs['sub_author_id']);
 				$inputs['category'] = explode(",",$inputs['category']);
+				$sql = "SELECT name FROM book_author WHERE author_id=" . $inputs['author_id'];
+				$book_data = Yii::app()->db->createCommand($sql)->queryRow();
+				$inputs['author_name'] = (!empty($book_data)) ? $book_data['name']:""; //作家
+				$sql = "SELECT GROUP_CONCAT(name) as sub_name FROM book_author WHERE author_id IN (" . $sub_author_id .")";
+				$sub_book_data = Yii::app()->db->createCommand($sql)->queryRow();
+				$inputs['sub_author_name'] = (!empty($sub_book_data)) ? explode(",",$sub_book_data['sub_name']):""; //次作家
+				$sql = "SELECT GROUP_CONCAT(name) as series_name FROM book_series WHERE book_series_id =" . $inputs['series'];
+				$series_data = Yii::app()->db->createCommand($sql)->queryRow();
+				$inputs['series_name'] = (!empty($series_data)) ? $series_data['series_name']:""; //叢書名
 				$mongo->insert_record('wenhsun', 'book', $inputs);
 				$this->redirect(array('view','id'=>$model->book_id));
 			}
@@ -103,8 +113,18 @@ class BookController extends Controller
 			if($model->save()){
 				$mongo = new Mongo();
 				$update_find = array('book_id'=>$id);
+				$sub_author_id = $inputs['sub_author_id'];
 				$inputs['sub_author_id'] = explode(",",$inputs['sub_author_id']);
 				$inputs['category'] = explode(",",$inputs['category']);
+				$sql = "SELECT name FROM book_author WHERE author_id=" . $inputs['author_id'];
+				$book_data = Yii::app()->db->createCommand($sql)->queryRow();
+				$inputs['author_name'] = (!empty($book_data)) ? $book_data['name']:""; //作家
+				$sql = "SELECT GROUP_CONCAT(name) as sub_name FROM book_author WHERE author_id IN (" . $sub_author_id .")";
+				$sub_book_data = Yii::app()->db->createCommand($sql)->queryRow();
+				$inputs['sub_author_name'] = (!empty($sub_book_data)) ? explode(",",$sub_book_data['sub_name']):""; //次作家
+				$sql = "SELECT GROUP_CONCAT(name) as series_name FROM book_series WHERE book_series_id =" . $inputs['series'];
+				$series_data = Yii::app()->db->createCommand($sql)->queryRow();
+				$inputs['series_name'] = (!empty($series_data)) ? $series_data['series_name']:""; //叢書名
 				$update_input = array('$set' => $inputs);
             	$mongo->update_record('wenhsun', 'book', $update_find, $update_input);
 				$this->redirect(array('view','id'=>$model->book_id));

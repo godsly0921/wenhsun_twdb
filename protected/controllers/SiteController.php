@@ -55,7 +55,11 @@ class SiteController extends CController{
         $category_data = $category_service->findCategoryMate();
         $total_result = $siteService->findPhotoCount($single_id, $keyword, $category_id, $filming_date, $object_name);
         $total_result = ceil($total_result / $limit );
-        $this->render('search',array( 'total_result' => $total_result, 'filming_date_range' => $filming_date_range, 'distinct_object_name' => $distinct_object_name, 'category_data' => $category_data ));
+        $bookService = new BookService();
+        $FK_data = $bookService->getAllFK_data();
+        // var_dump($_GET['search_type']);
+        // var_dump($FK_data);exit();
+        $this->render('search',array( 'total_result' => $total_result, 'filming_date_range' => $filming_date_range, 'distinct_object_name' => $distinct_object_name, 'category_data' => $category_data,'FK_data'=>$FK_data ));
     }
 
     public function ActionImageInfo($id){
