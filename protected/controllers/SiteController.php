@@ -48,7 +48,6 @@ class SiteController extends CController{
         $object_name = isset($_GET["object_name"])?explode(",",$_GET["object_name"]):"";
         $single_id = isset($_GET["single_id"]) && $_GET["single_id"] != ''?explode(",",$_GET["single_id"]):"";
         $siteService = new SiteService();
-        $siteService = new SiteService();
         $category_service = new CategoryService();
         $filming_date_range = $siteService->findPhotoFilmingRange();
         $distinct_object_name = $siteService->findPhotoObjectname();        
@@ -56,10 +55,13 @@ class SiteController extends CController{
         $total_result = $siteService->findPhotoCount($single_id, $keyword, $category_id, $filming_date, $object_name);
         $total_result = ceil($total_result / $limit );
         $bookService = new BookService();
-        $FK_data = $bookService->getAllFK_data();
+        $video_category_data = array();
+        $categoryService = new BookcategoryService();
+        $video_category_data = $categoryService->findCategoryTreeString("2");
+        $FK_data = $bookService->getAdvanceFilter_data();
         // var_dump($_GET['search_type']);
         // var_dump($FK_data);exit();
-        $this->render('search',array( 'total_result' => $total_result, 'filming_date_range' => $filming_date_range, 'distinct_object_name' => $distinct_object_name, 'category_data' => $category_data,'FK_data'=>$FK_data ));
+        $this->render('search',array( 'total_result' => $total_result, 'filming_date_range' => $filming_date_range, 'distinct_object_name' => $distinct_object_name, 'category_data' => $category_data,'FK_data'=>$FK_data,'video_category_data'=>$video_category_data ));
     }
 
     public function ActionImageInfo($id){

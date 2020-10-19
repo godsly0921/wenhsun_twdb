@@ -91,6 +91,31 @@ class BookService
 			"singles" => $singles
 		);
 	}
+	public function getAdvanceFilter_data($category=''){
+		$book_author = $this->getFK_Author_data();
+		$book_category = $this->getFK_Category_data($category);
+		$book_publish_place = $this->getFK_PublishPlace_data();
+		$book_publish_unit = $this->getFK_PublishPlaceUnit_data();
+		$book_series = $this->getFK_Series_data();
+		$book_size = $this->getFK_Size_data();
+		$publish_year = $this->getFK_PublishYear_data();
+		return array(
+			"book_author" => $book_author,
+			"book_category" => $book_category,
+			"book_publish_place" => $book_publish_place,
+			"book_publish_unit" => $book_publish_unit,
+			"book_series" => $book_series,
+			"book_size" => $book_size,
+			"publish_year" => $publish_year
+		);
+	}
+
+	public function getFK_PublishYear_data(){
+		$data = array();
+		$sql = "SELECT publish_year FROM book WHERE status=1 GROUP BY publish_year ORDER BY publish_year ASC";
+		$data = Yii::app()->db->createCommand($sql)->queryAll();
+		return $data;
+	}
 	public function getFK_Singles_data(){
 		$data = array();
 		$sql = "SELECT * FROM single WHERE publish=1 AND copyright=1";

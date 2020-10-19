@@ -21,7 +21,7 @@
 	}
 
 	#advanced_filter{
-		display: none;
+		display: block;
 	}
 	/* 進階搜尋 slider bar 客製 css -- start */
 	.slider-tick{

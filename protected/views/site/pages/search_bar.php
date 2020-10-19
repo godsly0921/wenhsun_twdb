@@ -2,8 +2,35 @@
 <style type="text/css">
 	#keyword:focus{
 	    z-index: 0;
-	  }
-
+	}
+	@font-face {
+		font-family: 'Glyphicons Halflings';
+		src: url('<?php echo Yii::app()->request->baseUrl; ?>/assets/gentelella/vendors/bootstrap/dist/fonts/glyphicons-halflings-regular.eot');
+		src: url('<?php echo Yii::app()->request->baseUrl; ?>/assets/gentelella/vendors/bootstrap/dist/fonts/glyphicons-halflings-regular.eot?#iefix') format('embedded-opentype'), url('<?php echo Yii::app()->request->baseUrl; ?>/assets/gentelella/vendors/bootstrap/dist/fonts/glyphicons-halflings-regular.woff2') format('woff2'), url('<?php echo Yii::app()->request->baseUrl; ?>/assets/gentelella/vendors/bootstrap/dist/fonts/glyphicons-halflings-regular.woff') format('woff'), url('<?php echo Yii::app()->request->baseUrl; ?>/assets/gentelella/vendors/bootstrap/dist/fonts/glyphicons-halflings-regular.ttf') format('truetype'), url('<?php echo Yii::app()->request->baseUrl; ?>/assets/gentelella/vendors/bootstrap/dist/fonts/glyphicons-halflings-regular.svg#glyphicons_halflingsregular') format('svg');
+	}
+	.glyphicon {
+		position: relative;
+		top: 1px;
+		display: inline-block;
+		font-family: 'Glyphicons Halflings';
+		font-style: normal;
+		font-weight: normal;
+		line-height: 1;
+		-webkit-font-smoothing: antialiased;
+		-moz-osx-font-smoothing: grayscale;
+	}
+	.glyphicon-check:before {
+	  	content: "\e067";
+	}
+	.glyphicon-unchecked:before {
+	  	content: "\e157";
+	}
+	.glyphicon-minus:before {
+		content: "\2212";
+	}
+	.glyphicon-plus:before {
+		content: "\002b";
+	}
 </style>
 <!-- Search Bar -- Start -->
 <form name="group_form" class="col-lg-12 form-horizontal" id="keyword_search" action="<?php echo Yii::app()->createUrl('site/search');?>" method="post">
@@ -24,85 +51,157 @@
     		<i class="fa fa-caret-down" aria-hidden="true"></i>
     	</div>
     	<div id="advanced_filter">
-    		<?php if($_GET['search_type'] == '1'){?>
-    			<div id="search_type_1">
-		    		<div class="row my-3 mb-5">
-		    			<div class="col-lg-1">依時代</div>
-		    			<div class="col-lg-11"><input id="filming_date" type="text"></div>
-		    		</div>
-		    		<?php if($distinct_object_name){?>
-			    		<div class="row my-4">
-			    			<div class="col-lg-1">依作品</div>
-				    		<div class="col-lg-11">
-				    			<?php foreach ($distinct_object_name as $key => $value) {?>
-				    				<div class="d-inline-block">
-					    				<div class="tiffany_checkbox">
-				                            <input type="checkbox" class="object_name" name="object_name" value="<?=$value['distinct_object_name']?>" <?=isset($_GET["object_name"]) && in_array($value['distinct_object_name'],explode(",",$_GET["object_name"]))?"checked":""?> onchange="adv_checkbox(this)">
-				                            <span class="checkmark"></span>		                            
-				                        </div>
-				                        <div class="d-inline-block mx-2"><?=$value['distinct_object_name']?></div>
-			                        </div>
-				    			<?php }?>		    			
-				    		</div>
-				    	</div>
-			    	<?php }?>
-			    	<?php if($category_data){?>
-			    		<div class="row my-4">
-			    			<div class="col-lg-1">依類別</div>
-			    			<div class="col-lg-11">
-			    				<?php foreach ($category_data as $key => $value) {?>
-				    				<div class="d-inline-block">
-					    				<div class="tiffany_checkbox">
-				                            <input type="checkbox" class="category_id" name="category_id" value="<?=$value['category_id']?>" <?=isset($_GET["category_id"]) && in_array($value['category_id'],explode(",",$_GET["category_id"]))?"checked":""?> onchange="adv_checkbox(this)">
-				                            <span class="checkmark"></span>		                            
-				                        </div>
-				                        <div class="d-inline-block mx-2"><?=$value['child_name']?></div>
-			                        </div>
-				    			<?php }?>
-			    			</div>
-			    		</div>
-		    		<?php }?>
+			<div id="search_type_1" class="<?=$_GET['search_type'] == '1'?'d-block':'d-none'?>">
+	    		<div class="row my-3 mb-5">
+	    			<div class="col-lg-1">依時代</div>
+	    			<div class="col-lg-11"><input id="filming_date" type="text"></div>
 	    		</div>
-    		<?php }?>
-    		<?php if($_GET['search_type'] == '2'){?>
-    			<div id="search_type_2">
-    				<?php if(!empty($FK_data['book_author'])){?>
-	    				<div class="row my-3 mb-5">
-			    			<div class="col-lg-2 my-auto">作者</div>
-			    			<div class="col-lg-10">
-			    				<select class="form-control selectpicker"  id="author_id" name="author_id" required="required" data-live-search="true">
+	    		<?php if($distinct_object_name){?>
+		    		<div class="row my-4">
+		    			<div class="col-lg-1">依作品</div>
+			    		<div class="col-lg-11">
+			    			<?php foreach ($distinct_object_name as $key => $value) {?>
+			    				<div class="d-inline-block">
+				    				<div class="tiffany_checkbox">
+			                            <input type="checkbox" class="object_name" name="object_name" value="<?=$value['distinct_object_name']?>" <?=isset($_GET["object_name"]) && in_array($value['distinct_object_name'],explode(",",$_GET["object_name"]))?"checked":""?> onchange="adv_checkbox(this)">
+			                            <span class="checkmark"></span>		                            
+			                        </div>
+			                        <div class="d-inline-block mx-2"><?=$value['distinct_object_name']?></div>
+		                        </div>
+			    			<?php }?>		    			
+			    		</div>
+			    	</div>
+		    	<?php }?>
+		    	<?php if($category_data){?>
+		    		<div class="row my-4">
+		    			<div class="col-lg-1">依類別</div>
+		    			<div class="col-lg-11">
+		    				<?php foreach ($category_data as $key => $value) {?>
+			    				<div class="d-inline-block">
+				    				<div class="tiffany_checkbox">
+			                            <input type="checkbox" class="category_id" name="category_id" value="<?=$value['category_id']?>" <?=isset($_GET["category_id"]) && in_array($value['category_id'],explode(",",$_GET["category_id"]))?"checked":""?> onchange="adv_checkbox(this)">
+			                            <span class="checkmark"></span>		                            
+			                        </div>
+			                        <div class="d-inline-block mx-2"><?=$value['child_name']?></div>
+		                        </div>
+			    			<?php }?>
+		    			</div>
+		    		</div>
+	    		<?php }?>
+    		</div>
+			<div id="search_type_2" class="<?=$_GET['search_type'] == '2'?'d-block':'d-none'?>">
+				<?php if(!empty($FK_data['book_author'])){?>
+    				<div class="row my-3">
+		    			<div class="col-lg-2 my-auto">作者</div>
+		    			<div class="col-lg-10">
+		    				<select class="form-control selectpicker"  id="author_id" name="author_id" data-live-search="true">
+				                <option value="">請選擇</option>
+				                <?php foreach ($FK_data['book_author'] as $value){?>
+				                    <option value="<?=$value['author_id']?>" data-tokens="<?=$value['author_id'] . '-' . $value['name']?>" <?=isset($_GET["author_id"]) && $_GET["author_id"]==$value['author_id']?'selected':''?>><?=$value['author_id'] . '-' . $value['name']?></option>
+				                <?php }?>
+				            </select>
+		    			</div>
+		    		</div>
+	    		<?php }?>
+	    		<?php if(!empty($FK_data['book_publish_unit'])){?>
+    				<div class="row my-3">
+		    			<div class="col-lg-2 my-auto">出版單位</div>
+		    			<div class="col-lg-10">
+		    				<select class="form-control selectpicker"  id="publish_unit_id" name="publish_unit_id" data-live-search="true">
+				                <option value="">請選擇</option>
+				                <?php foreach ($FK_data['book_publish_unit'] as $value){?>
+				                    <option value="<?=$value['publish_unit_id']?>" data-tokens="<?=$value['publish_unit_id'] . '-' . $value['name']?>" <?=isset($_GET["publish_unit_id"]) && $_GET["publish_unit_id"]==$value['publish_unit_id']?'selected':''?>><?=$value['publish_unit_id'] . '-' . $value['name']?></option>
+				                <?php }?>
+				            </select>
+		    			</div>
+		    		</div>
+	    		<?php }?>
+	    		<?php if(!empty($FK_data['book_category'])){?>
+    				<div class="row my-3">
+		    			<div class="col-lg-2 my-auto">作品分類</div>
+		    			<div class="col-lg-10">
+		    				<input type="hidden" id="category_id" name="category_id" value="<?=isset($_GET["category_id"])?$_GET["category_id"]:''?>">
+        					<div id="tree"></div>
+		    			</div>
+		    		</div>
+	    		<?php }?>
+	    		<?php if(!empty($FK_data['publish_year'])){?>
+    				<div class="row my-3">
+		    			<div class="col-lg-2 my-auto">出版區間 - 年(開始)</div>
+		    			<div class="col-lg-2">
+		    				<select class="form-control"  id="publish_year_s" name="publish_year_s">
+				                <option value="">請選擇</option>
+				                <?php foreach ($FK_data['publish_year'] as $value){?>
+				                	<option value="<?=$value['publish_year']?>"><?=$value['publish_year']?></option>
+				                <?php }?>
+				            </select>
+		    			</div>
+		    			<div class="col-lg-2 my-auto">出版區間 - 月(開始)</div>
+		    			<div class="col-lg-2">
+		    				<select class="form-control"  id="publish_month_s" name="publish_month_s">
+				                <option value="">請選擇</option>
+				            </select>
+		    			</div>
+		    			<div class="col-lg-2 my-auto">出版區間 - 日(開始)</div>
+		    			<div class="col-lg-2">
+		    				<select class="form-control"  id="publish_day_s" name="publish_day_s">
+				                <option value="">請選擇</option>
+				            </select>
+		    			</div>
+		    		</div>
+	    		<?php }?>
+	    		<?php if(!empty($FK_data['publish_year'])){?>
+    				<div class="row my-3">
+		    			<div class="col-lg-2 my-auto">出版區間 - 年(結束)</div>
+		    			<div class="col-lg-2">
+		    				<select class="form-control"  id="publish_year_e" name="publish_year_e">
+				                <option value="">請選擇</option>
+				                <?php foreach ($FK_data['publish_year'] as $value){?>
+				                	<option value="<?=$value['publish_year']?>"><?=$value['publish_year']?></option>
+				                <?php }?>
+				            </select>
+		    			</div>
+		    			<div class="col-lg-2 my-auto">出版區間 - 月(結束)</div>
+		    			<div class="col-lg-2">
+		    				<select class="form-control"  id="publish_month_e" name="publish_month_e">
+				                <option value="">請選擇</option>
+				            </select>
+		    			</div>
+		    			<div class="col-lg-2 my-auto">出版區間 - 日(結束)</div>
+		    			<div class="col-lg-2">
+		    				<select class="form-control"  id="publish_day_e" name="publish_day_e">
+				                <option value="">請選擇</option>
+				            </select>
+		    			</div>
+		    		</div>
+	    		<?php }?>
+	    		<?php if(!empty($FK_data['book_size']) || !empty($FK_data['series'])){?>
+	    			<div class="row my-3">
+	    				<?php if(!empty($FK_data['book_size'])){?>
+		    				<div class="col-lg-2 my-auto">開本規格</div>
+			    			<div class="col-lg-4">
+			    				<select class="form-control selectpicker"  id="book_size" name="book_size" data-live-search="true">
 					                <option value="">請選擇</option>
-					                <?php foreach ($FK_data['book_author'] as $value){?>
-					                    <option value="<?=$value['author_id']?>" data-tokens="<?=$value['author_id'] . '-' . $value['name']?>" <?=isset($_GET["author_id"]) && $_GET["author_id"]==$value['author_id']?'selected':''?>><?=$value['author_id'] . '-' . $value['name']?></option>
+					                <?php foreach ($FK_data['book_size'] as $value){?>
+					                	<option value="<?=$value['book_size_id']?>" data-tokens="<?=$value['book_size_id'] . '-' . $value['name']?>"><?=$value['name']?></option>
 					                <?php }?>
 					            </select>
 			    			</div>
-			    		</div>
-		    		<?php }?>
-		    		<?php if(!empty($FK_data['book_publish_unit'])){?>
-	    				<div class="row my-3 mb-5">
-			    			<div class="col-lg-2 my-auto">出版單位</div>
-			    			<div class="col-lg-10">
-			    				<select class="form-control selectpicker"  id="publish_unit_id" name="publish_unit_id" required="required" data-live-search="true">
+		    			<?php }?>
+		    			<?php if(!empty($FK_data['series'])){?>
+			    			<div class="col-lg-2 my-auto">叢書名</div>
+			    			<div class="col-lg-4">
+			    				<select class="form-control selectpicker"  id="series" name="series" data-live-search="true">
 					                <option value="">請選擇</option>
-					                <?php foreach ($FK_data['book_publish_unit'] as $value){?>
-					                    <option value="<?=$value['publish_unit_id']?>" data-tokens="<?=$value['publish_unit_id'] . '-' . $value['name']?>" <?=isset($_GET["publish_unit_id"]) && $_GET["publish_unit_id"]==$value['publish_unit_id']?'selected':''?>><?=$value['publish_unit_id'] . '-' . $value['name']?></option>
+					                <?php foreach ($FK_data['series'] as $value){?>
+					                	<option value="<?=$value['book_series_id']?>" data-tokens="<?=$value['book_series_id'] . '-' . $value['name']?>"><?=$value['name']?></option>
 					                <?php }?>
 					            </select>
 			    			</div>
-			    		</div>
-		    		<?php }?>
-		    		<?php if(!empty($FK_data['book_category'])){?>
-	    				<div class="row my-3 mb-5">
-			    			<div class="col-lg-2 my-auto">作品分類</div>
-			    			<div class="col-lg-10">
-			    				<input type="hidden" id="category_id" name="category_id" value="<?=isset($_GET["category_id"])?$_GET["category_id"]:''?>">
-            					<div id="tree"></div>
-			    			</div>
-			    		</div>
-		    		<?php }?>
-    			</div>
-    		<?php }?>
+		    			<?php }?>
+	    			</div>
+	    		<?php }?>	
+			</div>
     	</div>
     </div>
 </form>
