@@ -18,7 +18,7 @@
 <div id="banner" class="row">
   <?php if(count($banner_data)>0){?>
     <?php foreach ($banner_data as $key => $value) {?>
-      <a href="<?= $value['link'] ?>"><img src="<?= Yii::app()->request->baseUrl . $value['image']; ?>">
+      <a href="<?= $value['link'] ?>"><img src="<?= Yii::app()->request->baseUrl . $value['image']; ?>"></a>
     <?php }?>
   <?php }?>
 </div>
