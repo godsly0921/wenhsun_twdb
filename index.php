@@ -34,6 +34,7 @@ define('PICCOLUMN', dirname(__FILE__).'/assets/image/piccolumn/');
 define('PICCOLUMN_SHOW', '/assets/image/piccolumn/');
 define('HOMEAD', dirname(__FILE__).'/assets/AD/');
 define('PHOTOGRAPH_STORAGE_URL', 'image_storage/O/');
+define('M3U8_STORAGE_URL', 'image_storage/video/');
 define('DOMAIN', 'https://www.twdb.com.tw/');
 //define('DOMAIN', 'http://localhost:8080/wenhsun_hr/'); //測試環境
 define('ABOUT_IMAGE', '/assets/image/about/');

@@ -99,6 +99,7 @@ class BookService
 		$book_series = $this->getFK_Series_data();
 		$book_size = $this->getFK_Size_data();
 		$publish_year = $this->getFK_PublishYear_data();
+		$video_extension = $this->getFK_VideoExtension_data();
 		return array(
 			"book_author" => $book_author,
 			"book_category" => $book_category,
@@ -106,8 +107,16 @@ class BookService
 			"book_publish_unit" => $book_publish_unit,
 			"book_series" => $book_series,
 			"book_size" => $book_size,
-			"publish_year" => $publish_year
+			"publish_year" => $publish_year,
+			"video_extension" => $video_extension
 		);
+	}
+
+	public function getFK_VideoExtension_data(){
+		$data = array();
+		$sql = "SELECT extension FROM `video` WHERE status=1 GROUP BY extension";
+		$data = Yii::app()->db->createCommand($sql)->queryAll();
+		return $data;
 	}
 
 	public function getFK_PublishYear_data(){

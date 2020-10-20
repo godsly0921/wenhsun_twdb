@@ -179,7 +179,7 @@
 </style>
 <div class="container">
 	<?php
-    $this->renderPartial('pages/search_bar', array("distinct_object_name"=>$distinct_object_name, "category_data" => $category_data, "filming_date_range" => $filming_date_range,'FK_data'=>$FK_data));
+    $this->renderPartial('pages/search_bar', array("distinct_object_name"=>$distinct_object_name, "category_data" => $category_data, "filming_date_range" => $filming_date_range,'FK_data'=>$FK_data,'video_category_data'=>$video_category_data ));
     ?>
 	<input type="hidden" id="page" value="<?=isset($_GET['page'])?$_GET['page']:1?>">
 	<div class="col-lg-12" id="image_result"></div>		
@@ -195,10 +195,10 @@
 	// function closeIFrame(){
 	//     $('#youriframeid').remove();
 	// }
-	function open_image_info(single_id){
+	function open_image_info(single_id,search_type){
 		$.fancybox.open({
 	        type: 'iframe',
-	        src: '<?= Yii::app()->createUrl('site/ImageInfo');?>/'+single_id,
+	        src: '<?= Yii::app()->createUrl('site/ImageInfo');?>/'+single_id+'/'+search_type,
 	        toolbar  : false,
 			smallBtn : true,
 			iframe : {
@@ -212,8 +212,18 @@
 	}
 
 	function create_image(value){
-		$html = '<div onclick="open_image_info(\''+value.single_id+'\')" style="cursor:pointer;"><img src="<?= Yii::app()->createUrl('/'). "/" .PHOTOGRAPH_STORAGE_URL?>'+value.single_id+'.jpg"><div>';
-        $('#image_result').append($html);
+		var html = "";
+		var search_type = "<?=$_GET['search_type']?>";
+		switch(search_type) {
+			case '1':
+			case '2':
+				html = '<div onclick="open_image_info(\''+value.single_id+'\',\''+search_type+'\')" style="cursor:pointer;"><img src="<?= Yii::app()->createUrl('/'). "/" .PHOTOGRAPH_STORAGE_URL?>'+value.single_id+'.jpg"><div>';
+				break;
+			case '3':
+				html = '<div onclick="open_image_info(\''+value.video_id+'\',\''+search_type+'\')" style="cursor:pointer;"><img src="<?= Yii::app()->createUrl('/'). "/" .M3U8_STORAGE_URL. "/m3u8/"?>'+value.uuid_name+'/'+ value.uuid_name + '.jpg"><div>';
+				break;
+		}   
+		$('#image_result').append(html);     
 	}
 
 	function rejustifiedGallery_init(){
@@ -262,9 +272,23 @@
 	                	category_id: "<?=isset($_GET['category_id'])?$_GET['category_id']:''?>",
 	                	filming_date: "<?=isset($_GET['filming_date'])?$_GET['filming_date']:''?>",
 	                	object_name: "<?=isset($_GET['object_name'])?$_GET['object_name']:''?>",
+	                	author_id: "<?=isset($_GET['author_id'])?$_GET['author_id']:''?>",
+	                	publish_unit_id: "<?=isset($_GET['publish_unit_id'])?$_GET['publish_unit_id']:''?>",
+	                	book_category_id: "<?=isset($_GET['book_category_id'])?$_GET['book_category_id']:''?>",
+	                	publish_year_s: "<?=isset($_GET['publish_year_s'])?$_GET['publish_year_s']:''?>",
+	                	publish_month_s: "<?=isset($_GET['publish_month_s'])?$_GET['publish_month_s']:''?>",
+	                	publish_day_s: "<?=isset($_GET['publish_day_s'])?$_GET['publish_day_s']:''?>",
+	                	publish_year_e: "<?=isset($_GET['publish_year_e'])?$_GET['publish_year_e']:''?>",
+	                	publish_month_e: "<?=isset($_GET['publish_month_e'])?$_GET['publish_month_e']:''?>",
+	                	publish_day_e: "<?=isset($_GET['publish_day_e'])?$_GET['publish_day_e']:''?>",
+	                	book_size: "<?=isset($_GET['book_size'])?$_GET['book_size']:''?>",
+	                	series: "<?=isset($_GET['series'])?$_GET['series']:''?>",
+	                	video_extension: "<?=isset($_GET['video_extension'])?$_GET['video_extension']:''?>",
+	                	video_category_id: "<?=isset($_GET['video_category_id'])?$_GET['video_category_id']:''?>",
 	                }, 
 	                success: function(data) { 
 	                    $('#image_result').html('');
+	                    console.log(data);
 	                    $.each(data, function(index, value){
 	                        create_image(value)
 	                    });
@@ -274,8 +298,9 @@
 	        }
 	    });
 	    if (localStorage.getItem("single_id") != null) {
-	    	open_image_info(localStorage.getItem("single_id"));
+	    	open_image_info(localStorage.getItem("single_id"),localStorage.getItem("search_type"));
 	    	localStorage.removeItem("single_id");
+	    	localStorage.removeItem("search_type");
 	    }
   	});
 </script>

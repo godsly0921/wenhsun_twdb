@@ -128,10 +128,10 @@
             });
         <?php }?>
     }
-    function open_image_info(single_id){
+    function open_image_info(single_id,search_type){
         $.fancybox.open({
             type: 'iframe',
-            src: '<?= Yii::app()->createUrl('site/ImageInfo');?>/'+single_id,
+            src: '<?= Yii::app()->createUrl('site/ImageInfo');?>/'+single_id+'/'+search_type,
             toolbar  : false,
             smallBtn : true,
             iframe : {
@@ -155,8 +155,9 @@
     $(document).ready( function() {
         rejustifiedGallery_init();
         if (localStorage.getItem("single_id") != null) {
-            open_image_info(localStorage.getItem("single_id"));
+            open_image_info(localStorage.getItem("single_id"),localStorage.getItem("search_type"));
             localStorage.removeItem("single_id");
+            localStorage.removeItem("search_type");
         }
         $('.remove_favorite').click(function(e){ e.stopPropagation(); });
     });

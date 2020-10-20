@@ -38,12 +38,12 @@ class Video extends CActiveRecord
 		return array(
 			array('extension, length, file_size, m3u8_url, description', 'required'),
 			array('status, length, file_size, last_updated_user', 'numerical', 'integerOnly'=>true),
-			array('name, m3u8_url, category', 'length', 'max'=>100),
+			array('name, m3u8_url, category, uuid_name', 'length', 'max'=>100),
 			array('extension', 'length', 'max'=>4),
 			array('create_at, update_at, delete_at', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('video_id, name, status, extension, length, file_size, m3u8_url, description, category, create_at, update_at, delete_at, last_updated_user', 'safe', 'on'=>'search'),
+			array('video_id, name, status, extension, length, file_size, m3u8_url, description, category, create_at, update_at, delete_at, last_updated_user, uuid_name', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -78,6 +78,7 @@ class Video extends CActiveRecord
 			'update_at' => '更新時間',
 			'delete_at' => '刪除時間',
 			'last_updated_user' => '最後異動的人',
+			'uuid_name' => 'uuid_name',
 		);
 	}
 

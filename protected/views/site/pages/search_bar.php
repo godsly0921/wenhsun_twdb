@@ -120,7 +120,7 @@
     				<div class="row my-3">
 		    			<div class="col-lg-2 my-auto">作品分類</div>
 		    			<div class="col-lg-10">
-		    				<input type="hidden" id="category_id" name="category_id" value="<?=isset($_GET["category_id"])?$_GET["category_id"]:''?>">
+		    				<input type="hidden" id="book_category_id" name="book_category_id" value="<?=isset($_GET["book_category_id"])?$_GET["book_category_id"]:''?>">
         					<div id="tree"></div>
 		    			</div>
 		    		</div>
@@ -202,6 +202,30 @@
 	    			</div>
 	    		<?php }?>	
 			</div>
+			<div id="search_type_3" class="<?=$_GET['search_type'] == '3'?'d-block':'d-none'?>">
+				<?php if(!empty($FK_data['video_extension'])){?>
+    				<div class="row my-3">
+		    			<div class="col-lg-2 my-auto">原始格式</div>
+		    			<div class="col-lg-10">
+		    				<select class="form-control selectpicker"  id="video_extension" name="video_extension" data-live-search="true">
+				                <option value="">請選擇</option>
+				                <?php foreach ($FK_data['video_extension'] as $value){?>
+				                	<option value="<?=$value['extension']?>" data-tokens="<?=$value['extension']?>"><?=$value['extension']?></option>
+				                <?php }?>
+				            </select>
+		    			</div>
+		    		</div>
+	    		<?php }?>
+				<?php if(!empty($video_category_data)){?>
+    				<div class="row my-3">
+		    			<div class="col-lg-2 my-auto">作品分類</div>
+		    			<div class="col-lg-10">
+		    				<input type="hidden" id="video_category_id" name="video_category_id" value="<?=isset($_GET["video_category_id"])?$_GET["video_category_id"]:''?>">
+        					<div id="tree_3"></div>
+		    			</div>
+		    		</div>
+	    		<?php }?>
+			</div>
     	</div>
     </div>
 </form>
@@ -216,7 +240,16 @@ function getCheckedItems(treeview){
         node = nodes[i];
         checkedNodes.push(node.category_id);
     }
-    $('#category_id').val(checkedNodes.join());
+    $('#book_category_id').val(checkedNodes.join());
+}
+function getVideoCheckedItems(treeview){
+    var nodes = $('#tree_3').treeview('getChecked', treeview);
+    var checkedNodes = [];
+    for (var i = 0; i < nodes.length; i++) {
+        node = nodes[i];
+        checkedNodes.push(node.category_id);
+    }
+    $('#video_category_id').val(checkedNodes.join());
 }
 function search(){
     var keyword = $("#keyword").val();
@@ -342,5 +375,71 @@ $(function () {
 	        },
 	    });
 	<?php }?>
+	<?php if(!empty($video_category_data)){?>
+		$('#tree_3').treeview({
+	        data: '<?=$video_category_data?>',
+	        showCheckbox: true, //是否顯示覆選框
+	        highlightSelected: true, //是否高亮選中
+	        multiSelect: true, //多選
+	        checkboxFirst: true,
+	        onNodeChecked: function(event, data) {
+	            if (typeof data['nodes'] != "undefined") {
+	                var children = data['nodes'];
+	                for (var i=0; i<children.length; i++) {
+	                    $('#tree_3').treeview('checkNode', [children[i].nodeId, { silent: true } ]);
+	                }
+	            }
+	            getVideoCheckedItems(data);
+	        },
+	        onNodeUnchecked: function(event, data) {
+	            if (typeof data['nodes'] != "undefined") {
+	                var children = data['nodes'];
+	                for (var i=0; i<children.length; i++) {
+	                    $('#tree_3').treeview('uncheckNode', [children[i].nodeId, { silent: true } ]);
+	                }
+	            }
+	            // getParentItems(data);
+	            getVideoCheckedItems(data);        
+	        },
+	    });
+	<?php }?>
+	$( "#search_type" ).change(function() {
+		var search_type = $( "#search_type" ).val();
+		switch(search_type) {
+			case '1':
+				$( "#search_type_1" ).addClass( "d-block" );
+				$( "#search_type_1" ).removeClass( "d-none" );
+				$( "#search_type_2" ).addClass( "d-none" );
+				$( "#search_type_2" ).removeClass( "d-block" );
+				$( "#search_type_3" ).addClass( "d-none" );
+				$( "#search_type_3" ).removeClass( "d-block" );
+				$('#search_type_1').fadeIn('fast');
+				$('#search_type_2').fadeOut('fast');
+				$('#search_type_3').fadeOut('fast');
+				break;
+			case '2':
+				$( "#search_type_2" ).addClass( "d-block" );
+				$( "#search_type_2" ).removeClass( "d-none" );
+				$( "#search_type_1" ).addClass( "d-none" );
+				$( "#search_type_1" ).removeClass( "d-block" );
+				$( "#search_type_3" ).addClass( "d-none" );
+				$( "#search_type_3" ).removeClass( "d-block" );
+				$('#search_type_1').fadeOut('fast');
+				$('#search_type_2').fadeIn('fast');
+				$('#search_type_3').fadeOut('fast');
+				break;
+			case '3':
+				$( "#search_type_3" ).addClass( "d-block" );
+				$( "#search_type_3" ).removeClass( "d-none" );
+				$( "#search_type_2" ).addClass( "d-none" );
+				$( "#search_type_2" ).removeClass( "d-block" );
+				$( "#search_type_1" ).addClass( "d-none" );
+				$( "#search_type_1" ).removeClass( "d-block" );
+				$('#search_type_1').fadeOut('fast');
+				$('#search_type_2').fadeOut('fast');
+				$('#search_type_3').fadeIn('fast');
+				break;
+		}
+	});
 })
 </script>
