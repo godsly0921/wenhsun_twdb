@@ -33,8 +33,52 @@ class SiteController extends CController{
         $filming_date = isset($_GET["filming_date"]) && $_GET["filming_date"] != ''?$_GET["filming_date"]:"";
         $object_name = isset($_GET["object_name"]) && $_GET["object_name"] != ''?explode(",",$_GET["object_name"]):"";
         $single_id = isset($_GET["single_id"]) && $_GET["single_id"] != ''?explode(",",$_GET["single_id"]):"";
+        $search_type = isset($_GET["search_type"])?$_GET["search_type"]:"1";
+
+        $author_id = isset($_GET["author_id"])?$_GET["author_id"]:"";
+        $publish_unit_id = isset($_GET["publish_unit_id"])?$_GET["publish_unit_id"]:"";
+        $book_category_id = isset($_GET["book_category_id"])?$_GET["book_category_id"]:"";
+        $publish_year_s = isset($_GET["publish_year_s"])?$_GET["publish_year_s"]:"";
+        $publish_month_s = isset($_GET["publish_month_s"])?$_GET["publish_month_s"]:"";
+        $publish_day_s = isset($_GET["publish_day_s"])?$_GET["publish_day_s"]:"";
+        $publish_year_e = isset($_GET["publish_year_e"])?$_GET["publish_year_e"]:"";
+        $publish_month_e = isset($_GET["publish_month_e"])?$_GET["publish_month_e"]:"";
+        $publish_day_e = isset($_GET["publish_day_e"])?$_GET["publish_day_e"]:"";
+        $book_size = isset($_GET["book_size"])?$_GET["book_size"]:"";
+        $series = isset($_GET["series"])?$_GET["series"]:"";
+        $video_extension = isset($_GET["video_extension"])?$_GET["video_extension"]:"";
+        $video_category_id = isset($_GET["video_category_id"])?$_GET["video_category_id"]:"";
+        $book_filter = array(
+            "keyword" => $keyword,
+            "author_id" => $author_id,
+            "publish_unit_id" => $publish_unit_id,
+            "book_category_id" => $book_category_id,
+            "publish_year_s" => $publish_year_s,
+            "publish_month_s" => $publish_month_s,
+            "publish_day_s" => $publish_day_s,
+            "publish_year_e" => $publish_year_e,
+            "publish_month_e" => $publish_month_e,
+            "publish_day_e" => $publish_day_e,
+            "book_size" => $book_size,
+            "series" => $series
+        );
+        $video_filter = array(
+            "keyword" => $keyword,
+            "video_extension" => $video_extension,
+            "video_category_id" => $video_category_id
+        );
         $siteService = new SiteService();
-        $result = $siteService->findPhoto($single_id, $keyword, $category_id, $filming_date, $object_name ,$page, $limit);
+        switch ($search_type) {
+            case '1': // 圖庫
+                $result = $siteService->findPhoto($single_id, $keyword, $category_id, $filming_date, $object_name ,$page, $limit);
+                break;
+            case '2': // 書籍
+                $result = $siteService->findBook($book_filter ,$page, $limit);
+                break;
+            case '3': // 影片
+                $result = $siteService->findVideo($video_filter ,$page, $limit);
+                break;
+        }
         echo json_encode($result);
         exit();
     }
@@ -43,29 +87,73 @@ class SiteController extends CController{
         $limit = self::PERPAGE;
         $keyword = isset($_GET["keyword"])?$_GET["keyword"]:"";
         $page = isset($_GET["page"])?$_GET["page"]:"";
+        $search_type = isset($_GET["search_type"])?$_GET["search_type"]:"1";
         $category_id = isset($_GET["category_id"])?explode(",",$_GET["category_id"]):"";
         $filming_date = isset($_GET["filming_date"])?$_GET["filming_date"]:"";
         $object_name = isset($_GET["object_name"])?explode(",",$_GET["object_name"]):"";
         $single_id = isset($_GET["single_id"]) && $_GET["single_id"] != ''?explode(",",$_GET["single_id"]):"";
-        $siteService = new SiteService();
+        $author_id = isset($_GET["author_id"])?$_GET["author_id"]:"";
+        $publish_unit_id = isset($_GET["publish_unit_id"])?$_GET["publish_unit_id"]:"";
+        $book_category_id = isset($_GET["book_category_id"])?$_GET["book_category_id"]:"";
+        $publish_year_s = isset($_GET["publish_year_s"])?$_GET["publish_year_s"]:"";
+        $publish_month_s = isset($_GET["publish_month_s"])?$_GET["publish_month_s"]:"";
+        $publish_day_s = isset($_GET["publish_day_s"])?$_GET["publish_day_s"]:"";
+        $publish_year_e = isset($_GET["publish_year_e"])?$_GET["publish_year_e"]:"";
+        $publish_month_e = isset($_GET["publish_month_e"])?$_GET["publish_month_e"]:"";
+        $publish_day_e = isset($_GET["publish_day_e"])?$_GET["publish_day_e"]:"";
+        $book_size = isset($_GET["book_size"])?$_GET["book_size"]:"";
+        $series = isset($_GET["series"])?$_GET["series"]:"";
+        $video_extension = isset($_GET["video_extension"])?$_GET["video_extension"]:"";
+        $video_category_id = isset($_GET["video_category_id"])?$_GET["video_category_id"]:"";
+        $book_filter = array(
+            "keyword" => $keyword,
+            "author_id" => $author_id,
+            "publish_unit_id" => $publish_unit_id,
+            "book_category_id" => $book_category_id,
+            "publish_year_s" => $publish_year_s,
+            "publish_month_s" => $publish_month_s,
+            "publish_day_s" => $publish_day_s,
+            "publish_year_e" => $publish_year_e,
+            "publish_month_e" => $publish_month_e,
+            "publish_day_e" => $publish_day_e,
+            "book_size" => $book_size,
+            "series" => $series
+        );
+        $video_filter = array(
+            "keyword" => $keyword,
+            "video_extension" => $video_extension,
+            "video_category_id" => $video_category_id
+        );
         $siteService = new SiteService();
         $category_service = new CategoryService();
         $filming_date_range = $siteService->findPhotoFilmingRange();
         $distinct_object_name = $siteService->findPhotoObjectname();        
         $category_data = $category_service->findCategoryMate();
-        $total_result = $siteService->findPhotoCount($single_id, $keyword, $category_id, $filming_date, $object_name);
+        switch ($search_type) {
+            case '1': // 圖庫
+                $total_result = $siteService->findPhotoCount($single_id, $keyword, $category_id, $filming_date, $object_name);
+                break;
+            case '2': // 書籍
+                $total_result = $siteService->findBookCount($book_filter);
+                break;
+            case '3': // 影片
+                $total_result = $siteService->findVideoCount($video_filter);
+                break;
+        }
         $total_result = ceil($total_result / $limit );
-        $this->render('search',array( 'total_result' => $total_result, 'filming_date_range' => $filming_date_range, 'distinct_object_name' => $distinct_object_name, 'category_data' => $category_data ));
+        $bookService = new BookService();
+        $video_category_data = array();
+        $categoryService = new BookcategoryService();
+        $video_category_data = $categoryService->findCategoryTreeString("2");
+        $FK_data = $bookService->getAdvanceFilter_data();
+        // var_dump($video_category_data);exit();
+        $this->render('search',array( 'total_result' => $total_result, 'filming_date_range' => $filming_date_range, 'distinct_object_name' => $distinct_object_name, 'category_data' => $category_data,'FK_data'=>$FK_data,'video_category_data'=>$video_category_data ));
     }
 
-    public function ActionImageInfo($id){
+    public function ActionImageInfo(){
+        $id = isset($_GET['id'])?$_GET['id']:"";
+        $search_type = isset($_GET['search_type'])?$_GET['search_type']:"";
         $siteService = new SiteService();
-        $photographService = new PhotographService();
-        $category_service = new CategoryService();
-        $photograph_data = $photographService->findSingleAndSinglesize($id); 
-        $category_data = $category_service->findCategoryMate();
-        $photograph_data['photograph_info']['keyword'] = explode(",", $photograph_data['photograph_info']['keyword']);
-        $same_category = $siteService->findSameCategory($photograph_data['photograph_info']['category_id'],$id);
         $member_point = $member_plan = 0;
         if (!Yii::app() -> user -> isGuest && isset(Yii::app()->session['member_id'])){
             $memberService = new MemberService();
@@ -75,7 +163,28 @@ class SiteController extends CController{
             $member_point = $member->active_point;
             if($memberplan) $member_plan = $memberplan[0]['remain_amount'];
         }
-        $this->render('image_info',array('photograph_data'=>$photograph_data,'category_service'=>$category_service,'same_category'=>$same_category,'member_point'=>$member_point,'member_plan'=>$member_plan));
+        switch ($search_type) {
+            case '1': // 圖庫
+                $photographService = new PhotographService();
+                $category_service = new CategoryService();
+                $photograph_data = $photographService->findSingleAndSinglesize($id); 
+                $category_data = $category_service->findCategoryMate();
+                $photograph_data['photograph_info']['keyword'] = explode(",", $photograph_data['photograph_info']['keyword']);
+                $same_category = $siteService->findSameCategory($photograph_data['photograph_info']['category_id'],$id);
+                $this->render('image_info',array('photograph_data'=>$photograph_data,'category_service'=>$category_service,'same_category'=>$same_category,'member_point'=>$member_point,'member_plan'=>$member_plan));
+                break;
+            case '2': // 書籍
+                $data = $siteService->findBookDetail($id);
+                // var_dump($data);exit();
+                $this->render('book_info',array('data' => $data, 'member_point'=>$member_point,'member_plan'=>$member_plan));
+                break;
+            case '3': // 影片
+                $data = $siteService->findVideoDetail($id);
+                $this->render('video_info',array('data' => $data, 'member_point'=>$member_point,'member_plan'=>$member_plan));
+                break;
+        }
+        
+        
     }
 
     public function ActionDownload_image(){
@@ -291,10 +400,10 @@ class SiteController extends CController{
         $gRecaptchaResponse = $_POST['g-recaptcha-response'];
         $remoteIp = $_SERVER['REMOTE_ADDR'];
         $resp = $recaptcha->verify($gRecaptchaResponse, $remoteIp);
-        if(!$resp->isSuccess()){
-            Yii::app()->session['error_msg'] = '請先證明您不是機器人';
-            $this->redirect(Yii::app()->createUrl('site/login'));
-        }
+        // if(!$resp->isSuccess()){
+        //     Yii::app()->session['error_msg'] = '請先證明您不是機器人';
+        //     $this->redirect(Yii::app()->createUrl('site/login'));
+        // }
         $useridentity = new UserIdentity($input['account'],$input['password']);
         $is_login = $useridentity->authenticate(1);
         if (!$is_login) {
@@ -1012,8 +1121,9 @@ class SiteController extends CController{
         }
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $single_id = $_POST['single_id'];
+            $search_type = $_POST['search_type'];
             $photographService = new MemberService();
-            $add_favorite = $photographService->add_favorite($single_id, Yii::app()->session['member_id']);
+            $add_favorite = $photographService->add_favorite($single_id, Yii::app()->session['member_id'], $search_type);
             if($add_favorite){
                 echo json_encode(array('status'=>true));
             }else{
@@ -1028,8 +1138,9 @@ class SiteController extends CController{
         }
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $single_id = $_POST['single_id'];
+            $search_type = $_POST['search_type'];
             $photographService = new MemberService();
-            $remove_favorite = $photographService->remove_favorite($single_id, Yii::app()->session['member_id']);
+            $remove_favorite = $photographService->remove_favorite($single_id, Yii::app()->session['member_id'],$search_type);
             if($remove_favorite){
                 echo json_encode(array('status'=>true));
             }else{

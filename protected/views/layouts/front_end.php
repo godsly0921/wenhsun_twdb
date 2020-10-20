@@ -42,7 +42,7 @@
         <div class="navbar-collapse collapse dual-nav order-2 order-md-2 justify-content-end">
             <ul class="navbar-nav header_navbar_nav col-md-12 col-lg-8 mx-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="<?= Yii::app()->createUrl('site/search');?>/測試/1?filming_date=2000-2020">圖片檢索</a>
+                    <a class="nav-link" href="<?= Yii::app()->createUrl('site/search');?>/測試/1/1?filming_date=2000-2020">圖片檢索</a>
                 </li>
                <!--  <li class="nav-item">
                     <a class="nav-link" href="<?#= Yii::app()->createUrl('site/plan');?>">方案選擇</a>

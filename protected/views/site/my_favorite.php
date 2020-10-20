@@ -87,10 +87,22 @@
         <div class="row">
             <div class="col-lg-12 text-center" id="image_result">
                 <?php foreach ($data as $key => $value) {?>
-                    <div id="favorite_<?=$value['single_id']?>" onclick="open_image_info('<?=$value['single_id']?>')" style="cursor:pointer;">
-                        <img  class="download" src="<?= Yii::app()->createUrl('/'). "/" .PHOTOGRAPH_STORAGE_URL . $value['single_id']?>.jpg">
+                    <div id="favorite_<?=$value['single_id']?>" onclick="open_image_info('<?=$value['single_id']?>','<?=$value['search_type']?>')" style="cursor:pointer;">
+                        <?php switch ($value['search_type']) {
+                            case '1':
+                                echo '<img  class="download" src="'.Yii::app()->createUrl('/'). '/' .PHOTOGRAPH_STORAGE_URL . $value['image_id'].'.jpg">';
+                                break;
+                            case '2':
+                                echo '<img  class="download" src="'.Yii::app()->createUrl('/'). '/' .PHOTOGRAPH_STORAGE_URL . $value['image_id'].'.jpg">';
+                                break;
+                            case '3':
+                                echo '<img  class="download" src="'.Yii::app()->createUrl('/'). '/' . M3U8_STORAGE_URL . '/m3u8/' . $value['image_id'] . '/' . $value['image_id'] . '.jpg">';
+                                break;
+                        }
+                        ?>
+                        
                         <div class="caption">
-                            <span class="btn btn-dark btn-sm fa fa-window-close-o remove_favorite" onclick="remove_favorite('<?=$value['single_id']?>')" style="font-size: 24px;color:white;line-height: 24px;"></span>
+                            <span class="btn btn-dark btn-sm fa fa-window-close-o remove_favorite" onclick="remove_favorite('<?=$value['single_id']?>','<?=$value['search_type']?>')" style="font-size: 24px;color:white;line-height: 24px;"></span>
                         </div>
                     </div>
                 <?php }?>
@@ -101,7 +113,7 @@
 <script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/jquery.fancybox.min.js"></script>
 <script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/jquery.justifiedGallery.min.js"></script>
 <script type="text/javascript">
-    function remove_favorite(single_id){
+    function remove_favorite(single_id,search_type){
         <?php if (Yii::app() -> user -> isGuest){
             Yii::app()->user->returnUrl = Yii::app()->request->urlReferrer;
         ?>
@@ -114,6 +126,7 @@
                 dataType: "json",  
                 data: {
                     single_id: single_id,
+                    search_type: search_type,
                 }, 
                 success: function(data) {
                     if(!data.status){
@@ -128,10 +141,10 @@
             });
         <?php }?>
     }
-    function open_image_info(single_id){
+    function open_image_info(single_id,search_type){
         $.fancybox.open({
             type: 'iframe',
-            src: '<?= Yii::app()->createUrl('site/ImageInfo');?>/'+single_id,
+            src: '<?= Yii::app()->createUrl('site/ImageInfo');?>/'+single_id+'/'+search_type,
             toolbar  : false,
             smallBtn : true,
             iframe : {
@@ -155,8 +168,9 @@
     $(document).ready( function() {
         rejustifiedGallery_init();
         if (localStorage.getItem("single_id") != null) {
-            open_image_info(localStorage.getItem("single_id"));
+            open_image_info(localStorage.getItem("single_id"),localStorage.getItem("search_type"));
             localStorage.removeItem("single_id");
+            localStorage.removeItem("search_type");
         }
         $('.remove_favorite').click(function(e){ e.stopPropagation(); });
     });

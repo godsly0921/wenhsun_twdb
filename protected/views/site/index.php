@@ -6,6 +6,13 @@
   #keyword:focus{
     z-index: 0;
   }
+  #search_type:focus{
+    border: none;
+    box-shadow: none;
+  }
+  .advanced_filter{
+    color: #d0604e;
+  }
 </style>
 <!-- 輪播圖 -- Start -->
 <div id="banner" class="row">
@@ -21,6 +28,11 @@
   <form name="group_form" class="form-horizontal" id="keyword_search" action="<?php echo Yii::app()->createUrl('site/search');?>" method="post">
     <div class="col-lg-9 mx-auto input-group input-group-lg my-5">
       <input type="text" class="form-control" placeholder="推薦關鍵字：洛夫" aria-label="推薦關鍵字：洛夫" aria-describedby="basic-addon2" name="keyword" id="keyword" required>
+      <select class="form-control advanced_filter w-auto" id="search_type" name="search_type" style="flex: none !important">
+        <option value="1" <?=(isset($_GET['search_type']) && $_GET['search_type']==1) || !isset($_GET['search_type'])?"selected":""?>>圖片</option>
+        <option value="2" <?=isset($_GET['search_type']) && $_GET['search_type']==2?"selected":""?>>書籍</option>
+        <option value="3" <?=isset($_GET['search_type']) && $_GET['search_type']==3?"selected":""?>>影片</option>
+      </select>
       <input type="hidden" name="page" value="1" id="page">
       <div class="input-group-append">
         <button class="btn btn-outline-light customer_search_button" onclick="search();">搜尋</button>
@@ -43,7 +55,7 @@
       <div class="py-5" id="ad_image">
         <?php if(count($ad_data)>0){?>
           <?php foreach ($ad_data as $key => $value) {?>
-            <div onclick="open_image_info('<?=$value['single_id']?>')" style="cursor:pointer;"><img src="<?=Yii::app()->createUrl('/')."/".PHOTOGRAPH_STORAGE_URL.$value['single_id']?>.jpg"></div>
+            <div onclick="open_image_info('<?=$value['single_id']?>','1')" style="cursor:pointer;"><img src="<?=Yii::app()->createUrl('/')."/".PHOTOGRAPH_STORAGE_URL.$value['single_id']?>.jpg"></div>
           <?php }?>
         <?php }?>
       </div>
@@ -52,7 +64,7 @@
       <div class="py-5 col-lg-8 mx-auto">
         <?php if(count($ad_data)>0){?>
           <?php foreach ($ad_data as $key => $value) {?>
-            <div class="row col-lg-12 py-3" onclick="open_image_info('<?=$value['single_id']?>')" style="cursor:pointer;">
+            <div class="row col-lg-12 py-3" onclick="open_image_info('<?=$value['single_id']?>','1')" style="cursor:pointer;">
               <div class="col-lg-4 text-right"><img src="<?=Yii::app()->createUrl('/')."/".PHOTOGRAPH_STORAGE_URL.$value['single_id']?>.jpg" width="80%"></div>
               <div class="col-lg-8 my-auto">
                 <div class="col-lg-12">人物資訊:<?=$value['people_info']?></div>
@@ -75,15 +87,16 @@
   function search(){
     var keyword = $("#keyword").val();
     var page = $("#page").val();
+    var search_type = $("#search_type").val();
     if(keyword != '' && page >0){
-      $('#keyword_search').attr('action',"<?php echo Yii::app()->createUrl('site/search');?>/" + keyword + "/" + page);
+      $('#keyword_search').attr('action',"<?php echo Yii::app()->createUrl('site/search');?>/" + keyword + "/" + page + "/" + search_type);
       $('#keyword_search').submit();
     }   
   }
-  function open_image_info(single_id){
+  function open_image_info(single_id,search_type){
     $.fancybox.open({
       type: 'iframe',
-      src: '<?= Yii::app()->createUrl('site/ImageInfo');?>/'+single_id,
+      src: '<?= Yii::app()->createUrl('site/ImageInfo');?>/'+single_id+'/'+search_type,
       toolbar  : false,
       smallBtn : true,
       iframe : {
@@ -116,8 +129,9 @@
         slidesToScroll: 1
     });
     if (localStorage.getItem("single_id") != null) {
-      open_image_info(localStorage.getItem("single_id"));
+      open_image_info(localStorage.getItem("single_id"),localStorage.getItem("search_type"));
       localStorage.removeItem("single_id");
+      localStorage.removeItem("search_type");
     }
     if (localStorage.getItem("page") != null) {
       localStorage.removeItem("page");

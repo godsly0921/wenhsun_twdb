@@ -71,6 +71,7 @@ class VideoController extends Controller
 	            if ($return == 0) {
 	            	$inputs['length'] = round($output[0]);
 	            	$inputs['m3u8_url'] = $this->m3u8_url_create($video_show_path,$uuid_name);
+	            	$inputs['uuid_name'] = $uuid_name;
 	            }
 	        }
 			$model->attributes = $inputs;
@@ -94,6 +95,8 @@ class VideoController extends Controller
 		if(!is_dir($m3u8_path)) {
 			mkdir($m3u8_path, 0777, true);
 		}
+		$cmd_jpg_string = "ffmpeg -ss 00:00:01 -i '" . $path . "' -vframes 1 '" . $m3u8_path . "/" . $uuid_name . ".jpg'";
+		exec($cmd_jpg_string,$output,$return);
 		$cmd_string = "ffmpeg -i '" . $path . "' -c:v libx264 -c:a aac -strict -2 -f hls -hls_list_size 0 -hls_time 2 '" . $m3u8_path . "/" . $uuid_name . ".m3u8'";
 		exec($cmd_string,$output,$return);
 		return $uuid_name . "/" . $uuid_name . ".m3u8";
@@ -129,6 +132,7 @@ class VideoController extends Controller
 	            if ($return == 0) {
 	            	$inputs['length'] = round($output[0]);
 	            	$inputs['m3u8_url'] = $this->m3u8_url_create($video_show_path,$uuid_name);
+	            	$inputs['uuid_name'] = $uuid_name;
 	            }
 	        }
 			$inputs['update_at'] = date("Y-m-d H:i:s");

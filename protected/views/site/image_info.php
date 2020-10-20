@@ -385,6 +385,7 @@
 		?>
 			localStorage.setItem("page",window.parent.$("#page").val());
 			localStorage.setItem("single_id","<?=$_GET['id']?>");
+			localStorage.setItem("search_type","<?=$_GET['search_type']?>");
 			parent.location.href="<?=Yii::app()->createUrl('site/login')?>";
         <?php }else{?>
 			if($('#download_method').attr('data-download_method')==1){
@@ -409,6 +410,7 @@
 		?>
 			localStorage.setItem("page",window.parent.$("#page").val());
 			localStorage.setItem("single_id","<?=$_GET['id']?>");
+			localStorage.setItem("search_type","<?=$_GET['search_type']?>");
 			localStorage.setItem("add_favorite","true");
 			parent.location.href="<?=Yii::app()->createUrl('site/login')?>";
         <?php }else{?>
@@ -418,6 +420,7 @@
 		        dataType: "json",  
 		        data: {
 		        	single_id: "<?=$photograph_data['photograph_info']['single_id']?>",
+		        	search_type:"<?=$_GET['search_type']?>"
 		        }, 
 		        success: function(data) {
 		            if(!data.status){

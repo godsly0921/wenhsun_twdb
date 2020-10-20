@@ -66,7 +66,133 @@ class SiteService
         }
         return $filter;
     }
+    /*
+    $book_filter = array(
+        "keyword" => $keyword,
+        "author_id" => $author_id, // 作家
+        "publish_unit_id" => $publish_unit_id, // 出版單位
+        "book_category_id" => $book_category_id, // 作品分類
+        "publish_year_s" => $publish_year_s, // 出版區間 - 年(開始)
+        "publish_month_s" => $publish_month_s, // 出版區間 - 月(開始)
+        "publish_day_s" => $publish_day_s, // 出版區間 - 日(開始)
+        "publish_year_e" => $publish_year_e, // 出版區間 - 年(結束)
+        "publish_month_e" => $publish_month_e, // 出版區間 - 月(結束)
+        "publish_day_e" => $publish_day_e, // 出版區間 - 日(結束)
+        "book_size" => $book_size, // 開本規格
+        "series" => $series // 叢書名
+    );
+    */
+    public function storeFindBookFilter($book_filter){
+        // 關鍵字搜尋
+        if( $book_filter["keyword"] != '' ){
+            $explode_keyword = explode(',', $book_filter["keyword"]);
+            //$store_filter['keyword'] = array( '$all' => $explode_keyword ); 
+            $store_filter['$or'] = array(
+                array('keyword'=>array( '$in' => $explode_keyword )),
+                // array('book_num'=>array( '$regex' => $explode_keyword )),
+                // array('summary'=>array( '$regex' => $explode_keyword )),
+                // array('memo'=>array( '$regex' => $explode_keyword )),
+                array('sub_author_name'=>array( '$in' => $explode_keyword ))
+                // array('author_name'=>array( '$regex' => $explode_keyword ))
+            );
+            foreach ($explode_keyword as $key => $value) {
+                $store_filter['$or'][]=array('book_num'=>array('$regex' => $value));
+                $store_filter['$or'][]=array('summary'=>array('$regex' => $value));
+                $store_filter['$or'][]=array('memo'=>array('$regex' => $value));
+                $store_filter['$or'][]=array('author_name'=>array('$regex' => $value));
+            }
+        }
+        // book_category_id 作品分類
+        if( $book_filter["book_category_id"] != '' ){
+            $explode_book_category_id = explode(',', $book_filter["book_category_id"]);
+            $store_filter['category'] = array( '$all' => $explode_book_category_id );
+        }     
+        // author_id 作家
+        if( $book_filter["author_id"] != '' ){
+            $store_filter['author_id'] = $book_filter["author_id"];
+        } 
+        // publish_unit_id 出版單位
+        if( $book_filter["publish_unit_id"] != '' ){
+            $store_filter['publish_organization'] = $book_filter["publish_unit_id"];
+        } 
+        // book_size 開本規格
+        if( $book_filter["book_size"] != '' ){
+            $store_filter['book_size'] = $book_filter["book_size"];
+        } 
+        // series 叢書名
+        if( $book_filter["series"] != '' ){
+            $store_filter['series'] = $book_filter["series"];
+        } 
+        // 出版區間 - 年(開始)
+        if( $book_filter["publish_year_s"] != '' ){
+            $store_filter['$and']["publish_year"]["$gte"] = $book_filter["publish_year_s"];
+        }
+        // 出版區間 - 月(開始)
+        if( $book_filter["publish_month_s"] != '' ){
+            $store_filter['$and']["publish_month"]["$gte"] = $book_filter["publish_month_s"];
+        }
+        // 出版區間 - 日(開始)
+        if( $book_filter["publish_day_s"] != '' ){
+            $store_filter['$and']["publish_day"]["$gte"] = $book_filter["publish_day_s"];
+        }
 
+        // 出版區間 - 年(結束)
+        if( $book_filter["publish_year_e"] != '' ){
+            $store_filter['$and']["publish_year"]["$lte"] = $book_filter["publish_year_e"];
+        }
+        // 出版區間 - 月(結束)
+        if( $book_filter["publish_month_e"] != '' ){
+            $store_filter['$and']["publish_month"]["$lte"] = $book_filter["publish_month_e"];
+        }
+        // 出版區間 - 日(結束)
+        if( $book_filter["publish_day_e"] != '' ){
+            $store_filter['$and']["publish_day"]["$lte"] = $book_filter["publish_day_e"];
+        }
+        // 狀態是已上架
+        $filter['$and'] = array(array('status' => '1'));
+        // 組合所有搜尋條件
+        foreach ($store_filter as $key => $value) {
+            array_push($filter['$and'], array($key=>$value));
+        }
+        return $filter;
+    }
+
+    /*
+    $book_filter = array(
+        "keyword" => $keyword,
+        "video_extension" => $video_extension,
+        "video_category_id" => $video_category_id // 作品分類
+    );
+    */
+    public function storeFindVideoFilter($video_filter){
+        // 關鍵字搜尋
+        if( $video_filter["keyword"] != '' ){
+            $explode_keyword = explode(',', $video_filter["keyword"]);
+            $store_filter['$or'] = array(
+                array('name'=>array( '$in' => $explode_keyword ))
+            );
+            foreach ($explode_keyword as $key => $value) {
+                $store_filter['$or'][]=array('description'=>array('$regex' => $value));
+            }
+        }
+        // book_size 開本規格
+        if( $video_filter["video_category_id"] != '' ){
+            $explode_video_category_id = explode(',', $video_filter["video_category_id"]);
+            $store_filter['category'] = array( '$all' => $explode_video_category_id );
+        }     
+        // video_extension 原始格式
+        if( $video_filter["video_extension"] != '' ){
+            $store_filter['extension'] = $video_filter["video_extension"];
+        } 
+
+        // 狀態是已上架
+        $filter['$and'] = array(array('status' => '1'));
+        // 組合所有搜尋條件
+        foreach ($store_filter as $key => $value) {
+            array_push($filter['$and'], array($key=>$value));
+        }
+        return $filter;
+    }
 	public function findPhotoCount($single_id, $keyword, $category_id, $filming_date, $object_name){
 		$filter = $option = $result = array();
         $total_result = 0;
@@ -83,6 +209,41 @@ class SiteService
         }
         return $total_result;
 	}
+
+    public function findBookCount($book_filter){
+        $filter = $option = $result = array();
+        $total_result = 0;
+        $mongo = new Mongo();
+        $cmd = [
+            'count' => "book",
+            'query' => $this->storeFindBookFilter($book_filter)
+        ];
+
+        //$option['projection'] = array('single_id'=>1,'people_info'=>1,'object_name'=>1,'filming_date'=>1,'filming_location'=>1,'keyword'=>1);
+        $result = $mongo->command('wenhsun', $cmd)->toArray();
+        if (!empty($result)) {
+            $total_result = $result[0]->n;
+        }
+        return $total_result;
+    }
+
+    public function findVideoCount($video_filter){
+        $filter = $option = $result = array();
+        $total_result = 0;
+        $mongo = new Mongo();
+        $cmd = [
+            'count' => "video",
+            'query' => $this->storeFindVideoFilter($video_filter)
+        ];
+
+        //$option['projection'] = array('single_id'=>1,'people_info'=>1,'object_name'=>1,'filming_date'=>1,'filming_location'=>1,'keyword'=>1);
+        $result = $mongo->command('wenhsun', $cmd)->toArray();
+        if (!empty($result)) {
+            $total_result = $result[0]->n;
+        }
+        return $total_result;
+    }
+
     public function findPhoto($single_id, $keyword, $category_id, $filming_date, $object_name, $page, $limit){
         $filter = $option = $result = array();
         $mongo = new Mongo();
@@ -91,6 +252,27 @@ class SiteService
         $option['skip'] = ($page-1)*$limit;
         $option['limit'] = $limit;
         $result = $mongo->search_record('wenhsun', 'single', $filter, $option);
+        return iterator_to_array($result);
+    }
+
+    public function findBook($book_filter, $page, $limit){
+        $filter = $option = $result = array();
+        $mongo = new Mongo();
+        $filter = $this->storeFindBookFilter($book_filter);
+        $option['projection'] = array('book_id'=>1,'single_id'=>1,'book_name'=>1);
+        $option['skip'] = ($page-1)*$limit;
+        $option['limit'] = $limit;
+        $result = $mongo->search_record('wenhsun', 'book', $filter, $option);
+        return iterator_to_array($result);
+    }
+    public function findVideo($video_filter, $page, $limit){
+        $filter = $option = $result = array();
+        $mongo = new Mongo();
+        $filter = $this->storeFindVideoFilter($video_filter);
+        $option['projection'] = array('video_id'=>1,'m3u8_url'=>1,'name'=>1,'uuid_name'=>1);
+        $option['skip'] = ($page-1)*$limit;
+        $option['limit'] = $limit;
+        $result = $mongo->search_record('wenhsun', 'video', $filter, $option);
         return iterator_to_array($result);
     }
 
@@ -176,6 +358,78 @@ class SiteService
         ->where('copyright=:copyright and publish=:publish and object_name != ""', array(':copyright'=>1,':publish'=>1))
         ->queryAll();
         return $distinct_object_name;
+    }
+
+    public function findBookDetail($id){
+        $data = array();
+        $sql = "SELECT 
+            b.book_id, 
+            b.single_id,
+            b.book_num,
+            b.category,
+            b.book_name,
+            b.publish_year,
+            b.publish_month,
+            b.publish_day,
+            b.book_version,
+            b.book_pages,
+            b.summary,
+            ba.name as author_name,
+            CASE WHEN b.sub_author_id IS NOT NULL 
+                THEN (SELECT GROUP_CONCAT(name) AS sub_author_name FROM book_author WHERE author_id IN(b.sub_author_id))
+                ELSE ''
+            END AS sub_author_name,
+            bpp.name as publish_place,
+            bpu.name as publish_organization,
+            bs.name as book_size,
+            bss.name as series
+            FROM `book` b 
+            LEFT JOIN book_author ba ON b.author_id=ba.author_id
+            LEFT JOIN book_publish_place bpp ON b.publish_place=bpp.publish_place_id
+            LEFT JOIN book_publish_unit bpu ON b.publish_organization=bpu.publish_unit_id
+            LEFT JOIN book_size bs ON b.book_size=bs.book_size_id
+            LEFT JOIN book_series bss ON b.series=bss.book_series_id
+            WHERE b.book_id=" . $id;
+        $data = Yii::app()->db->createCommand($sql)->queryrow();
+        // var_dump($sql);exit();
+        if($data){
+            $category_sql = 'SELECT a.name as child_name,b.name as parent_name FROM category a join category b on a.parents=b.category_id where a.category_id in('.'"'.$data["category"].'"'.')';
+            $category_result = Yii::app()->db->createCommand($category_sql)->queryAll();
+            $category = array();
+            foreach ($category_result as $category_key => $category_value) {
+                $txt = $category_value['parent_name'] . ' => ' . $category_value['child_name'];
+                array_push($category, $txt);
+            }
+            $data['category_name'] = implode('<br/>', $category);
+        }
+        return $data;
+    }
+    public function findVideoDetail($id){
+        $data = array();
+        $sql = "SELECT 
+            b.video_id, 
+            b.name,
+            b.extension,
+            b.length,
+            b.file_size,
+            b.m3u8_url,
+            b.description,
+            b.category
+            FROM video b
+            WHERE b.video_id=" . $id;
+        $data = Yii::app()->db->createCommand($sql)->queryrow();
+        // var_dump($sql);exit();
+        if($data){
+            $category_sql = 'SELECT a.name as child_name,b.name as parent_name FROM category a join category b on a.parents=b.category_id where a.category_id in('.'"'.$data["category"].'"'.')';
+            $category_result = Yii::app()->db->createCommand($category_sql)->queryAll();
+            $category = array();
+            foreach ($category_result as $category_key => $category_value) {
+                $txt = $category_value['parent_name'] . ' => ' . $category_value['child_name'];
+                array_push($category, $txt);
+            }
+            $data['category_name'] = implode('<br/>', $category);
+        }
+        return $data;
     }
 }
 ?>
