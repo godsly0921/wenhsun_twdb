@@ -132,6 +132,7 @@ class VideoController extends Controller
 	            if ($return == 0) {
 	            	$inputs['length'] = round($output[0]);
 	            	$inputs['m3u8_url'] = $this->m3u8_url_create($video_show_path,$uuid_name);
+	            	$inputs['uuid_name'] = $uuid_name;
 	            }
 	        }
 			$inputs['update_at'] = date("Y-m-d H:i:s");

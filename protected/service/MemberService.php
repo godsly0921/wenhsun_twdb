@@ -1060,24 +1060,29 @@ class MemberService
     public function listMemberFavorite($member_id){
         $data = array();
         if( $member_id != '' ){
-            $sql = "SELECT mf.* FROM `member_favorite` mf INNER JOIN single s on mf.single_id=s.single_id where mf.member_id=".$member_id." and mf.status=1 order by create_time desc";
+            $sql = "(SELECT mf.*,s.single_id as image_id FROM `member_favorite` mf INNER JOIN single s on mf.single_id=s.single_id where mf.member_id=".$member_id." and mf.status=1 and search_type=1 order by create_time desc) union 
+            (SELECT mf.*,b.single_id as image_id FROM `member_favorite` mf INNER JOIN book b on mf.single_id=b.book_id where mf.member_id=".$member_id." and mf.status=1 and search_type=2 and b.status=1 order by create_time desc) union
+            (SELECT mf.*,b.uuid_name as image_id FROM `member_favorite` mf INNER JOIN video b on mf.single_id=b.video_id where mf.member_id=".$member_id." and mf.status=1 and search_type=3 and b.status=1 order by create_time desc)
+            ";
             $data = Yii::app()->db->createCommand($sql)->queryAll();
         }
         return $data;
     }
 
-    public function add_favorite($single_id,$member_id){
+    public function add_favorite($single_id,$member_id,$search_type){
         $data = Memberfavorite::model()->find([
-            'condition' => 'member_id=:member_id and single_id=:single_id',
+            'condition' => 'member_id=:member_id and single_id=:single_id and search_type=:search_type',
             'params' => [
                 ':member_id' => $member_id,
                 ':single_id' => $single_id,
+                ':search_type' => $search_type,
             ]
         ]);
         if(!$data){
             $model = new Memberfavorite();
             $model->member_id = $member_id;
             $model->single_id = $single_id;
+            $model->search_type = $search_type;
             $model->status = 1;
             $model->create_time = date('Y-m-d H:i:s');
             if($model->save()){
@@ -1105,12 +1110,13 @@ class MemberService
             return true;
         }
     }
-    public function remove_favorite($single_id,$member_id){
+    public function remove_favorite($single_id,$member_id,$search_type){
         $data = Memberfavorite::model()->find([
-            'condition' => 'member_id=:member_id and single_id=:single_id',
+            'condition' => 'member_id=:member_id and single_id=:single_id and search_type=:search_type',
             'params' => [
                 ':member_id' => $member_id,
                 ':single_id' => $single_id,
+                ':search_type' => $search_type,
             ]
         ]);
         if($data){

@@ -359,5 +359,77 @@ class SiteService
         ->queryAll();
         return $distinct_object_name;
     }
+
+    public function findBookDetail($id){
+        $data = array();
+        $sql = "SELECT 
+            b.book_id, 
+            b.single_id,
+            b.book_num,
+            b.category,
+            b.book_name,
+            b.publish_year,
+            b.publish_month,
+            b.publish_day,
+            b.book_version,
+            b.book_pages,
+            b.summary,
+            ba.name as author_name,
+            CASE WHEN b.sub_author_id IS NOT NULL 
+                THEN (SELECT GROUP_CONCAT(name) AS sub_author_name FROM book_author WHERE author_id IN(b.sub_author_id))
+                ELSE ''
+            END AS sub_author_name,
+            bpp.name as publish_place,
+            bpu.name as publish_organization,
+            bs.name as book_size,
+            bss.name as series
+            FROM `book` b 
+            LEFT JOIN book_author ba ON b.author_id=ba.author_id
+            LEFT JOIN book_publish_place bpp ON b.publish_place=bpp.publish_place_id
+            LEFT JOIN book_publish_unit bpu ON b.publish_organization=bpu.publish_unit_id
+            LEFT JOIN book_size bs ON b.book_size=bs.book_size_id
+            LEFT JOIN book_series bss ON b.series=bss.book_series_id
+            WHERE b.book_id=" . $id;
+        $data = Yii::app()->db->createCommand($sql)->queryrow();
+        // var_dump($sql);exit();
+        if($data){
+            $category_sql = 'SELECT a.name as child_name,b.name as parent_name FROM category a join category b on a.parents=b.category_id where a.category_id in('.'"'.$data["category"].'"'.')';
+            $category_result = Yii::app()->db->createCommand($category_sql)->queryAll();
+            $category = array();
+            foreach ($category_result as $category_key => $category_value) {
+                $txt = $category_value['parent_name'] . ' => ' . $category_value['child_name'];
+                array_push($category, $txt);
+            }
+            $data['category_name'] = implode('<br/>', $category);
+        }
+        return $data;
+    }
+    public function findVideoDetail($id){
+        $data = array();
+        $sql = "SELECT 
+            b.video_id, 
+            b.name,
+            b.extension,
+            b.length,
+            b.file_size,
+            b.m3u8_url,
+            b.description,
+            b.category
+            FROM video b
+            WHERE b.video_id=" . $id;
+        $data = Yii::app()->db->createCommand($sql)->queryrow();
+        // var_dump($sql);exit();
+        if($data){
+            $category_sql = 'SELECT a.name as child_name,b.name as parent_name FROM category a join category b on a.parents=b.category_id where a.category_id in('.'"'.$data["category"].'"'.')';
+            $category_result = Yii::app()->db->createCommand($category_sql)->queryAll();
+            $category = array();
+            foreach ($category_result as $category_key => $category_value) {
+                $txt = $category_value['parent_name'] . ' => ' . $category_value['child_name'];
+                array_push($category, $txt);
+            }
+            $data['category_name'] = implode('<br/>', $category);
+        }
+        return $data;
+    }
 }
 ?>

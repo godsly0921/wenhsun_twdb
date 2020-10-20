@@ -146,6 +146,7 @@ class SiteController extends CController{
         $categoryService = new BookcategoryService();
         $video_category_data = $categoryService->findCategoryTreeString("2");
         $FK_data = $bookService->getAdvanceFilter_data();
+        // var_dump($video_category_data);exit();
         $this->render('search',array( 'total_result' => $total_result, 'filming_date_range' => $filming_date_range, 'distinct_object_name' => $distinct_object_name, 'category_data' => $category_data,'FK_data'=>$FK_data,'video_category_data'=>$video_category_data ));
     }
 
@@ -153,12 +154,6 @@ class SiteController extends CController{
         $id = isset($_GET['id'])?$_GET['id']:"";
         $search_type = isset($_GET['search_type'])?$_GET['search_type']:"";
         $siteService = new SiteService();
-        $photographService = new PhotographService();
-        $category_service = new CategoryService();
-        $photograph_data = $photographService->findSingleAndSinglesize($id); 
-        $category_data = $category_service->findCategoryMate();
-        $photograph_data['photograph_info']['keyword'] = explode(",", $photograph_data['photograph_info']['keyword']);
-        $same_category = $siteService->findSameCategory($photograph_data['photograph_info']['category_id'],$id);
         $member_point = $member_plan = 0;
         if (!Yii::app() -> user -> isGuest && isset(Yii::app()->session['member_id'])){
             $memberService = new MemberService();
@@ -168,7 +163,28 @@ class SiteController extends CController{
             $member_point = $member->active_point;
             if($memberplan) $member_plan = $memberplan[0]['remain_amount'];
         }
-        $this->render('image_info',array('photograph_data'=>$photograph_data,'category_service'=>$category_service,'same_category'=>$same_category,'member_point'=>$member_point,'member_plan'=>$member_plan));
+        switch ($search_type) {
+            case '1': // 圖庫
+                $photographService = new PhotographService();
+                $category_service = new CategoryService();
+                $photograph_data = $photographService->findSingleAndSinglesize($id); 
+                $category_data = $category_service->findCategoryMate();
+                $photograph_data['photograph_info']['keyword'] = explode(",", $photograph_data['photograph_info']['keyword']);
+                $same_category = $siteService->findSameCategory($photograph_data['photograph_info']['category_id'],$id);
+                $this->render('image_info',array('photograph_data'=>$photograph_data,'category_service'=>$category_service,'same_category'=>$same_category,'member_point'=>$member_point,'member_plan'=>$member_plan));
+                break;
+            case '2': // 書籍
+                $data = $siteService->findBookDetail($id);
+                // var_dump($data);exit();
+                $this->render('book_info',array('data' => $data, 'member_point'=>$member_point,'member_plan'=>$member_plan));
+                break;
+            case '3': // 影片
+                $data = $siteService->findVideoDetail($id);
+                $this->render('video_info',array('data' => $data, 'member_point'=>$member_point,'member_plan'=>$member_plan));
+                break;
+        }
+        
+        
     }
 
     public function ActionDownload_image(){
@@ -384,10 +400,10 @@ class SiteController extends CController{
         $gRecaptchaResponse = $_POST['g-recaptcha-response'];
         $remoteIp = $_SERVER['REMOTE_ADDR'];
         $resp = $recaptcha->verify($gRecaptchaResponse, $remoteIp);
-        if(!$resp->isSuccess()){
-            Yii::app()->session['error_msg'] = '請先證明您不是機器人';
-            $this->redirect(Yii::app()->createUrl('site/login'));
-        }
+        // if(!$resp->isSuccess()){
+        //     Yii::app()->session['error_msg'] = '請先證明您不是機器人';
+        //     $this->redirect(Yii::app()->createUrl('site/login'));
+        // }
         $useridentity = new UserIdentity($input['account'],$input['password']);
         $is_login = $useridentity->authenticate(1);
         if (!$is_login) {
@@ -1105,8 +1121,9 @@ class SiteController extends CController{
         }
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $single_id = $_POST['single_id'];
+            $search_type = $_POST['search_type'];
             $photographService = new MemberService();
-            $add_favorite = $photographService->add_favorite($single_id, Yii::app()->session['member_id']);
+            $add_favorite = $photographService->add_favorite($single_id, Yii::app()->session['member_id'], $search_type);
             if($add_favorite){
                 echo json_encode(array('status'=>true));
             }else{
@@ -1121,8 +1138,9 @@ class SiteController extends CController{
         }
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $single_id = $_POST['single_id'];
+            $search_type = $_POST['search_type'];
             $photographService = new MemberService();
-            $remove_favorite = $photographService->remove_favorite($single_id, Yii::app()->session['member_id']);
+            $remove_favorite = $photographService->remove_favorite($single_id, Yii::app()->session['member_id'],$search_type);
             if($remove_favorite){
                 echo json_encode(array('status'=>true));
             }else{

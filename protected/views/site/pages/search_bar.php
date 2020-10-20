@@ -125,61 +125,11 @@
 		    			</div>
 		    		</div>
 	    		<?php }?>
-	    		<?php if(!empty($FK_data['publish_year'])){?>
-    				<div class="row my-3">
-		    			<div class="col-lg-2 my-auto">出版區間 - 年(開始)</div>
-		    			<div class="col-lg-2">
-		    				<select class="form-control"  id="publish_year_s" name="publish_year_s">
-				                <option value="">請選擇</option>
-				                <?php foreach ($FK_data['publish_year'] as $value){?>
-				                	<option value="<?=$value['publish_year']?>"><?=$value['publish_year']?></option>
-				                <?php }?>
-				            </select>
-		    			</div>
-		    			<div class="col-lg-2 my-auto">出版區間 - 月(開始)</div>
-		    			<div class="col-lg-2">
-		    				<select class="form-control"  id="publish_month_s" name="publish_month_s">
-				                <option value="">請選擇</option>
-				            </select>
-		    			</div>
-		    			<div class="col-lg-2 my-auto">出版區間 - 日(開始)</div>
-		    			<div class="col-lg-2">
-		    				<select class="form-control"  id="publish_day_s" name="publish_day_s">
-				                <option value="">請選擇</option>
-				            </select>
-		    			</div>
-		    		</div>
-	    		<?php }?>
-	    		<?php if(!empty($FK_data['publish_year'])){?>
-    				<div class="row my-3">
-		    			<div class="col-lg-2 my-auto">出版區間 - 年(結束)</div>
-		    			<div class="col-lg-2">
-		    				<select class="form-control"  id="publish_year_e" name="publish_year_e">
-				                <option value="">請選擇</option>
-				                <?php foreach ($FK_data['publish_year'] as $value){?>
-				                	<option value="<?=$value['publish_year']?>"><?=$value['publish_year']?></option>
-				                <?php }?>
-				            </select>
-		    			</div>
-		    			<div class="col-lg-2 my-auto">出版區間 - 月(結束)</div>
-		    			<div class="col-lg-2">
-		    				<select class="form-control"  id="publish_month_e" name="publish_month_e">
-				                <option value="">請選擇</option>
-				            </select>
-		    			</div>
-		    			<div class="col-lg-2 my-auto">出版區間 - 日(結束)</div>
-		    			<div class="col-lg-2">
-		    				<select class="form-control"  id="publish_day_e" name="publish_day_e">
-				                <option value="">請選擇</option>
-				            </select>
-		    			</div>
-		    		</div>
-	    		<?php }?>
-	    		<?php if(!empty($FK_data['book_size']) || !empty($FK_data['series'])){?>
+	    		<?php if(!empty($FK_data['book_size']) || !empty($FK_data['book_series'])){?>
 	    			<div class="row my-3">
 	    				<?php if(!empty($FK_data['book_size'])){?>
-		    				<div class="col-lg-2 my-auto">開本規格</div>
-			    			<div class="col-lg-4">
+		    				<div class="col-lg-3 my-auto">開本規格</div>
+			    			<div class="col-lg-3">
 			    				<select class="form-control selectpicker"  id="book_size" name="book_size" data-live-search="true">
 					                <option value="">請選擇</option>
 					                <?php foreach ($FK_data['book_size'] as $value){?>
@@ -188,12 +138,12 @@
 					            </select>
 			    			</div>
 		    			<?php }?>
-		    			<?php if(!empty($FK_data['series'])){?>
-			    			<div class="col-lg-2 my-auto">叢書名</div>
-			    			<div class="col-lg-4">
+		    			<?php if(!empty($FK_data['book_series'])){?>
+			    			<div class="col-lg-3 my-auto">叢書名</div>
+			    			<div class="col-lg-3">
 			    				<select class="form-control selectpicker"  id="series" name="series" data-live-search="true">
 					                <option value="">請選擇</option>
-					                <?php foreach ($FK_data['series'] as $value){?>
+					                <?php foreach ($FK_data['book_series'] as $value){?>
 					                	<option value="<?=$value['book_series_id']?>" data-tokens="<?=$value['book_series_id'] . '-' . $value['name']?>"><?=$value['name']?></option>
 					                <?php }?>
 					            </select>
@@ -201,6 +151,63 @@
 		    			<?php }?>
 	    			</div>
 	    		<?php }?>	
+	    		<?php if(!empty($FK_data['publish_year'])){?>
+    				<div class="row my-3">
+		    			<div class="col-lg-3 my-auto">出版區間 - 年(開始)</div>
+		    			<div class="col-lg-3">
+		    				<select class="form-control"  id="publish_year_s" name="publish_year_s">
+				                <option value="">請選擇</option>
+				                <?php foreach ($FK_data['publish_year'] as $value){?>
+				                	<option value="<?=$value['publish_year']?>"><?=$value['publish_year']?></option>
+				                <?php }?>
+				            </select>
+		    			</div>
+		    			<div class="col-lg-3 my-auto">出版區間 - 月(開始)</div>
+		    			<div class="col-lg-3">
+		    				<select class="form-control"  id="publish_month_s" name="publish_month_s">
+				                <option value="">請選擇</option>
+				                <?php for ($i=1; $i <=12 ; $i++) { ?>
+				                	<option value="<?=$i?>"><?=$i?></option>
+				                <?php }?>
+				            </select>
+		    			</div>
+		    			<!-- <div class="col-lg-2 my-auto">出版區間 - 日(開始)</div>
+		    			<div class="col-lg-2">
+		    				<select class="form-control"  id="publish_day_s" name="publish_day_s">
+				                <option value="">請選擇</option>
+				            </select>
+		    			</div> -->
+		    		</div>
+	    		<?php }?>
+	    		<?php if(!empty($FK_data['publish_year'])){?>
+    				<div class="row my-3">
+		    			<div class="col-lg-3 my-auto">出版區間 - 年(結束)</div>
+		    			<div class="col-lg-3">
+		    				<select class="form-control"  id="publish_year_e" name="publish_year_e">
+				                <option value="">請選擇</option>
+				                <?php foreach ($FK_data['publish_year'] as $value){?>
+				                	<option value="<?=$value['publish_year']?>"><?=$value['publish_year']?></option>
+				                <?php }?>
+				            </select>
+		    			</div>
+		    			<div class="col-lg-3 my-auto">出版區間 - 月(結束)</div>
+		    			<div class="col-lg-3">
+		    				<select class="form-control"  id="publish_month_e" name="publish_month_e">
+				                <option value="">請選擇</option>
+				                <?php for ($i=1; $i <=12 ; $i++) { ?>
+				                	<option value="<?=$i?>"><?=$i?></option>
+				                <?php }?>
+				            </select>
+		    			</div>
+		    			<!-- <div class="col-lg-2 my-auto">出版區間 - 日(結束)</div>
+		    			<div class="col-lg-2">
+		    				<select class="form-control"  id="publish_day_e" name="publish_day_e">
+				                <option value="">請選擇</option>
+				            </select>
+		    			</div> -->
+		    		</div>
+	    		<?php }?>
+	    		
 			</div>
 			<div id="search_type_3" class="<?=$_GET['search_type'] == '3'?'d-block':'d-none'?>">
 				<?php if(!empty($FK_data['video_extension'])){?>

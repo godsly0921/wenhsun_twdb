@@ -216,8 +216,10 @@
 		var search_type = "<?=$_GET['search_type']?>";
 		switch(search_type) {
 			case '1':
-			case '2':
 				html = '<div onclick="open_image_info(\''+value.single_id+'\',\''+search_type+'\')" style="cursor:pointer;"><img src="<?= Yii::app()->createUrl('/'). "/" .PHOTOGRAPH_STORAGE_URL?>'+value.single_id+'.jpg"><div>';
+				break;
+			case '2':
+				html = '<div onclick="open_image_info(\''+value.book_id+'\',\''+search_type+'\')" style="cursor:pointer;"><img src="<?= Yii::app()->createUrl('/'). "/" .PHOTOGRAPH_STORAGE_URL?>'+value.single_id+'.jpg"><div>';
 				break;
 			case '3':
 				html = '<div onclick="open_image_info(\''+value.video_id+'\',\''+search_type+'\')" style="cursor:pointer;"><img src="<?= Yii::app()->createUrl('/'). "/" .M3U8_STORAGE_URL. "/m3u8/"?>'+value.uuid_name+'/'+ value.uuid_name + '.jpg"><div>';
