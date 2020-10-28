@@ -223,15 +223,6 @@
 		    			</div>
 		    		</div>
 	    		<?php }?>
-				<?php if(!empty($video_category_data)){?>
-    				<div class="row my-3">
-		    			<div class="col-lg-2 my-auto">作品分類</div>
-		    			<div class="col-lg-10">
-		    				<input type="hidden" id="video_category_id" name="video_category_id" value="<?=isset($_GET["video_category_id"])?$_GET["video_category_id"]:''?>">
-        					<div id="tree_3"></div>
-		    			</div>
-		    		</div>
-	    		<?php }?>
 			</div>
     	</div>
     </div>
