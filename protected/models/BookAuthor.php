@@ -35,13 +35,18 @@ class BookAuthor extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('name, birthday, summary, last_updated_user', 'required'),
-			array('status, last_updated_user', 'numerical', 'integerOnly'=>true),
-			array('name', 'length', 'max'=>128),
-			array('gender', 'length', 'max'=>1),
-			array('memo, create_at, update_at, delete_at', 'safe'),
+			array('status, last_updated_user', 'numerical', 'integerOnly' => true),
+			array('name', 'length', 'max' => 128),
+			array('gender', 'length', 'max' => 1),
+			array('original_name, hometown', 'length', 'max' => 10),
+			array('birth_year, year_of_death, year_of_day', 'length', 'max' => 4),
+			array('birth_month, bitrh_day, year_of_month', 'length', 'max' => 2),
+			array('arrive_time', 'length', 'max' => 50),
+			array('pen_name, literary_genre', 'length', 'max' => 20),
+			array('memo, create_at, update_at, delete_at, delete_at, experience, literary_style, literary_achievement, present_job, brief_intro', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('author_id, name, birthday, gender, summary, memo, create_at, update_at, delete_at, status, last_updated_user', 'safe', 'on'=>'search'),
+			array('author_id, name, birthday, gender, summary, memo, create_at, update_at, delete_at, status, last_updated_user, original_name, hometown, birth_year, birth_month, bitrh_day', 'safe', 'on'=>'search'),
 			array('birthday', 'type', 'type' => 'date', 'message' => '{attribute}: is not a date!', 'dateFormat' => 'yyyy-MM-dd')
 		);
 	}

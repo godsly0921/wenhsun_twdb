@@ -719,5 +719,165 @@ class ApiController extends CController{
 		echo $response;
 		exit();
 	}
+
+	public function ActionGetAuthor()
+	{
+		$params = $this->getparams();
+		try {
+			$check_commmon = $this->check_common($params['body']);
+			if (!$check_commmon['result']) {
+				$response = $this->setresponse(
+					$params,
+					$check_commmon
+				);
+			} else {
+				$size = (int) $params['body']['size'];
+				$page = (int) $params['body']['page'];
+				$query = Yii::app()->db->createCommand();
+				$authors = $query->select('*')
+					->from('book_author')
+					->order('author_id ASC')
+					->limit($size, $page)
+					->queryAll();
+				$this->output = $authors;
+				if (!empty($this->output)) {
+					$response = $this->setresponse(
+						$params,
+						[
+							'result' => true,
+							'code' => SUCCESS_GEL_NO,
+							'msg' => SUCCESS_GEL_MSG,
+							'content' => $this->output
+						]
+					);
+				} else {
+					$response = $this->setresponse(
+						$params,
+						[
+							'result' => true,
+							'code' => SUCCESS_EMPTYERR_NO,
+							'msg' => SUCCESS_EMPTYERR_MSG,
+							'content' => ''
+						]
+					);
+				}
+			}
+		} catch (Exception $e) {
+			$response = $this->setresponse(
+				$params,
+				array(
+					'result' => false,
+					'code' => ERROR_SERVER_NO,
+					'msg' => ERROR_SERVER_MSG,
+					'content' => $this->output
+				)
+			);
+			Yii::log(date("Y-m-d H:i:s") . ' VerifyToken false。error message => ' . $e->getMessage(), CLogger::LEVEL_INFO);
+		}
+		echo $response;
+		exit;
+	}
+
+	public function ActionGetAuthorDetail()
+	{
+		$params = $this->getparams();
+		try {
+			$check_commmon = $this->check_common($params['body']);
+			if (!$check_commmon['result']) {
+				$response = $this->setresponse(
+					$params,
+					$check_commmon
+				);
+			} else {
+				$author = BookAuthor::model()->findByPk($params['body']['author_id']);
+				$output = [];
+				if (!empty($author)) {
+					// $siteService = new SiteService();
+					// $subfix = '作者教學資源';
+					//$image = $siteService->findPhoto('', $author->name . $subfix, '', '', '', '', '');
+					$image = [];
+					$event = EventList::model()->findAll(
+						[
+							'condition' => 'author_id = :author_id',
+							'params' => [
+								':author_id' => $params['body']['author_id']
+							]
+						]
+					);
+					$book = Book::model()->findAll(
+						[
+							'condition' => 'author_id = :author_id',
+							'params' => [
+								':author_id' => $params['body']['author_id']
+							]
+						]
+					);
+					$output[]['image'] = $image;
+					$output[]['author'] = $this->objectToArray($author);
+					$output[]['event'] = $this->objectsToArray($event);
+					$output[]['book'] = $this->objectsToArray($book);
+					$this->output = $output;
+					$response = $this->setresponse(
+						$params,
+						[
+							'result' => true,
+							'code' => SUCCESS_GEL_NO,
+							'msg' => SUCCESS_GEL_MSG,
+							'content' => $this->output
+						]
+					);
+				} else {
+					$response = $this->setresponse(
+						$params,
+						[
+							'result' => true,
+							'code' => SUCCESS_EMPTYERR_NO,
+							'msg' => SUCCESS_EMPTYERR_MSG,
+							'content' => ''
+						]
+					);
+				}
+			}
+		} catch (Exception $e) {
+			$response = $this->setresponse(
+				$params,
+				array(
+					'result' => false,
+					'code' => ERROR_SERVER_NO,
+					'msg' => ERROR_SERVER_MSG,
+					'content' => $this->output
+				)
+			);
+			Yii::log(date("Y-m-d H:i:s") . ' VerifyToken false。error message => ' . $e->getMessage(), CLogger::LEVEL_INFO);
+		}
+		echo $response;
+		exit;
+	}
+
+	private function objectsToArray($obj)
+	{
+		$arr = [];
+		$i = 0;
+		foreach ($obj as $value) {
+			foreach($value as $k => $v) {
+				$arr[$i][$k] = $v;
+			}
+			$i++;
+		}
+
+		return $arr;
+	}
+
+	private function objectToArray($obj)
+	{
+		$arr = [];
+		$i = 0;
+		foreach ($obj as $k => $v) {
+			$arr[$i][$k] = $v;
+		}
+		$i++;
+
+		return $arr;
+	}
 }
 ?>
