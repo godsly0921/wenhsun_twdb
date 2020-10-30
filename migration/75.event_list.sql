@@ -1,6 +1,6 @@
 CREATE TABLE `wenhsun`.`event_list` (
     `id` INT NOT NULL AUTO_INCREMENT ,
-    `author_id` INT NOT NULL COMMENT '作者 id';
+    `author_id` INT NOT NULL COMMENT '作者 id',
     `year` CHAR(4) NOT NULL DEFAULT '' COMMENT '年' ,
     `month` CHAR(2) NOT NULL DEFAULT '' COMMENT '月' ,
     `day` CHAR(2) NOT NULL DEFAULT '' COMMENT '日' ,

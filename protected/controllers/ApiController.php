@@ -733,12 +733,9 @@ class ApiController extends CController{
 			} else {
 				$size = (int) $params['body']['size'];
 				$page = (int) $params['body']['page'];
-				$query = Yii::app()->db->createCommand();
-				$authors = $query->select('*')
-					->from('book_author')
-					->order('author_id ASC')
-					->limit($size, $page)
-					->queryAll();
+				$keyword = (string) $params['body']['keyword'];
+				$siteService = new ApiService();
+				$authors = $siteService->findAuthorByKeyword($keyword, $size, $page);
 				$this->output = $authors;
 				if (!empty($this->output)) {
 					$response = $this->setresponse(
@@ -792,30 +789,21 @@ class ApiController extends CController{
 				$author = BookAuthor::model()->findByPk($params['body']['author_id']);
 				$output = [];
 				if (!empty($author)) {
-					// $siteService = new SiteService();
-					// $subfix = '作者教學資源';
-					//$image = $siteService->findPhoto('', $author->name . $subfix, '', '', '', '', '');
-					$image = [];
-					$event = EventList::model()->findAll(
-						[
-							'condition' => 'author_id = :author_id',
-							'params' => [
-								':author_id' => $params['body']['author_id']
-							]
-						]
-					);
-					$book = Book::model()->findAll(
-						[
-							'condition' => 'author_id = :author_id',
-							'params' => [
-								':author_id' => $params['body']['author_id']
-							]
-						]
-					);
+					$apiservice = new ApiService();
+					$siteService = new SiteService();
+					$subfix = '作者教學資源';
+					$image = $siteService->findPhoto('', $author->name . $subfix, '', '', '', '0', '0');
+					// $image = [];
+					// 作者年表
+					$event = $apiservice->findAuthorEvent($params['body']['author_id']);
+					// 作者書籍
+					$book = $apiservice->findAuthorBook($params['body']['author_id']);
+
 					$output[]['image'] = $image;
 					$output[]['author'] = $this->objectToArray($author);
-					$output[]['event'] = $this->objectsToArray($event);
-					$output[]['book'] = $this->objectsToArray($book);
+					$output[]['event'] = $event;
+					$output[]['book'] = $book;
+					// var_dump($output);exit();
 					$this->output = $output;
 					$response = $this->setresponse(
 						$params,
