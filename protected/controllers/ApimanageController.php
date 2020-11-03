@@ -126,6 +126,7 @@ class ApimanageController extends Controller{
 				"api_password" => bin2hex(random_bytes(8)),
 				"status" => 1,
 				"remark" => "",
+                "isNeedToken" => 1,
 			);
 			$this->render('apimanage_create',array( 'data' => $data ));
 		}

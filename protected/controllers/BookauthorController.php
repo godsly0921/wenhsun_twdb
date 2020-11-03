@@ -24,10 +24,9 @@ class BookauthorController extends Controller
 			echo "<script>alert('此 id = " . $id . " 已不存在');window.location.href = '".Yii::app()->createUrl(Yii::app()->controller->id.'/admin')."';</script>";
 		}else{
 			$this->render('view',array(
-				'model'=>$model,
+				'model'=>$this->loadModel($id),
 			));
 		}
-		
 	}
 
 	/**
@@ -42,18 +41,12 @@ class BookauthorController extends Controller
 		// $this->performAjaxValidation($model);
 
 		if(isset($_POST['BookAuthor']))
-		{	
-			$inputs = $_POST['BookAuthor'];
-			$inputs['create_at'] = date("Y-m-d H:i:s");
-			$inputs['last_updated_user'] = Yii::app()->session['uid'];
-			$model->attributes = $inputs;
-			if($model->save()){
-				$mongo = new Mongo();
-				$inputs['author_id'] = $model->author_id;
-				$mongo->insert_record('wenhsun', 'book_author', $inputs);
+		{
+			$model->attributes=$_POST['BookAuthor'];
+			if($model->save())
 				$this->redirect(array('view','id'=>$model->author_id));
-			}
 		}
+
 		$this->render('create',array(
 			'model'=>$model,
 		));
@@ -72,18 +65,10 @@ class BookauthorController extends Controller
 		// $this->performAjaxValidation($model);
 
 		if(isset($_POST['BookAuthor']))
-		{	
-			$inputs = $_POST['BookAuthor'];
-			$inputs['update_at'] = date("Y-m-d H:i:s");
-			$inputs['last_updated_user'] = Yii::app()->session['uid'];
-			$model->attributes = $inputs;
-			if($model->save()){
-				$mongo = new Mongo();
-				$update_find = array('author_id'=>$id);
-				$update_input = array('$set' => $inputs);
-            	$mongo->update_record('wenhsun', 'book_author', $update_find, $update_input);
+		{
+			$model->attributes=$_POST['BookAuthor'];
+			if($model->save())
 				$this->redirect(array('view','id'=>$model->author_id));
-			}
 		}
 
 		$this->render('update',array(
@@ -98,21 +83,8 @@ class BookauthorController extends Controller
 	 */
 	public function actionDelete($id)
 	{
-		$model=$this->loadModel($id);
-		if($model){
-			$inputs = array();
-			$inputs['status'] = -1;
-			$inputs['update_at'] = date("Y-m-d H:i:s");
-			$inputs['delete_at'] = date("Y-m-d H:i:s");
-			$inputs['last_updated_user'] = Yii::app()->session['uid'];
-			$model->attributes = $inputs;
-			if($model->save()){
-				$mongo = new Mongo();
-				$update_find = array('author_id'=>$id);
-				$update_input = array('$set' => $inputs);
-	        	$mongo->update_record('wenhsun', 'book_author', $update_find, $update_input);
-			}
-		}
+		$this->loadModel($id)->delete();
+
 		// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
 		if(!isset($_GET['ajax']))
 			$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
@@ -153,10 +125,9 @@ class BookauthorController extends Controller
 	 */
 	public function loadModel($id)
 	{
-		$model=BookAuthor::model()->with('_Account')->findByPk($id);
+		$model=BookAuthor::model()->findByPk($id);
 		if($model===null)
 			echo "<script>alert('此 id = " . $id . " 已不存在');window.location.href = '".Yii::app()->createUrl(Yii::app()->controller->id.'/admin')."';</script>";
-			// throw new CHttpException(404,'The requested page does not exist.');
 		return $model;
 	}
 

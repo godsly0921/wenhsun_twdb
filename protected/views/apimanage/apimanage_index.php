@@ -29,6 +29,7 @@ unset( Yii::app()->session['success_msg'] );
                 <th>API 密碼</th>
                 <th>建立時間</th>
                 <th>狀態</th>
+                <th>是否需要檢查 token</th>
                 <th>備註</th>
                 <th>操作</th>
             </tr>
@@ -41,6 +42,7 @@ unset( Yii::app()->session['success_msg'] );
                         <td><?=$value['api_password']?></td>
                         <td><?=$value['createtime']?></td>
                         <td><?=$value['status']==0?"停用":"啟用"?></td>
+                        <td><?=$value['isNeedToken']==0?"否":"是"?></td>
                         <td><?=$value['remark']?></td>
                         <td>
                             <?php foreach ($session_jsons as $jsons) : ?>

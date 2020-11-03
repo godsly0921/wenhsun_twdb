@@ -46,6 +46,15 @@ unset( Yii::app()->session['success_msg'] );
                 </div>
             </div>
             <div class="form-group">
+                <label for="group_name" class="col-lg-2 control-label">是否需要檢查 token:</label>
+                <div class="col-lg-6">
+                    <select class="form-control" name="isNeedToken">
+                        <option value="1" <?= $data['isNeedToken']==1?"selected":"" ?>>是</option>
+                        <option value="0" <?= $data['isNeedToken']==0?"selected":"" ?>>否</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
                 <label for="group_name" class="col-lg-2 control-label">備註:</label>
                 <div class="col-lg-6">
                     <input type="text" class="form-control" id="remark" name="remark" value="<?=$data['remark']?>">

@@ -1,0 +1,1 @@
+ALTER TABLE `api_manage`  ADD `isNeedToken` INT(1) NOT NULL DEFAULT '1' COMMENT '是否需要檢查 token（0：否 1：是）'  AFTER `remark`;

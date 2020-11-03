@@ -84,7 +84,7 @@ class ApiService{
             }
             $model->status = $input['status'];
             $model->remark = $input['remark'];
-            
+            $model->isNeedToken = $input['isNeedToken'];
             if (!$model->validate()) {
                 return $input;
             }
@@ -261,6 +261,14 @@ class ApiService{
 		if(!empty($author_id)){
 			$sql = "SELECT * FROM book WHERE author_id='" . $author_id . "'";
 			$data = Yii::app()->db->createCommand($sql)->queryAll();
+		}
+		return $data;
+	}
+	function findAuthorById($author_id){
+		$data = array();
+		if(!empty($author_id)){
+			$sql = "SELECT * FROM book_author WHERE author_id='" . $author_id . "'";
+			$data = Yii::app()->db->createCommand($sql)->queryRow();
 		}
 		return $data;
 	}
