@@ -78,24 +78,31 @@ $('.search-form form').submit(function(){
 				'author_id',
 		'name',
 		'birthday',
-		array(  
-			"name" => "gender",
-			"value" => 'Common::getGenderText($data->gender)', // ** 很重要 ** 一定要用單引號不然吃不到變數 $data (地雷)
-		),
-		array(  
-			"name" => "status",
-			"value" => 'Common::getStatusText($data->status)', // ** 很重要 ** 一定要用單引號不然吃不到變數 $data (地雷)
-		),
+		'gender',
 		'summary',
 		'memo',
-		array(  
-			"name" => "last_updated_user",
-			"value" => '$data->_Account->account_name', // ** 很重要 ** 一定要用單引號不然吃不到變數 $data (地雷)
-		),
 		/*
 		'create_at',
 		'update_at',
 		'delete_at',
+		'status',
+		'last_updated_user',
+		'original_name',
+		'hometown',
+		'birth_year',
+		'birth_month',
+		'bitrh_day',
+		'arrive_time',
+		'experience',
+		'literary_style',
+		'literary_achievement',
+		'year_of_death',
+		'year_of_month',
+		'year_of_day',
+		'pen_name',
+		'literary_genre',
+		'present_job',
+		'brief_intro',
 		*/
 				array(
 					'class'=>'CButtonColumn',

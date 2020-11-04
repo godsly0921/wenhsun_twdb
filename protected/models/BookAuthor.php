@@ -15,6 +15,22 @@
  * @property string $delete_at
  * @property integer $status
  * @property integer $last_updated_user
+ * @property string $original_name
+ * @property string $hometown
+ * @property string $birth_year
+ * @property string $birth_month
+ * @property string $bitrh_day
+ * @property string $arrive_time
+ * @property string $experience
+ * @property string $literary_style
+ * @property string $literary_achievement
+ * @property string $year_of_death
+ * @property string $year_of_month
+ * @property string $year_of_day
+ * @property string $pen_name
+ * @property string $literary_genre
+ * @property string $present_job
+ * @property string $brief_intro
  */
 class BookAuthor extends CActiveRecord
 {
@@ -34,15 +50,19 @@ class BookAuthor extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('name, birthday, summary, last_updated_user', 'required'),
+			array('name, birthday, summary, status, last_updated_user', 'required'),
 			array('status, last_updated_user', 'numerical', 'integerOnly'=>true),
 			array('name', 'length', 'max'=>128),
 			array('gender', 'length', 'max'=>1),
-			array('memo, create_at, update_at, delete_at', 'safe'),
+			array('original_name, hometown', 'length', 'max'=>10),
+			array('birth_year, year_of_death, year_of_day', 'length', 'max'=>4),
+			array('birth_month, bitrh_day, year_of_month', 'length', 'max'=>2),
+			array('arrive_time', 'length', 'max'=>50),
+			array('pen_name, literary_genre', 'length', 'max'=>20),
+			array('memo, create_at, update_at, delete_at, experience, literary_style, literary_achievement, present_job, brief_intro', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('author_id, name, birthday, gender, summary, memo, create_at, update_at, delete_at, status, last_updated_user', 'safe', 'on'=>'search'),
-			array('birthday', 'type', 'type' => 'date', 'message' => '{attribute}: is not a date!', 'dateFormat' => 'yyyy-MM-dd')
+			array('author_id, name, birthday, gender, summary, memo, create_at, update_at, delete_at, status, last_updated_user, original_name, hometown, birth_year, birth_month, bitrh_day, arrive_time, experience, literary_style, literary_achievement, year_of_death, year_of_month, year_of_day, pen_name, literary_genre, present_job, brief_intro', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -54,7 +74,6 @@ class BookAuthor extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'_Account' => array(self::BELONGS_TO, 'Account', 'last_updated_user'),
 		);
 	}
 
@@ -67,14 +86,30 @@ class BookAuthor extends CActiveRecord
 			'author_id' => '索引編號',
 			'name' => '作者姓名',
 			'birthday' => '作者生日',
-			'gender' => '作者性別 ( M:男 F:女 )',
+			'gender' => '作者性別',
 			'summary' => '作者簡介',
 			'memo' => 'Memo',
 			'create_at' => '建立時間',
 			'update_at' => '更新時間',
 			'delete_at' => '刪除時間',
-			'status' => '	狀態 ( -1:刪除 0:停用 1:啟用 )',
+			'status' => '狀態 ( -1:刪除 0:停用 1:啟用 )',
 			'last_updated_user' => '最後異動的人',
+			'original_name' => '本名',
+			'hometown' => '籍貫',
+			'birth_year' => '出生年',
+			'birth_month' => '出生月',
+			'bitrh_day' => '出生日',
+			'arrive_time' => '來台時間',
+			'experience' => '學經歷',
+			'literary_style' => '文學風格',
+			'literary_achievement' => '文學成就(得獎經歷)',
+			'year_of_death' => '卒年',
+			'year_of_month' => '卒月',
+			'year_of_day' => '卒日',
+			'pen_name' => '筆名',
+			'literary_genre' => '創作文類',
+			'present_job' => '現職',
+			'brief_intro' => '簡介',
 		);
 	}
 
@@ -107,7 +142,23 @@ class BookAuthor extends CActiveRecord
 		$criteria->compare('delete_at',$this->delete_at,true);
 		$criteria->compare('status',$this->status);
 		$criteria->compare('last_updated_user',$this->last_updated_user);
-		// var_dump($criteria);exit();
+		$criteria->compare('original_name',$this->original_name,true);
+		$criteria->compare('hometown',$this->hometown,true);
+		$criteria->compare('birth_year',$this->birth_year,true);
+		$criteria->compare('birth_month',$this->birth_month,true);
+		$criteria->compare('bitrh_day',$this->bitrh_day,true);
+		$criteria->compare('arrive_time',$this->arrive_time,true);
+		$criteria->compare('experience',$this->experience,true);
+		$criteria->compare('literary_style',$this->literary_style,true);
+		$criteria->compare('literary_achievement',$this->literary_achievement,true);
+		$criteria->compare('year_of_death',$this->year_of_death,true);
+		$criteria->compare('year_of_month',$this->year_of_month,true);
+		$criteria->compare('year_of_day',$this->year_of_day,true);
+		$criteria->compare('pen_name',$this->pen_name,true);
+		$criteria->compare('literary_genre',$this->literary_genre,true);
+		$criteria->compare('present_job',$this->present_job,true);
+		$criteria->compare('brief_intro',$this->brief_intro,true);
+
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
 		));

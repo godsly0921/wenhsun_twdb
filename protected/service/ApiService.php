@@ -84,7 +84,7 @@ class ApiService{
             }
             $model->status = $input['status'];
             $model->remark = $input['remark'];
-            
+            $model->isNeedToken = $input['isNeedToken'];
             if (!$model->validate()) {
                 return $input;
             }
@@ -223,6 +223,53 @@ class ApiService{
 		ini_set('memory_limit', '256M');
 		$sql = "SELECT al.*,am.api_key FROM api_download al LEFT JOIN api_manage am ON al.api_manage_id=am.id WHERE al.status=1";
 		$data = Yii::app()->db->createCommand($sql)->queryAll();
+		return $data;
+	}
+
+	function findAuthorByKeyword($keyword, $limit, $page){
+		$data = array();
+		$total_result = 0;
+		$conditions = "";
+		if(!empty($keyword)){
+			$conditions = " WHERE name LIKE '%" . $keyword . "%' OR original_name LIKE '" . $keyword . "'";
+		}
+		$sql = "SELECT * FROM book_author" . $conditions;
+		if(!empty($limit) && !empty($page)){
+			$sql .= " LIMIT " . ($page-1)*$limit . "," . $limit;
+		}
+		$total_row_sql = "SELECT COUNT(*) as total_result FROM book_author" . $conditions;
+		$total_row = Yii::app()->db->createCommand($total_row_sql)->queryRow();
+		if($total_row){
+			$total_result = $total_row["total_result"];
+		}
+		$data = Yii::app()->db->createCommand($sql)->queryAll();
+
+		return array("total_result" => $total_result, "data" => $data);
+	}
+
+	function findAuthorEvent($author_id){
+		$data = array();
+		if(!empty($author_id)){
+			$sql = "SELECT * FROM event_list WHERE author_id='" . $author_id . "'";
+			$data = Yii::app()->db->createCommand($sql)->queryAll();
+		}
+		return $data;
+	}
+
+	function findAuthorBook($author_id){
+		$data = array();
+		if(!empty($author_id)){
+			$sql = "SELECT * FROM book WHERE author_id='" . $author_id . "'";
+			$data = Yii::app()->db->createCommand($sql)->queryAll();
+		}
+		return $data;
+	}
+	function findAuthorById($author_id){
+		$data = array();
+		if(!empty($author_id)){
+			$sql = "SELECT * FROM book_author WHERE author_id='" . $author_id . "'";
+			$data = Yii::app()->db->createCommand($sql)->queryRow();
+		}
 		return $data;
 	}
 }

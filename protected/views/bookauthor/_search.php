@@ -12,17 +12,7 @@
 	'htmlOptions'=>array(
 		'class'=>'form-horizontal',
     )
-)); 
-$gender = array(
-	"F" => "小姐",
-	"M" => "先生",
-);
-$status = array(
-	// "-1" => "刪除",
-	"1" => "啟用",
-	"0" => "停用",
-);
-?>
+)); ?>
 
 	<div class="form-group">
 		<?php echo $form->label($model,'author_id', array('class'=>'col-sm-3 control-label')); ?>
@@ -48,35 +38,171 @@ $status = array(
 	<div class="form-group">
 		<?php echo $form->label($model,'gender', array('class'=>'col-sm-3 control-label')); ?>
 		<div class="col-sm-8">
-			<?php
-				$this->widget('luckywave.widgets.jui.CJuiDatePicker', array(
-					'model'=>$model,
-					'attribute'=>'birthday',
-			        'value'=>$model->birthday,
-					//additional javascript options for the date picker plugin
-					'options'=>array(
-						'dateFormat'=>'yy-mm-dd',
-						'showAnim'=>'fold',
-			            'debug'=>true,
-						'datepickerOptions'=>array('changeMonth'=>true, 'changeYear'=>true),
-					),
-					'htmlOptions'=>array('class'=>'form-control'),
-				)); 
-			?>
+			<?php echo $form->textField($model,'gender',array('size'=>1,'maxlength'=>1,'class'=>'form-control')); ?>
 		</div>
 	</div>
-	<div class="form-group">
-		<?php echo $form->label($model,'status', array('class'=>'col-sm-3 control-label')); ?>
-		<div class="col-sm-8">
-			<?php echo $form->dropDownList($model,'status', $status, array('class'=>'form-control')); ?>
-		</div>
-	</div>
+
 	<div class="form-group">
 		<?php echo $form->label($model,'summary', array('class'=>'col-sm-3 control-label')); ?>
 		<div class="col-sm-8">
 			<?php echo $form->textArea($model,'summary',array('rows'=>6, 'cols'=>50,'class'=>'form-control')); ?>
 		</div>
 	</div>
+
+	<div class="form-group">
+		<?php echo $form->label($model,'memo', array('class'=>'col-sm-3 control-label')); ?>
+		<div class="col-sm-8">
+			<?php echo $form->textArea($model,'memo',array('rows'=>6, 'cols'=>50,'class'=>'form-control')); ?>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<?php echo $form->label($model,'create_at', array('class'=>'col-sm-3 control-label')); ?>
+		<div class="col-sm-8">
+			<?php echo $form->textField($model,'create_at', array('class'=>'form-control')); ?>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<?php echo $form->label($model,'update_at', array('class'=>'col-sm-3 control-label')); ?>
+		<div class="col-sm-8">
+			<?php echo $form->textField($model,'update_at', array('class'=>'form-control')); ?>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<?php echo $form->label($model,'delete_at', array('class'=>'col-sm-3 control-label')); ?>
+		<div class="col-sm-8">
+			<?php echo $form->textField($model,'delete_at', array('class'=>'form-control')); ?>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<?php echo $form->label($model,'status', array('class'=>'col-sm-3 control-label')); ?>
+		<div class="col-sm-8">
+			<?php echo $form->textField($model,'status', array('class'=>'form-control')); ?>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<?php echo $form->label($model,'last_updated_user', array('class'=>'col-sm-3 control-label')); ?>
+		<div class="col-sm-8">
+			<?php echo $form->textField($model,'last_updated_user', array('class'=>'form-control')); ?>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<?php echo $form->label($model,'original_name', array('class'=>'col-sm-3 control-label')); ?>
+		<div class="col-sm-8">
+			<?php echo $form->textField($model,'original_name',array('size'=>10,'maxlength'=>10,'class'=>'form-control')); ?>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<?php echo $form->label($model,'hometown', array('class'=>'col-sm-3 control-label')); ?>
+		<div class="col-sm-8">
+			<?php echo $form->textField($model,'hometown',array('size'=>10,'maxlength'=>10,'class'=>'form-control')); ?>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<?php echo $form->label($model,'birth_year', array('class'=>'col-sm-3 control-label')); ?>
+		<div class="col-sm-8">
+			<?php echo $form->textField($model,'birth_year',array('size'=>4,'maxlength'=>4,'class'=>'form-control')); ?>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<?php echo $form->label($model,'birth_month', array('class'=>'col-sm-3 control-label')); ?>
+		<div class="col-sm-8">
+			<?php echo $form->textField($model,'birth_month',array('size'=>2,'maxlength'=>2,'class'=>'form-control')); ?>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<?php echo $form->label($model,'bitrh_day', array('class'=>'col-sm-3 control-label')); ?>
+		<div class="col-sm-8">
+			<?php echo $form->textField($model,'bitrh_day',array('size'=>2,'maxlength'=>2,'class'=>'form-control')); ?>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<?php echo $form->label($model,'arrive_time', array('class'=>'col-sm-3 control-label')); ?>
+		<div class="col-sm-8">
+			<?php echo $form->textField($model,'arrive_time',array('size'=>50,'maxlength'=>50,'class'=>'form-control')); ?>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<?php echo $form->label($model,'experience', array('class'=>'col-sm-3 control-label')); ?>
+		<div class="col-sm-8">
+			<?php echo $form->textArea($model,'experience',array('rows'=>6, 'cols'=>50,'class'=>'form-control')); ?>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<?php echo $form->label($model,'literary_style', array('class'=>'col-sm-3 control-label')); ?>
+		<div class="col-sm-8">
+			<?php echo $form->textArea($model,'literary_style',array('rows'=>6, 'cols'=>50,'class'=>'form-control')); ?>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<?php echo $form->label($model,'literary_achievement', array('class'=>'col-sm-3 control-label')); ?>
+		<div class="col-sm-8">
+			<?php echo $form->textArea($model,'literary_achievement',array('rows'=>6, 'cols'=>50,'class'=>'form-control')); ?>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<?php echo $form->label($model,'year_of_death', array('class'=>'col-sm-3 control-label')); ?>
+		<div class="col-sm-8">
+			<?php echo $form->textField($model,'year_of_death',array('size'=>4,'maxlength'=>4,'class'=>'form-control')); ?>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<?php echo $form->label($model,'year_of_month', array('class'=>'col-sm-3 control-label')); ?>
+		<div class="col-sm-8">
+			<?php echo $form->textField($model,'year_of_month',array('size'=>2,'maxlength'=>2,'class'=>'form-control')); ?>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<?php echo $form->label($model,'year_of_day', array('class'=>'col-sm-3 control-label')); ?>
+		<div class="col-sm-8">
+			<?php echo $form->textField($model,'year_of_day',array('size'=>4,'maxlength'=>4,'class'=>'form-control')); ?>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<?php echo $form->label($model,'pen_name', array('class'=>'col-sm-3 control-label')); ?>
+		<div class="col-sm-8">
+			<?php echo $form->textField($model,'pen_name',array('size'=>20,'maxlength'=>20,'class'=>'form-control')); ?>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<?php echo $form->label($model,'literary_genre', array('class'=>'col-sm-3 control-label')); ?>
+		<div class="col-sm-8">
+			<?php echo $form->textField($model,'literary_genre',array('size'=>20,'maxlength'=>20,'class'=>'form-control')); ?>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<?php echo $form->label($model,'present_job', array('class'=>'col-sm-3 control-label')); ?>
+		<div class="col-sm-8">
+			<?php echo $form->textArea($model,'present_job',array('rows'=>6, 'cols'=>50,'class'=>'form-control')); ?>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<?php echo $form->label($model,'brief_intro', array('class'=>'col-sm-3 control-label')); ?>
+		<div class="col-sm-8">
+			<?php echo $form->textArea($model,'brief_intro',array('rows'=>6, 'cols'=>50,'class'=>'form-control')); ?>
+		</div>
+	</div>
+
 	<div class="form-group buttons">
 		<div class="col-sm-offset-3 col-sm-8">
 			<?php echo CHtml::submitButton('搜尋', array('class'=>'btn btn-primary')); ?>
