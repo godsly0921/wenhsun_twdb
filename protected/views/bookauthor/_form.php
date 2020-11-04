@@ -16,7 +16,18 @@
 	'htmlOptions'=>array(
 		'class'=>'form-horizontal',
     )
-)); ?>
+)); 
+$status = array(
+	// "-1" => "刪除",
+	"1" => "啟用",
+	"0" => "停用",
+);
+$gender = array(
+	// "-1" => "刪除",
+	"F" => "女",
+	"M" => "男",
+);
+?>
 	<div class="form-group">
 		<div class="col-sm-offset-3 col-sm-8">
 			<p class="note"><span class="required">*</span>表示為必填欄位</p>
@@ -43,7 +54,7 @@
 	<div class="form-group">
 		<?php echo $form->labelEx($model,'gender', array('class'=>'col-sm-3 control-label')); ?>
 		<div class="col-sm-8">
-			<?php echo $form->textField($model,'gender',array('size'=>1,'maxlength'=>1,'class'=>'form-control')); ?>
+			<?php echo $form->dropDownList($model,'gender',$gender, array('class'=>'form-control')); ?>
 		</div>
 		<?php echo $form->error($model,'gender'); ?>
 	</div>
@@ -65,43 +76,11 @@
 	</div>
 
 	<div class="form-group">
-		<?php echo $form->labelEx($model,'create_at', array('class'=>'col-sm-3 control-label')); ?>
-		<div class="col-sm-8">
-			<?php echo $form->textField($model,'create_at', array('class'=>'form-control')); ?>
-		</div>
-		<?php echo $form->error($model,'create_at'); ?>
-	</div>
-
-	<div class="form-group">
-		<?php echo $form->labelEx($model,'update_at', array('class'=>'col-sm-3 control-label')); ?>
-		<div class="col-sm-8">
-			<?php echo $form->textField($model,'update_at', array('class'=>'form-control')); ?>
-		</div>
-		<?php echo $form->error($model,'update_at'); ?>
-	</div>
-
-	<div class="form-group">
-		<?php echo $form->labelEx($model,'delete_at', array('class'=>'col-sm-3 control-label')); ?>
-		<div class="col-sm-8">
-			<?php echo $form->textField($model,'delete_at', array('class'=>'form-control')); ?>
-		</div>
-		<?php echo $form->error($model,'delete_at'); ?>
-	</div>
-
-	<div class="form-group">
 		<?php echo $form->labelEx($model,'status', array('class'=>'col-sm-3 control-label')); ?>
 		<div class="col-sm-8">
-			<?php echo $form->textField($model,'status', array('class'=>'form-control')); ?>
+			<?php echo $form->dropDownList($model,'status',$status, array('class'=>'form-control')); ?>
 		</div>
 		<?php echo $form->error($model,'status'); ?>
-	</div>
-
-	<div class="form-group">
-		<?php echo $form->labelEx($model,'last_updated_user', array('class'=>'col-sm-3 control-label')); ?>
-		<div class="col-sm-8">
-			<?php echo $form->textField($model,'last_updated_user', array('class'=>'form-control')); ?>
-		</div>
-		<?php echo $form->error($model,'last_updated_user'); ?>
 	</div>
 
 	<div class="form-group">
@@ -123,7 +102,7 @@
 	<div class="form-group">
 		<?php echo $form->labelEx($model,'birth_year', array('class'=>'col-sm-3 control-label')); ?>
 		<div class="col-sm-8">
-			<?php echo $form->textField($model,'birth_year',array('size'=>4,'maxlength'=>4,'class'=>'form-control')); ?>
+			<input type="text" id="birth_year" size="4", maxlength="4" name="BookAuthor[birth_year]" required="required" data-date-format="yyyy" class="form-control datepicker" value="<?=$model->birth_year?>" placeholder="出生年">
 		</div>
 		<?php echo $form->error($model,'birth_year'); ?>
 	</div>
@@ -131,7 +110,7 @@
 	<div class="form-group">
 		<?php echo $form->labelEx($model,'birth_month', array('class'=>'col-sm-3 control-label')); ?>
 		<div class="col-sm-8">
-			<?php echo $form->textField($model,'birth_month',array('size'=>2,'maxlength'=>2,'class'=>'form-control')); ?>
+			<input type="text" id="birth_month" size="2", maxlength="2" name="BookAuthor[birth_month]" data-date-format="mm" class="form-control datepicker" value="<?=$model->birth_month?>" placeholder="出生月">
 		</div>
 		<?php echo $form->error($model,'birth_month'); ?>
 	</div>
@@ -139,7 +118,7 @@
 	<div class="form-group">
 		<?php echo $form->labelEx($model,'bitrh_day', array('class'=>'col-sm-3 control-label')); ?>
 		<div class="col-sm-8">
-			<?php echo $form->textField($model,'bitrh_day',array('size'=>2,'maxlength'=>2,'class'=>'form-control')); ?>
+			<input type="text" id="bitrh_day" size="2", maxlength="2" name="BookAuthor[bitrh_day]" data-date-format="dd" class="form-control datepicker" value="<?=$model->bitrh_day?>" placeholder="出生日">
 		</div>
 		<?php echo $form->error($model,'bitrh_day'); ?>
 	</div>
@@ -241,3 +220,11 @@
 <?php $this->endWidget(); ?>
 
 </div><!-- form -->
+<script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/bootstrap-select/dist/js/bootstrap-select.js"></script>
+<script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/bootstrap-datepicker.js"></script>
+<script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/bootstrap-treeview.js"></script>
+<script type="text/javascript">
+	$(function () {
+		$('.datepicker').datepicker();
+	})
+</script>
