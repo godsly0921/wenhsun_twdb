@@ -182,6 +182,15 @@ class SiteController extends CController{
                 $data = $siteService->findVideoDetail($id);
                 $this->render('video_info',array('data' => $data, 'member_point'=>$member_point,'member_plan'=>$member_plan));
                 break;
+            default://處理國家記憶庫 存取文訊網站會出現空白的錯誤 預設圖庫
+                $photographService = new PhotographService();
+                $category_service = new CategoryService();
+                $photograph_data = $photographService->findSingleAndSinglesize($id); 
+                $category_data = $category_service->findCategoryMate();
+                $photograph_data['photograph_info']['keyword'] = explode(",", $photograph_data['photograph_info']['keyword']);
+                $same_category = $siteService->findSameCategory($photograph_data['photograph_info']['category_id'],$id);
+                $this->render('image_info',array('photograph_data'=>$photograph_data,'category_service'=>$category_service,'same_category'=>$same_category,'member_point'=>$member_point,'member_plan'=>$member_plan));
+                break;
         }
         
         
