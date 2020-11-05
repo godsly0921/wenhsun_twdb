@@ -183,6 +183,7 @@ class SiteController extends CController{
                 $this->render('video_info',array('data' => $data, 'member_point'=>$member_point,'member_plan'=>$member_plan));
                 break;
             default://處理國家記憶庫 存取文訊網站會出現空白的錯誤 預設圖庫
+                 $_GET['search_type'] = 1;
                 $photographService = new PhotographService();
                 $category_service = new CategoryService();
                 $photograph_data = $photographService->findSingleAndSinglesize($id); 
