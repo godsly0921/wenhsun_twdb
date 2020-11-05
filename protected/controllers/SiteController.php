@@ -152,7 +152,7 @@ class SiteController extends CController{
 
     public function ActionImageInfo(){
         $id = isset($_GET['id'])?$_GET['id']:"";
-        $search_type = isset($_GET['search_type'])?$_GET['search_type']:"";
+        $search_type = isset($_GET['search_type'])?$_GET['search_type']:1;
         $siteService = new SiteService();
         $member_point = $member_plan = 0;
         if (!Yii::app() -> user -> isGuest && isset(Yii::app()->session['member_id'])){
