@@ -152,7 +152,7 @@ class SiteController extends CController{
 
     public function ActionImageInfo(){
         $id = isset($_GET['id'])?$_GET['id']:"";
-        $search_type = isset($_GET['search_type'])?$_GET['search_type']:1;
+        $search_type = isset($_GET['search_type'])?$_GET['search_type']:"";
         $siteService = new SiteService();
         $member_point = $member_plan = 0;
         if (!Yii::app() -> user -> isGuest && isset(Yii::app()->session['member_id'])){
@@ -165,6 +165,7 @@ class SiteController extends CController{
         }
         switch ($search_type) {
             case '1': // 圖庫
+                $_GET['search_type'] = 1;
                 $photographService = new PhotographService();
                 $category_service = new CategoryService();
                 $photograph_data = $photographService->findSingleAndSinglesize($id); 
@@ -183,7 +184,7 @@ class SiteController extends CController{
                 $this->render('video_info',array('data' => $data, 'member_point'=>$member_point,'member_plan'=>$member_plan));
                 break;
             default://處理國家記憶庫 存取文訊網站會出現空白的錯誤 預設圖庫
-                 $_GET['search_type'] = 1;
+                $_GET['search_type'] = 1;
                 $photographService = new PhotographService();
                 $category_service = new CategoryService();
                 $photograph_data = $photographService->findSingleAndSinglesize($id); 
