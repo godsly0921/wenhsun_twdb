@@ -24,6 +24,6 @@ $this->menu=array(
 
 ?><div class='panel panel-default' style='width=100%; overflow-y:scroll;'>
     <div class='panel-body'>
-		<?php $this->renderPartial('_form', array('model'=>$model)); ?>	
+		<?php $this->renderPartial('_form', array('model'=>$model, 'single'=>$single, 'book_category'=>$book_category)); ?>	
 </div>
 </div>

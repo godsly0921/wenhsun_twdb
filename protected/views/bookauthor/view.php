@@ -28,6 +28,11 @@ $this->menu=array(
 	'data'=>$model,
 	'attributes'=>array(
 		'author_id',
+		array(        
+        	'name'=>'圖庫圖片',
+        	'type'=>'raw',
+			'value'=>  CHtml::image(DOMAIN."image_storage/P/".$model->single_id.".jpg","",array("style"=>"max-width:150px;max-height:150px")),
+        ),
 		'name',
 		'birthday',
 		'gender',

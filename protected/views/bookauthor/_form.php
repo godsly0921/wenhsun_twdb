@@ -3,7 +3,17 @@
 /* @var $model BookAuthor */
 /* @var $form CActiveForm */
 ?>
-
+<link href="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/bootstrap-select/dist/css/bootstrap-select.css" rel="stylesheet">
+<link href="<?php echo Yii::app()->request->baseUrl; ?>/assets/css/bootstrap-datepicker.css" rel="stylesheet">
+<style>
+.media-body, .media-left, .media-right{
+	vertical-align: middle;
+}
+.media-object,.data_thumbnail {
+	max-width: 100px;
+    max-height: 100px;
+}
+</style>
 <div class="form">
 
 <?php $form=$this->beginWidget('CActiveForm', array(
@@ -42,13 +52,31 @@ $gender = array(
 		</div>
 		<?php echo $form->error($model,'name'); ?>
 	</div>
-
 	<div class="form-group">
-		<?php echo $form->labelEx($model,'birthday', array('class'=>'col-sm-3 control-label')); ?>
+		<?php echo $form->labelEx($model,'single_id', array('class'=>'col-sm-3 control-label')); ?>
 		<div class="col-sm-8">
-			<?php echo $form->textField($model,'birthday', array('class'=>'form-control')); ?>
+			<select class="form-control selectpicker"  id="single_id" name="BookAuthor[single_id]" required="required" data-live-search="true">
+                <option value="">請選擇</option>
+                <?php foreach ($single as $value){
+                	$data_tokens = array();
+                	array_push($data_tokens, $value['single_id']);
+                	if(!empty($value['keyword'])) array_push($data_tokens, $value['keyword']);
+                	if(!empty($value['people_info'])) array_push($data_tokens, $value['people_info']);
+                	if(!empty($value['event_name'])) array_push($data_tokens, $value['event_name']);
+                	if(!empty($value['filming_location'])) array_push($data_tokens, $value['filming_location']);
+                	if(!empty($value['filming_date'])) array_push($data_tokens, $value['filming_date']);
+                	if(!empty($value['filming_name'])) array_push($data_tokens, $value['filming_name']);
+                	if(!empty($value['object_name'])) array_push($data_tokens, $value['object_name']);
+                	if(!empty($value['people_info'])) array_push($data_tokens, $value['people_info']);
+                	if(!empty($value['description'])) array_push($data_tokens, $value['description']);
+                	if(!empty($value['photo_source'])) array_push($data_tokens, $value['photo_source']);
+                	if(!empty($value['filming_date_text'])) array_push($data_tokens, $value['filming_date_text']);
+                ?>
+                    <option value="<?=$value['single_id']?>" data-tokens="<?=implode(",",$data_tokens)?>" data-content="<img class='data_thumbnail' src='<?=DOMAIN."image_storage/P/".$value['single_id']?>.jpg'></img> <?=$value['single_id']?>" <?=$model->single_id==$value['single_id']?'selected':''?> <?=$model->single_id==$value['single_id']?'selected':''?>><?=$value['single_id']?></option>
+                <?php }?>
+            </select>
 		</div>
-		<?php echo $form->error($model,'birthday'); ?>
+		<?php echo $form->error($model,'single_id'); ?>
 	</div>
 
 	<div class="form-group">
@@ -116,17 +144,17 @@ $gender = array(
 	</div>
 
 	<div class="form-group">
-		<?php echo $form->labelEx($model,'bitrh_day', array('class'=>'col-sm-3 control-label')); ?>
+		<?php echo $form->labelEx($model,'birth_day', array('class'=>'col-sm-3 control-label')); ?>
 		<div class="col-sm-8">
-			<input type="text" id="bitrh_day" size="2", maxlength="2" name="BookAuthor[bitrh_day]" data-date-format="dd" class="form-control datepicker" value="<?=$model->bitrh_day?>" placeholder="出生日">
+			<input type="text" id="birth_day" size="2", maxlength="2" name="BookAuthor[birth_day]" data-date-format="dd" class="form-control datepicker" value="<?=$model->birth_day?>" placeholder="出生日">
 		</div>
-		<?php echo $form->error($model,'bitrh_day'); ?>
+		<?php echo $form->error($model,'birth_day'); ?>
 	</div>
 
 	<div class="form-group">
 		<?php echo $form->labelEx($model,'arrive_time', array('class'=>'col-sm-3 control-label')); ?>
 		<div class="col-sm-8">
-			<?php echo $form->textField($model,'arrive_time',array('size'=>50,'maxlength'=>50,'class'=>'form-control')); ?>
+			<?php echo $form->textField($model,'arrive_time',array('size'=>50,'maxlength'=>50,'class'=>'form-control datepicker','data-date-format'=>'yyyy-mm')); ?>
 		</div>
 		<?php echo $form->error($model,'arrive_time'); ?>
 	</div>
@@ -158,7 +186,7 @@ $gender = array(
 	<div class="form-group">
 		<?php echo $form->labelEx($model,'year_of_death', array('class'=>'col-sm-3 control-label')); ?>
 		<div class="col-sm-8">
-			<?php echo $form->textField($model,'year_of_death',array('size'=>4,'maxlength'=>4,'class'=>'form-control')); ?>
+			<?php echo $form->textField($model,'year_of_death',array('size'=>4,'maxlength'=>4,'class'=>'form-control datepicker','data-date-format'=>'yyyy')); ?>
 		</div>
 		<?php echo $form->error($model,'year_of_death'); ?>
 	</div>
@@ -166,7 +194,7 @@ $gender = array(
 	<div class="form-group">
 		<?php echo $form->labelEx($model,'year_of_month', array('class'=>'col-sm-3 control-label')); ?>
 		<div class="col-sm-8">
-			<?php echo $form->textField($model,'year_of_month',array('size'=>2,'maxlength'=>2,'class'=>'form-control')); ?>
+			<?php echo $form->textField($model,'year_of_month',array('size'=>2,'maxlength'=>2,'class'=>'form-control datepicker','data-date-format'=>'mm')); ?>
 		</div>
 		<?php echo $form->error($model,'year_of_month'); ?>
 	</div>
@@ -174,7 +202,7 @@ $gender = array(
 	<div class="form-group">
 		<?php echo $form->labelEx($model,'year_of_day', array('class'=>'col-sm-3 control-label')); ?>
 		<div class="col-sm-8">
-			<?php echo $form->textField($model,'year_of_day',array('size'=>4,'maxlength'=>4,'class'=>'form-control')); ?>
+			<?php echo $form->textField($model,'year_of_day',array('size'=>4,'maxlength'=>4,'class'=>'form-control datepicker','data-date-format'=>'dd')); ?>
 		</div>
 		<?php echo $form->error($model,'year_of_day'); ?>
 	</div>
@@ -190,7 +218,8 @@ $gender = array(
 	<div class="form-group">
 		<?php echo $form->labelEx($model,'literary_genre', array('class'=>'col-sm-3 control-label')); ?>
 		<div class="col-sm-8">
-			<?php echo $form->textField($model,'literary_genre',array('size'=>20,'maxlength'=>20,'class'=>'form-control')); ?>
+			<input type="hidden" id="literary_genre" name="BookAuthor[literary_genre]" value="<?=$model->literary_genre?>">
+            <div id="tree"></div>
 		</div>
 		<?php echo $form->error($model,'literary_genre'); ?>
 	</div>
@@ -225,6 +254,42 @@ $gender = array(
 <script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/bootstrap-treeview.js"></script>
 <script type="text/javascript">
 	$(function () {
+		function getCheckedItems(treeview){
+            var nodes = $('#tree').treeview('getChecked', treeview);
+            var checkedNodes = [];
+            for (var i = 0; i < nodes.length; i++) {
+                node = nodes[i];
+                checkedNodes.push(node.category_id);
+            }
+            $('#category_id').val(checkedNodes.join());
+        }
+		$('.selectpicker').selectpicker();
 		$('.datepicker').datepicker();
+		$('#tree').treeview({
+            data: '<?=$book_category?>',
+            showCheckbox: true, //是否顯示覆選框
+            highlightSelected: true, //是否高亮選中
+            multiSelect: true, //多選
+            checkboxFirst: true,
+            onNodeChecked: function(event, data) {
+                if (typeof data['nodes'] != "undefined") {
+                    var children = data['nodes'];
+                    for (var i=0; i<children.length; i++) {
+                        $('#tree').treeview('checkNode', [children[i].nodeId, { silent: true } ]);
+                    }
+                }
+                getCheckedItems(data);
+            },
+            onNodeUnchecked: function(event, data) {
+                if (typeof data['nodes'] != "undefined") {
+                    var children = data['nodes'];
+                    for (var i=0; i<children.length; i++) {
+                        $('#tree').treeview('uncheckNode', [children[i].nodeId, { silent: true } ]);
+                    }
+                }
+                // getParentItems(data);
+                getCheckedItems(data);        
+            },
+        });
 	})
 </script>

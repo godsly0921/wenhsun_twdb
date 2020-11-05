@@ -36,19 +36,31 @@ class BookauthorController extends Controller
 	public function actionCreate()
 	{
 		$model=new BookAuthor;
-
+		$bookService = new BookService();
+		$single = $bookService->getFK_Singles_data();
+		$book_category = $bookService->getFK_Category_data();
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
 
 		if(isset($_POST['BookAuthor']))
-		{
-			$model->attributes=$_POST['BookAuthor'];
-			if($model->save())
+		{	
+			$inputs = $_POST['BookAuthor'];
+			$inputs['create_at'] = date("Y-m-d H:i:s");
+			$inputs['last_updated_user'] = Yii::app()->session['uid'];
+			$model->attributes=$inputs;
+			if($model->save()){
+				$mongo = new Mongo();
+				$inputs['author_id'] = $model->author_id;
+				$inputs['literary_genre'] = explode(",",$inputs['literary_genre']);
+				$mongo->insert_record('wenhsun', 'book_author', $inputs);
 				$this->redirect(array('view','id'=>$model->author_id));
+			}
 		}
 
 		$this->render('create',array(
 			'model'=>$model,
+			'single'=>$single,
+			'book_category'=>$book_category,
 		));
 	}
 
@@ -60,19 +72,32 @@ class BookauthorController extends Controller
 	public function actionUpdate($id)
 	{
 		$model=$this->loadModel($id);
-
+		$bookService = new BookService();
+		$single = $bookService->getFK_Singles_data();
+		$book_category = $bookService->getFK_Category_data();
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
 
 		if(isset($_POST['BookAuthor']))
 		{
-			$model->attributes=$_POST['BookAuthor'];
-			if($model->save())
+			$inputs = $_POST['BookAuthor'];
+			$inputs['update_at'] = date("Y-m-d H:i:s");
+			$inputs['last_updated_user'] = Yii::app()->session['uid'];
+			$model->attributes=$inputs;
+			if($model->save()){
+				$mongo = new Mongo();
+				$update_find = array('author_id'=>$id);
+				$inputs['literary_genre'] = explode(",",$inputs['literary_genre']);
+				$update_input = array('$set' => $inputs);
+				$mongo->update_record('wenhsun', 'book_author', $update_find, $update_input);
 				$this->redirect(array('view','id'=>$model->author_id));
+			}
 		}
 
 		$this->render('update',array(
 			'model'=>$model,
+			'single'=>$single,
+			'book_category'=>$book_category,
 		));
 	}
 
@@ -83,7 +108,21 @@ class BookauthorController extends Controller
 	 */
 	public function actionDelete($id)
 	{
-		$this->loadModel($id)->delete();
+		$model=$this->loadModel($id);
+		if($model){
+			$inputs = array();
+			$inputs['status'] = -1;
+			$inputs['update_at'] = date("Y-m-d H:i:s");
+			$inputs['delete_at'] = date("Y-m-d H:i:s");
+			$inputs['last_updated_user'] = Yii::app()->session['uid'];
+			$model->attributes = $inputs;
+			if($model->save()){
+				$mongo = new Mongo();
+				$update_find = array('author_id'=>$id);
+				$update_input = array('$set' => $inputs);
+            	$mongo->update_record('wenhsun', 'book_author', $update_find, $update_input);
+			}
+		}
 
 		// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
 		if(!isset($_GET['ajax']))
