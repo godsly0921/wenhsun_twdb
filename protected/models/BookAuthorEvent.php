@@ -15,14 +15,14 @@
  * @property string $create_at
  * @property string $update_at
  */
-class EventList extends CActiveRecord
+class BookAuthorEvent extends CActiveRecord
 {
     /**
      * @return string the associated database table name
      */
     public function tableName()
     {
-        return 'event_list';
+        return 'book_author_event';
     }
 
     /**

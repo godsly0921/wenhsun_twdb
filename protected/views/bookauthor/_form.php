@@ -3,7 +3,6 @@
 /* @var $model BookAuthor */
 /* @var $form CActiveForm */
 ?>
-<link href="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/bootstrap-select/dist/css/bootstrap-select.css" rel="stylesheet">
 <link href="<?php echo Yii::app()->request->baseUrl; ?>/assets/css/bootstrap-datepicker.css" rel="stylesheet">
 <style>
 .media-body, .media-left, .media-right{
@@ -55,9 +54,9 @@ $gender = array(
 	<div class="form-group">
 		<?php echo $form->labelEx($model,'single_id', array('class'=>'col-sm-3 control-label')); ?>
 		<div class="col-sm-8">
-			<select class="form-control selectpicker"  id="single_id" name="BookAuthor[single_id]" required="required" data-live-search="true">
+			<select class="form-control" id="single_id" name="BookAuthor[single_id]" required="required">
                 <option value="">請選擇</option>
-                <?php foreach ($single as $value){
+                <?php foreach ($single as $key => $value){
                 	$data_tokens = array();
                 	array_push($data_tokens, $value['single_id']);
                 	if(!empty($value['keyword'])) array_push($data_tokens, $value['keyword']);
@@ -72,7 +71,7 @@ $gender = array(
                 	if(!empty($value['photo_source'])) array_push($data_tokens, $value['photo_source']);
                 	if(!empty($value['filming_date_text'])) array_push($data_tokens, $value['filming_date_text']);
                 ?>
-                    <option value="<?=$value['single_id']?>" data-tokens="<?=implode(",",$data_tokens)?>" data-content="<img class='data_thumbnail' src='<?=DOMAIN."image_storage/P/".$value['single_id']?>.jpg'></img> <?=$value['single_id']?>" <?=$model->single_id==$value['single_id']?'selected':''?> <?=$model->single_id==$value['single_id']?'selected':''?>><?=$value['single_id']?></option>
+                    <option value="<?=$value['single_id']?>" data-tokens="<?=implode(",",$data_tokens)?>" data-content="<img class='data_thumbnail lazyload' width='100' src='<?=DOMAIN."image_storage/P/".$value['single_id']?>.jpg' data-src='<?=DOMAIN."image_storage/P/".$value['single_id']?>.jpg' data-original='<?=DOMAIN."image_storage/P/".$value['single_id']?>.jpg' onload='lazy()'></img> <?=$value['single_id']?>" <?=$model->single_id==$value['single_id']?'selected':''?> <?=$model->single_id==$value['single_id']?'selected':''?>><?=$value['single_id']?></option>
                 <?php }?>
             </select>
 		</div>
@@ -249,11 +248,21 @@ $gender = array(
 <?php $this->endWidget(); ?>
 
 </div><!-- form -->
-<script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/bootstrap-select/dist/js/bootstrap-select.js"></script>
 <script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/bootstrap-datepicker.js"></script>
 <script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/bootstrap-treeview.js"></script>
 <script type="text/javascript">
-	$(function () {
+	$( document ).ready(function() {
+    	$("img.lazyload").lazyload();
+		$('#single_id').selectpicker();
+		$("#single_id").on("shown.bs.select",function(e, clickedIndex, newValue, oldValue) {
+		    $(".lazyload").lazyload();
+		});
+		// $('.lazyload').each(function(){
+			$('.lazyload').load(function(){
+				$(this).attr('src', '');
+				$(this).unveil();
+			});
+		// });
 		function getCheckedItems(treeview){
             var nodes = $('#tree').treeview('getChecked', treeview);
             var checkedNodes = [];
@@ -263,7 +272,8 @@ $gender = array(
             }
             $('#category_id').val(checkedNodes.join());
         }
-		$('.selectpicker').selectpicker();
+        
+        
 		$('.datepicker').datepicker();
 		$('#tree').treeview({
             data: '<?=$book_category?>',
