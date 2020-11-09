@@ -111,7 +111,6 @@ class BookAuthor extends CActiveRecord
 			'pen_name' => '筆名',
 			'literary_genre' => '創作文類',
 			'present_job' => '現職',
-			'brief_intro' => '簡介',
 		);
 	}
 
@@ -160,8 +159,6 @@ class BookAuthor extends CActiveRecord
 		$criteria->compare('pen_name',$this->pen_name,true);
 		$criteria->compare('literary_genre',$this->literary_genre,true);
 		$criteria->compare('present_job',$this->present_job,true);
-		$criteria->compare('brief_intro',$this->brief_intro,true);
-
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
 		));

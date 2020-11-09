@@ -10,7 +10,10 @@
 }
 .media-object,.data_thumbnail {
 	max-width: 100px;
-    max-height: 100px;
+    /* max-height: 100px; */
+}
+.bootstrap-select{
+	height: auto;
 }
 </style>
 <div class="form">
@@ -54,7 +57,7 @@ $gender = array(
 	<div class="form-group">
 		<?php echo $form->labelEx($model,'single_id', array('class'=>'col-sm-3 control-label')); ?>
 		<div class="col-sm-8">
-			<select class="form-control" id="single_id" name="BookAuthor[single_id]" required="required">
+			<select class="form-control single_id" name="BookAuthor[single_id]" required="required">
                 <option value="">請選擇</option>
                 <?php foreach ($single as $key => $value){
                 	$data_tokens = array();
@@ -71,7 +74,7 @@ $gender = array(
                 	if(!empty($value['photo_source'])) array_push($data_tokens, $value['photo_source']);
                 	if(!empty($value['filming_date_text'])) array_push($data_tokens, $value['filming_date_text']);
                 ?>
-                    <option value="<?=$value['single_id']?>" data-tokens="<?=implode(",",$data_tokens)?>" data-content="<img class='data_thumbnail lazyload' width='100' src='<?=DOMAIN."image_storage/P/".$value['single_id']?>.jpg' data-src='<?=DOMAIN."image_storage/P/".$value['single_id']?>.jpg' data-original='<?=DOMAIN."image_storage/P/".$value['single_id']?>.jpg' onload='lazy()'></img> <?=$value['single_id']?>" <?=$model->single_id==$value['single_id']?'selected':''?> <?=$model->single_id==$value['single_id']?'selected':''?>><?=$value['single_id']?></option>
+                    <option value="<?=$value['single_id']?>" data-tokens="<?=implode(",",$data_tokens)?>" data-content="<img class='data_thumbnail lazyload' width='100' height='auto' data-src='<?=DOMAIN."image_storage/P/".$value['single_id']?>.jpg' data-original='<?=DOMAIN."image_storage/P/".$value['single_id']?>.jpg'></img> <?=$value['single_id']?>" <?=$model->single_id==$value['single_id']?'selected':''?> <?=$model->single_id==$value['single_id']?'selected':''?>><?=$value['single_id']?></option>
                 <?php }?>
             </select>
 		</div>
@@ -230,15 +233,77 @@ $gender = array(
 		</div>
 		<?php echo $form->error($model,'present_job'); ?>
 	</div>
+	<div class="panel panel-default" style="width=100%; overflow-y:scroll;">
+        <div class="panel-body">
+        	<div class="panel panel-default" style="width=100%; overflow-y:scroll;">
+        		<div class="panel-body">
+        			<div class="form-group">
+						<?php echo $form->labelEx($model_author_event,'title', array('class'=>'col-sm-3 control-label')); ?>
+						<div class="col-sm-8">
+							<input type="text" id="title" size="200", maxlength="200" name="BookAuthorEvent[title][]" required="required" class="form-control" value="<?=$model_author_event->title?>">
+						</div>
+						<?php echo $form->error($model_author_event,'title'); ?>
+					</div>
+					<div class="form-group">
+						<?php echo $form->labelEx($model_author_event,'description', array('class'=>'col-sm-3 control-label')); ?>
+						<div class="col-sm-8">
+							<textarea rows="6" cols="50" class="form-control" name="BookAuthorEvent[description][]"></textarea>
+						</div>
+						<?php echo $form->error($model_author_event,'title'); ?>
+					</div>
+					<div class="form-group">
+						<?php echo $form->labelEx($model,'image_link', array('class'=>'col-sm-3 control-label')); ?>
+						<div class="col-sm-8">
+							<select class="form-control image_link" name="BookAuthorEvent[image_link][]" required="required">
+				                <option value="">請選擇</option>
+				                <?php foreach ($single as $key => $value){
+				                	$data_tokens = array();
+				                	array_push($data_tokens, $value['single_id']);
+				                	if(!empty($value['keyword'])) array_push($data_tokens, $value['keyword']);
+				                	if(!empty($value['people_info'])) array_push($data_tokens, $value['people_info']);
+				                	if(!empty($value['event_name'])) array_push($data_tokens, $value['event_name']);
+				                	if(!empty($value['filming_location'])) array_push($data_tokens, $value['filming_location']);
+				                	if(!empty($value['filming_date'])) array_push($data_tokens, $value['filming_date']);
+				                	if(!empty($value['filming_name'])) array_push($data_tokens, $value['filming_name']);
+				                	if(!empty($value['object_name'])) array_push($data_tokens, $value['object_name']);
+				                	if(!empty($value['people_info'])) array_push($data_tokens, $value['people_info']);
+				                	if(!empty($value['description'])) array_push($data_tokens, $value['description']);
+				                	if(!empty($value['photo_source'])) array_push($data_tokens, $value['photo_source']);
+				                	if(!empty($value['filming_date_text'])) array_push($data_tokens, $value['filming_date_text']);
+				                ?>
+				                    <option value="<?=$value['single_id']?>" data-tokens="<?=implode(",",$data_tokens)?>" data-content="<img class='data_thumbnail lazyload' width='100' height='auto' data-src='<?=DOMAIN."image_storage/P/".$value['single_id']?>.jpg' data-original='<?=DOMAIN."image_storage/P/".$value['single_id']?>.jpg'></img> <?=$value['single_id']?>" <?=$model->single_id==$value['single_id']?'selected':''?> <?=$model->single_id==$value['single_id']?'selected':''?>><?=$value['single_id']?></option>
+				                <?php }?>
+				            </select>
+						</div>
+						<?php echo $form->error($model,'single_id'); ?>
+					</div>
+        			<div class="form-group">
+						<?php echo $form->labelEx($model_author_event,'year', array('class'=>'col-sm-3 control-label')); ?>
+						<div class="col-sm-8">
+							<input type="text" id="year" size="4", maxlength="4" name="BookAuthorEvent[year][]" required="required" data-date-format="yyyy" class="form-control datepicker" value="<?=$model_author_event->year?>" placeholder="年表-年">
+						</div>
+						<?php echo $form->error($model_author_event,'year'); ?>
+					</div>
 
-	<div class="form-group">
-		<?php echo $form->labelEx($model,'brief_intro', array('class'=>'col-sm-3 control-label')); ?>
-		<div class="col-sm-8">
-			<?php echo $form->textArea($model,'brief_intro',array('rows'=>6, 'cols'=>50,'class'=>'form-control')); ?>
-		</div>
-		<?php echo $form->error($model,'brief_intro'); ?>
-	</div>
+					<div class="form-group">
+						<?php echo $form->labelEx($model_author_event,'month', array('class'=>'col-sm-3 control-label')); ?>
+						<div class="col-sm-8">
+							<input type="text" id="month" size="2", maxlength="2" name="BookAuthorEvent[month][]" data-date-format="mm" class="form-control datepicker" value="<?=$model_author_event->month?>" placeholder="年表-月">
+						</div>
+						<?php echo $form->error($model_author_event,'month'); ?>
+					</div>
 
+					<div class="form-group">
+						<?php echo $form->labelEx($model_author_event,'day', array('class'=>'col-sm-3 control-label')); ?>
+						<div class="col-sm-8">
+							<input type="text" id="day" size="2", maxlength="2" name="BookAuthorEvent[day][]" data-date-format="dd" class="form-control datepicker" value="<?=$model_author_event->day?>" placeholder="年表-日">
+						</div>
+						<?php echo $form->error($model_author_event,'day'); ?>
+					</div>
+        		</div>
+    		</div>
+        </div>
+    </div>
 	<div class="form-group buttons">
 		<div class="col-sm-offset-3 col-sm-8">
 			<?php echo CHtml::submitButton($model->isNewRecord ? '新增' : '儲存', array('class'=>'btn btn-primary')); ?>
@@ -252,17 +317,28 @@ $gender = array(
 <script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/bootstrap-treeview.js"></script>
 <script type="text/javascript">
 	$( document ).ready(function() {
-    	$("img.lazyload").lazyload();
-		$('#single_id').selectpicker();
-		$("#single_id").on("shown.bs.select",function(e, clickedIndex, newValue, oldValue) {
-		    $(".lazyload").lazyload();
+		$('.single_id').selectpicker({
+			size: 10,
+			virtualScroll:false
 		});
-		// $('.lazyload').each(function(){
-			$('.lazyload').load(function(){
-				$(this).attr('src', '');
-				$(this).unveil();
-			});
-		// });
+		$(".single_id").on("shown.bs.select",function(e, clickedIndex, newValue, oldValue) {
+			console.log(e);
+		    $("img.lazyload").lazyload({container: $("#bs-select-1"),skip_invisible : false});
+		});
+		$(".single_id").on("change.bs.select",function(e, clickedIndex, isSelected, previousValue) {
+			$(".filter-option-inner-inner img.lazyload").attr("src",$(".filter-option-inner-inner img.lazyload").data('original'));
+		});
+
+		$('.image_link').selectpicker({
+			size: 10,
+			virtualScroll:false
+		});
+		$(".image_link").on("show.bs.select",function(e, clickedIndex, newValue, oldValue) {
+		    $("img.lazyload").lazyload({container: $("#bs-select-2"),skip_invisible : false});
+		});
+		$(".image_link").on("change.bs.select",function(e, clickedIndex, isSelected, previousValue) {
+			$(".filter-option-inner-inner img.lazyload").attr("src",$(".filter-option-inner-inner img.lazyload").data('original'));
+		});
 		function getCheckedItems(treeview){
             var nodes = $('#tree').treeview('getChecked', treeview);
             var checkedNodes = [];

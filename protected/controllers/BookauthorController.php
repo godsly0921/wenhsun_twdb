@@ -36,6 +36,7 @@ class BookauthorController extends Controller
 	public function actionCreate()
 	{
 		$model=new BookAuthor;
+		$model_author_event=new BookAuthorEvent;
 		$bookService = new BookService();
 		$single = $bookService->getFK_Singles_data();
 		$book_category = $bookService->getFK_Category_data();
@@ -59,6 +60,7 @@ class BookauthorController extends Controller
 
 		$this->render('create',array(
 			'model'=>$model,
+			'model_author_event'=>$model_author_event,
 			'single'=>$single,
 			'book_category'=>$book_category,
 		));

@@ -23,3 +23,4 @@ UPDATE `book_author` SET birth_month=MONTH(birthday);
 UPDATE `book_author` SET bitrh_day=DAY(birthday);
 ALTER TABLE `book_author` DROP `birthday`;
 ALTER TABLE `book_author` DROP `brief_intro`;
+ALTER TABLE `book_author_event` COMMENT = '作者年表' ROW_FORMAT = COMPACT;
