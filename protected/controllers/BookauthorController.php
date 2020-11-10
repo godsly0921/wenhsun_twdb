@@ -52,20 +52,15 @@ class BookauthorController extends Controller
 			$book_author_event_inputs = $_POST['BookAuthorEvent'];
 
 			if($model->save()){
+				
 				foreach ($book_author_event_inputs as $key => $value) {
-					
-					if(!empty($book_author_event_inputs['title'][$key]) && !empty($book_author_event_inputs['description'][$key]) && !empty($book_author_event_inputs['image_link'][$key]) && !empty($book_author_event_inputs['year'][$key])){
+					if(!empty($value["title"]) && !empty($value["description"]) && !empty($value["image_link"]) && !empty($value["year"])){
+						$value["create_at"] = date("Y-m-d H:i:s");
+						$value["update_at"] = date("Y-m-d H:i:s");
+						$value["author_id"] = $model->author_id;
 						$model_author_event=new BookAuthorEvent;
-						$model_author_event->title=$book_author_event_inputs['title'][$key];
-						$model_author_event->description=$book_author_event_inputs['description'][$key];
-						$model_author_event->image_link=$book_author_event_inputs['image_link'][$key];
-						$model_author_event->year=$book_author_event_inputs['year'][$key];
-						$model_author_event->month=$book_author_event_inputs['month'][$key];
-						$model_author_event->day=$book_author_event_inputs['day'][$key];
-						$model_author_event->author_id=$model->author_id;
-						$model_author_event->create_at=date("Y-m-d H:i:s");
-						$model_author_event->update_at=date("Y-m-d H:i:s");
-						
+						$model_author_event->attributes=$value;		
+
 						if($model_author_event->save()){
 							$mongo = new Mongo();
 							$mongo->insert_record('wenhsun', 'book_author_event', $value);
@@ -98,19 +93,44 @@ class BookauthorController extends Controller
 	public function actionUpdate($id)
 	{
 		$model=$this->loadModel($id);
+
 		$bookService = new BookService();
+		$model_author_event = $bookService->getBookAuthorEvent($id);
 		$single = $bookService->getFK_Singles_data();
-		$book_category = $bookService->getFK_Category_data();
+		$book_category = $bookService->getFK_Category_data($model->literary_genre);
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
 
 		if(isset($_POST['BookAuthor']))
 		{
+			$book_author_event_inputs = $_POST['BookAuthorEvent'];
 			$inputs = $_POST['BookAuthor'];
 			$inputs['update_at'] = date("Y-m-d H:i:s");
 			$inputs['last_updated_user'] = Yii::app()->session['uid'];
 			$model->attributes=$inputs;
 			if($model->save()){
+				BookAuthorEvent::model()->deleteAll(array(
+	                'condition' => "author_id=:author_id",   
+	                'params' => array(':author_id' => $model->author_id ),    
+	            ));  
+	            $mongo = new Mongo();
+	            $delete_find = array('author_id'=>$model->author_id);
+	            $mongo->delete_record( 'wenhsun', 'book_author_event', $delete_find );
+				foreach ($book_author_event_inputs as $key => $value) {
+					if(!empty($value["title"]) && !empty($value["description"]) && !empty($value["image_link"]) && !empty($value["year"])){
+						$value["create_at"] = date("Y-m-d H:i:s");
+						$value["update_at"] = date("Y-m-d H:i:s");
+						$value["author_id"] = $model->author_id;
+						$model_author_event=new BookAuthorEvent;	
+						$model_author_event->attributes=$value;		
+						if($model_author_event->save()){
+							$mongo = new Mongo();
+							$mongo->insert_record('wenhsun', 'book_author_event', $value);
+						}else{
+							var_dump($model_author_event);exit();
+						}
+					}
+				}
 				$mongo = new Mongo();
 				$update_find = array('author_id'=>$id);
 				$inputs['literary_genre'] = explode(",",$inputs['literary_genre']);
@@ -122,6 +142,7 @@ class BookauthorController extends Controller
 
 		$this->render('update',array(
 			'model'=>$model,
+			'model_author_event'=>$model_author_event,
 			'single'=>$single,
 			'book_category'=>$book_category,
 		));

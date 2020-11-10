@@ -74,7 +74,7 @@ $gender = array(
                 	if(!empty($value['photo_source'])) array_push($data_tokens, $value['photo_source']);
                 	if(!empty($value['filming_date_text'])) array_push($data_tokens, $value['filming_date_text']);
                 ?>
-                    <option value="<?=$value['single_id']?>" data-tokens="<?=implode(",",$data_tokens)?>" data-content="<img class='data_thumbnail lazyload' width='100' height='auto' data-src='<?=DOMAIN."image_storage/P/".$value['single_id']?>.jpg' data-original='<?=DOMAIN."image_storage/P/".$value['single_id']?>.jpg'></img> <?=$value['single_id']?>" <?=$model->single_id==$value['single_id']?'selected':''?> <?=$model->single_id==$value['single_id']?'selected':''?>><?=$value['single_id']?></option>
+                    <option value="<?=$value['single_id']?>" data-tokens="<?=implode(",",$data_tokens)?>" data-content="<img class='data_thumbnail lazyload' width='100' height='auto' <?php if($model->single_id==$value['single_id']) echo "src='".DOMAIN."image_storage/P/". $value['single_id'] .".jpg'"?> data-src='<?=DOMAIN."image_storage/P/".$value['single_id']?>.jpg' data-original='<?=DOMAIN."image_storage/P/".$value['single_id']?>.jpg'></img> <?=$value['single_id']?>" <?=$model->single_id==$value['single_id']?'selected':''?> <?=$model->single_id==$value['single_id']?'selected':''?>><?=$value['single_id']?></option>
                 <?php }?>
             </select>
 		</div>
@@ -239,7 +239,7 @@ $gender = array(
 		</div>
         <div class="panel-body" id="book_author_event">
         	<?php
-        		if($model_author_event->isNewRecord){
+        		if($isNewRecord){
 	    			$i = 1;
 	    		}else{
 	    			$i = count($model_author_event)+1;
@@ -249,7 +249,7 @@ $gender = array(
 	    		<button type="button" class="btn btn-primary btn-lg" onclick="addGallery('<?=$i?>',this)">增加</button>
 	    	</div>
         	<?php	
-	        	if($model_author_event->isNewRecord){
+	        	if($isNewRecord){
 	        		$this->renderPartial('pages/model_author_event', array("model_author_event"=>$model_author_event, "single" => $single, "i" => 0, "form" => $form ));
 	        	}else{
 	        		foreach ($model_author_event as $key => $value) {
@@ -287,19 +287,19 @@ $gender = array(
 				<div class="form-group">\
 					<label class="col-sm-3 control-label" for="BookAuthorEvent_title">事件標題</label>\
 					<div class="col-sm-8">\
-						<input type="text" id="title" size="200" ,="" maxlength="200" name="BookAuthorEvent[title][]" class="form-control" value="">\
+						<input type="text" id="title" size="200" ,="" maxlength="200" name="BookAuthorEvent['+add_no+'][title]" class="form-control" value="">\
 					</div>\
 				</div>\
 				<div class="form-group">\
 					<label class="col-sm-3 control-label" for="BookAuthorEvent_description">事件說明</label>\
 					<div class="col-sm-8">\
-						<textarea rows="6" cols="50" class="form-control" name="BookAuthorEvent[description][]"></textarea>\
+						<textarea rows="6" cols="50" class="form-control" name="BookAuthorEvent['+add_no+'][description]"></textarea>\
 					</div>\
 				</div>\
 				<div class="form-group">\
 					<label class="col-sm-3 control-label" for="BookAuthorEvent_image_link">圖庫圖片</label>\
 					<div class="col-sm-8">\
-						<select class="form-control image_link" name="BookAuthorEvent[image_link][]">\
+						<select class="form-control image_link image_link_'+add_no+'" name="BookAuthorEvent['+add_no+'][image_link]">\
 			                <option value="">請選擇</option>';
 			                <?php foreach ($single as $key => $value){
 			                	$data_tokens = array();
@@ -316,7 +316,7 @@ $gender = array(
 			                	if(!empty($value['photo_source'])) array_push($data_tokens, htmlspecialchars(str_replace(array("'", "\"", "\n", "\r\n", "\r", "\t"), "",$value['photo_source'])),ENT_QUOTES);
 			                	if(!empty($value['filming_date_text'])) array_push($data_tokens, htmlspecialchars(str_replace(array("'", "\"", "\n", "\r\n", "\r", "\t"), "",$value['filming_date_text'])),ENT_QUOTES);
 			                ?>
-			                html += '<option value="<?=$value['single_id']?>" data-tokens="<?=implode(",",$data_tokens)?>" data-content="<img class=\"data_thumbnail lazyload\" width=\"100\" height=\"auto\" data-src=\"<?=DOMAIN."image_storage/P/".$value['single_id']?>.jpg\" data-original=\"<?=DOMAIN."image_storage/P/".$value['single_id']?>.jpg\"></img> <?=$value['single_id']?>"><?=$value['single_id']?></option>';
+			                html += '<option value="<?=$value['single_id']?>" data-tokens="<?=implode(",",$data_tokens)?>" data-content=\'<img class="data_thumbnail lazyload" width="100" height="auto" data-src="<?=DOMAIN."image_storage/P/".$value['single_id']?>.jpg" src="<?=DOMAIN."image_storage/P/".$value['single_id']?>.jpg" data-original="<?=DOMAIN."image_storage/P/".$value['single_id']?>.jpg"></img> <?=$value['single_id']?>\'><?=$value['single_id']?></option>';
 			                <?php }?>
 		html += '		</select>\
 					</div>\
@@ -324,25 +324,32 @@ $gender = array(
 				<div class="form-group">\
 					<label class="col-sm-3 control-label" for="BookAuthorEvent_year">年</label>\
 					<div class="col-sm-8">\
-						<input type="text" id="year" size="4" ,="" maxlength="4" name="BookAuthorEvent[year][]" data-date-format="yyyy" class="form-control datepicker" value="" placeholder="年表-年">\
+						<input type="text" id="year" size="4" ,="" maxlength="4" name="BookAuthorEvent['+add_no+'][year]" data-date-format="yyyy" class="form-control datepicker" value="" placeholder="年表-年">\
 					</div>\
 				</div>\
 				<div class="form-group">\
 					<label class="col-sm-3 control-label" for="BookAuthorEvent_month">月</label>\
 					<div class="col-sm-8">\
-						<input type="text" id="month" size="2" ,="" maxlength="2" name="BookAuthorEvent[month][]" data-date-format="mm" class="form-control datepicker" value="" placeholder="年表-月">\
+						<input type="text" id="month" size="2" ,="" maxlength="2" name="BookAuthorEvent['+add_no+'][month]" data-date-format="mm" class="form-control datepicker" value="" placeholder="年表-月">\
 					</div>\
 				</div>\
 				<div class="form-group">\
 					<label class="col-sm-3 control-label" for="BookAuthorEvent_day">日</label>\
 					<div class="col-sm-8">\
-						<input type="text" id="day" size="2" ,="" maxlength="2" name="BookAuthorEvent[day][]" data-date-format="dd" class="form-control datepicker" value="" placeholder="年表-日">\
+						<input type="text" id="day" size="2" ,="" maxlength="2" name="BookAuthorEvent['+add_no+'][day]" data-date-format="dd" class="form-control datepicker" value="" placeholder="年表-日">\
 					</div>\
 				</div>\
 			</div>\
 		</div>';
         // $("#"+add_id).append(html);
         $(my).parent("div").append(html);
+
+        $('.image_link_'+add_no).selectpicker({
+			size: 10,
+			virtualScroll:false
+		});
+
+		$('.datepicker').datepicker();
         <?php $i++;?>
     }
 	$( document ).ready(function() {
@@ -356,7 +363,7 @@ $gender = array(
 				$("img.lazyload").lazyload({container: e.currentTarget.children[2].firstChild,skip_invisible : false});
 			}
 		});
-		$(".single_id").on("change.bs.select",function(e, clickedIndex, isSelected, previousValue) {
+		$(".single_id").on("changed.bs.select",function(e, clickedIndex, isSelected, previousValue) {
 			$(".filter-option-inner-inner img.lazyload").attr("src",$(".filter-option-inner-inner img.lazyload").data('original'));
 		});
 
@@ -369,8 +376,8 @@ $gender = array(
 				$("img.lazyload").lazyload({container: e.currentTarget.children[2].firstChild,skip_invisible : false});
 			}
 		});
-		$(".image_link").on("change.bs.select",function(e, clickedIndex, isSelected, previousValue) {
-			$(".filter-option-inner-inner img.lazyload").attr("src",$(".filter-option-inner-inner img.lazyload").data('original'));
+		$(".image_link").on("changed.bs.select",function(e, clickedIndex, isSelected, previousValue) {
+			$(".filter-option-inner-inner img.lazyload").attr("src","<?=DOMAIN?>image_storage/P/"+e.target.value+".jpg");
 		});
 		function getCheckedItems(treeview){
             var nodes = $('#tree').treeview('getChecked', treeview);
@@ -379,7 +386,7 @@ $gender = array(
                 node = nodes[i];
                 checkedNodes.push(node.category_id);
             }
-            $('#category_id').val(checkedNodes.join());
+            $('#literary_genre').val(checkedNodes.join());
         }
         
 

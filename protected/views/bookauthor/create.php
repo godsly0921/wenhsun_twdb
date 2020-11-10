@@ -21,5 +21,5 @@ $this->menu=array(
 
 ?><div class='panel panel-default' style='width=100%; overflow-y:scroll;'>
     <div class='panel-body'>
-		<?php $this->renderPartial('_form', array('model'=>$model, 'model_author_event'=>$model_author_event, 'single'=>$single, 'book_category'=>$book_category)); ?>	</div>
+		<?php $this->renderPartial('_form', array('isNewRecord'=>true, 'model'=>$model, 'model_author_event'=>$model_author_event, 'single'=>$single, 'book_category'=>$book_category)); ?>	</div>
 </div>
