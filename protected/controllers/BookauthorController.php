@@ -49,7 +49,31 @@ class BookauthorController extends Controller
 			$inputs['create_at'] = date("Y-m-d H:i:s");
 			$inputs['last_updated_user'] = Yii::app()->session['uid'];
 			$model->attributes=$inputs;
+			$book_author_event_inputs = $_POST['BookAuthorEvent'];
+
 			if($model->save()){
+				foreach ($book_author_event_inputs as $key => $value) {
+					
+					if(!empty($book_author_event_inputs['title'][$key]) && !empty($book_author_event_inputs['description'][$key]) && !empty($book_author_event_inputs['image_link'][$key]) && !empty($book_author_event_inputs['year'][$key])){
+						$model_author_event=new BookAuthorEvent;
+						$model_author_event->title=$book_author_event_inputs['title'][$key];
+						$model_author_event->description=$book_author_event_inputs['description'][$key];
+						$model_author_event->image_link=$book_author_event_inputs['image_link'][$key];
+						$model_author_event->year=$book_author_event_inputs['year'][$key];
+						$model_author_event->month=$book_author_event_inputs['month'][$key];
+						$model_author_event->day=$book_author_event_inputs['day'][$key];
+						$model_author_event->author_id=$model->author_id;
+						$model_author_event->create_at=date("Y-m-d H:i:s");
+						$model_author_event->update_at=date("Y-m-d H:i:s");
+						
+						if($model_author_event->save()){
+							$mongo = new Mongo();
+							$mongo->insert_record('wenhsun', 'book_author_event', $value);
+						}else{
+							var_dump($model_author_event);exit();
+						}
+					}
+				}
 				$mongo = new Mongo();
 				$inputs['author_id'] = $model->author_id;
 				$inputs['literary_genre'] = explode(",",$inputs['literary_genre']);

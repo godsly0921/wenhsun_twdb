@@ -64,9 +64,9 @@ class BookAuthorEvent extends CActiveRecord
         return array(
             'id' => 'ID',
             'book_author_id' => '作者 id',
-            'year' => '年',
-            'month' => '月',
-            'day' => '日',
+            'year' => '年表-年',
+            'month' => '年表-月',
+            'day' => '年表-日',
             'title' => '事件標題',
             'description' => '事件說明',
             'image_link' => '圖庫圖片',
