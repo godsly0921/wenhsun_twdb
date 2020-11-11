@@ -75,9 +75,9 @@ class BookauthorController extends Controller
 					$inputs['author_id'] = $model->author_id;
 					$inputs['literary_genre'] = explode(",",$inputs['literary_genre']);
 					$mongo->insert_record('wenhsun', 'book_author', $inputs);
+					$transaction->commit();
 					$this->redirect(array('view','id'=>$model->author_id));
 				}
-				$transaction->commit();
 	        }catch (Exception $e) {
 	            $transaction->rollback();
 	            Yii::log(date('Y-m-d H:i:s') . "  book_author create fail. Message =>" . $e->getMessage(), CLogger::LEVEL_INFO);
@@ -150,9 +150,9 @@ class BookauthorController extends Controller
 					$inputs['literary_genre'] = explode(",",$inputs['literary_genre']);
 					$update_input = array('$set' => $inputs);
 					$mongo->update_record('wenhsun', 'book_author', $update_find, $update_input);
+					$transaction->commit();
 					$this->redirect(array('view','id'=>$model->author_id));
 				}
-				$transaction->commit();
 	        }catch (Exception $e) {
 	            $transaction->rollback();
 	            Yii::log(date('Y-m-d H:i:s') . "  book_author update fail. Message =>" . $e->getMessage(), CLogger::LEVEL_INFO);
