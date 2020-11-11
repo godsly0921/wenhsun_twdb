@@ -59,7 +59,7 @@ class BookController extends Controller
 		{
 			$inputs = $_POST['Book'];
 			$inputs['book_num'] = "B" . $inputs['book_num'];
-			$inputs['sub_author_id'] = implode(",",$inputs['sub_author_id']);
+			$inputs['sub_author_id'] = isset($inputs['sub_author_id'])?implode(",",$inputs['sub_author_id']):"";
 			$inputs['create_at'] = date("Y-m-d H:i:s");
 			$inputs['last_updated_user'] = Yii::app()->session['uid'];
 			$model->attributes = $inputs;
@@ -67,9 +67,9 @@ class BookController extends Controller
 			if($model->save()){
 				$mongo = new Mongo();
 				$inputs['book_id'] = $model->book_id;
-				$sub_author_id = $inputs['sub_author_id'];
+				$sub_author_id = isset($inputs['sub_author_id'])?$inputs['sub_author_id']:"";
 				$inputs['sub_author_id'] = explode(",",$inputs['sub_author_id']);
-				$inputs['category'] = explode(",",$inputs['category']);
+				$inputs['category'] = isset($inputs['category'])?explode(",",$inputs['category']):array();
 				$sql = "SELECT name FROM book_author WHERE author_id=" . $inputs['author_id'];
 				$book_data = Yii::app()->db->createCommand($sql)->queryRow();
 				$inputs['author_name'] = (!empty($book_data)) ? $book_data['name']:""; //作家
@@ -106,16 +106,16 @@ class BookController extends Controller
 		if(isset($_POST['Book']))
 		{
 			$inputs = $_POST['Book'];
-			$inputs['sub_author_id'] = implode(",",$inputs['sub_author_id']);
+			$inputs['sub_author_id'] = isset($inputs['sub_author_id'])?implode(",",$inputs['sub_author_id']):"";
 			$inputs['update_at'] = date("Y-m-d H:i:s");
 			$inputs['last_updated_user'] = Yii::app()->session['uid'];
 			$model->attributes = $inputs;
 			if($model->save()){
 				$mongo = new Mongo();
 				$update_find = array('book_id'=>$id);
-				$sub_author_id = $inputs['sub_author_id'];
+				$sub_author_id = isset($inputs['sub_author_id'])?$inputs['sub_author_id']:"";
 				$inputs['sub_author_id'] = explode(",",$inputs['sub_author_id']);
-				$inputs['category'] = explode(",",$inputs['category']);
+				$inputs['category'] = isset($inputs['category'])?explode(",",$inputs['category']):array();
 				$sql = "SELECT name FROM book_author WHERE author_id=" . $inputs['author_id'];
 				$book_data = Yii::app()->db->createCommand($sql)->queryRow();
 				$inputs['author_name'] = (!empty($book_data)) ? $book_data['name']:""; //作家

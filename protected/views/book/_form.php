@@ -60,7 +60,7 @@ $status = array(
 	    <div class="col-sm-8">
 			<div class="input-group">
 				<span class="input-group-addon" id="book_num_perfix">B</span>
-  				<input type="text" class="form-control" id="book_num" name="Book[book_num]" aria-describedby="book_num_perfix" placeholder="書本編號" value="<?=$model->book_num?>">
+  				<input type="text" class="form-control" id="book_num" required="required" name="Book[book_num]" aria-describedby="book_num_perfix" placeholder="書本編號" value="<?=$model->book_num?>">
 			</div>
 		</div>
 		<?php echo $form->error($model,'book_num'); ?>
