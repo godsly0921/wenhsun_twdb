@@ -24,6 +24,12 @@ $config = $configService->findByConfigName('title');
     <script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/gentelella/vendors/moment/moment.js"></script>
     <script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/gentelella/vendors/bootstrap-daterangepicker/daterangepicker.js"></script>
     <script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/jquery-ui-1.12.1/jquery-ui.min.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery.lazyload/1.9.1/jquery.lazyload.js"></script>
+    
+    <script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/bootstrap-select/dist/js/bootstrap-select.js"></script>
+    <script>
+        $("img.lazyload").lazyload();
+    </script>
 </head>
 <style>
     .lmask {
@@ -42,6 +48,7 @@ $config = $configService->findByConfigName('title');
         opacity: 0.4;
     }
 </style>
+
 <body class="nav-md">
     <div class='lmask' style="display: none;">資料處理中...</div>
     <div class="container body">

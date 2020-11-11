@@ -36,19 +36,52 @@ class BookauthorController extends Controller
 	public function actionCreate()
 	{
 		$model=new BookAuthor;
-
+		$model_author_event=new BookAuthorEvent;
+		$bookService = new BookService();
+		$single = $bookService->getFK_Singles_data();
+		$book_category = $bookService->getFK_Category_data();
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
 
 		if(isset($_POST['BookAuthor']))
-		{
-			$model->attributes=$_POST['BookAuthor'];
-			if($model->save())
+		{	
+			$inputs = $_POST['BookAuthor'];
+			$inputs['create_at'] = date("Y-m-d H:i:s");
+			$inputs['last_updated_user'] = Yii::app()->session['uid'];
+			$model->attributes=$inputs;
+			$book_author_event_inputs = $_POST['BookAuthorEvent'];
+
+			if($model->save()){
+				
+				foreach ($book_author_event_inputs as $key => $value) {
+					if(!empty($value["title"]) && !empty($value["description"]) && !empty($value["image_link"]) && !empty($value["year"])){
+						$value["create_at"] = date("Y-m-d H:i:s");
+						$value["update_at"] = date("Y-m-d H:i:s");
+						$value["author_id"] = $model->author_id;
+						$model_author_event=new BookAuthorEvent;
+						$model_author_event->attributes=$value;		
+
+						if($model_author_event->save()){
+							$mongo = new Mongo();
+							$mongo->insert_record('wenhsun', 'book_author_event', $value);
+						}else{
+							var_dump($model_author_event);exit();
+						}
+					}
+				}
+				$mongo = new Mongo();
+				$inputs['author_id'] = $model->author_id;
+				$inputs['literary_genre'] = explode(",",$inputs['literary_genre']);
+				$mongo->insert_record('wenhsun', 'book_author', $inputs);
 				$this->redirect(array('view','id'=>$model->author_id));
+			}
 		}
 
 		$this->render('create',array(
 			'model'=>$model,
+			'model_author_event'=>$model_author_event,
+			'single'=>$single,
+			'book_category'=>$book_category,
 		));
 	}
 
@@ -61,18 +94,57 @@ class BookauthorController extends Controller
 	{
 		$model=$this->loadModel($id);
 
+		$bookService = new BookService();
+		$model_author_event = $bookService->getBookAuthorEvent($id);
+		$single = $bookService->getFK_Singles_data();
+		$book_category = $bookService->getFK_Category_data($model->literary_genre);
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
 
 		if(isset($_POST['BookAuthor']))
 		{
-			$model->attributes=$_POST['BookAuthor'];
-			if($model->save())
+			$book_author_event_inputs = $_POST['BookAuthorEvent'];
+			$inputs = $_POST['BookAuthor'];
+			$inputs['update_at'] = date("Y-m-d H:i:s");
+			$inputs['last_updated_user'] = Yii::app()->session['uid'];
+			$model->attributes=$inputs;
+			if($model->save()){
+				BookAuthorEvent::model()->deleteAll(array(
+	                'condition' => "author_id=:author_id",   
+	                'params' => array(':author_id' => $model->author_id ),    
+	            ));  
+	            $mongo = new Mongo();
+	            $delete_find = array('author_id'=>$model->author_id);
+	            $mongo->delete_record( 'wenhsun', 'book_author_event', $delete_find );
+				foreach ($book_author_event_inputs as $key => $value) {
+					if(!empty($value["title"]) && !empty($value["description"]) && !empty($value["image_link"]) && !empty($value["year"])){
+						$value["create_at"] = date("Y-m-d H:i:s");
+						$value["update_at"] = date("Y-m-d H:i:s");
+						$value["author_id"] = $model->author_id;
+						$model_author_event=new BookAuthorEvent;	
+						$model_author_event->attributes=$value;		
+						if($model_author_event->save()){
+							$mongo = new Mongo();
+							$mongo->insert_record('wenhsun', 'book_author_event', $value);
+						}else{
+							var_dump($model_author_event);exit();
+						}
+					}
+				}
+				$mongo = new Mongo();
+				$update_find = array('author_id'=>$id);
+				$inputs['literary_genre'] = explode(",",$inputs['literary_genre']);
+				$update_input = array('$set' => $inputs);
+				$mongo->update_record('wenhsun', 'book_author', $update_find, $update_input);
 				$this->redirect(array('view','id'=>$model->author_id));
+			}
 		}
 
 		$this->render('update',array(
 			'model'=>$model,
+			'model_author_event'=>$model_author_event,
+			'single'=>$single,
+			'book_category'=>$book_category,
 		));
 	}
 
@@ -83,7 +155,21 @@ class BookauthorController extends Controller
 	 */
 	public function actionDelete($id)
 	{
-		$this->loadModel($id)->delete();
+		$model=$this->loadModel($id);
+		if($model){
+			$inputs = array();
+			$inputs['status'] = -1;
+			$inputs['update_at'] = date("Y-m-d H:i:s");
+			$inputs['delete_at'] = date("Y-m-d H:i:s");
+			$inputs['last_updated_user'] = Yii::app()->session['uid'];
+			$model->attributes = $inputs;
+			if($model->save()){
+				$mongo = new Mongo();
+				$update_find = array('author_id'=>$id);
+				$update_input = array('$set' => $inputs);
+            	$mongo->update_record('wenhsun', 'book_author', $update_find, $update_input);
+			}
+		}
 
 		// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
 		if(!isset($_GET['ajax']))

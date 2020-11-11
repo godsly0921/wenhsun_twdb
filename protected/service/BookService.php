@@ -167,5 +167,16 @@ class BookService
 		$data = Yii::app()->db->createCommand($sql)->queryAll();
 		return $data;
 	}
+
+	public function getBookAuthorEvent($author_id){
+		$data = array();
+		$data = BookAuthorEvent::model()->findAll(array(
+            'condition'=>'author_id=:author_id',
+            'params'=>array(
+                ':author_id' => $author_id,
+            )
+        ));
+		return $data;
+	}
 }
 ?>

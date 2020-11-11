@@ -77,7 +77,7 @@ $('.search-form form').submit(function(){
 			'columns'=>array(
 				'author_id',
 		'name',
-		'birthday',
+		// 'birthday',
 		'gender',
 		'summary',
 		'memo',

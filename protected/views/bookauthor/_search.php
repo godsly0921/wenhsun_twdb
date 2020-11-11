@@ -29,13 +29,6 @@
 	</div>
 
 	<div class="form-group">
-		<?php echo $form->label($model,'birthday', array('class'=>'col-sm-3 control-label')); ?>
-		<div class="col-sm-8">
-			<?php echo $form->textField($model,'birthday', array('class'=>'form-control')); ?>
-		</div>
-	</div>
-
-	<div class="form-group">
 		<?php echo $form->label($model,'gender', array('class'=>'col-sm-3 control-label')); ?>
 		<div class="col-sm-8">
 			<?php echo $form->textField($model,'gender',array('size'=>1,'maxlength'=>1,'class'=>'form-control')); ?>
@@ -57,37 +50,9 @@
 	</div>
 
 	<div class="form-group">
-		<?php echo $form->label($model,'create_at', array('class'=>'col-sm-3 control-label')); ?>
-		<div class="col-sm-8">
-			<?php echo $form->textField($model,'create_at', array('class'=>'form-control')); ?>
-		</div>
-	</div>
-
-	<div class="form-group">
-		<?php echo $form->label($model,'update_at', array('class'=>'col-sm-3 control-label')); ?>
-		<div class="col-sm-8">
-			<?php echo $form->textField($model,'update_at', array('class'=>'form-control')); ?>
-		</div>
-	</div>
-
-	<div class="form-group">
-		<?php echo $form->label($model,'delete_at', array('class'=>'col-sm-3 control-label')); ?>
-		<div class="col-sm-8">
-			<?php echo $form->textField($model,'delete_at', array('class'=>'form-control')); ?>
-		</div>
-	</div>
-
-	<div class="form-group">
 		<?php echo $form->label($model,'status', array('class'=>'col-sm-3 control-label')); ?>
 		<div class="col-sm-8">
 			<?php echo $form->textField($model,'status', array('class'=>'form-control')); ?>
-		</div>
-	</div>
-
-	<div class="form-group">
-		<?php echo $form->label($model,'last_updated_user', array('class'=>'col-sm-3 control-label')); ?>
-		<div class="col-sm-8">
-			<?php echo $form->textField($model,'last_updated_user', array('class'=>'form-control')); ?>
 		</div>
 	</div>
 
@@ -120,9 +85,9 @@
 	</div>
 
 	<div class="form-group">
-		<?php echo $form->label($model,'bitrh_day', array('class'=>'col-sm-3 control-label')); ?>
+		<?php echo $form->label($model,'birth_day', array('class'=>'col-sm-3 control-label')); ?>
 		<div class="col-sm-8">
-			<?php echo $form->textField($model,'bitrh_day',array('size'=>2,'maxlength'=>2,'class'=>'form-control')); ?>
+			<?php echo $form->textField($model,'birth_day',array('size'=>2,'maxlength'=>2,'class'=>'form-control')); ?>
 		</div>
 	</div>
 
@@ -193,13 +158,6 @@
 		<?php echo $form->label($model,'present_job', array('class'=>'col-sm-3 control-label')); ?>
 		<div class="col-sm-8">
 			<?php echo $form->textArea($model,'present_job',array('rows'=>6, 'cols'=>50,'class'=>'form-control')); ?>
-		</div>
-	</div>
-
-	<div class="form-group">
-		<?php echo $form->label($model,'brief_intro', array('class'=>'col-sm-3 control-label')); ?>
-		<div class="col-sm-8">
-			<?php echo $form->textArea($model,'brief_intro',array('rows'=>6, 'cols'=>50,'class'=>'form-control')); ?>
 		</div>
 	</div>
 

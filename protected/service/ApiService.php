@@ -250,7 +250,7 @@ class ApiService{
 	function findAuthorEvent($author_id){
 		$data = array();
 		if(!empty($author_id)){
-			$sql = "SELECT * FROM event_list WHERE author_id='" . $author_id . "'";
+			$sql = "SELECT * FROM book_author_event WHERE author_id='" . $author_id . "'";
 			$data = Yii::app()->db->createCommand($sql)->queryAll();
 		}
 		return $data;

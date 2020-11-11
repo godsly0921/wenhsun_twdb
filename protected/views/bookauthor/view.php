@@ -28,8 +28,13 @@ $this->menu=array(
 	'data'=>$model,
 	'attributes'=>array(
 		'author_id',
+		array(        
+        	'name'=>'圖庫圖片',
+        	'type'=>'raw',
+			'value'=>  CHtml::image(DOMAIN."image_storage/P/".$model->single_id.".jpg","",array("style"=>"max-width:150px;max-height:150px")),
+        ),
 		'name',
-		'birthday',
+		// 'birthday',
 		'gender',
 		'summary',
 		'memo',
@@ -42,7 +47,7 @@ $this->menu=array(
 		'hometown',
 		'birth_year',
 		'birth_month',
-		'bitrh_day',
+		'birth_day',
 		'arrive_time',
 		'experience',
 		'literary_style',
@@ -53,6 +58,6 @@ $this->menu=array(
 		'pen_name',
 		'literary_genre',
 		'present_job',
-		'brief_intro',
+		// 'brief_intro',
 	),
 )); ?>

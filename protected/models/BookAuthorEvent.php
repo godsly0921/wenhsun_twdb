@@ -15,14 +15,14 @@
  * @property string $create_at
  * @property string $update_at
  */
-class EventList extends CActiveRecord
+class BookAuthorEvent extends CActiveRecord
 {
     /**
      * @return string the associated database table name
      */
     public function tableName()
     {
-        return 'event_list';
+        return 'book_author_event';
     }
 
     /**
@@ -33,15 +33,15 @@ class EventList extends CActiveRecord
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('book_author_id, create_at, update_at', 'required'),
-            array('book_author_id', 'numerical', 'integerOnly'=>true),
+            array('author_id, create_at, update_at', 'required'),
+            array('author_id', 'numerical', 'integerOnly'=>true),
             array('year', 'length', 'max'=>4),
             array('month, day', 'length', 'max'=>2),
             array('title', 'length', 'max'=>200),
             array('image_link', 'length', 'max'=>512),
             array('description', 'safe'),
             // The following rule is used by search().
-            array('id, book_author_id, year, month, day, title', 'safe', 'on'=>'search'),
+            array('id, author_id, year, month, day, title', 'safe', 'on'=>'search'),
         );
     }
 
@@ -63,10 +63,10 @@ class EventList extends CActiveRecord
     {
         return array(
             'id' => 'ID',
-            'book_author_id' => '作者 id',
-            'year' => '年',
-            'month' => '月',
-            'day' => '日',
+            'author_id' => '作者 id',
+            'year' => '年表-年',
+            'month' => '年表-月',
+            'day' => '年表-日',
             'title' => '事件標題',
             'description' => '事件說明',
             'image_link' => '圖庫圖片',
@@ -94,7 +94,7 @@ class EventList extends CActiveRecord
         $criteria=new CDbCriteria;
 
         $criteria->compare('id',$this->id);
-        $criteria->compare('book_author_id',$this->book_author_id);
+        $criteria->compare('author_id',$this->author_id);
         $criteria->compare('year',$this->year,true);
         $criteria->compare('month',$this->month,true);
         $criteria->compare('day',$this->day,true);
