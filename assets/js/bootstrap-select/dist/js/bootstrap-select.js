@@ -59,7 +59,7 @@
     h5: [],
     h6: [],
     i: [],
-    img: ['src', 'alt', 'title', 'width', 'height'],
+    img: ['src', 'alt', 'title', 'width', 'height','data-original','data-src'],
     li: [],
     ol: [],
     p: [],
