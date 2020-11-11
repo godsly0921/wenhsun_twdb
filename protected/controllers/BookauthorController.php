@@ -42,41 +42,52 @@ class BookauthorController extends Controller
 		$book_category = $bookService->getFK_Category_data();
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
+		$transaction = Yii::app()->db->beginTransaction();
+        try {
+			if(isset($_POST['BookAuthor']))
+			{	
+				$inputs = $_POST['BookAuthor'];
+				$inputs['create_at'] = date("Y-m-d H:i:s");
+				$inputs['last_updated_user'] = Yii::app()->session['uid'];
+				$model->attributes=$inputs;
+				$book_author_event_inputs = $_POST['BookAuthorEvent'];
 
-		if(isset($_POST['BookAuthor']))
-		{	
-			$inputs = $_POST['BookAuthor'];
-			$inputs['create_at'] = date("Y-m-d H:i:s");
-			$inputs['last_updated_user'] = Yii::app()->session['uid'];
-			$model->attributes=$inputs;
-			$book_author_event_inputs = $_POST['BookAuthorEvent'];
+				if($model->save()){
+					
+					foreach ($book_author_event_inputs as $key => $value) {
+						if(!empty($value["title"]) && !empty($value["description"]) && !empty($value["image_link"]) && !empty($value["year"])){
+							$value["create_at"] = date("Y-m-d H:i:s");
+							$value["update_at"] = date("Y-m-d H:i:s");
+							$value["author_id"] = $model->author_id;
+							$model_author_event=new BookAuthorEvent;
+							$model_author_event->attributes=$value;		
 
-			if($model->save()){
-				
-				foreach ($book_author_event_inputs as $key => $value) {
-					if(!empty($value["title"]) && !empty($value["description"]) && !empty($value["image_link"]) && !empty($value["year"])){
-						$value["create_at"] = date("Y-m-d H:i:s");
-						$value["update_at"] = date("Y-m-d H:i:s");
-						$value["author_id"] = $model->author_id;
-						$model_author_event=new BookAuthorEvent;
-						$model_author_event->attributes=$value;		
-
-						if($model_author_event->save()){
-							$mongo = new Mongo();
-							$mongo->insert_record('wenhsun', 'book_author_event', $value);
-						}else{
-							var_dump($model_author_event);exit();
+							if($model_author_event->save()){
+								$mongo = new Mongo();
+								$mongo->insert_record('wenhsun', 'book_author_event', $value);
+							}else{
+								var_dump($model_author_event);exit();
+							}
 						}
 					}
+					$mongo = new Mongo();
+					$inputs['author_id'] = $model->author_id;
+					$inputs['literary_genre'] = explode(",",$inputs['literary_genre']);
+					$mongo->insert_record('wenhsun', 'book_author', $inputs);
+					$this->redirect(array('view','id'=>$model->author_id));
 				}
-				$mongo = new Mongo();
-				$inputs['author_id'] = $model->author_id;
-				$inputs['literary_genre'] = explode(",",$inputs['literary_genre']);
-				$mongo->insert_record('wenhsun', 'book_author', $inputs);
-				$this->redirect(array('view','id'=>$model->author_id));
 			}
-		}
-
+			$transaction->commit();
+        }catch (Exception $e) {
+            $transaction->rollback();
+            Yii::log(date('Y-m-d H:i:s') . "  book_author create fail. Message =>" . $e->getMessage(), CLogger::LEVEL_INFO);
+            $this->render('create',array(
+				'model'=>$model,
+				'model_author_event'=>$model_author_event,
+				'single'=>$single,
+				'book_category'=>$book_category,
+			));
+        } 
 		$this->render('create',array(
 			'model'=>$model,
 			'model_author_event'=>$model_author_event,
@@ -100,46 +111,57 @@ class BookauthorController extends Controller
 		$book_category = $bookService->getFK_Category_data($model->literary_genre);
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
-
-		if(isset($_POST['BookAuthor']))
-		{
-			$book_author_event_inputs = $_POST['BookAuthorEvent'];
-			$inputs = $_POST['BookAuthor'];
-			$inputs['update_at'] = date("Y-m-d H:i:s");
-			$inputs['last_updated_user'] = Yii::app()->session['uid'];
-			$model->attributes=$inputs;
-			if($model->save()){
-				BookAuthorEvent::model()->deleteAll(array(
-	                'condition' => "author_id=:author_id",   
-	                'params' => array(':author_id' => $model->author_id ),    
-	            ));  
-	            $mongo = new Mongo();
-	            $delete_find = array('author_id'=>$model->author_id);
-	            $mongo->delete_record( 'wenhsun', 'book_author_event', $delete_find );
-				foreach ($book_author_event_inputs as $key => $value) {
-					if(!empty($value["title"]) && !empty($value["description"]) && !empty($value["image_link"]) && !empty($value["year"])){
-						$value["create_at"] = date("Y-m-d H:i:s");
-						$value["update_at"] = date("Y-m-d H:i:s");
-						$value["author_id"] = $model->author_id;
-						$model_author_event=new BookAuthorEvent;	
-						$model_author_event->attributes=$value;		
-						if($model_author_event->save()){
-							$mongo = new Mongo();
-							$mongo->insert_record('wenhsun', 'book_author_event', $value);
-						}else{
-							var_dump($model_author_event);exit();
+		$transaction = Yii::app()->db->beginTransaction();
+        try {
+			if(isset($_POST['BookAuthor']))
+			{
+				$book_author_event_inputs = $_POST['BookAuthorEvent'];
+				$inputs = $_POST['BookAuthor'];
+				$inputs['update_at'] = date("Y-m-d H:i:s");
+				$inputs['last_updated_user'] = Yii::app()->session['uid'];
+				$model->attributes=$inputs;
+				if($model->save()){
+					BookAuthorEvent::model()->deleteAll(array(
+		                'condition' => "author_id=:author_id",   
+		                'params' => array(':author_id' => $model->author_id ),    
+		            ));  
+		            $mongo = new Mongo();
+		            $delete_find = array('author_id'=>$model->author_id);
+		            $mongo->delete_record( 'wenhsun', 'book_author_event', $delete_find );
+					foreach ($book_author_event_inputs as $key => $value) {
+						if(!empty($value["title"]) && !empty($value["description"]) && !empty($value["image_link"]) && !empty($value["year"])){
+							$value["create_at"] = date("Y-m-d H:i:s");
+							$value["update_at"] = date("Y-m-d H:i:s");
+							$value["author_id"] = $model->author_id;
+							$model_author_event=new BookAuthorEvent;	
+							$model_author_event->attributes=$value;		
+							if($model_author_event->save()){
+								$mongo = new Mongo();
+								$mongo->insert_record('wenhsun', 'book_author_event', $value);
+							}else{
+								var_dump($model_author_event);exit();
+							}
 						}
 					}
+					$mongo = new Mongo();
+					$update_find = array('author_id'=>$id);
+					$inputs['literary_genre'] = explode(",",$inputs['literary_genre']);
+					$update_input = array('$set' => $inputs);
+					$mongo->update_record('wenhsun', 'book_author', $update_find, $update_input);
+					$this->redirect(array('view','id'=>$model->author_id));
 				}
-				$mongo = new Mongo();
-				$update_find = array('author_id'=>$id);
-				$inputs['literary_genre'] = explode(",",$inputs['literary_genre']);
-				$update_input = array('$set' => $inputs);
-				$mongo->update_record('wenhsun', 'book_author', $update_find, $update_input);
-				$this->redirect(array('view','id'=>$model->author_id));
 			}
-		}
-
+			$transaction->commit();
+        }catch (Exception $e) {
+            $transaction->rollback();
+            Yii::log(date('Y-m-d H:i:s') . "  book_author update fail. Message =>" . $e->getMessage(), CLogger::LEVEL_INFO);
+            $this->render('update',array(
+				'model'=>$model,
+				'model_author_event'=>$model_author_event,
+				'single'=>$single,
+				'book_category'=>$book_category,
+			));
+        } 
 		$this->render('update',array(
 			'model'=>$model,
 			'model_author_event'=>$model_author_event,
