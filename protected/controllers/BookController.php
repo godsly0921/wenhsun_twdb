@@ -195,8 +195,11 @@ class BookController extends Controller
 
 	public function findSubAuthorName($sub_author_id){
 		$data = array();
-		$sql = "SELECT GROUP_CONCAT(name) as sub_author_name FROM book_author WHERE author_id IN(" . $sub_author_id . ")";
-		$data = Yii::app()->db->createCommand($sql)->queryAll();
+		if(!empty($sub_author_id)){
+			$sql = "SELECT GROUP_CONCAT(name) as sub_author_name FROM book_author WHERE author_id IN(" . $sub_author_id . ")";
+			$data = Yii::app()->db->createCommand($sql)->queryAll();
+		}
+		
         if(!empty($data)){
         	return $data[0]['sub_author_name'];
         }else{
