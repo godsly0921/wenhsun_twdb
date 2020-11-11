@@ -42,10 +42,11 @@ class BookauthorController extends Controller
 		$book_category = $bookService->getFK_Category_data();
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
-		$transaction = Yii::app()->db->beginTransaction();
-        try {
-			if(isset($_POST['BookAuthor']))
-			{	
+		
+		if(isset($_POST['BookAuthor']))
+		{	
+			$transaction = Yii::app()->db->beginTransaction();
+    		try {
 				$inputs = $_POST['BookAuthor'];
 				$inputs['create_at'] = date("Y-m-d H:i:s");
 				$inputs['last_updated_user'] = Yii::app()->session['uid'];
@@ -76,18 +77,19 @@ class BookauthorController extends Controller
 					$mongo->insert_record('wenhsun', 'book_author', $inputs);
 					$this->redirect(array('view','id'=>$model->author_id));
 				}
-			}
-			$transaction->commit();
-        }catch (Exception $e) {
-            $transaction->rollback();
-            Yii::log(date('Y-m-d H:i:s') . "  book_author create fail. Message =>" . $e->getMessage(), CLogger::LEVEL_INFO);
-            $this->render('create',array(
-				'model'=>$model,
-				'model_author_event'=>$model_author_event,
-				'single'=>$single,
-				'book_category'=>$book_category,
-			));
-        } 
+				$transaction->commit();
+	        }catch (Exception $e) {
+	            $transaction->rollback();
+	            Yii::log(date('Y-m-d H:i:s') . "  book_author create fail. Message =>" . $e->getMessage(), CLogger::LEVEL_INFO);
+	            $this->render('create',array(
+					'model'=>$model,
+					'model_author_event'=>$model_author_event,
+					'single'=>$single,
+					'book_category'=>$book_category,
+				));
+	        } 
+		}
+			
 		$this->render('create',array(
 			'model'=>$model,
 			'model_author_event'=>$model_author_event,
@@ -111,10 +113,10 @@ class BookauthorController extends Controller
 		$book_category = $bookService->getFK_Category_data($model->literary_genre);
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
-		$transaction = Yii::app()->db->beginTransaction();
-        try {
-			if(isset($_POST['BookAuthor']))
-			{
+		if(isset($_POST['BookAuthor']))
+		{
+			$transaction = Yii::app()->db->beginTransaction();
+			try {
 				$book_author_event_inputs = $_POST['BookAuthorEvent'];
 				$inputs = $_POST['BookAuthor'];
 				$inputs['update_at'] = date("Y-m-d H:i:s");
@@ -150,18 +152,19 @@ class BookauthorController extends Controller
 					$mongo->update_record('wenhsun', 'book_author', $update_find, $update_input);
 					$this->redirect(array('view','id'=>$model->author_id));
 				}
-			}
-			$transaction->commit();
-        }catch (Exception $e) {
-            $transaction->rollback();
-            Yii::log(date('Y-m-d H:i:s') . "  book_author update fail. Message =>" . $e->getMessage(), CLogger::LEVEL_INFO);
-            $this->render('update',array(
-				'model'=>$model,
-				'model_author_event'=>$model_author_event,
-				'single'=>$single,
-				'book_category'=>$book_category,
-			));
-        } 
+				$transaction->commit();
+	        }catch (Exception $e) {
+	            $transaction->rollback();
+	            Yii::log(date('Y-m-d H:i:s') . "  book_author update fail. Message =>" . $e->getMessage(), CLogger::LEVEL_INFO);
+	            $this->render('update',array(
+					'model'=>$model,
+					'model_author_event'=>$model_author_event,
+					'single'=>$single,
+					'book_category'=>$book_category,
+				));
+	        } 
+		}
+			
 		$this->render('update',array(
 			'model'=>$model,
 			'model_author_event'=>$model_author_event,
