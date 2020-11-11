@@ -83,7 +83,7 @@ class BookController extends Controller
 				$this->redirect(array('view','id'=>$model->book_id));
 			}
 		}
-		$model->sub_author_id = explode(",",$model->sub_author_id);
+		
 		$this->render('create',array(
 			'model'=>$model,
 			'FK_data'=>$FK_data,
