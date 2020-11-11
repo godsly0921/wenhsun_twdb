@@ -71,13 +71,6 @@
 	</div>
 
 	<div class="form-group">
-		<?php echo $form->label($model,'birth_year', array('class'=>'col-sm-3 control-label')); ?>
-		<div class="col-sm-8">
-			<?php echo $form->textField($model,'birth_year',array('size'=>4,'maxlength'=>4,'class'=>'form-control')); ?>
-		</div>
-	</div>
-
-	<div class="form-group">
 		<?php echo $form->label($model,'birth_month', array('class'=>'col-sm-3 control-label')); ?>
 		<div class="col-sm-8">
 			<?php echo $form->textField($model,'birth_month',array('size'=>2,'maxlength'=>2,'class'=>'form-control')); ?>
