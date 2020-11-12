@@ -796,6 +796,7 @@ class ApiController extends CController{
 				);
 			} else {
 				$apiservice = new ApiService();
+				$categoryService = new BookcategoryService();
 				$author = $apiservice->findAuthorById($params['body']['author_id']);
 				$output = [];
 				if (!empty($author)) {
@@ -807,7 +808,16 @@ class ApiController extends CController{
 					$event = $apiservice->findAuthorEvent($params['body']['author_id']);
 					// 作者書籍
 					$book = $apiservice->findAuthorBook($params['body']['author_id']);
-
+					// 創作文類
+					$category_data = $categoryService->get_Allcategory_data("1");
+					$literary_genre = explode(",", $author["literary_genre"]);
+					$category_name = array();
+					foreach ($literary_genre as $key => $value) {
+						if(isset($category_data[$value])){
+							array_push( $category_name, $category_data[$value] );
+						}
+					}
+					$author["literary_genre"] = implode('，',$category_name);
 					$output['image'] = $image;
 					$output['author'] = $author;
 					$output['event'] = $event;
