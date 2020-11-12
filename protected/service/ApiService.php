@@ -250,8 +250,14 @@ class ApiService{
 	function findAuthorEvent($author_id){
 		$data = array();
 		if(!empty($author_id)){
-			$sql = "SELECT * FROM book_author_event WHERE author_id='" . $author_id . "'";
-			$data = Yii::app()->db->createCommand($sql)->queryAll();
+			$sql = "SELECT * FROM book_author_event WHERE author_id='" . $author_id . "' ORDER BY year DESC, month DESC, day DESC";
+			$result = Yii::app()->db->createCommand($sql)->queryAll();
+			if(!empty($result)){
+				foreach ($result as $key => $value) {
+					if(!isset($data[$value["year"]])) $data[$value["year"]] = array();
+					$data[$value["year"]][] = $value;
+				}
+			}
 		}
 		return $data;
 	}
@@ -259,8 +265,33 @@ class ApiService{
 	function findAuthorBook($author_id){
 		$data = array();
 		if(!empty($author_id)){
-			$sql = "SELECT * FROM book WHERE author_id='" . $author_id . "'";
-			$data = Yii::app()->db->createCommand($sql)->queryAll();
+			$sql ="SELECT 
+				book_name,
+				bpp.name as publish_place_name,
+				bpu.name as publish_organization_name,
+				b.publish_year,
+				b.publish_month,
+				b.publish_day,
+				b.category,
+				(SELECT GROUP_CONCAT(name) FROM book_category WHERE  FIND_IN_SET(category_id,b.category) AND isroot='0') as category_name,
+				bs.name as size_name,book_pages 
+			FROM `book` b
+			LEFT JOIN book_publish_place bpp on b.publish_place=bpp.publish_place_id
+			LEFT JOIN book_publish_unit bpu on b.publish_organization=bpu.publish_unit_id
+			LEFT JOIN book_size bs on b.book_size=bs.book_size_id
+			WHERE b.author_id='" . $author_id . "' AND b.status='1'";
+			$result = Yii::app()->db->createCommand($sql)->queryAll();
+			if(!empty($result)){
+				foreach ($result as $key => $value) {
+					$category = explode(",", $value['category_name']);
+					foreach ($category as $c_key => $c_value) {
+						if(isset($data[$c_value])) $data[$c_value] = array();
+						$data[$c_value][] = $value;
+					}
+					
+				}
+				
+			}
 		}
 		return $data;
 	}
