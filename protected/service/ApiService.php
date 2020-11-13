@@ -303,5 +303,14 @@ class ApiService{
 		}
 		return $data;
 	}
+
+	function findAuthorArticle($author_name){
+		$data = array();
+		if(!empty($author_name)){
+			$sql = "SELECT * FROM focus WHERE (title like '%" . $author_name . "%' OR author like '%" . $author_name . "%' OR content like'%" . $author_name . "%'  OR description like '%" . $author_name . "%') AND status='1'";
+			$data = Yii::app()->db_official->createCommand($sql)->queryAll();
+		}
+		return $data;
+	}
 }
 ?>
