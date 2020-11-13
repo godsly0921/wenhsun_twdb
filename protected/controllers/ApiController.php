@@ -817,11 +817,14 @@ class ApiController extends CController{
 							array_push( $category_name, $category_data[$value] );
 						}
 					}
+					// 作者書籍
+					$article = $apiservice->findAuthorArticle($author["name"]);
 					$author["literary_genre"] = implode('，',$category_name);
 					$output['image'] = $image;
 					$output['author'] = $author;
 					$output['event'] = $event;
 					$output['book'] = $book;
+					$output['article'] = $article;
 					$this->output = $output;
 					$response = $this->setresponse(
 						$params,
