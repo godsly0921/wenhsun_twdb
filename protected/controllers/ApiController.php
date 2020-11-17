@@ -329,9 +329,11 @@ class ApiController extends CController{
 					$sql = "SELECT * FROM `single` s LEFT JOIN single_size ss ON s.single_id = ss.single_id WHERE s.single_id =" . $id . " AND ss.size_type <> 'source' AND publish='1' AND copyright='1' AND photo_limit IN('3') order by ss.single_size_id asc";
 			        $result = Yii::app()->db->createCommand($sql)->queryAll();
 			        $data['image_info'] = $data['size'] = array();
+			        $images = array();
 			        if(!empty($result)){
 			        	foreach ($result as $key => $value) {
 				            if($key == 0){
+				            	$images[] = DOMAIN . "image_storage/" . $value['size_type'] . "/" . $value['single_id'] . ".jpg";
 				                $data['size'][] = array(
 				                    'size_type' => $value['size_type'],
 				                    'size_description' => $value['size_description'],
@@ -383,9 +385,11 @@ class ApiController extends CController{
 				                    // 'sale_twd' => $value['sale_twd'],
 				                    // 'sale_point' => $value['sale_point'],
 				                );
+				                $images[] = DOMAIN . "image_storage/" . $value['size_type'] . "/" . $value['single_id'] . ".jpg";
 				            }        
 				        }
 				        $data['image_info']['size'] = $data['size'];
+				        $data['image_info']["images"] = $images;
 				       	$this->output = $data['image_info'];
 				        $response = $this->setresponse(
 							$params, 
