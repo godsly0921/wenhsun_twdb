@@ -117,7 +117,7 @@ class BookauthorController extends Controller
 		{
 			$transaction = Yii::app()->db->beginTransaction();
 			try {
-				$book_author_event_inputs = $_POST['BookAuthorEvent'];
+				$book_author_event_inputs = isset($_POST['BookAuthorEvent'])?$_POST['BookAuthorEvent']:array();
 				$inputs = $_POST['BookAuthor'];
 				$inputs['update_at'] = date("Y-m-d H:i:s");
 				$inputs['last_updated_user'] = Yii::app()->session['uid'];
@@ -130,21 +130,24 @@ class BookauthorController extends Controller
 		            $mongo = new Mongo();
 		            $delete_find = array('author_id'=>$model->author_id);
 		            $mongo->delete_record( 'wenhsun', 'book_author_event', $delete_find );
-					foreach ($book_author_event_inputs as $key => $value) {
-						if(!empty($value["title"]) && !empty($value["description"]) && !empty($value["image_link"]) && !empty($value["year"])){
-							$value["create_at"] = date("Y-m-d H:i:s");
-							$value["update_at"] = date("Y-m-d H:i:s");
-							$value["author_id"] = $model->author_id;
-							$model_author_event=new BookAuthorEvent;	
-							$model_author_event->attributes=$value;		
-							if($model_author_event->save()){
-								$mongo = new Mongo();
-								$mongo->insert_record('wenhsun', 'book_author_event', $value);
-							}else{
-								var_dump($model_author_event);exit();
+		            if(!empty($book_author_event_inputs)){
+		            	foreach ($book_author_event_inputs as $key => $value) {
+							if(!empty($value["title"]) && !empty($value["description"]) && !empty($value["image_link"]) && !empty($value["year"])){
+								$value["create_at"] = date("Y-m-d H:i:s");
+								$value["update_at"] = date("Y-m-d H:i:s");
+								$value["author_id"] = $model->author_id;
+								$model_author_event=new BookAuthorEvent;	
+								$model_author_event->attributes=$value;		
+								if($model_author_event->save()){
+									$mongo = new Mongo();
+									$mongo->insert_record('wenhsun', 'book_author_event', $value);
+								}else{
+									var_dump($model_author_event);exit();
+								}
 							}
 						}
-					}
+		            }
+					
 					$mongo = new Mongo();
 					$update_find = array('author_id'=>$id);
 					$inputs['literary_genre'] = explode(",",$inputs['literary_genre']);

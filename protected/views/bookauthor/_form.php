@@ -132,7 +132,7 @@ $gender = array(
 	<div class="form-group">
 		<?php echo $form->labelEx($model,'birth_year', array('class'=>'col-sm-3 control-label')); ?>
 		<div class="col-sm-8">
-			<input type="text" id="birth_year" size="4", maxlength="4" name="BookAuthor[birth_year]" required="required" data-date-format="yyyy" class="form-control datepicker" value="<?=$model->birth_year?>" placeholder="出生年">
+			<input type="text" id="birth_year" size="4", maxlength="4" name="BookAuthor[birth_year]" required="required" data-date-format="yyyy" class="form-control datepicker birth_year" value="<?=$model->birth_year?>" placeholder="出生年">
 		</div>
 		<?php echo $form->error($model,'birth_year'); ?>
 	</div>
@@ -140,7 +140,7 @@ $gender = array(
 	<div class="form-group">
 		<?php echo $form->labelEx($model,'birth_month', array('class'=>'col-sm-3 control-label')); ?>
 		<div class="col-sm-8">
-			<input type="text" id="birth_month" size="2", maxlength="2" name="BookAuthor[birth_month]" data-date-format="mm" class="form-control datepicker" value="<?=$model->birth_month?>" placeholder="出生月">
+			<input type="text" id="birth_month" size="2", maxlength="2" name="BookAuthor[birth_month]" data-date-format="mm" class="form-control datepicker birth_month" value="<?=$model->birth_month?>" placeholder="出生月">
 		</div>
 		<?php echo $form->error($model,'birth_month'); ?>
 	</div>
@@ -148,7 +148,7 @@ $gender = array(
 	<div class="form-group">
 		<?php echo $form->labelEx($model,'birth_day', array('class'=>'col-sm-3 control-label')); ?>
 		<div class="col-sm-8">
-			<input type="text" id="birth_day" size="2", maxlength="2" name="BookAuthor[birth_day]" data-date-format="dd" class="form-control datepicker" value="<?=$model->birth_day?>" placeholder="出生日">
+			<input type="text" id="birth_day" size="2", maxlength="2" name="BookAuthor[birth_day]" data-date-format="dd" class="form-control datepicker birth_day" value="<?=$model->birth_day?>" placeholder="出生日">
 		</div>
 		<?php echo $form->error($model,'birth_day'); ?>
 	</div>
@@ -188,7 +188,7 @@ $gender = array(
 	<div class="form-group">
 		<?php echo $form->labelEx($model,'year_of_death', array('class'=>'col-sm-3 control-label')); ?>
 		<div class="col-sm-8">
-			<?php echo $form->textField($model,'year_of_death',array('size'=>4,'maxlength'=>4,'class'=>'form-control datepicker','data-date-format'=>'yyyy')); ?>
+			<?php echo $form->textField($model,'year_of_death',array('size'=>4,'maxlength'=>4,'class'=>'form-control datepicker year_of_death','data-date-format'=>'yyyy')); ?>
 		</div>
 		<?php echo $form->error($model,'year_of_death'); ?>
 	</div>
@@ -196,7 +196,7 @@ $gender = array(
 	<div class="form-group">
 		<?php echo $form->labelEx($model,'year_of_month', array('class'=>'col-sm-3 control-label')); ?>
 		<div class="col-sm-8">
-			<?php echo $form->textField($model,'year_of_month',array('size'=>2,'maxlength'=>2,'class'=>'form-control datepicker','data-date-format'=>'mm')); ?>
+			<?php echo $form->textField($model,'year_of_month',array('size'=>2,'maxlength'=>2,'class'=>'form-control datepicker year_of_month','data-date-format'=>'mm')); ?>
 		</div>
 		<?php echo $form->error($model,'year_of_month'); ?>
 	</div>
@@ -204,7 +204,7 @@ $gender = array(
 	<div class="form-group">
 		<?php echo $form->labelEx($model,'year_of_day', array('class'=>'col-sm-3 control-label')); ?>
 		<div class="col-sm-8">
-			<?php echo $form->textField($model,'year_of_day',array('size'=>4,'maxlength'=>4,'class'=>'form-control datepicker','data-date-format'=>'dd')); ?>
+			<?php echo $form->textField($model,'year_of_day',array('size'=>4,'maxlength'=>4,'class'=>'form-control datepicker year_of_day','data-date-format'=>'dd')); ?>
 		</div>
 		<?php echo $form->error($model,'year_of_day'); ?>
 	</div>
@@ -238,15 +238,9 @@ $gender = array(
 			<h3 class="panel-title">作者年表</h3>
 		</div>
         <div class="panel-body" id="book_author_event">
-        	<?php
-        		if($isNewRecord){
-	    			$i = 1;
-	    		}else{
-	    			$i = count($model_author_event)+1;
-	    		}
-	    	?>
+        	
 	    	<div class="row text-center">
-	    		<button type="button" class="btn btn-primary btn-lg" onclick="addGallery('<?=$i?>',this)">增加</button>
+	    		<button type="button" class="btn btn-primary btn-lg" onclick="addGallery(this)">增加</button>
 	    	</div>
         	<?php	
 	        	if($isNewRecord){
@@ -271,10 +265,18 @@ $gender = array(
 <script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/bootstrap-datepicker.js"></script>
 <script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/bootstrap-treeview.js"></script>
 <script type="text/javascript">
+
+	var isNewRecord = '<?=$isNewRecord?>';
+	if(isNewRecord){
+		var add_no = 1;
+	}else{
+		var add_no = '<?=count($model_author_event)+1?>';
+	}
 	function delGallery(my) {
         $(my).parent("div").parent("div").parent("div").remove();
     }
-	function addGallery(add_no,my) {
+	function addGallery(my) {
+		// alert(add_no);
 		if($('#title_'+(add_no-1)).val() == '' || $('#description_'+(add_no-1)).val() == '' || $('#image_link_'+(add_no-1)).val() == '' || $('#year_'+(add_no-1)).val() == '' ){
 			alert("事件標題、事件說明、圖庫圖片與年表-年皆為必填欄位");
 			return;
@@ -324,33 +326,48 @@ $gender = array(
 				<div class="form-group">\
 					<label class="col-sm-3 control-label" for="BookAuthorEvent_year">年</label>\
 					<div class="col-sm-8">\
-						<input type="text" id="year" size="4" ,="" maxlength="4" name="BookAuthorEvent['+add_no+'][year]" data-date-format="yyyy" class="form-control datepicker" value="" placeholder="年表-年">\
+						<input type="text" id="year" size="4" ,="" maxlength="4" name="BookAuthorEvent['+add_no+'][year]" data-date-format="yyyy" class="form-control datepicker event_year" value="" placeholder="年表-年">\
 					</div>\
 				</div>\
 				<div class="form-group">\
 					<label class="col-sm-3 control-label" for="BookAuthorEvent_month">月</label>\
 					<div class="col-sm-8">\
-						<input type="text" id="month" size="2" ,="" maxlength="2" name="BookAuthorEvent['+add_no+'][month]" data-date-format="mm" class="form-control datepicker" value="" placeholder="年表-月">\
+						<input type="text" id="month" size="2" ,="" maxlength="2" name="BookAuthorEvent['+add_no+'][month]" data-date-format="mm" class="form-control datepicker event_month" value="" placeholder="年表-月">\
 					</div>\
 				</div>\
 				<div class="form-group">\
 					<label class="col-sm-3 control-label" for="BookAuthorEvent_day">日</label>\
 					<div class="col-sm-8">\
-						<input type="text" id="day" size="2" ,="" maxlength="2" name="BookAuthorEvent['+add_no+'][day]" data-date-format="dd" class="form-control datepicker" value="" placeholder="年表-日">\
+						<input type="text" id="day" size="2" ,="" maxlength="2" name="BookAuthorEvent['+add_no+'][day]" data-date-format="dd" class="form-control datepicker event_day" value="" placeholder="年表-日">\
 					</div>\
 				</div>\
 			</div>\
 		</div>';
         // $("#"+add_id).append(html);
-        $(my).parent("div").append(html);
+        $(my).after(html);
 
         $('.image_link_'+add_no).selectpicker({
 			size: 10,
 			virtualScroll:false
 		});
 
-		$('.datepicker').datepicker();
-        <?php $i++;?>
+		$(".event_year").datepicker({
+		    format: "yyyy",
+		    viewMode: "years", 
+		    minViewMode: "years"
+		});
+
+		$(".event_month").datepicker({
+		    format: "mm",
+		    viewMode: "months", 
+		    minViewMode: "months"
+		});
+		$(".event_day").datepicker({
+		    format: "dd",
+		    viewMode: "montdayshs", 
+		    minViewMode: "days"
+		});
+        add_no++;
     }
 	$( document ).ready(function() {
 
@@ -390,7 +407,55 @@ $gender = array(
         }
         
 
-		$('.datepicker').datepicker();
+		$(".birth_year").datepicker({
+		    format: "yyyy",
+		    viewMode: "years", 
+		    minViewMode: "years"
+		});
+
+		$(".birth_month").datepicker({
+		    format: "mm",
+		    viewMode: "months", 
+		    minViewMode: "months"
+		});
+		$(".birth_day").datepicker({
+		    format: "dd",
+		    viewMode: "montdayshs", 
+		    minViewMode: "days"
+		});
+		$(".year_of_death").datepicker({
+		    format: "yyyy",
+		    viewMode: "years", 
+		    minViewMode: "years"
+		});
+
+		$(".year_of_month").datepicker({
+		    format: "mm",
+		    viewMode: "months", 
+		    minViewMode: "months"
+		});
+		$(".year_of_day").datepicker({
+		    format: "dd",
+		    viewMode: "montdayshs", 
+		    minViewMode: "days"
+		});
+		$(".event_year").datepicker({
+		    format: "yyyy",
+		    viewMode: "years", 
+		    minViewMode: "years"
+		});
+
+		$(".event_month").datepicker({
+		    format: "mm",
+		    viewMode: "months", 
+		    minViewMode: "months"
+		});
+		$(".event_day").datepicker({
+		    format: "dd",
+		    viewMode: "montdayshs", 
+		    minViewMode: "days"
+		});
+
 		$('#tree').treeview({
             data: '<?=$book_category?>',
             showCheckbox: true, //是否顯示覆選框

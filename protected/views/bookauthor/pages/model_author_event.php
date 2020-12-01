@@ -49,7 +49,7 @@
 		<div class="form-group">
 			<?php echo $form->labelEx($model_author_event,'year', array('class'=>'col-sm-3 control-label')); ?>
 			<div class="col-sm-8">
-				<input type="text" id="year_<?=$i?>" size="4", maxlength="4" name="BookAuthorEvent[<?=$i?>][year]" required="required" data-date-format="yyyy" class="form-control datepicker" value="<?=$model_author_event->year?>" placeholder="年表-年">
+				<input type="text" id="year_<?=$i?>" size="4", maxlength="4" name="BookAuthorEvent[<?=$i?>][year]" required="required" data-date-format="yyyy" class="form-control datepicker event_year" value="<?=$model_author_event->year?>" placeholder="年表-年">
 			</div>
 			<?php echo $form->error($model_author_event,'year'); ?>
 		</div>
@@ -57,7 +57,7 @@
 		<div class="form-group">
 			<?php echo $form->labelEx($model_author_event,'month', array('class'=>'col-sm-3 control-label')); ?>
 			<div class="col-sm-8">
-				<input type="text" id="month_<?=$i?>" size="2", maxlength="2" name="BookAuthorEvent[<?=$i?>][month]" data-date-format="mm" class="form-control datepicker" value="<?=$model_author_event->month?>" placeholder="年表-月">
+				<input type="text" id="month_<?=$i?>" size="2", maxlength="2" name="BookAuthorEvent[<?=$i?>][month]" data-date-format="mm" class="form-control datepicker event_month" value="<?=$model_author_event->month?>" placeholder="年表-月">
 			</div>
 			<?php echo $form->error($model_author_event,'month'); ?>
 		</div>
@@ -65,7 +65,7 @@
 		<div class="form-group">
 			<?php echo $form->labelEx($model_author_event,'day', array('class'=>'col-sm-3 control-label')); ?>
 			<div class="col-sm-8">
-				<input type="text" id="day_<?=$i?>" size="2", maxlength="2" name="BookAuthorEvent[<?=$i?>][day]" data-date-format="dd" class="form-control datepicker" value="<?=$model_author_event->day?>" placeholder="年表-日">
+				<input type="text" id="day_<?=$i?>" size="2", maxlength="2" name="BookAuthorEvent[<?=$i?>][day]" data-date-format="dd" class="form-control datepicker event_day" value="<?=$model_author_event->day?>" placeholder="年表-日">
 			</div>
 			<?php echo $form->error($model_author_event,'day'); ?>
 		</div>
