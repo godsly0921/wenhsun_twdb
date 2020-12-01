@@ -151,7 +151,7 @@ class BookauthorController extends Controller
 					$update_input = array('$set' => $inputs);
 					$mongo->update_record('wenhsun', 'book_author', $update_find, $update_input);
 					$transaction->commit();
-					$this->redirect(array('view','id'=>$model->author_id));
+					$this->redirect(array('update','id'=>$model->author_id));
 				}
 	        }catch (Exception $e) {
 	            $transaction->rollback();
