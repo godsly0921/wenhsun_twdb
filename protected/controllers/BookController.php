@@ -84,13 +84,8 @@ class BookController extends Controller
 				$mongo->insert_record('wenhsun', 'book', $inputs);
 				$this->redirect(array('view','id'=>$model->book_id));
 			}
-			if(empty($model->sub_author_id)){
-				$model->sub_author_id = array();
-			}else{
-				$model->sub_author_id = explode(",", $model->sub_author_id);
-			}
 		}
-		
+		$model->sub_author_id = !empty($model->sub_author_id)?explode(',',$model->sub_author_id):array();
 		$this->render('create',array(
 			'model'=>$model,
 			'FK_data'=>$FK_data,
