@@ -33,6 +33,8 @@ define('HOMEBANNER_SHOW', '/assets/image/banner/');
 define('PICCOLUMN', dirname(__FILE__).'/assets/image/piccolumn/');
 define('PICCOLUMN_SHOW', '/assets/image/piccolumn/');
 define('HOMEAD', dirname(__FILE__).'/assets/AD/');
+define('BOOKAUTHORGALLERY', dirname(__FILE__).'/assets/book_author_gallery/');
+define('BOOKAUTHORGALLERY_SHOW', '/assets/book_author_gallery/');
 define('PHOTOGRAPH_STORAGE_URL', 'image_storage/O/');
 define('M3U8_STORAGE_URL', 'image_storage/video/');
 define('DOMAIN', 'https://www.twdb.com.tw/');

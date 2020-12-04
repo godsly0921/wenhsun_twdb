@@ -801,12 +801,23 @@ class ApiController extends CController{
 			} else {
 				$apiservice = new ApiService();
 				$categoryService = new BookcategoryService();
+				$bookService = new BookService();
 				$author = $apiservice->findAuthorById($params['body']['author_id']);
 				$output = [];
 				if (!empty($author)) {
 					$siteService = new SiteService();
-					$subfix = '作者教學資源';
-					$image = $siteService->findPhoto('', $author["name"] . $subfix, '', '', '', '0', '0');
+					$book_author_gallery = $bookService->getBookAuthorGallery($params['body']['author_id']);
+					$image = [];
+					if(!empty($book_author_gallery)){
+						foreach ($book_author_gallery as $key => $value) {
+							$image[] = array(
+								"image" => DOMAIN . $value['img'],
+								"captions" => $value['captions']
+							);
+						}
+					}
+					// $subfix = '作者教學資源';
+					// $image = $siteService->findPhoto('', $author["name"] . $subfix, '', '', '', '0', '0');
 					// $image = [];
 					// 作者年表
 					$event = $apiservice->findAuthorEvent($params['body']['author_id']);
