@@ -36,7 +36,9 @@ class BookauthorController extends Controller
 	public function actionCreate()
 	{
 		$model=new BookAuthor;
-		$model_author_event=new BookAuthorEvent;
+		$model_author_event = new BookAuthorEvent;
+		$book_author_gallery = new BookAuthorGallery;
+		// var_dump($model_author_event);exit();
 		$bookService = new BookService();
 		$single = $bookService->getFK_Singles_data();
 		$book_category = $bookService->getFK_Category_data();
@@ -51,26 +53,45 @@ class BookauthorController extends Controller
 				$inputs['create_at'] = date("Y-m-d H:i:s");
 				$inputs['last_updated_user'] = Yii::app()->session['uid'];
 				$model->attributes=$inputs;
-				$book_author_event_inputs = $_POST['BookAuthorEvent'];
+				$book_author_event_inputs = isset($_POST['BookAuthorEvent'])?$_POST['BookAuthorEvent']:array();
 
 				if($model->save()){
-					
-					foreach ($book_author_event_inputs as $key => $value) {
-						if(!empty($value["title"]) && !empty($value["description"]) && !empty($value["image_link"]) && !empty($value["year"])){
-							$value["create_at"] = date("Y-m-d H:i:s");
-							$value["update_at"] = date("Y-m-d H:i:s");
-							$value["author_id"] = $model->author_id;
-							$model_author_event=new BookAuthorEvent;
-							$model_author_event->attributes=$value;		
+					$total = count($_FILES["book_author_gallery"]["name"]);
+					for( $i=0 ; $i < $total ; $i++ ) {
+		                if($_FILES["book_author_gallery"]["tmp_name"][$i] != "") {
+		                    if(!is_dir(BOOKAUTHORGALLERY . $model->author_id)) {
+		                       mkdir(BOOKAUTHORGALLERY . $model->author_id, 0777,true);
+		                    }
+		                    $uuid_name = date("YmdHis").uniqid();
+		                    $tmp = explode('.',$_FILES["book_author_gallery"]["name"][$i]);
+            				$ext = end($tmp);
+		                    move_uploaded_file($_FILES["book_author_gallery"]["tmp_name"][$i],
+		                    BOOKAUTHORGALLERY . $model->author_id . "/" . $uuid_name . '.' . $ext);
+		                    $ag = new BookAuthorGallery();
+		                    $ag->author_id = $model->author_id;
+		                    $ag->img = BOOKAUTHORGALLERY_SHOW . $model->author_id . "/" . $uuid_name . '.' . $ext;
+		                    $ag->captions = $_POST['captions'][$i];
+		                    $ag->save();
+		                }
+		            }
+		            if(!empty($book_author_event_inputs)){
+		            	foreach ($book_author_event_inputs as $key => $value) {
+							if(!empty($value["title"]) && !empty($value["description"]) && !empty($value["image_link"]) && !empty($value["year"])){
+								$value["create_at"] = date("Y-m-d H:i:s");
+								$value["update_at"] = date("Y-m-d H:i:s");
+								$value["author_id"] = $model->author_id;
+								$model_author_event=new BookAuthorEvent;
+								$model_author_event->attributes=$value;		
 
-							if($model_author_event->save()){
-								$mongo = new Mongo();
-								$mongo->insert_record('wenhsun', 'book_author_event', $value);
-							}else{
-								var_dump($model_author_event);exit();
+								if($model_author_event->save()){
+									$mongo = new Mongo();
+									$mongo->insert_record('wenhsun', 'book_author_event', $value);
+								}else{
+									var_dump($model_author_event);exit();
+								}
 							}
 						}
-					}
+		            }
 					$mongo = new Mongo();
 					$inputs['author_id'] = $model->author_id;
 					$inputs['literary_genre'] = explode(",",$inputs['literary_genre']);
@@ -86,6 +107,8 @@ class BookauthorController extends Controller
 					'model_author_event'=>$model_author_event,
 					'single'=>$single,
 					'book_category'=>$book_category,
+					'book_author_gallery' => $book_author_gallery,
+					'total_model_author_event' => count($model_author_event)
 				));
 	        } 
 		}
@@ -95,6 +118,8 @@ class BookauthorController extends Controller
 			'model_author_event'=>$model_author_event,
 			'single'=>$single,
 			'book_category'=>$book_category,
+			'book_author_gallery' => $book_author_gallery,
+			'total_model_author_event' => 0
 		));
 	}
 
@@ -106,8 +131,8 @@ class BookauthorController extends Controller
 	public function actionUpdate($id)
 	{
 		$model=$this->loadModel($id);
-
 		$bookService = new BookService();
+		$book_author_gallery = $bookService->getBookAuthorGallery($id);
 		$model_author_event = $bookService->getBookAuthorEvent($id);
 		$single = $bookService->getFK_Singles_data();
 		$book_category = $bookService->getFK_Category_data($model->literary_genre);
@@ -123,6 +148,36 @@ class BookauthorController extends Controller
 				$inputs['last_updated_user'] = Yii::app()->session['uid'];
 				$model->attributes=$inputs;
 				if($model->save()){
+					$total = count($_FILES["book_author_gallery"]["name"]);
+					for( $i=0 ; $i < $total ; $i++ ) {
+		                if($_FILES["book_author_gallery"]["tmp_name"][$i] != "") {
+		                    if(!is_dir(BOOKAUTHORGALLERY . $id)) {
+		                       mkdir(BOOKAUTHORGALLERY . $id, 0777,true);
+		                    }
+		                    $uuid_name = date("YmdHis").uniqid();
+		                    $tmp = explode('.',$_FILES["book_author_gallery"]["name"][$i]);
+            				$ext = end($tmp);
+		                    move_uploaded_file($_FILES["book_author_gallery"]["tmp_name"][$i],
+		                    BOOKAUTHORGALLERY . $id . "/" . $uuid_name . '.' . $ext);
+		                    $ag = new BookAuthorGallery();
+		                    $ag->author_id = $id;
+		                    $ag->img = BOOKAUTHORGALLERY_SHOW . $id . "/" . $uuid_name . '.' . $ext;
+		                    $ag->captions = $_POST['captions'][$i];
+		                    $ag->save();
+		                }
+		            }
+
+		            if(isset($_POST["old_captions"])){
+		                foreach ($_POST["old_captions"] as $key => $value) {
+		                    if(!empty($value)){
+		                        $model = BookAuthorGallery::model()->findByPK($key);
+		                        if(!empty($model)){
+		                           $model->captions = $value;
+		                           $model->save();
+		                        }
+		                    }
+		                }
+		            }
 					BookAuthorEvent::model()->deleteAll(array(
 		                'condition' => "author_id=:author_id",   
 		                'params' => array(':author_id' => $model->author_id ),    
@@ -164,17 +219,44 @@ class BookauthorController extends Controller
 					'model_author_event'=>$model_author_event,
 					'single'=>$single,
 					'book_category'=>$book_category,
+					'book_author_gallery' => $book_author_gallery,
+					'total_model_author_event' => count($model_author_event)
 				));
 	        } 
 		}
-			
+		// var_dump($book_author_gallery);exit();
 		$this->render('update',array(
 			'model'=>$model,
 			'model_author_event'=>$model_author_event,
 			'single'=>$single,
 			'book_category'=>$book_category,
+			'book_author_gallery' => $book_author_gallery,
+			'total_model_author_event' => count($model_author_event)
 		));
 	}
+
+	public function actionDeleteGallery()
+    {
+        if($_POST) {
+            try {
+                $id = $_POST['id'];
+                $authorGallery = BookAuthorGallery::model()->findByPK($id);
+                if($authorGallery != null) {
+                    $authorGallery->is_delete = 1;
+                    $authorGallery->save();
+                    echo "success";
+                    return;
+                }
+            } catch (exception $e) {
+                echo $e;
+                return;
+            }
+            echo "刪除圖片失敗";
+            return;
+        }
+        echo "fail";
+        return;
+    }
 
 	/**
 	 * Deletes a particular model.
@@ -192,6 +274,7 @@ class BookauthorController extends Controller
 			$inputs['last_updated_user'] = Yii::app()->session['uid'];
 			$model->attributes = $inputs;
 			if($model->save()){
+				BookAuthorGallery::model()->updateAll(array("is_delete"=>1),"author_id=".$id);  
 				$mongo = new Mongo();
 				$update_find = array('author_id'=>$id);
 				$update_input = array('$set' => $inputs);

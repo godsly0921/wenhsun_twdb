@@ -26,6 +26,7 @@
 	// See class documentation of CActiveForm for details on this.
 	'enableAjaxValidation'=>false,
 	'htmlOptions'=>array(
+		'enctype' => 'multipart/form-data',
 		'class'=>'form-horizontal',
     )
 )); 
@@ -235,6 +236,37 @@ $gender = array(
 	</div>
 	<div class="panel panel-default" style="width=100%; overflow-y:scroll;">
 		<div class="panel-heading">
+			<h3 class="panel-title">作者圖片</h3>
+		</div>
+		<div class="form-group">
+			<label for="gallerys" class="col-sm-3 control-label">作者圖片:</label>
+            <div id="gallerys" class="row col-sm-8">
+                <input type="file" multiple id="gallery" name="book_author_gallery[]" accept=".jpg,.png,.gif">
+                <div class="col-sm-12 row gallery">
+                    <table class="row table">
+						<?php if(isset($book_author_gallery) != ""){ ?>
+							<?php foreach ($book_author_gallery as $gallery_key => $gallery_value) {?>
+								<tr id="<?=$gallery_value['id']?>">
+	                                <td class="col-sm-4">
+	                                    <img src="<?php echo Yii::app()->createUrl($gallery_value['img']);?>" style="width: 100%; border-width: 3px;"/>
+	                                </td>
+	                                <td class="col-sm-5">
+	                                    <span>圖片出處</span>
+	                                    <input type="text" class="form-control" name="old_captions[<?= $gallery_value['id'] ?>]" value="<?= $gallery_value['captions'] ?>" placeholder="圖片出處">
+	                                </td>
+	                                <td class="col-sm-2">
+	                                    <i class="fa fa-close fa-lg" onclick="deleteBookAuthorGallery(<?= $gallery_value['id'] ?>);">刪除</i>
+	                                </td>
+	                            </tr>
+							<?php }?>
+						<?php }?>
+                    </table>
+                </div>
+            </div>
+		</div>
+	</div>
+	<div class="panel panel-default" style="width=100%; overflow-y:scroll;">
+		<div class="panel-heading">
 			<h3 class="panel-title">作者年表</h3>
 		</div>
         <div class="panel-body" id="book_author_event">
@@ -244,7 +276,7 @@ $gender = array(
 	    	</div>
         	<?php	
 	        	if($isNewRecord){
-	        		$this->renderPartial('pages/model_author_event', array("model_author_event"=>$model_author_event, "single" => $single, "i" => 0, "form" => $form ));
+	        		//$this->renderPartial('pages/model_author_event', array("model_author_event"=>$model_author_event, "single" => $single, "i" => 0, "form" => $form ));
 	        	}else{
 	        		foreach ($model_author_event as $key => $value) {
 	        			$this->renderPartial('pages/model_author_event', array("model_author_event"=>$value, "single" => $single, "i" => $key, "form" => $form ));
@@ -270,11 +302,31 @@ $gender = array(
 	if(isNewRecord){
 		var add_no = 1;
 	}else{
-		var add_no = '<?=count($model_author_event)+1?>';
+		var add_no = '<?=$total_model_author_event+1?>';
 	}
+	function deleteBookAuthorGallery(id) {
+        if(confirm("是否刪除該圖片？") == true) {
+            $.ajax({
+                url: "<?=Yii::app()->createUrl('/bookauthor/deleteGallery')?>",
+                type: "POST",
+                data: {id: id},
+            }).success(resp => {
+                if("success" === resp) {
+                    alert("刪除圖片 ID: " + id);
+                    $("#" + id).remove();
+                } else {
+                    alert(resp);
+                }
+            }).fail((xhr, status, error) => {
+                alert(error);
+            });
+        }
+    };
+
 	function delGallery(my) {
         $(my).parent("div").parent("div").parent("div").remove();
     }
+    
 	function addGallery(my) {
 		// alert(add_no);
 		if($('#title_'+(add_no-1)).val() == '' || $('#description_'+(add_no-1)).val() == '' || $('#image_link_'+(add_no-1)).val() == '' || $('#year_'+(add_no-1)).val() == '' ){
@@ -370,6 +422,29 @@ $gender = array(
         add_no++;
     }
 	$( document ).ready(function() {
+		// Multiple images preview in browser
+        var imagesPreview = function(input, placeToInsertImagePreview) {
+        	$('.imagespreview').remove();
+            if (input.files) {
+                var filesAmount = input.files.length;
+                for (i = 0; i < filesAmount; i++) {
+                    var reader = new FileReader();
+
+                    reader.onload = function(event) {
+                        var html_string = "<tr class='imagespreview'>\
+                            <td class='col-sm-4'><img src='"+event.target.result+"' style='width: 100%; border-width: 3px;'></td>\
+                            <td class='col-sm-5'><input type='text' class='form-control' name='captions[]' value='' placeholder='圖片出處''></td>\
+                        </tr>";
+                        $(html_string).appendTo(placeToInsertImagePreview);
+                    }
+                    reader.readAsDataURL(input.files[i]);
+                }
+            }
+        };
+
+        $('#gallery').on('change', function() {
+            imagesPreview(this, 'div.gallery table');
+        });
 
 		$('.single_id').selectpicker({
 			size: 10,

@@ -178,5 +178,12 @@ class BookService
         ));
 		return $data;
 	}
+
+	public function getBookAuthorGallery($id){
+		$data = array();
+		$sql ="SELECT * FROM `book_author_gallery` WHERE author_id='" . $id . "' AND is_delete='0'";
+		$data = Yii::app()->db->createCommand($sql)->queryAll();
+		return $data;
+	}
 }
 ?>
