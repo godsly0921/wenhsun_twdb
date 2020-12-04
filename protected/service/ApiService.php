@@ -231,7 +231,9 @@ class ApiService{
 		$total_result = 0;
 		$conditions = "";
 		if(!empty($keyword)){
-			$conditions = " WHERE name LIKE '%" . $keyword . "%' OR original_name LIKE '" . $keyword . "'";
+			$conditions = " WHERE (name LIKE '%" . $keyword . "%' OR original_name LIKE '" . $keyword . "') AND status='1'";
+		}else{
+			$conditions = " WHERE status='1'";
 		}
 		$sql = "SELECT * FROM book_author" . $conditions;
 		if(!empty($limit) && !empty($page)){
