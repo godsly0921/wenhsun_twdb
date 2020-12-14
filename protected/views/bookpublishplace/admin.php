@@ -72,7 +72,7 @@ $('.search-form form').submit(function(){
 		$this->widget('luckywave.widgets.grid.CGridView', array(
 			'id'=>'book-publish-place-grid',
 			'dataProvider'=>$model->search(),
-			'filter'=>$model,
+			// 'filter'=>$model,
 			'emptyText' => '目前沒有任何資料',
 			'columns'=>array(
 				'publish_place_id',
