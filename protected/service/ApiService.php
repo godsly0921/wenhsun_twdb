@@ -275,7 +275,7 @@ class ApiService{
 				b.publish_month,
 				b.publish_day,
 				b.category,
-				(SELECT GROUP_CONCAT(name) FROM book_category WHERE  FIND_IN_SET(category_id,b.category) AND isroot='0') as category_name,
+				(SELECT GROUP_CONCAT(name) FROM book_category WHERE  FIND_IN_SET(category_id,b.category)) as category_name,
 				bs.name as size_name,book_pages 
 			FROM `book` b
 			LEFT JOIN book_publish_place bpp on b.publish_place=bpp.publish_place_id
@@ -287,7 +287,7 @@ class ApiService{
 				foreach ($result as $key => $value) {
 					$category = explode(",", $value['category_name']);
 					foreach ($category as $c_key => $c_value) {
-						if(isset($data[$c_value])) $data[$c_value] = array();
+						if(!isset($data[$c_value])) $data[$c_value] = array();
 						$data[$c_value][] = $value;
 					}
 					
