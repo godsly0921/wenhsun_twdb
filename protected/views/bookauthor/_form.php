@@ -40,6 +40,11 @@ $gender = array(
 	"F" => "女",
 	"M" => "男",
 );
+$display_frontend = array(
+	// "-1" => "刪除",
+	"1" => "是",
+	"0" => "否",
+);
 ?>
 	<div class="form-group">
 		<div class="col-sm-offset-3 col-sm-8">
@@ -113,7 +118,13 @@ $gender = array(
 		</div>
 		<?php echo $form->error($model,'status'); ?>
 	</div>
-
+	<div class="form-group">
+		<?php echo $form->labelEx($model,'display_frontend', array('class'=>'col-sm-3 control-label')); ?>
+		<div class="col-sm-8">
+			<?php echo $form->dropDownList($model,'display_frontend',$display_frontend, array('class'=>'form-control')); ?>
+		</div>
+		<?php echo $form->error($model,'display_frontend'); ?>
+	</div>
 	<div class="form-group">
 		<?php echo $form->labelEx($model,'original_name', array('class'=>'col-sm-3 control-label')); ?>
 		<div class="col-sm-8">

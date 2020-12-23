@@ -51,8 +51,8 @@ class BookAuthor extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('single_id, name, summary, status, last_updated_user', 'required'),
-			array('single_id, status, last_updated_user', 'numerical', 'integerOnly'=>true),
+			array('single_id, name, summary, status, display_frontend, last_updated_user', 'required'),
+			array('single_id, status, display_frontend, last_updated_user', 'numerical', 'integerOnly'=>true),
 			array('name', 'length', 'max'=>128),
 			array('gender', 'length', 'max'=>1),
 			array('original_name, hometown', 'length', 'max'=>10),
@@ -63,7 +63,7 @@ class BookAuthor extends CActiveRecord
 			array('memo, create_at, update_at, delete_at, experience, literary_style, literary_achievement, present_job, brief_intro', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('author_id, single_id, name, gender, summary, memo, create_at, update_at, delete_at, status, last_updated_user, original_name, hometown, birth_year, birth_month, birth_day, arrive_time, experience, literary_style, literary_achievement, year_of_death, year_of_month, year_of_day, pen_name, literary_genre, present_job, brief_intro', 'safe', 'on'=>'search'),
+			array('author_id, single_id, name, gender, summary, memo, create_at, update_at, delete_at, status, display_frontend, last_updated_user, original_name, hometown, birth_year, birth_month, birth_day, arrive_time, experience, literary_style, literary_achievement, year_of_death, year_of_month, year_of_day, pen_name, literary_genre, present_job, brief_intro', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -95,6 +95,7 @@ class BookAuthor extends CActiveRecord
 			'update_at' => '更新時間',
 			'delete_at' => '刪除時間',
 			'status' => '狀態 ( -1:刪除 0:停用 1:啟用 )',
+			'display_frontend' => '是否顯示於前台（1：是 0：否）',
 			'last_updated_user' => '最後異動的人',
 			'original_name' => '本名',
 			'hometown' => '籍貫',
@@ -143,6 +144,7 @@ class BookAuthor extends CActiveRecord
 		$criteria->compare('update_at',$this->update_at,true);
 		$criteria->compare('delete_at',$this->delete_at,true);
 		$criteria->compare('status',$this->status);
+		$criteria->compare('display_frontend',$this->display_frontend);		
 		$criteria->compare('last_updated_user',$this->last_updated_user);
 		$criteria->compare('original_name',$this->original_name,true);
 		$criteria->compare('hometown',$this->hometown,true);

@@ -231,9 +231,9 @@ class ApiService{
 		$total_result = 0;
 		$conditions = "";
 		if(!empty($keyword)){
-			$conditions = " WHERE (name LIKE '%" . $keyword . "%' OR original_name LIKE '" . $keyword . "') AND status='1'";
+			$conditions = " WHERE (name LIKE '%" . $keyword . "%' OR original_name LIKE '" . $keyword . "') AND status='1' AND display_frontend='1'";
 		}else{
-			$conditions = " WHERE status='1'";
+			$conditions = " WHERE status='1' AND display_frontend='1'";
 		}
 		$sql = "SELECT * FROM book_author" . $conditions;
 		if(!empty($limit) && !empty($page)){
@@ -300,7 +300,7 @@ class ApiService{
 	function findAuthorById($author_id){
 		$data = array();
 		if(!empty($author_id)){
-			$sql = "SELECT * FROM book_author WHERE author_id='" . $author_id . "'";
+			$sql = "SELECT * FROM book_author WHERE author_id='" . $author_id . "' AND status='1' AND display_frontend='1'";
 			$data = Yii::app()->db->createCommand($sql)->queryRow();
 		}
 		return $data;
