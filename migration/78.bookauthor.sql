@@ -1,0 +1,1 @@
+ALTER TABLE `book_author` ADD `display_frontend` INT(1) NOT NULL DEFAULT '0' COMMENT '是否顯示於前端（0：否 1：是）' AFTER `status`;
