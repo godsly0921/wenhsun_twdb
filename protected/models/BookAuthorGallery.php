@@ -27,12 +27,12 @@ class BookAuthorGallery extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('is_delete', 'numerical', 'integerOnly'=>true),
+			array('is_delete, sort', 'numerical', 'integerOnly'=>true),
 			array('author_id', 'length', 'max'=>60),
 			array('img', 'length', 'max'=>100),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, author_id, img, is_delete', 'safe', 'on'=>'search'),
+			array('id, author_id, img, is_delete, sort', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -57,6 +57,7 @@ class BookAuthorGallery extends CActiveRecord
 			'author_id' => 'Author',
 			'img' => 'Img',
 			'is_delete' => 'Is Delete',
+			'sort' => '排序(值愈小愈前面)'
 		);
 	}
 
@@ -82,7 +83,7 @@ class BookAuthorGallery extends CActiveRecord
 		$criteria->compare('author_id',$this->author_id,true);
 		$criteria->compare('img',$this->img,true);
 		$criteria->compare('is_delete',$this->is_delete);
-
+		$criteria->compare('sort',$this->sort,true);
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
 		));

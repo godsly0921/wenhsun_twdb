@@ -71,6 +71,7 @@ class BookauthorController extends Controller
 		                    $ag->author_id = $model->author_id;
 		                    $ag->img = BOOKAUTHORGALLERY_SHOW . $model->author_id . "/" . $uuid_name . '.' . $ext;
 		                    $ag->captions = $_POST['captions'][$i];
+		                    $ag->sort = $_POST['sort'][$i];
 		                    $ag->save();
 		                }
 		            }
@@ -163,6 +164,7 @@ class BookauthorController extends Controller
 		                    $ag->author_id = $id;
 		                    $ag->img = BOOKAUTHORGALLERY_SHOW . $id . "/" . $uuid_name . '.' . $ext;
 		                    $ag->captions = $_POST['captions'][$i];
+		                    $ag->sort = $_POST['sort'][$i];
 		                    $ag->save();
 		                }
 		            }
@@ -173,6 +175,7 @@ class BookauthorController extends Controller
 		                        $model = BookAuthorGallery::model()->findByPK($key);
 		                        if(!empty($model)){
 		                           $model->captions = $value;
+		                           $model->sort = $_POST['old_sort'][$key];
 		                           $model->save();
 		                        }
 		                    }
