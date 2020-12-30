@@ -86,7 +86,13 @@ $display_frontend = array(
 		</div>
 		<?php echo $form->error($model,'single_id'); ?>
 	</div>
-
+	<div class="form-group">
+		<?php echo $form->labelEx($model,'bookauthor_sort', array('class'=>'col-sm-3 control-label')); ?>
+		<div class="col-sm-8">
+			<?php echo $form->numberField($model,'bookauthor_sort',array('class'=>'form-control')); ?>
+		</div>
+		<?php echo $form->error($model,'bookauthor_sort'); ?>
+	</div>
 	<div class="form-group">
 		<?php echo $form->labelEx($model,'gender', array('class'=>'col-sm-3 control-label')); ?>
 		<div class="col-sm-8">
@@ -264,6 +270,10 @@ $display_frontend = array(
 	                                <td class="col-sm-5">
 	                                    <span>圖片出處</span>
 	                                    <input type="text" class="form-control" name="old_captions[<?= $gallery_value['id'] ?>]" value="<?= $gallery_value['captions'] ?>" placeholder="圖片出處">
+	                                </td>
+	                                <td class="col-sm-5">
+	                                    <span>圖片順序</span>
+	                                    <input type="number" class="form-control" name="old_sort[<?= $gallery_value['id'] ?>]" value="<?= $gallery_value['sort'] ?>" placeholder="圖片順序">
 	                                </td>
 	                                <td class="col-sm-2">
 	                                    <i class="fa fa-close fa-lg" onclick="deleteBookAuthorGallery(<?= $gallery_value['id'] ?>);">刪除</i>
@@ -445,6 +455,7 @@ $display_frontend = array(
                         var html_string = "<tr class='imagespreview'>\
                             <td class='col-sm-4'><img src='"+event.target.result+"' style='width: 100%; border-width: 3px;'></td>\
                             <td class='col-sm-5'><input type='text' class='form-control' name='captions[]' value='' placeholder='圖片出處''></td>\
+                            <td class='col-sm-5'><input type='number' class='form-control' name='sort[]' value='' placeholder='圖片順序''></td>\
                         </tr>";
                         $(html_string).appendTo(placeToInsertImagePreview);
                     }

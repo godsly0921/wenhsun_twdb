@@ -235,7 +235,7 @@ class ApiService{
 		}else{
 			$conditions = " WHERE status='1' AND display_frontend='1'";
 		}
-		$sql = "SELECT * FROM book_author" . $conditions;
+		$sql = "SELECT * FROM book_author" . $conditions . " ORDER BY bookauthor_sort ASC";
 		if(!empty($limit) && !empty($page)){
 			$sql .= " LIMIT " . ($page-1)*$limit . "," . $limit;
 		}

@@ -52,7 +52,7 @@ class BookAuthor extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('single_id, name, summary, status, display_frontend, last_updated_user', 'required'),
-			array('single_id, status, display_frontend, last_updated_user', 'numerical', 'integerOnly'=>true),
+			array('single_id, status, display_frontend, last_updated_user, bookauthor_sort', 'numerical', 'integerOnly'=>true),
 			array('name', 'length', 'max'=>128),
 			array('gender', 'length', 'max'=>1),
 			array('original_name, hometown', 'length', 'max'=>10),
@@ -63,7 +63,7 @@ class BookAuthor extends CActiveRecord
 			array('memo, create_at, update_at, delete_at, experience, literary_style, literary_achievement, present_job, brief_intro', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('author_id, single_id, name, gender, summary, memo, create_at, update_at, delete_at, status, display_frontend, last_updated_user, original_name, hometown, birth_year, birth_month, birth_day, arrive_time, experience, literary_style, literary_achievement, year_of_death, year_of_month, year_of_day, pen_name, literary_genre, present_job, brief_intro', 'safe', 'on'=>'search'),
+			array('author_id, single_id, name, gender, summary, memo, create_at, update_at, delete_at, status, display_frontend, last_updated_user, original_name, hometown, birth_year, birth_month, birth_day, arrive_time, experience, literary_style, literary_achievement, year_of_death, year_of_month, year_of_day, pen_name, literary_genre, present_job, brief_intro, bookauthor_sort', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -112,6 +112,7 @@ class BookAuthor extends CActiveRecord
 			'pen_name' => '筆名',
 			'literary_genre' => '創作文類',
 			'present_job' => '現職',
+			'bookauthor_sort' => '排序(值愈小愈前面)'
 		);
 	}
 
@@ -161,6 +162,7 @@ class BookAuthor extends CActiveRecord
 		$criteria->compare('pen_name',$this->pen_name,true);
 		$criteria->compare('literary_genre',$this->literary_genre,true);
 		$criteria->compare('present_job',$this->present_job,true);
+		$criteria->compare('bookauthor_sort',$this->bookauthor_sort,true);
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
 		));
