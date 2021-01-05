@@ -77,7 +77,7 @@ class BookauthorController extends Controller
 		            }
 		            if(!empty($book_author_event_inputs)){
 		            	foreach ($book_author_event_inputs as $key => $value) {
-							if(!empty($value["title"]) && !empty($value["description"]) && !empty($value["image_link"]) && !empty($value["year"])){
+							if((!empty($value["title"]) || !empty($value["description"])) && !empty($value["year"])){
 								$value["create_at"] = date("Y-m-d H:i:s");
 								$value["update_at"] = date("Y-m-d H:i:s");
 								$value["author_id"] = $model->author_id;
@@ -109,7 +109,7 @@ class BookauthorController extends Controller
 					'single'=>$single,
 					'book_category'=>$book_category,
 					'book_author_gallery' => $book_author_gallery,
-					'total_model_author_event' => count($model_author_event)
+					'total_model_author_event' => count($book_author_event_inputs)
 				));
 	        } 
 		}
@@ -190,7 +190,7 @@ class BookauthorController extends Controller
 		            $mongo->delete_record( 'wenhsun', 'book_author_event', $delete_find );
 		            if(!empty($book_author_event_inputs)){
 		            	foreach ($book_author_event_inputs as $key => $value) {
-							if(!empty($value["title"]) && !empty($value["description"]) && !empty($value["image_link"]) && !empty($value["year"])){
+							if((!empty($value["title"]) || !empty($value["description"])) && !empty($value["year"])){
 								$value["create_at"] = date("Y-m-d H:i:s");
 								$value["update_at"] = date("Y-m-d H:i:s");
 								$value["author_id"] = $model->author_id;
