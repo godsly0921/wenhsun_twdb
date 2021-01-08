@@ -223,7 +223,7 @@ class BookauthorController extends Controller
 					'single'=>$single,
 					'book_category'=>$book_category,
 					'book_author_gallery' => $book_author_gallery,
-					'total_model_author_event' => count($model_author_event)
+					'total_model_author_event' => count($book_author_event_inputs)
 				));
 	        } 
 		}

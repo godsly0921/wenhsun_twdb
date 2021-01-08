@@ -9,7 +9,7 @@
 		<div class="form-group">
 			<?php echo $form->labelEx($model_author_event,'title', array('class'=>'col-sm-3 control-label')); ?>
 			<div class="col-sm-8">
-				<input type="text" id="title_<?=$i?>" size="200", maxlength="200" name="BookAuthorEvent[<?=$i?>][title]" required="required" class="form-control" value="<?=$model_author_event->title?>">
+				<input type="text" id="title_<?=$i?>" size="200", maxlength="200" name="BookAuthorEvent[<?=$i?>][title]" class="form-control" value="<?=$model_author_event->title?>">
 			</div>
 			<?php echo $form->error($model_author_event,'title'); ?>
 		</div>
@@ -23,7 +23,7 @@
 		<div class="form-group">
 			<?php echo $form->labelEx($model_author_event,'image_link', array('class'=>'col-sm-3 control-label')); ?>
 			<div class="col-sm-8">
-				<select class="form-control image_link" id="image_link_<?=$i?>" name="BookAuthorEvent[<?=$i?>][image_link]" required="required">
+				<select class="form-control image_link" id="image_link_<?=$i?>" name="BookAuthorEvent[<?=$i?>][image_link]">
 	                <option value="">請選擇</option>
 	                <?php foreach ($single as $key => $value){
 	                	$data_tokens = array();
