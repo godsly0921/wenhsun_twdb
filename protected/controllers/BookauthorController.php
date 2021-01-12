@@ -131,6 +131,7 @@ class BookauthorController extends Controller
 	 */
 	public function actionUpdate($id)
 	{
+		
 		$model=$this->loadModel($id);
 		$bookService = new BookService();
 		$book_author_gallery = $bookService->getBookAuthorGallery($id);
@@ -139,6 +140,7 @@ class BookauthorController extends Controller
 		$book_category = $bookService->getFK_Category_data($model->literary_genre);
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
+
 		if(isset($_POST['BookAuthor']))
 		{
 			$transaction = Yii::app()->db->beginTransaction();
@@ -227,6 +229,7 @@ class BookauthorController extends Controller
 				));
 	        } 
 		}
+		// var_dump($model_author_event);exit();
 		// var_dump($book_author_gallery);exit();
 		$this->render('update',array(
 			'model'=>$model,
