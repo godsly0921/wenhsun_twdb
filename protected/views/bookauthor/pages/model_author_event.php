@@ -20,32 +20,35 @@
 			</div>
 			<?php echo $form->error($model_author_event,'description'); ?>
 		</div>
+		<!--
 		<div class="form-group">
-			<?php echo $form->labelEx($model_author_event,'image_link', array('class'=>'col-sm-3 control-label')); ?>
+			<?php #echo $form->labelEx($model_author_event,'image_link', array('class'=>'col-sm-3 control-label')); ?>
 			<div class="col-sm-8">
 				<select class="form-control image_link" id="image_link_<?=$i?>" name="BookAuthorEvent[<?=$i?>][image_link]">
 	                <option value="">請選擇</option>
-	                <?php foreach ($single as $key => $value){
-	                	$data_tokens = array();
-	                	array_push($data_tokens, $value['single_id']);
-	                	if(!empty($value['keyword'])) array_push($data_tokens, $value['keyword']);
-	                	if(!empty($value['people_info'])) array_push($data_tokens, $value['people_info']);
-	                	if(!empty($value['event_name'])) array_push($data_tokens, $value['event_name']);
-	                	if(!empty($value['filming_location'])) array_push($data_tokens, $value['filming_location']);
-	                	if(!empty($value['filming_date'])) array_push($data_tokens, $value['filming_date']);
-	                	if(!empty($value['filming_name'])) array_push($data_tokens, $value['filming_name']);
-	                	if(!empty($value['object_name'])) array_push($data_tokens, $value['object_name']);
-	                	if(!empty($value['people_info'])) array_push($data_tokens, $value['people_info']);
-	                	if(!empty($value['description'])) array_push($data_tokens, $value['description']);
-	                	if(!empty($value['photo_source'])) array_push($data_tokens, $value['photo_source']);
-	                	if(!empty($value['filming_date_text'])) array_push($data_tokens, $value['filming_date_text']);
+	                <?php 
+	                // foreach ($single as $key => $value){
+	                	// $data_tokens = array();
+	                	// array_push($data_tokens, $value['single_id']);
+	                	// if(!empty($value['keyword'])) array_push($data_tokens, $value['keyword']);
+	                	// if(!empty($value['people_info'])) array_push($data_tokens, $value['people_info']);
+	                	// if(!empty($value['event_name'])) array_push($data_tokens, $value['event_name']);
+	                	// if(!empty($value['filming_location'])) array_push($data_tokens, $value['filming_location']);
+	                	// if(!empty($value['filming_date'])) array_push($data_tokens, $value['filming_date']);
+	                	// if(!empty($value['filming_name'])) array_push($data_tokens, $value['filming_name']);
+	                	// if(!empty($value['object_name'])) array_push($data_tokens, $value['object_name']);
+	                	// if(!empty($value['people_info'])) array_push($data_tokens, $value['people_info']);
+	                	// if(!empty($value['description'])) array_push($data_tokens, $value['description']);
+	                	// if(!empty($value['photo_source'])) array_push($data_tokens, $value['photo_source']);
+	                	// if(!empty($value['filming_date_text'])) array_push($data_tokens, $value['filming_date_text']);
 	                ?>
-	                    <option value="<?=$value['single_id']?>" data-tokens="<?=implode(",",$data_tokens)?>" data-content="<img class='data_thumbnail lazyload' width='100' height='auto'<?php if($model_author_event->image_link==$value['single_id']) echo "src='".DOMAIN."image_storage/P/". $value['single_id'] .".jpg'"?> data-src='<?=DOMAIN."image_storage/P/".$value['single_id']?>.jpg' data-original='<?=DOMAIN."image_storage/P/".$value['single_id']?>.jpg'></img> <?=$value['single_id']?>" <?=$model_author_event->image_link==$value['single_id']?'selected':''?> <?=$model_author_event->image_link==$value['single_id']?'selected':''?>><?=$value['single_id']?></option>
-	                <?php }?>
+	                    <option value="<?#=$value['single_id']?>" data-tokens="<?#=implode(",",$data_tokens)?>" data-content="<img class='data_thumbnail lazyload' width='100' height='auto'<?php #if($model_author_event->image_link==$value['single_id']) echo "src='".DOMAIN."image_storage/P/". $value['single_id'] .".jpg'"?> data-src='<?#=DOMAIN."image_storage/P/".$value['single_id']?>.jpg' data-original='<#?=DOMAIN."image_storage/P/".$value['single_id']?>.jpg'></img> <?#=$value['single_id']?>" <?#=$model_author_event->image_link==$value['single_id']?'selected':''?> <?#=$model_author_event->image_link==$value['single_id']?'selected':''?>><?#=$value['single_id']?></option>
+	                <?php #}?>
 	            </select>
 			</div>
-			<?php echo $form->error($model_author_event,'image_link'); ?>
+			<?php #echo $form->error($model_author_event,'image_link'); ?>
 		</div>
+		-->
 		<div class="form-group">
 			<?php echo $form->labelEx($model_author_event,'year', array('class'=>'col-sm-3 control-label')); ?>
 			<div class="col-sm-8">

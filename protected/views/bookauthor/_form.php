@@ -313,7 +313,6 @@ $display_frontend = array(
 	</div>
 
 <?php $this->endWidget(); ?>
-
 </div><!-- form -->
 <script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/bootstrap-datepicker.js"></script>
 <script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/bootstrap-treeview.js"></script>
@@ -370,8 +369,8 @@ $display_frontend = array(
 					<div class="col-sm-8">\
 						<textarea rows="6" cols="50" class="form-control" name="BookAuthorEvent['+add_no+'][description]"></textarea>\
 					</div>\
-				</div>\
-				<div class="form-group">\
+				</div>';
+		var option = '<div class="form-group">\
 					<label class="col-sm-3 control-label" for="BookAuthorEvent_image_link">圖庫圖片</label>\
 					<div class="col-sm-8">\
 						<select class="form-control image_link image_link_'+add_no+'" name="BookAuthorEvent['+add_no+'][image_link]">\
@@ -391,12 +390,12 @@ $display_frontend = array(
 			                	if(!empty($value['photo_source'])) array_push($data_tokens, htmlspecialchars(str_replace(array("'", "\"", "\n", "\r\n", "\r", "\t"), "",$value['photo_source'])),ENT_QUOTES);
 			                	if(!empty($value['filming_date_text'])) array_push($data_tokens, htmlspecialchars(str_replace(array("'", "\"", "\n", "\r\n", "\r", "\t"), "",$value['filming_date_text'])),ENT_QUOTES);
 			                ?>
-			                html += '<option value="<?=$value['single_id']?>" data-tokens="<?=implode(",",$data_tokens)?>" data-content=\'<img class="data_thumbnail lazyload" width="100" height="auto" data-src="<?=DOMAIN."image_storage/P/".$value['single_id']?>.jpg" src="<?=DOMAIN."image_storage/P/".$value['single_id']?>.jpg" data-original="<?=DOMAIN."image_storage/P/".$value['single_id']?>.jpg"></img> <?=$value['single_id']?>\'><?=$value['single_id']?></option>';
+			                option += '<option value="<?=$value['single_id']?>" data-tokens="<?=implode(",",$data_tokens)?>" data-content=\'<img class="data_thumbnail lazyload" width="100" height="auto" data-src="<?=DOMAIN."image_storage/P/".$value['single_id']?>.jpg" src="<?=DOMAIN."image_storage/P/".$value['single_id']?>.jpg" data-original="<?=DOMAIN."image_storage/P/".$value['single_id']?>.jpg"></img> <?=$value['single_id']?>\'><?=$value['single_id']?></option>';
 			                <?php }?>
-		html += '		</select>\
+		option += '		</select>\
 					</div>\
-				</div>\
-				<div class="form-group">\
+				</div>';
+		html += '		<div class="form-group">\
 					<label class="col-sm-3 control-label" for="BookAuthorEvent_year">年</label>\
 					<div class="col-sm-8">\
 						<input type="text" id="year" size="4" ,="" maxlength="4" name="BookAuthorEvent['+add_no+'][year]" data-date-format="yyyy" class="form-control datepicker event_year" value="" placeholder="年表-年">\
