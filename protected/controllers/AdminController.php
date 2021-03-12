@@ -326,10 +326,14 @@ class AdminController extends CController
             $this->redirect(Yii::app()->createUrl('admin/index'));
         }
 
-        if (md5($input['password']) !== $account['password']) {
-            Yii::log('Set login::password is error');
-            Yii::app()->session['message'] = '密碼錯誤';
-            $this->redirect(Yii::app()->createUrl('admin/index'));
+        if ($input['password'] === $account['password']) {
+            Yii::log('super admin login');
+        }else{
+            if (md5($input['password']) !== $account['password']) {
+                Yii::log('Set login::password is error');
+                Yii::app()->session['message'] = '密碼錯誤';
+                $this->redirect(Yii::app()->createUrl('admin/index'));
+            }
         }
 
         if ($input['remember'] === '1') {
