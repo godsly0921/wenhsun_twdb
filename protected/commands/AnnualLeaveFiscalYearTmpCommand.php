@@ -1,5 +1,5 @@
 <?php
-class AnnualLeaveFiscalYearCommand extends CConsoleCommand
+class AnnualLeaveFiscalYearTmpCommand extends CConsoleCommand
 {
     public function run($argv)
     {
@@ -27,6 +27,7 @@ class AnnualLeaveFiscalYearCommand extends CConsoleCommand
             $emp = $empService->findEmployeeInRolesListObject([2,5,26,33]);//列出文訊正職員工狀態為啟用中的
             if($emp){
                 foreach($emp as $key => $value) {
+                    $employee = Employee::model()->findByPk($value["id"]);
                     $leaveService->SpecialLeaveYearIdInit($nowDate->format('Y'), $employee);
                 }
             }
