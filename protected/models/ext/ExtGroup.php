@@ -52,10 +52,10 @@ class ExtGroup extends Group
 	}
 	
 	public static function findByGroupNumber($id){
-		return ExtGroup::model()->find(array(
-			'condition'=>'group_number=:group_number ',
+		return Group::model()->find(array(
+			'condition'=>'id=:id ',
 			'params'=>array(
-				':group_number'=>$id,
+				':id'=>$id,
 			)
 		));
 	}
