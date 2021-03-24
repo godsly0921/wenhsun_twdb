@@ -259,6 +259,7 @@ class ApiController extends CController{
 							"people_info" => $value->people_info,
 							"event_name" => !empty($value->event_name)?$value->event_name:"",
 							"photo_source" =>  !empty($value->photo_source)?$value->photo_source:"",
+							"memo1" =>  $value->memo1,
 							"memo2" =>  $value->memo2
 						);
 					}

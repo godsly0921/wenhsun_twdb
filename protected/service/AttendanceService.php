@@ -741,8 +741,8 @@ class AttendanceService
                     if (!empty($result)) {
                         //假如今天時間有排班紀錄
                         foreach ($result as $k => $v) {
-                            $start_record = strtotime($v->start_time);
-                            $end_record = strtotime($v->end_time);
+                            $start_record = strtotime($v->start_time);//上班時間
+                            $end_record = strtotime($v->end_time);//下班時間
                             $diff_time = strtotime($last_time) - strtotime($first_time);//這個員工一整天上班時間
 
                             $abnormal .= '排班編號：' . $v->id . ' |';
@@ -777,13 +777,14 @@ class AttendanceService
                             if ($diff_time != 1) {//0 2~以上
                                 if ($diff_time != 0) {
                                     //假如第一筆時間大於9:30 //加註 遲到
-                                    if (strtotime($first_time) >= $this->getArriveLateTime($day) and $diff_time >= NINE_HOUR && $diff_time <= TEN_HOUR) {
+                                    if (strtotime($first_time) >= $start_record and $diff_time >= NINE_HOUR && $diff_time <= TEN_HOUR) {
                                         $abnormal_type = 0;
                                         $abnormal = '上班八小時';
 
                                     }
 
-                                    if (strtotime($first_time) >= $this->getArriveLateTime($day) and $diff_time < NINE_HOUR) {
+                                    //第一筆打卡時間 大於 班表排班時間 
+                                    if (strtotime($first_time) >= $start_record and $diff_time < NINE_HOUR) {
                                         $abnormal_type = 1;
                                         $abnormal .= '|遲到|';
                                     }
