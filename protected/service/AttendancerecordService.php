@@ -429,19 +429,23 @@ class AttendancerecordService
             $year = date('Y', strtotime($leave->leave_time));
             $agent = EmployeeORM::model()->findByPk($leave->agent);
             $manager = EmployeeORM::model()->findByPk($leave->manager);
+            $configService = new ConfigService();
+            $AnnualLeaveType = $configService->findByConfigName("AnnualLeaveType");
+            if(!empty($AnnualLeaveType)){
+                $AnnualLeaveType = $AnnualLeaveType[0]['config_value'];
+            }else{
+                $AnnualLeaveType = 1;
+            }
 
+            $leaveService = new LeaveService();
+            
             $employeeLeaveCalculator = new EmployeeLeaveCalculator();
             $annualLeaveMinutes = $employeeLeaveCalculator->calcAnnualLeaveSummaryOnBoardDate(new DateTime(), $employee);
 
             $attendanceRecordServ = new AttendancerecordService();
             $tomorrow = new DateTime();
             $tomorrow->add(DateInterval::createFromDateString('1 day'));
-            $appliedAnnualLeave = $attendanceRecordServ->summaryMinutesByPeriodOfTimeAndLeaveType(
-                $employee->getEmployeeId()->value(),
-                $employee->getOnBoardDate() . ' 00:00:00',
-                $tomorrow->format('Y-m-d 00:00:00'),
-                Attendance::ANNUAL_LEAVE
-            );
+            
 
             $personalLeaveAnnualMinutes = $employeeLeaveCalculator->personalLeaveAnnualMinutes();
             $sickLeaveAnnualMinutes = $employeeLeaveCalculator->sickLeaveAnnualMinutes();
@@ -451,6 +455,34 @@ class AttendancerecordService
             $commonLeaveEndDateTime = new DateTime("{$year}/01/01 00:00:00");
             $commonLeaveEndDateTime->add(DateInterval::createFromDateString('1 year'));
             $commonLeaveEndDate = $commonLeaveEndDateTime->format('Y/m/d H:i:s');
+
+            if($AnnualLeaveType==2){
+                $annualLeaveMinutes = $employeeLeaveCalculator->calcAnnualLeaveSummaryOnBoardDate(new DateTime(), $employee);
+                // $annualLeaveMinutes = $leaveService->calcAnnualLeaveSummaryOnBoardDate(new DateTime(), $employee);
+                $appliedAnnualLeave = $attendanceRecordServ->summaryMinutesByPeriodOfTimeAndLeaveType(
+                    $employee->getEmployeeId()->value(),
+                    $commonLeaveStartDate,
+                    $commonLeaveEndDate,
+                    Attendance::ANNUAL_LEAVE
+                );
+                $annualLeaveMinutes = $annualLeaveMinutes->minutesValue();
+            }else{
+                // 該年度可請特休數
+                $annualLeaveMinutes = $leaveService->calcAnnualLeaveSummaryYear_FiscalYear($employee->getEmployeeId()->value(), $year);
+                $holidayList = array();
+                if(!empty($annualLeaveMinutes)){
+                    $annualLeaveMinutes = $annualLeaveMinutes[0];
+                    // 該年度已請且審核通過特休數
+                    $appliedAnnualLeave = $leaveService->getEmployeeLeaves_FiscalYear(
+                        $annualLeaveMinutes["id"],
+                        $employee->getEmployeeId()->value()
+                    );
+                    $annualLeaveMinutes = $annualLeaveMinutes["special_leave"];
+                }else{
+                    $appliedAnnualLeave = 0;
+                    $annualLeaveMinutes = 0;
+                }
+            }
 
             $sickLeavedMins = $attendanceRecordServ->summaryMinutesByPeriodOfTimeAndLeaveType(
                 $employee->getEmployeeId()->value(),
@@ -560,7 +592,7 @@ class AttendancerecordService
                 [
                     'category' => '年假(特別休假)',
                     'leave_applied' => $appliedAnnualLeave / 60,
-                    'leave_available' => $annualLeaveMinutes->minutesValue() / 60 - $appliedAnnualLeave / 60,
+                    'leave_available' => $annualLeaveMinutes / 60 - $appliedAnnualLeave / 60,
                 ],
                 [
                     'category' => '分娩假含例假日',
@@ -727,8 +759,8 @@ class AttendancerecordService
             $inputs['to'] = $emp->email;
             $inputs['agent'] = $agent == null ? '' : $agent->email;
             $inputs['manager'] = $manager->email;
-            //$inputs['agent'] = 'godsly0921@gmail.com';
-            //$inputs['manager'] = 'godsly0921@gmail.com';
+            // $inputs['agent'] = 'yuyen103@gmail.com';
+            // $inputs['manager'] = 'yuyen103@gmail.com';
 
             $mailService = new MailService();
             $mailService->sendApproveMail($inputs);
