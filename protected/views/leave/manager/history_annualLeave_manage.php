@@ -96,6 +96,7 @@
         </div>
     </div>
 </div>
+<script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/jquery-ui-1.12.1/jquery-ui.min.js"></script>
 <script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/admin/ext/js/jquery.dataTables.min.js"></script>
 <script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/admin/ext/js/dataTables.bootstrap.min.js"></script>
 <script>
