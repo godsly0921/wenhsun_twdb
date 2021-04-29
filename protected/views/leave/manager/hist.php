@@ -46,10 +46,10 @@
                     <table id="datatable1" class="table table-striped table-bordered">
                         <thead>
                             <tr>
-                                <th>申請日期</th>
+                                <th>請假日期</th>
                                 <th>假別</th>
                                 <th>事由</th>
-                                <th>請假日期</th>
+                                <th>申請日期</th>
                                 <th>請假時間</th>
                                 <th>申請時數(小時)</th>
                                 <th>審核狀態</th>
@@ -59,10 +59,11 @@
                         <tbody>
                             <?php foreach ($holidayList as $row) : ?>
                                 <tr role="row" id="<?= $row['id'] ?>">
-                                    <td><?= substr($row['create_at'], 0, 10) ?></td>
+                                    <td><?= date('Y-m-d', strtotime($row['leave_time'])) ?></td>
+                                    
                                     <td><?= $row['take'] ?></td>
                                     <td><?= $row['reason'] ?></td>
-                                    <td><?= date('Y-m-d', strtotime($row['leave_time'])) ?></td>
+                                    <td><?= substr($row['create_at'], 0, 10) ?></td>
                                     <td><?= substr($row['start_time'], 11, 8) . ' - ' . substr($row['end_time'], 11, 8) ?></td>
                                     <td><?= $row['leave_minutes'] / 60 ?></td>
                                     <td>
