@@ -57,7 +57,9 @@ class PartTimeController extends Controller
             if($value->builder_type){//1表示 員工 0表示系統管理員
                 $service = new EmployeeService();
                 $employee = $service->findEmployeeById($value->builder);
-                $name = $employee->name;
+                if(!empty($employee)){
+                    $name = $employee->name;
+                }
 
             }else{
                 $service = new AccountService();
