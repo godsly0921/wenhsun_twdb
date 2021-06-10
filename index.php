@@ -1,5 +1,5 @@
-<?php
-
+<?php 
+define ('_BEGIN_TIME',microtime(true));
 date_default_timezone_set('Asia/Taipei');
 
 require __DIR__ . '/vendor/autoload.php';
