@@ -17,17 +17,23 @@
 
 class Google_Service_ShoppingContent_DeliveryTime extends Google_Collection
 {
-  protected $collection_key = 'holidayCutoffs';
+  protected $collection_key = 'warehouseBasedDeliveryTimes';
   protected $cutoffTimeType = 'Google_Service_ShoppingContent_CutoffTime';
   protected $cutoffTimeDataType = '';
+  protected $handlingBusinessDayConfigType = 'Google_Service_ShoppingContent_BusinessDayConfig';
+  protected $handlingBusinessDayConfigDataType = '';
   protected $holidayCutoffsType = 'Google_Service_ShoppingContent_HolidayCutoff';
   protected $holidayCutoffsDataType = 'array';
   public $maxHandlingTimeInDays;
   public $maxTransitTimeInDays;
   public $minHandlingTimeInDays;
   public $minTransitTimeInDays;
+  protected $transitBusinessDayConfigType = 'Google_Service_ShoppingContent_BusinessDayConfig';
+  protected $transitBusinessDayConfigDataType = '';
   protected $transitTimeTableType = 'Google_Service_ShoppingContent_TransitTable';
   protected $transitTimeTableDataType = '';
+  protected $warehouseBasedDeliveryTimesType = 'Google_Service_ShoppingContent_WarehouseBasedDeliveryTime';
+  protected $warehouseBasedDeliveryTimesDataType = 'array';
 
   /**
    * @param Google_Service_ShoppingContent_CutoffTime
@@ -44,14 +50,28 @@ class Google_Service_ShoppingContent_DeliveryTime extends Google_Collection
     return $this->cutoffTime;
   }
   /**
-   * @param Google_Service_ShoppingContent_HolidayCutoff
+   * @param Google_Service_ShoppingContent_BusinessDayConfig
+   */
+  public function setHandlingBusinessDayConfig(Google_Service_ShoppingContent_BusinessDayConfig $handlingBusinessDayConfig)
+  {
+    $this->handlingBusinessDayConfig = $handlingBusinessDayConfig;
+  }
+  /**
+   * @return Google_Service_ShoppingContent_BusinessDayConfig
+   */
+  public function getHandlingBusinessDayConfig()
+  {
+    return $this->handlingBusinessDayConfig;
+  }
+  /**
+   * @param Google_Service_ShoppingContent_HolidayCutoff[]
    */
   public function setHolidayCutoffs($holidayCutoffs)
   {
     $this->holidayCutoffs = $holidayCutoffs;
   }
   /**
-   * @return Google_Service_ShoppingContent_HolidayCutoff
+   * @return Google_Service_ShoppingContent_HolidayCutoff[]
    */
   public function getHolidayCutoffs()
   {
@@ -90,6 +110,20 @@ class Google_Service_ShoppingContent_DeliveryTime extends Google_Collection
     return $this->minTransitTimeInDays;
   }
   /**
+   * @param Google_Service_ShoppingContent_BusinessDayConfig
+   */
+  public function setTransitBusinessDayConfig(Google_Service_ShoppingContent_BusinessDayConfig $transitBusinessDayConfig)
+  {
+    $this->transitBusinessDayConfig = $transitBusinessDayConfig;
+  }
+  /**
+   * @return Google_Service_ShoppingContent_BusinessDayConfig
+   */
+  public function getTransitBusinessDayConfig()
+  {
+    return $this->transitBusinessDayConfig;
+  }
+  /**
    * @param Google_Service_ShoppingContent_TransitTable
    */
   public function setTransitTimeTable(Google_Service_ShoppingContent_TransitTable $transitTimeTable)
@@ -102,5 +136,19 @@ class Google_Service_ShoppingContent_DeliveryTime extends Google_Collection
   public function getTransitTimeTable()
   {
     return $this->transitTimeTable;
+  }
+  /**
+   * @param Google_Service_ShoppingContent_WarehouseBasedDeliveryTime[]
+   */
+  public function setWarehouseBasedDeliveryTimes($warehouseBasedDeliveryTimes)
+  {
+    $this->warehouseBasedDeliveryTimes = $warehouseBasedDeliveryTimes;
+  }
+  /**
+   * @return Google_Service_ShoppingContent_WarehouseBasedDeliveryTime[]
+   */
+  public function getWarehouseBasedDeliveryTimes()
+  {
+    return $this->warehouseBasedDeliveryTimes;
   }
 }

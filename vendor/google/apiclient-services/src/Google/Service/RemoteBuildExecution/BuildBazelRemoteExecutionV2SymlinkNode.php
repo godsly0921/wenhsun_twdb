@@ -18,6 +18,8 @@
 class Google_Service_RemoteBuildExecution_BuildBazelRemoteExecutionV2SymlinkNode extends Google_Model
 {
   public $name;
+  protected $nodePropertiesType = 'Google_Service_RemoteBuildExecution_BuildBazelRemoteExecutionV2NodeProperties';
+  protected $nodePropertiesDataType = '';
   public $target;
 
   public function setName($name)
@@ -27,6 +29,20 @@ class Google_Service_RemoteBuildExecution_BuildBazelRemoteExecutionV2SymlinkNode
   public function getName()
   {
     return $this->name;
+  }
+  /**
+   * @param Google_Service_RemoteBuildExecution_BuildBazelRemoteExecutionV2NodeProperties
+   */
+  public function setNodeProperties(Google_Service_RemoteBuildExecution_BuildBazelRemoteExecutionV2NodeProperties $nodeProperties)
+  {
+    $this->nodeProperties = $nodeProperties;
+  }
+  /**
+   * @return Google_Service_RemoteBuildExecution_BuildBazelRemoteExecutionV2NodeProperties
+   */
+  public function getNodeProperties()
+  {
+    return $this->nodeProperties;
   }
   public function setTarget($target)
   {

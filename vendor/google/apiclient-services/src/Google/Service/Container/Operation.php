@@ -22,11 +22,15 @@ class Google_Service_Container_Operation extends Google_Collection
   protected $clusterConditionsDataType = 'array';
   public $detail;
   public $endTime;
+  protected $errorType = 'Google_Service_Container_Status';
+  protected $errorDataType = '';
   public $location;
   public $name;
   protected $nodepoolConditionsType = 'Google_Service_Container_StatusCondition';
   protected $nodepoolConditionsDataType = 'array';
   public $operationType;
+  protected $progressType = 'Google_Service_Container_OperationProgress';
+  protected $progressDataType = '';
   public $selfLink;
   public $startTime;
   public $status;
@@ -35,14 +39,14 @@ class Google_Service_Container_Operation extends Google_Collection
   public $zone;
 
   /**
-   * @param Google_Service_Container_StatusCondition
+   * @param Google_Service_Container_StatusCondition[]
    */
   public function setClusterConditions($clusterConditions)
   {
     $this->clusterConditions = $clusterConditions;
   }
   /**
-   * @return Google_Service_Container_StatusCondition
+   * @return Google_Service_Container_StatusCondition[]
    */
   public function getClusterConditions()
   {
@@ -64,6 +68,20 @@ class Google_Service_Container_Operation extends Google_Collection
   {
     return $this->endTime;
   }
+  /**
+   * @param Google_Service_Container_Status
+   */
+  public function setError(Google_Service_Container_Status $error)
+  {
+    $this->error = $error;
+  }
+  /**
+   * @return Google_Service_Container_Status
+   */
+  public function getError()
+  {
+    return $this->error;
+  }
   public function setLocation($location)
   {
     $this->location = $location;
@@ -81,14 +99,14 @@ class Google_Service_Container_Operation extends Google_Collection
     return $this->name;
   }
   /**
-   * @param Google_Service_Container_StatusCondition
+   * @param Google_Service_Container_StatusCondition[]
    */
   public function setNodepoolConditions($nodepoolConditions)
   {
     $this->nodepoolConditions = $nodepoolConditions;
   }
   /**
-   * @return Google_Service_Container_StatusCondition
+   * @return Google_Service_Container_StatusCondition[]
    */
   public function getNodepoolConditions()
   {
@@ -101,6 +119,20 @@ class Google_Service_Container_Operation extends Google_Collection
   public function getOperationType()
   {
     return $this->operationType;
+  }
+  /**
+   * @param Google_Service_Container_OperationProgress
+   */
+  public function setProgress(Google_Service_Container_OperationProgress $progress)
+  {
+    $this->progress = $progress;
+  }
+  /**
+   * @return Google_Service_Container_OperationProgress
+   */
+  public function getProgress()
+  {
+    return $this->progress;
   }
   public function setSelfLink($selfLink)
   {

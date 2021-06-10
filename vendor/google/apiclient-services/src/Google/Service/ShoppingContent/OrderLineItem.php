@@ -33,8 +33,10 @@ class Google_Service_ShoppingContent_OrderLineItem extends Google_Collection
   public $quantityDelivered;
   public $quantityOrdered;
   public $quantityPending;
+  public $quantityReadyForPickup;
   public $quantityReturned;
   public $quantityShipped;
+  public $quantityUndeliverable;
   protected $returnInfoType = 'Google_Service_ShoppingContent_OrderLineItemReturnInfo';
   protected $returnInfoDataType = '';
   protected $returnsType = 'Google_Service_ShoppingContent_OrderReturn';
@@ -45,42 +47,42 @@ class Google_Service_ShoppingContent_OrderLineItem extends Google_Collection
   protected $taxDataType = '';
 
   /**
-   * @param Google_Service_ShoppingContent_OrderLineItemAdjustment
+   * @param Google_Service_ShoppingContent_OrderLineItemAdjustment[]
    */
   public function setAdjustments($adjustments)
   {
     $this->adjustments = $adjustments;
   }
   /**
-   * @return Google_Service_ShoppingContent_OrderLineItemAdjustment
+   * @return Google_Service_ShoppingContent_OrderLineItemAdjustment[]
    */
   public function getAdjustments()
   {
     return $this->adjustments;
   }
   /**
-   * @param Google_Service_ShoppingContent_OrderMerchantProvidedAnnotation
+   * @param Google_Service_ShoppingContent_OrderMerchantProvidedAnnotation[]
    */
   public function setAnnotations($annotations)
   {
     $this->annotations = $annotations;
   }
   /**
-   * @return Google_Service_ShoppingContent_OrderMerchantProvidedAnnotation
+   * @return Google_Service_ShoppingContent_OrderMerchantProvidedAnnotation[]
    */
   public function getAnnotations()
   {
     return $this->annotations;
   }
   /**
-   * @param Google_Service_ShoppingContent_OrderCancellation
+   * @param Google_Service_ShoppingContent_OrderCancellation[]
    */
   public function setCancellations($cancellations)
   {
     $this->cancellations = $cancellations;
   }
   /**
-   * @return Google_Service_ShoppingContent_OrderCancellation
+   * @return Google_Service_ShoppingContent_OrderCancellation[]
    */
   public function getCancellations()
   {
@@ -154,6 +156,14 @@ class Google_Service_ShoppingContent_OrderLineItem extends Google_Collection
   {
     return $this->quantityPending;
   }
+  public function setQuantityReadyForPickup($quantityReadyForPickup)
+  {
+    $this->quantityReadyForPickup = $quantityReadyForPickup;
+  }
+  public function getQuantityReadyForPickup()
+  {
+    return $this->quantityReadyForPickup;
+  }
   public function setQuantityReturned($quantityReturned)
   {
     $this->quantityReturned = $quantityReturned;
@@ -170,6 +180,14 @@ class Google_Service_ShoppingContent_OrderLineItem extends Google_Collection
   {
     return $this->quantityShipped;
   }
+  public function setQuantityUndeliverable($quantityUndeliverable)
+  {
+    $this->quantityUndeliverable = $quantityUndeliverable;
+  }
+  public function getQuantityUndeliverable()
+  {
+    return $this->quantityUndeliverable;
+  }
   /**
    * @param Google_Service_ShoppingContent_OrderLineItemReturnInfo
    */
@@ -185,14 +203,14 @@ class Google_Service_ShoppingContent_OrderLineItem extends Google_Collection
     return $this->returnInfo;
   }
   /**
-   * @param Google_Service_ShoppingContent_OrderReturn
+   * @param Google_Service_ShoppingContent_OrderReturn[]
    */
   public function setReturns($returns)
   {
     $this->returns = $returns;
   }
   /**
-   * @return Google_Service_ShoppingContent_OrderReturn
+   * @return Google_Service_ShoppingContent_OrderReturn[]
    */
   public function getReturns()
   {

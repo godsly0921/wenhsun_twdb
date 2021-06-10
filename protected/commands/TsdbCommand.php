@@ -1,5 +1,4 @@
 <?php
-
 class TsdbCommand extends CConsoleCommand
 {
     public function actionSendTsdbMeasurement($params,$silent=false)
@@ -7,17 +6,20 @@ class TsdbCommand extends CConsoleCommand
         
         $params=TsdbTool::urlsafe_b64decode($params);
         $params= @json_decode($params,true);
+        define ('TSDB_FILE_SAVE_PATH',dirname(__FILE__).'/../../protected/runtime/');
+        define ('INFLUXDB_HOST','35.73.47.81');
+        define ('INFLUXDB_PORT','8086');
+        define ('INFLUXDB_DB','luckywave_api');
         
-        var_dump($params);
-        die();
         
         if ( $params )
         {
+          
             require_once(__DIR__."/../../vendor/autoload.php");
             try 
             {
                 
-                $influxdbClient=new InfluxDB\Client(INFLUXDB_HOST, INFLUXDB_PORT,'','',false,false,2,2);
+                $influxdbClient=new InfluxDB\Client(INFLUXDB_HOST, INFLUXDB_PORT,'admin','cute0921',false,false,2,2);
                 $database = $influxdbClient->selectDB(INFLUXDB_DB);
                 
                 $retentionPolicy=isset($params['policy_name'])?$params['policy_name']:null;

@@ -24,7 +24,7 @@
  *
  * <p>
  * For more information about this service, see the API
- * <a href="https://cloud.google.com/bigquery/" target="_blank">Documentation</a>
+ * <a href="https://cloud.google.com/bigquery-transfer/" target="_blank">Documentation</a>
  * </p>
  *
  * @author Google, Inc.
@@ -34,7 +34,7 @@ class Google_Service_BigQueryDataTransfer extends Google_Service
   /** View and manage your data in Google BigQuery. */
   const BIGQUERY =
       "https://www.googleapis.com/auth/bigquery";
-  /** View and manage your data across Google Cloud Platform services. */
+  /** See, edit, configure, and delete your Google Cloud Platform data. */
   const CLOUD_PLATFORM =
       "https://www.googleapis.com/auth/cloud-platform";
   /** View your data across Google Cloud Platform services. */
@@ -50,16 +50,17 @@ class Google_Service_BigQueryDataTransfer extends Google_Service
   public $projects_transferConfigs;
   public $projects_transferConfigs_runs;
   public $projects_transferConfigs_runs_transferLogs;
-  
+
   /**
    * Constructs the internal representation of the BigQueryDataTransfer service.
    *
-   * @param Google_Client $client
+   * @param Google_Client $client The client used to deliver requests.
+   * @param string $rootUrl The root URL used for requests to the service.
    */
-  public function __construct(Google_Client $client)
+  public function __construct(Google_Client $client, $rootUrl = null)
   {
     parent::__construct($client);
-    $this->rootUrl = 'https://bigquerydatatransfer.googleapis.com/';
+    $this->rootUrl = $rootUrl ?: 'https://bigquerydatatransfer.googleapis.com/';
     $this->servicePath = '';
     $this->batchPath = 'batch';
     $this->version = 'v1';
@@ -142,13 +143,13 @@ class Google_Service_BigQueryDataTransfer extends Google_Service
                   'location' => 'query',
                   'type' => 'string',
                 ),
-                'pageToken' => array(
-                  'location' => 'query',
-                  'type' => 'string',
-                ),
                 'pageSize' => array(
                   'location' => 'query',
                   'type' => 'integer',
+                ),
+                'pageToken' => array(
+                  'location' => 'query',
+                  'type' => 'string',
                 ),
               ),
             ),
@@ -190,13 +191,13 @@ class Google_Service_BigQueryDataTransfer extends Google_Service
                   'type' => 'string',
                   'required' => true,
                 ),
-                'pageToken' => array(
-                  'location' => 'query',
-                  'type' => 'string',
-                ),
                 'pageSize' => array(
                   'location' => 'query',
                   'type' => 'integer',
+                ),
+                'pageToken' => array(
+                  'location' => 'query',
+                  'type' => 'string',
                 ),
               ),
             ),
@@ -218,11 +219,15 @@ class Google_Service_BigQueryDataTransfer extends Google_Service
                   'type' => 'string',
                   'required' => true,
                 ),
-                'versionInfo' => array(
+                'authorizationCode' => array(
                   'location' => 'query',
                   'type' => 'string',
                 ),
-                'authorizationCode' => array(
+                'serviceAccountName' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                ),
+                'versionInfo' => array(
                   'location' => 'query',
                   'type' => 'string',
                 ),
@@ -261,13 +266,13 @@ class Google_Service_BigQueryDataTransfer extends Google_Service
                   'type' => 'string',
                   'repeated' => true,
                 ),
-                'pageToken' => array(
-                  'location' => 'query',
-                  'type' => 'string',
-                ),
                 'pageSize' => array(
                   'location' => 'query',
                   'type' => 'integer',
+                ),
+                'pageToken' => array(
+                  'location' => 'query',
+                  'type' => 'string',
                 ),
               ),
             ),'patch' => array(
@@ -280,6 +285,10 @@ class Google_Service_BigQueryDataTransfer extends Google_Service
                   'required' => true,
                 ),
                 'authorizationCode' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                ),
+                'serviceAccountName' => array(
                   'location' => 'query',
                   'type' => 'string',
                 ),
@@ -351,7 +360,15 @@ class Google_Service_BigQueryDataTransfer extends Google_Service
                   'type' => 'string',
                   'required' => true,
                 ),
+                'pageSize' => array(
+                  'location' => 'query',
+                  'type' => 'integer',
+                ),
                 'pageToken' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                ),
+                'runAttempt' => array(
                   'location' => 'query',
                   'type' => 'string',
                 ),
@@ -359,14 +376,6 @@ class Google_Service_BigQueryDataTransfer extends Google_Service
                   'location' => 'query',
                   'type' => 'string',
                   'repeated' => true,
-                ),
-                'pageSize' => array(
-                  'location' => 'query',
-                  'type' => 'integer',
-                ),
-                'runAttempt' => array(
-                  'location' => 'query',
-                  'type' => 'string',
                 ),
               ),
             ),
@@ -388,18 +397,18 @@ class Google_Service_BigQueryDataTransfer extends Google_Service
                   'type' => 'string',
                   'required' => true,
                 ),
-                'pageToken' => array(
+                'messageTypes' => array(
                   'location' => 'query',
                   'type' => 'string',
+                  'repeated' => true,
                 ),
                 'pageSize' => array(
                   'location' => 'query',
                   'type' => 'integer',
                 ),
-                'messageTypes' => array(
+                'pageToken' => array(
                   'location' => 'query',
                   'type' => 'string',
-                  'repeated' => true,
                 ),
               ),
             ),
@@ -421,11 +430,15 @@ class Google_Service_BigQueryDataTransfer extends Google_Service
                   'type' => 'string',
                   'required' => true,
                 ),
-                'versionInfo' => array(
+                'authorizationCode' => array(
                   'location' => 'query',
                   'type' => 'string',
                 ),
-                'authorizationCode' => array(
+                'serviceAccountName' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                ),
+                'versionInfo' => array(
                   'location' => 'query',
                   'type' => 'string',
                 ),
@@ -464,13 +477,13 @@ class Google_Service_BigQueryDataTransfer extends Google_Service
                   'type' => 'string',
                   'repeated' => true,
                 ),
-                'pageToken' => array(
-                  'location' => 'query',
-                  'type' => 'string',
-                ),
                 'pageSize' => array(
                   'location' => 'query',
                   'type' => 'integer',
+                ),
+                'pageToken' => array(
+                  'location' => 'query',
+                  'type' => 'string',
                 ),
               ),
             ),'patch' => array(
@@ -482,15 +495,19 @@ class Google_Service_BigQueryDataTransfer extends Google_Service
                   'type' => 'string',
                   'required' => true,
                 ),
+                'authorizationCode' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                ),
+                'serviceAccountName' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                ),
                 'updateMask' => array(
                   'location' => 'query',
                   'type' => 'string',
                 ),
                 'versionInfo' => array(
-                  'location' => 'query',
-                  'type' => 'string',
-                ),
-                'authorizationCode' => array(
                   'location' => 'query',
                   'type' => 'string',
                 ),
@@ -554,7 +571,15 @@ class Google_Service_BigQueryDataTransfer extends Google_Service
                   'type' => 'string',
                   'required' => true,
                 ),
+                'pageSize' => array(
+                  'location' => 'query',
+                  'type' => 'integer',
+                ),
                 'pageToken' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                ),
+                'runAttempt' => array(
                   'location' => 'query',
                   'type' => 'string',
                 ),
@@ -562,14 +587,6 @@ class Google_Service_BigQueryDataTransfer extends Google_Service
                   'location' => 'query',
                   'type' => 'string',
                   'repeated' => true,
-                ),
-                'pageSize' => array(
-                  'location' => 'query',
-                  'type' => 'integer',
-                ),
-                'runAttempt' => array(
-                  'location' => 'query',
-                  'type' => 'string',
                 ),
               ),
             ),
@@ -591,18 +608,18 @@ class Google_Service_BigQueryDataTransfer extends Google_Service
                   'type' => 'string',
                   'required' => true,
                 ),
-                'pageToken' => array(
+                'messageTypes' => array(
                   'location' => 'query',
                   'type' => 'string',
+                  'repeated' => true,
                 ),
                 'pageSize' => array(
                   'location' => 'query',
                   'type' => 'integer',
                 ),
-                'messageTypes' => array(
+                'pageToken' => array(
                   'location' => 'query',
                   'type' => 'string',
-                  'repeated' => true,
                 ),
               ),
             ),

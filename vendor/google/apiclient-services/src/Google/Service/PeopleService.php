@@ -33,22 +33,34 @@ class Google_Service_PeopleService extends Google_Service
   /** See, edit, download, and permanently delete your contacts. */
   const CONTACTS =
       "https://www.googleapis.com/auth/contacts";
+  /** See and download contact info automatically saved in your "Other contacts". */
+  const CONTACTS_OTHER_READONLY =
+      "https://www.googleapis.com/auth/contacts.other.readonly";
   /** See and download your contacts. */
   const CONTACTS_READONLY =
       "https://www.googleapis.com/auth/contacts.readonly";
+  /** See and download your organization's GSuite directory. */
+  const DIRECTORY_READONLY =
+      "https://www.googleapis.com/auth/directory.readonly";
   /** View your street addresses. */
   const USER_ADDRESSES_READ =
       "https://www.googleapis.com/auth/user.addresses.read";
-  /** View your complete date of birth. */
+  /** See and download your exact date of birth. */
   const USER_BIRTHDAY_READ =
       "https://www.googleapis.com/auth/user.birthday.read";
-  /** View your email addresses. */
+  /** See and download all of your Google Account email addresses. */
   const USER_EMAILS_READ =
       "https://www.googleapis.com/auth/user.emails.read";
-  /** View your phone numbers. */
+  /** See your gender. */
+  const USER_GENDER_READ =
+      "https://www.googleapis.com/auth/user.gender.read";
+  /** See your education, work history and org info. */
+  const USER_ORGANIZATION_READ =
+      "https://www.googleapis.com/auth/user.organization.read";
+  /** See and download your personal phone numbers. */
   const USER_PHONENUMBERS_READ =
       "https://www.googleapis.com/auth/user.phonenumbers.read";
-  /** View your email address. */
+  /** See your primary Google Account email address. */
   const USERINFO_EMAIL =
       "https://www.googleapis.com/auth/userinfo.email";
   /** See your personal info, including any personal info you've made publicly available. */
@@ -57,18 +69,20 @@ class Google_Service_PeopleService extends Google_Service
 
   public $contactGroups;
   public $contactGroups_members;
+  public $otherContacts;
   public $people;
   public $people_connections;
-  
+
   /**
    * Constructs the internal representation of the PeopleService service.
    *
-   * @param Google_Client $client
+   * @param Google_Client $client The client used to deliver requests.
+   * @param string $rootUrl The root URL used for requests to the service.
    */
-  public function __construct(Google_Client $client)
+  public function __construct(Google_Client $client, $rootUrl = null)
   {
     parent::__construct($client);
-    $this->rootUrl = 'https://people.googleapis.com/';
+    $this->rootUrl = $rootUrl ?: 'https://people.googleapis.com/';
     $this->servicePath = '';
     $this->batchPath = 'batch';
     $this->version = 'v1';
@@ -84,6 +98,10 @@ class Google_Service_PeopleService extends Google_Service
               'path' => 'v1/contactGroups:batchGet',
               'httpMethod' => 'GET',
               'parameters' => array(
+                'groupFields' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                ),
                 'maxMembers' => array(
                   'location' => 'query',
                   'type' => 'integer',
@@ -121,6 +139,10 @@ class Google_Service_PeopleService extends Google_Service
                   'type' => 'string',
                   'required' => true,
                 ),
+                'groupFields' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                ),
                 'maxMembers' => array(
                   'location' => 'query',
                   'type' => 'integer',
@@ -130,17 +152,21 @@ class Google_Service_PeopleService extends Google_Service
               'path' => 'v1/contactGroups',
               'httpMethod' => 'GET',
               'parameters' => array(
-                'syncToken' => array(
-                  'location' => 'query',
-                  'type' => 'string',
-                ),
-                'pageToken' => array(
+                'groupFields' => array(
                   'location' => 'query',
                   'type' => 'string',
                 ),
                 'pageSize' => array(
                   'location' => 'query',
                   'type' => 'integer',
+                ),
+                'pageToken' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                ),
+                'syncToken' => array(
+                  'location' => 'query',
+                  'type' => 'string',
                 ),
               ),
             ),'update' => array(
@@ -177,19 +203,98 @@ class Google_Service_PeopleService extends Google_Service
           )
         )
     );
+    $this->otherContacts = new Google_Service_PeopleService_Resource_OtherContacts(
+        $this,
+        $this->serviceName,
+        'otherContacts',
+        array(
+          'methods' => array(
+            'copyOtherContactToMyContactsGroup' => array(
+              'path' => 'v1/{+resourceName}:copyOtherContactToMyContactsGroup',
+              'httpMethod' => 'POST',
+              'parameters' => array(
+                'resourceName' => array(
+                  'location' => 'path',
+                  'type' => 'string',
+                  'required' => true,
+                ),
+              ),
+            ),'list' => array(
+              'path' => 'v1/otherContacts',
+              'httpMethod' => 'GET',
+              'parameters' => array(
+                'pageSize' => array(
+                  'location' => 'query',
+                  'type' => 'integer',
+                ),
+                'pageToken' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                ),
+                'readMask' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                ),
+                'requestSyncToken' => array(
+                  'location' => 'query',
+                  'type' => 'boolean',
+                ),
+                'syncToken' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                ),
+              ),
+            ),'search' => array(
+              'path' => 'v1/otherContacts:search',
+              'httpMethod' => 'GET',
+              'parameters' => array(
+                'pageSize' => array(
+                  'location' => 'query',
+                  'type' => 'integer',
+                ),
+                'query' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                ),
+                'readMask' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                ),
+              ),
+            ),
+          )
+        )
+    );
     $this->people = new Google_Service_PeopleService_Resource_People(
         $this,
         $this->serviceName,
         'people',
         array(
           'methods' => array(
-            'createContact' => array(
+            'batchCreateContacts' => array(
+              'path' => 'v1/people:batchCreateContacts',
+              'httpMethod' => 'POST',
+              'parameters' => array(),
+            ),'batchDeleteContacts' => array(
+              'path' => 'v1/people:batchDeleteContacts',
+              'httpMethod' => 'POST',
+              'parameters' => array(),
+            ),'batchUpdateContacts' => array(
+              'path' => 'v1/people:batchUpdateContacts',
+              'httpMethod' => 'POST',
+              'parameters' => array(),
+            ),'createContact' => array(
               'path' => 'v1/people:createContact',
               'httpMethod' => 'POST',
               'parameters' => array(
-                'parent' => array(
+                'personFields' => array(
                   'location' => 'query',
                   'type' => 'string',
+                ),
+                'sources' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                  'repeated' => true,
                 ),
               ),
             ),'deleteContact' => array(
@@ -202,6 +307,25 @@ class Google_Service_PeopleService extends Google_Service
                   'required' => true,
                 ),
               ),
+            ),'deleteContactPhoto' => array(
+              'path' => 'v1/{+resourceName}:deleteContactPhoto',
+              'httpMethod' => 'DELETE',
+              'parameters' => array(
+                'resourceName' => array(
+                  'location' => 'path',
+                  'type' => 'string',
+                  'required' => true,
+                ),
+                'personFields' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                ),
+                'sources' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                  'repeated' => true,
+                ),
+              ),
             ),'get' => array(
               'path' => 'v1/{+resourceName}',
               'httpMethod' => 'GET',
@@ -211,13 +335,18 @@ class Google_Service_PeopleService extends Google_Service
                   'type' => 'string',
                   'required' => true,
                 ),
+                'personFields' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                ),
                 'requestMask.includeField' => array(
                   'location' => 'query',
                   'type' => 'string',
                 ),
-                'personFields' => array(
+                'sources' => array(
                   'location' => 'query',
                   'type' => 'string',
+                  'repeated' => true,
                 ),
               ),
             ),'getBatchGet' => array(
@@ -237,6 +366,99 @@ class Google_Service_PeopleService extends Google_Service
                   'type' => 'string',
                   'repeated' => true,
                 ),
+                'sources' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                  'repeated' => true,
+                ),
+              ),
+            ),'listDirectoryPeople' => array(
+              'path' => 'v1/people:listDirectoryPeople',
+              'httpMethod' => 'GET',
+              'parameters' => array(
+                'mergeSources' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                  'repeated' => true,
+                ),
+                'pageSize' => array(
+                  'location' => 'query',
+                  'type' => 'integer',
+                ),
+                'pageToken' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                ),
+                'readMask' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                ),
+                'requestSyncToken' => array(
+                  'location' => 'query',
+                  'type' => 'boolean',
+                ),
+                'sources' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                  'repeated' => true,
+                ),
+                'syncToken' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                ),
+              ),
+            ),'searchContacts' => array(
+              'path' => 'v1/people:searchContacts',
+              'httpMethod' => 'GET',
+              'parameters' => array(
+                'pageSize' => array(
+                  'location' => 'query',
+                  'type' => 'integer',
+                ),
+                'query' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                ),
+                'readMask' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                ),
+                'sources' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                  'repeated' => true,
+                ),
+              ),
+            ),'searchDirectoryPeople' => array(
+              'path' => 'v1/people:searchDirectoryPeople',
+              'httpMethod' => 'GET',
+              'parameters' => array(
+                'mergeSources' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                  'repeated' => true,
+                ),
+                'pageSize' => array(
+                  'location' => 'query',
+                  'type' => 'integer',
+                ),
+                'pageToken' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                ),
+                'query' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                ),
+                'readMask' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                ),
+                'sources' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                  'repeated' => true,
+                ),
               ),
             ),'updateContact' => array(
               'path' => 'v1/{+resourceName}:updateContact',
@@ -247,9 +469,28 @@ class Google_Service_PeopleService extends Google_Service
                   'type' => 'string',
                   'required' => true,
                 ),
+                'personFields' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                ),
+                'sources' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                  'repeated' => true,
+                ),
                 'updatePersonFields' => array(
                   'location' => 'query',
                   'type' => 'string',
+                ),
+              ),
+            ),'updateContactPhoto' => array(
+              'path' => 'v1/{+resourceName}:updateContactPhoto',
+              'httpMethod' => 'PATCH',
+              'parameters' => array(
+                'resourceName' => array(
+                  'location' => 'path',
+                  'type' => 'string',
+                  'required' => true,
                 ),
               ),
             ),
@@ -271,15 +512,15 @@ class Google_Service_PeopleService extends Google_Service
                   'type' => 'string',
                   'required' => true,
                 ),
-                'sortOrder' => array(
+                'pageSize' => array(
+                  'location' => 'query',
+                  'type' => 'integer',
+                ),
+                'pageToken' => array(
                   'location' => 'query',
                   'type' => 'string',
                 ),
-                'requestSyncToken' => array(
-                  'location' => 'query',
-                  'type' => 'boolean',
-                ),
-                'pageToken' => array(
+                'personFields' => array(
                   'location' => 'query',
                   'type' => 'string',
                 ),
@@ -287,15 +528,20 @@ class Google_Service_PeopleService extends Google_Service
                   'location' => 'query',
                   'type' => 'string',
                 ),
-                'pageSize' => array(
+                'requestSyncToken' => array(
                   'location' => 'query',
-                  'type' => 'integer',
+                  'type' => 'boolean',
                 ),
-                'syncToken' => array(
+                'sortOrder' => array(
                   'location' => 'query',
                   'type' => 'string',
                 ),
-                'personFields' => array(
+                'sources' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                  'repeated' => true,
+                ),
+                'syncToken' => array(
                   'location' => 'query',
                   'type' => 'string',
                 ),

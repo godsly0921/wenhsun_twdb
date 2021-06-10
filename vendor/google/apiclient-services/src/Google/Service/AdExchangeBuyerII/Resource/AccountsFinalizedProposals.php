@@ -34,16 +34,14 @@ class Google_Service_AdExchangeBuyerII_Resource_AccountsFinalizedProposals exten
    * @param string $accountId Account ID of the buyer.
    * @param array $optParams Optional parameters.
    *
+   * @opt_param string filter An optional PQL filter query used to query for
+   * proposals. Nested repeated fields, such as proposal.deals.targetingCriterion,
+   * cannot be filtered.
+   * @opt_param string filterSyntax Syntax the filter is written in. Current
+   * implementation defaults to PQL but in the future it will be LIST_FILTER.
    * @opt_param int pageSize Requested page size. The server may return fewer
    * results than requested. If unspecified, the server will pick an appropriate
    * default.
-   * @opt_param string filterSyntax Syntax the filter is written in. Current
-   * implementation defaults to PQL but in the future it will be LIST_FILTER.
-   * @opt_param string filter An optional PQL filter query used to query for
-   * proposals.
-   *
-   * Nested repeated fields, such as proposal.deals.targetingCriterion, cannot be
-   * filtered.
    * @opt_param string pageToken The page token as returned from
    * ListProposalsResponse.
    * @return Google_Service_AdExchangeBuyerII_ListProposalsResponse
@@ -53,5 +51,51 @@ class Google_Service_AdExchangeBuyerII_Resource_AccountsFinalizedProposals exten
     $params = array('accountId' => $accountId);
     $params = array_merge($params, $optParams);
     return $this->call('list', array($params), "Google_Service_AdExchangeBuyerII_ListProposalsResponse");
+  }
+  /**
+   * Update given deals to pause serving. This method will set the
+   * `DealServingMetadata.DealPauseStatus.has_buyer_paused` bit to true for all
+   * listed deals in the request. Currently, this method only applies to PG and PD
+   * deals. For PA deals, please call accounts.proposals.pause endpoint. It is a
+   * no-op to pause already-paused deals. It is an error to call
+   * PauseProposalDeals for deals which are not part of the proposal of
+   * proposal_id or which are not finalized or renegotiating.
+   * (finalizedProposals.pause)
+   *
+   * @param string $accountId Account ID of the buyer.
+   * @param string $proposalId The proposal_id of the proposal containing the
+   * deals.
+   * @param Google_Service_AdExchangeBuyerII_PauseProposalDealsRequest $postBody
+   * @param array $optParams Optional parameters.
+   * @return Google_Service_AdExchangeBuyerII_Proposal
+   */
+  public function pause($accountId, $proposalId, Google_Service_AdExchangeBuyerII_PauseProposalDealsRequest $postBody, $optParams = array())
+  {
+    $params = array('accountId' => $accountId, 'proposalId' => $proposalId, 'postBody' => $postBody);
+    $params = array_merge($params, $optParams);
+    return $this->call('pause', array($params), "Google_Service_AdExchangeBuyerII_Proposal");
+  }
+  /**
+   * Update given deals to resume serving. This method will set the
+   * `DealServingMetadata.DealPauseStatus.has_buyer_paused` bit to false for all
+   * listed deals in the request. Currently, this method only applies to PG and PD
+   * deals. For PA deals, please call accounts.proposals.resume endpoint. It is a
+   * no-op to resume already-running deals. It is an error to call
+   * ResumeProposalDeals for deals which are not part of the proposal of
+   * proposal_id or which are not finalized or renegotiating.
+   * (finalizedProposals.resume)
+   *
+   * @param string $accountId Account ID of the buyer.
+   * @param string $proposalId The proposal_id of the proposal containing the
+   * deals.
+   * @param Google_Service_AdExchangeBuyerII_ResumeProposalDealsRequest $postBody
+   * @param array $optParams Optional parameters.
+   * @return Google_Service_AdExchangeBuyerII_Proposal
+   */
+  public function resume($accountId, $proposalId, Google_Service_AdExchangeBuyerII_ResumeProposalDealsRequest $postBody, $optParams = array())
+  {
+    $params = array('accountId' => $accountId, 'proposalId' => $proposalId, 'postBody' => $postBody);
+    $params = array_merge($params, $optParams);
+    return $this->call('resume', array($params), "Google_Service_AdExchangeBuyerII_Proposal");
   }
 }

@@ -35,21 +35,22 @@ class Google_Service_CloudNaturalLanguage extends Google_Service
   /** Apply machine learning models to reveal the structure and meaning of text. */
   const CLOUD_LANGUAGE =
       "https://www.googleapis.com/auth/cloud-language";
-  /** View and manage your data across Google Cloud Platform services. */
+  /** See, edit, configure, and delete your Google Cloud Platform data. */
   const CLOUD_PLATFORM =
       "https://www.googleapis.com/auth/cloud-platform";
 
   public $documents;
-  
+
   /**
    * Constructs the internal representation of the CloudNaturalLanguage service.
    *
-   * @param Google_Client $client
+   * @param Google_Client $client The client used to deliver requests.
+   * @param string $rootUrl The root URL used for requests to the service.
    */
-  public function __construct(Google_Client $client)
+  public function __construct(Google_Client $client, $rootUrl = null)
   {
     parent::__construct($client);
-    $this->rootUrl = 'https://language.googleapis.com/';
+    $this->rootUrl = $rootUrl ?: 'https://language.googleapis.com/';
     $this->servicePath = '';
     $this->batchPath = 'batch';
     $this->version = 'v1';

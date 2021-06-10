@@ -15,11 +15,17 @@
  * the License.
  */
 
-class Google_Service_Dataflow_Snapshot extends Google_Model
+class Google_Service_Dataflow_Snapshot extends Google_Collection
 {
+  protected $collection_key = 'pubsubMetadata';
   public $creationTime;
+  public $description;
+  public $diskSizeBytes;
   public $id;
   public $projectId;
+  protected $pubsubMetadataType = 'Google_Service_Dataflow_PubsubSnapshotMetadata';
+  protected $pubsubMetadataDataType = 'array';
+  public $region;
   public $sourceJobId;
   public $state;
   public $ttl;
@@ -31,6 +37,22 @@ class Google_Service_Dataflow_Snapshot extends Google_Model
   public function getCreationTime()
   {
     return $this->creationTime;
+  }
+  public function setDescription($description)
+  {
+    $this->description = $description;
+  }
+  public function getDescription()
+  {
+    return $this->description;
+  }
+  public function setDiskSizeBytes($diskSizeBytes)
+  {
+    $this->diskSizeBytes = $diskSizeBytes;
+  }
+  public function getDiskSizeBytes()
+  {
+    return $this->diskSizeBytes;
   }
   public function setId($id)
   {
@@ -47,6 +69,28 @@ class Google_Service_Dataflow_Snapshot extends Google_Model
   public function getProjectId()
   {
     return $this->projectId;
+  }
+  /**
+   * @param Google_Service_Dataflow_PubsubSnapshotMetadata[]
+   */
+  public function setPubsubMetadata($pubsubMetadata)
+  {
+    $this->pubsubMetadata = $pubsubMetadata;
+  }
+  /**
+   * @return Google_Service_Dataflow_PubsubSnapshotMetadata[]
+   */
+  public function getPubsubMetadata()
+  {
+    return $this->pubsubMetadata;
+  }
+  public function setRegion($region)
+  {
+    $this->region = $region;
+  }
+  public function getRegion()
+  {
+    return $this->region;
   }
   public function setSourceJobId($sourceJobId)
   {

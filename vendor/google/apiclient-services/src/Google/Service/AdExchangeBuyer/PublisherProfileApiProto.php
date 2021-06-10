@@ -22,6 +22,7 @@ class Google_Service_AdExchangeBuyer_PublisherProfileApiProto extends Google_Col
   public $buyerPitchStatement;
   public $directContact;
   public $exchange;
+  public $forecastInventory;
   public $googlePlusLink;
   public $isParent;
   public $isPublished;
@@ -32,6 +33,9 @@ class Google_Service_AdExchangeBuyer_PublisherProfileApiProto extends Google_Col
   public $overview;
   public $profileId;
   public $programmaticContact;
+  public $publisherAppIds;
+  protected $publisherAppsType = 'Google_Service_AdExchangeBuyer_MobileApplication';
+  protected $publisherAppsDataType = 'array';
   public $publisherDomains;
   public $publisherProfileId;
   protected $publisherProvidedForecastType = 'Google_Service_AdExchangeBuyer_PublisherProvidedForecast';
@@ -74,6 +78,14 @@ class Google_Service_AdExchangeBuyer_PublisherProfileApiProto extends Google_Col
   public function getExchange()
   {
     return $this->exchange;
+  }
+  public function setForecastInventory($forecastInventory)
+  {
+    $this->forecastInventory = $forecastInventory;
+  }
+  public function getForecastInventory()
+  {
+    return $this->forecastInventory;
   }
   public function setGooglePlusLink($googlePlusLink)
   {
@@ -154,6 +166,28 @@ class Google_Service_AdExchangeBuyer_PublisherProfileApiProto extends Google_Col
   public function getProgrammaticContact()
   {
     return $this->programmaticContact;
+  }
+  public function setPublisherAppIds($publisherAppIds)
+  {
+    $this->publisherAppIds = $publisherAppIds;
+  }
+  public function getPublisherAppIds()
+  {
+    return $this->publisherAppIds;
+  }
+  /**
+   * @param Google_Service_AdExchangeBuyer_MobileApplication[]
+   */
+  public function setPublisherApps($publisherApps)
+  {
+    $this->publisherApps = $publisherApps;
+  }
+  /**
+   * @return Google_Service_AdExchangeBuyer_MobileApplication[]
+   */
+  public function getPublisherApps()
+  {
+    return $this->publisherApps;
   }
   public function setPublisherDomains($publisherDomains)
   {
