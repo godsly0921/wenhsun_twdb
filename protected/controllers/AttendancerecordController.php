@@ -97,7 +97,7 @@ class AttendancerecordController extends Controller
                 $temp['name'] = $value['name'];
                 $temp['day'] = $value['day'];
                 $temp['first_time'] = $value['first_time'];
-                $temp['last_time'] = $value['last_time'];
+                $temp['last_time'] = ($value['first_time'] == "0000-00-00 00:00:00" && $value['last_time'] == "0000-00-00 00:00:01") ? "0000-00-00 00:00:00" : $value['last_time'];
                 switch ($value['abnormal_type']) {
                     case "0":
                         $value['abnormal_type'] = "正常";
@@ -233,6 +233,11 @@ class AttendancerecordController extends Controller
         require_once dirname( __FILE__ ) . '/../components/PHPExcel.php';
         // Create new PHPExcel object
         $objPHPExcel = new PHPExcel();
+        $objPHPExcel->getDefaultStyle()
+        ->getNumberFormat()
+        ->setFormatCode(
+            PHPExcel_Style_NumberFormat::FORMAT_TEXT
+        );
         // Set document properties
         $objPHPExcel->getProperties()->setCreator( "文訊人資" )
             ->setLastModifiedBy( "文訊人資" )
@@ -266,8 +271,8 @@ class AttendancerecordController extends Controller
                 ->setCellValue( 'A' . $i, $value[ 'user_name' ] )
                 ->setCellValue( 'B' . $i, $value[ 'name' ] )
                 ->setCellValue( 'C' . $i, $value[ 'day' ] )
-                ->setCellValue( 'D' . $i, substr($value[ 'last_time' ],10,9) )
-                ->setCellValue( 'E' . $i, substr($value[ 'first_time' ],10,9) )
+                ->setCellValue( 'D' . $i, substr($value[ 'last_time' ],11,9) )
+                ->setCellValue( 'E' . $i, substr($value[ 'first_time' ],11,9) )
                 ->setCellValue( 'F' . $i, $value[ 'abnormal_type' ] )
                 ->setCellValue( 'G' . $i, $value[ 'abnormal' ] )
                 ->setCellValue( 'H' . $i, $value[ 'take' ] )
