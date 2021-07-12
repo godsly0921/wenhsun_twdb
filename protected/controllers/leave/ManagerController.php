@@ -560,7 +560,7 @@ class ManagerController extends Controller
             }
             $can_apply_annual_last = $can_apply_annual_now = false;
             $special_leave_year_id = null;
-            $check_role = [2,5,26,33];
+            $check_role = CHECKROLE;
             if($AnnualLeaveType == 1 && $_POST['leave_type'] == 5 && in_array($employeeOrmEnt->role, $check_role) ){
                 $now_year = new DateTime($start_time);
                 $now_year->setTime(0, 0, 0);
@@ -880,7 +880,7 @@ class ManagerController extends Controller
                 'id=:id',
                 [':id' => $attendanceRecord->employee_id]
             );
-            $check_role = [2,5,26,33];
+            $check_role = CHECKROLE;
             if($AnnualLeaveType == 1 && $attendanceRecord->take == 5 && in_array($employeeOrmEnt->role, $check_role)){
                 $now_year = new DateTime($attendanceRecord->day);
                 $now_year->setTime(0, 0, 0);
@@ -980,7 +980,7 @@ class ManagerController extends Controller
                 'id=:id',
                 [':id' => $attendanceRecord->employee_id]
             );
-            $check_role = [2,5,26,33];
+            $check_role = CHECKROLE;
 			
             if($AnnualLeaveType == 1 && $_POST['leave_type'] == 5){
 				

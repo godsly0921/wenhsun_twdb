@@ -98,16 +98,23 @@ class LeaveService
                     // 到職日滿 1 年 不滿 25 年
                     if (isset($this->leaveMap[$diffYear])) {
                         $seniority_month = $onBoardDate->format('m')-1;
-
                         // var_dump(round(
                         //     round(($seniority_month + ($onBoardDate->format('d')-1)/$month_day)/12 * $this->leaveMap[$diffYear],2) + 
                         //     round($this->leaveMap[($diffYear+1)]-(($seniority_month+($onBoardDate->format('d')-1)/$month_day)/12 * $this->leaveMap[($diffYear+1)]),2)
                         //     ,1));
                         // exit();
-                        $special_leave = round((
+                        if($diffYear < 25){
+                            $special_leave = round((
                             round(($seniority_month + ($onBoardDate->format('d')-1)/$month_day)/12 * $this->leaveMap[$diffYear],2) + 
                             round($this->leaveMap[($diffYear+1)]-(($seniority_month+($onBoardDate->format('d')-1)/$month_day)/12 * $this->leaveMap[($diffYear+1)]),2))
                             * 8 * 60);
+                        }else{
+                            $special_leave = round((
+                            round(($seniority_month + ($onBoardDate->format('d')-1)/$month_day)/12 * $this->leaveMap[$diffYear],2) + 
+                            round($this->leaveMap[25]-(($seniority_month+($onBoardDate->format('d')-1)/$month_day)/12 * $this->leaveMap[25]),2))
+                            * 8 * 60);
+                        }
+                        
                         $this->create_Specialleaveyear($employee, $now->format('Y')."-01-01", $now->format('Y')."-12-31", ($dDiff->format('%y')*12 + $dDiff->format('%m')),  $special_leave);
                     }else{// 到職日滿 25 年
                         $special_leave = round((
