@@ -98,7 +98,7 @@
                     <td>
                         <a href="<?php echo Yii::app()->createUrl('site/my_account'); ?>" class="active">我的帳戶</a>
                     </td>
-                    <td>
+                    <td class="d-none">
                         <a href="<?php echo Yii::app()->createUrl('site/my_points'); ?>" class="small">我的點數與下載</a>
                     </td>
                     <td>

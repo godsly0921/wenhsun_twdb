@@ -73,12 +73,13 @@ class ComposerStaticInite45597f2f6a7d3af6047475575265b4d
         '320cde22f66dd4f5d3fd621d3e88b98f' => __DIR__ . '/..' . '/symfony/polyfill-ctype/bootstrap.php',
         '6124b4c8570aa390c21fafd04a26c69f' => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy/deep_copy.php',
         'c65d09b6820da036953a371c8c73a9b1' => __DIR__ . '/..' . '/facebook/graph-sdk/src/Facebook/polyfills.php',
+        'a8d3953fd9959404dd22d3dfcd0a79f0' => __DIR__ . '/..' . '/google/apiclient/src/aliases.php',
     );
 
     public static $prefixLengthsPsr4 = array (
         'p' => 
         array (
-            'phpseclib\\' => 10,
+            'phpseclib3\\' => 11,
             'phpDocumentor\\Reflection\\' => 25,
         ),
         'W' => 
@@ -99,13 +100,19 @@ class ComposerStaticInite45597f2f6a7d3af6047475575265b4d
             'Psr\\SimpleCache\\' => 16,
             'Psr\\Log\\' => 8,
             'Psr\\Http\\Message\\' => 17,
+            'Psr\\Http\\Client\\' => 16,
             'Psr\\Cache\\' => 10,
             'PhpOffice\\PhpSpreadsheet\\' => 25,
+            'ParagonIE\\ConstantTime\\' => 23,
         ),
         'M' => 
         array (
             'Monolog\\' => 8,
             'Matrix\\' => 7,
+        ),
+        'I' => 
+        array (
+            'InfluxDB\\' => 9,
         ),
         'G' => 
         array (
@@ -113,6 +120,7 @@ class ComposerStaticInite45597f2f6a7d3af6047475575265b4d
             'GuzzleHttp\\Promise\\' => 19,
             'GuzzleHttp\\' => 11,
             'Google\\Auth\\' => 12,
+            'Google\\' => 7,
         ),
         'F' => 
         array (
@@ -131,7 +139,7 @@ class ComposerStaticInite45597f2f6a7d3af6047475575265b4d
     );
 
     public static $prefixDirsPsr4 = array (
-        'phpseclib\\' => 
+        'phpseclib3\\' => 
         array (
             0 => __DIR__ . '/..' . '/phpseclib/phpseclib/phpseclib',
         ),
@@ -169,6 +177,10 @@ class ComposerStaticInite45597f2f6a7d3af6047475575265b4d
         array (
             0 => __DIR__ . '/..' . '/psr/http-message/src',
         ),
+        'Psr\\Http\\Client\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/psr/http-client/src',
+        ),
         'Psr\\Cache\\' => 
         array (
             0 => __DIR__ . '/..' . '/psr/cache/src',
@@ -177,6 +189,10 @@ class ComposerStaticInite45597f2f6a7d3af6047475575265b4d
         array (
             0 => __DIR__ . '/..' . '/phpoffice/phpspreadsheet/src/PhpSpreadsheet',
         ),
+        'ParagonIE\\ConstantTime\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/paragonie/constant_time_encoding/src',
+        ),
         'Monolog\\' => 
         array (
             0 => __DIR__ . '/..' . '/monolog/monolog/src/Monolog',
@@ -184,6 +200,10 @@ class ComposerStaticInite45597f2f6a7d3af6047475575265b4d
         'Matrix\\' => 
         array (
             0 => __DIR__ . '/..' . '/markbaker/matrix/classes/src',
+        ),
+        'InfluxDB\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/influxdb/influxdb-php/src/InfluxDB',
         ),
         'GuzzleHttp\\Psr7\\' => 
         array (
@@ -200,6 +220,10 @@ class ComposerStaticInite45597f2f6a7d3af6047475575265b4d
         'Google\\Auth\\' => 
         array (
             0 => __DIR__ . '/..' . '/google/auth/src',
+        ),
+        'Google\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/google/apiclient/src',
         ),
         'Firebase\\JWT\\' => 
         array (
@@ -244,16 +268,31 @@ class ComposerStaticInite45597f2f6a7d3af6047475575265b4d
             array (
                 0 => __DIR__ . '/..' . '/google/apiclient-services/src',
             ),
-            'Google_' => 
-            array (
-                0 => __DIR__ . '/..' . '/google/apiclient/src',
-            ),
         ),
     );
 
     public static $classMap = array (
-        'Google_Service_Exception' => __DIR__ . '/..' . '/google/apiclient/src/Google/Service/Exception.php',
-        'Google_Service_Resource' => __DIR__ . '/..' . '/google/apiclient/src/Google/Service/Resource.php',
+        'Google_AccessToken_Revoke' => __DIR__ . '/..' . '/google/apiclient/src/aliases.php',
+        'Google_AccessToken_Verify' => __DIR__ . '/..' . '/google/apiclient/src/aliases.php',
+        'Google_AuthHandler_AuthHandlerFactory' => __DIR__ . '/..' . '/google/apiclient/src/aliases.php',
+        'Google_AuthHandler_Guzzle5AuthHandler' => __DIR__ . '/..' . '/google/apiclient/src/aliases.php',
+        'Google_AuthHandler_Guzzle6AuthHandler' => __DIR__ . '/..' . '/google/apiclient/src/aliases.php',
+        'Google_AuthHandler_Guzzle7AuthHandler' => __DIR__ . '/..' . '/google/apiclient/src/aliases.php',
+        'Google_Client' => __DIR__ . '/..' . '/google/apiclient/src/aliases.php',
+        'Google_Collection' => __DIR__ . '/..' . '/google/apiclient/src/aliases.php',
+        'Google_Exception' => __DIR__ . '/..' . '/google/apiclient/src/aliases.php',
+        'Google_Http_Batch' => __DIR__ . '/..' . '/google/apiclient/src/aliases.php',
+        'Google_Http_MediaFileUpload' => __DIR__ . '/..' . '/google/apiclient/src/aliases.php',
+        'Google_Http_REST' => __DIR__ . '/..' . '/google/apiclient/src/aliases.php',
+        'Google_Model' => __DIR__ . '/..' . '/google/apiclient/src/aliases.php',
+        'Google_Service' => __DIR__ . '/..' . '/google/apiclient/src/aliases.php',
+        'Google_Service_Exception' => __DIR__ . '/..' . '/google/apiclient/src/aliases.php',
+        'Google_Service_Resource' => __DIR__ . '/..' . '/google/apiclient/src/aliases.php',
+        'Google_Task_Composer' => __DIR__ . '/..' . '/google/apiclient/src/aliases.php',
+        'Google_Task_Exception' => __DIR__ . '/..' . '/google/apiclient/src/aliases.php',
+        'Google_Task_Retryable' => __DIR__ . '/..' . '/google/apiclient/src/aliases.php',
+        'Google_Task_Runner' => __DIR__ . '/..' . '/google/apiclient/src/aliases.php',
+        'Google_Utils_UriTemplate' => __DIR__ . '/..' . '/google/apiclient/src/aliases.php',
         'Hamcrest\\Arrays\\IsArray' => __DIR__ . '/..' . '/hamcrest/hamcrest-php/hamcrest/Hamcrest/Arrays/IsArray.php',
         'Hamcrest\\Arrays\\IsArrayContaining' => __DIR__ . '/..' . '/hamcrest/hamcrest-php/hamcrest/Hamcrest/Arrays/IsArrayContaining.php',
         'Hamcrest\\Arrays\\IsArrayContainingInAnyOrder' => __DIR__ . '/..' . '/hamcrest/hamcrest-php/hamcrest/Hamcrest/Arrays/IsArrayContainingInAnyOrder.php',

@@ -21,18 +21,28 @@ class Google_Service_Compute_Subnetwork extends Google_Collection
   public $creationTimestamp;
   public $description;
   public $enableFlowLogs;
+  public $externalIpv6Prefix;
   public $fingerprint;
   public $gatewayAddress;
   public $id;
   public $ipCidrRange;
+  public $ipv6AccessType;
+  public $ipv6CidrRange;
   public $kind;
+  protected $logConfigType = 'Google_Service_Compute_SubnetworkLogConfig';
+  protected $logConfigDataType = '';
   public $name;
   public $network;
   public $privateIpGoogleAccess;
+  public $privateIpv6GoogleAccess;
+  public $purpose;
   public $region;
+  public $role;
   protected $secondaryIpRangesType = 'Google_Service_Compute_SubnetworkSecondaryRange';
   protected $secondaryIpRangesDataType = 'array';
   public $selfLink;
+  public $stackType;
+  public $state;
 
   public function setCreationTimestamp($creationTimestamp)
   {
@@ -57,6 +67,14 @@ class Google_Service_Compute_Subnetwork extends Google_Collection
   public function getEnableFlowLogs()
   {
     return $this->enableFlowLogs;
+  }
+  public function setExternalIpv6Prefix($externalIpv6Prefix)
+  {
+    $this->externalIpv6Prefix = $externalIpv6Prefix;
+  }
+  public function getExternalIpv6Prefix()
+  {
+    return $this->externalIpv6Prefix;
   }
   public function setFingerprint($fingerprint)
   {
@@ -90,6 +108,22 @@ class Google_Service_Compute_Subnetwork extends Google_Collection
   {
     return $this->ipCidrRange;
   }
+  public function setIpv6AccessType($ipv6AccessType)
+  {
+    $this->ipv6AccessType = $ipv6AccessType;
+  }
+  public function getIpv6AccessType()
+  {
+    return $this->ipv6AccessType;
+  }
+  public function setIpv6CidrRange($ipv6CidrRange)
+  {
+    $this->ipv6CidrRange = $ipv6CidrRange;
+  }
+  public function getIpv6CidrRange()
+  {
+    return $this->ipv6CidrRange;
+  }
   public function setKind($kind)
   {
     $this->kind = $kind;
@@ -97,6 +131,20 @@ class Google_Service_Compute_Subnetwork extends Google_Collection
   public function getKind()
   {
     return $this->kind;
+  }
+  /**
+   * @param Google_Service_Compute_SubnetworkLogConfig
+   */
+  public function setLogConfig(Google_Service_Compute_SubnetworkLogConfig $logConfig)
+  {
+    $this->logConfig = $logConfig;
+  }
+  /**
+   * @return Google_Service_Compute_SubnetworkLogConfig
+   */
+  public function getLogConfig()
+  {
+    return $this->logConfig;
   }
   public function setName($name)
   {
@@ -122,6 +170,22 @@ class Google_Service_Compute_Subnetwork extends Google_Collection
   {
     return $this->privateIpGoogleAccess;
   }
+  public function setPrivateIpv6GoogleAccess($privateIpv6GoogleAccess)
+  {
+    $this->privateIpv6GoogleAccess = $privateIpv6GoogleAccess;
+  }
+  public function getPrivateIpv6GoogleAccess()
+  {
+    return $this->privateIpv6GoogleAccess;
+  }
+  public function setPurpose($purpose)
+  {
+    $this->purpose = $purpose;
+  }
+  public function getPurpose()
+  {
+    return $this->purpose;
+  }
   public function setRegion($region)
   {
     $this->region = $region;
@@ -130,15 +194,23 @@ class Google_Service_Compute_Subnetwork extends Google_Collection
   {
     return $this->region;
   }
+  public function setRole($role)
+  {
+    $this->role = $role;
+  }
+  public function getRole()
+  {
+    return $this->role;
+  }
   /**
-   * @param Google_Service_Compute_SubnetworkSecondaryRange
+   * @param Google_Service_Compute_SubnetworkSecondaryRange[]
    */
   public function setSecondaryIpRanges($secondaryIpRanges)
   {
     $this->secondaryIpRanges = $secondaryIpRanges;
   }
   /**
-   * @return Google_Service_Compute_SubnetworkSecondaryRange
+   * @return Google_Service_Compute_SubnetworkSecondaryRange[]
    */
   public function getSecondaryIpRanges()
   {
@@ -151,5 +223,21 @@ class Google_Service_Compute_Subnetwork extends Google_Collection
   public function getSelfLink()
   {
     return $this->selfLink;
+  }
+  public function setStackType($stackType)
+  {
+    $this->stackType = $stackType;
+  }
+  public function getStackType()
+  {
+    return $this->stackType;
+  }
+  public function setState($state)
+  {
+    $this->state = $state;
+  }
+  public function getState()
+  {
+    return $this->state;
   }
 }

@@ -11,7 +11,7 @@
                     <td class="title">
                         <a href="<?php echo Yii::app()->createUrl('site/my_account'); ?>">我的帳戶</a>
                     </td>
-                    <td class="title">
+                    <td class="title" class="d-none">
                         <a href="<?php echo Yii::app()->createUrl('site/my_points'); ?>" class="small">我的點數與下載</a>
                     </td>
                     <td class="title">

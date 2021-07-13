@@ -44,16 +44,17 @@ class Google_Service_AndroidManagement extends Google_Service
   public $enterprises_webApps;
   public $enterprises_webTokens;
   public $signupUrls;
-  
+
   /**
    * Constructs the internal representation of the AndroidManagement service.
    *
-   * @param Google_Client $client
+   * @param Google_Client $client The client used to deliver requests.
+   * @param string $rootUrl The root URL used for requests to the service.
    */
-  public function __construct(Google_Client $client)
+  public function __construct(Google_Client $client, $rootUrl = null)
   {
     parent::__construct($client);
-    $this->rootUrl = 'https://androidmanagement.googleapis.com/';
+    $this->rootUrl = $rootUrl ?: 'https://androidmanagement.googleapis.com/';
     $this->servicePath = '';
     $this->batchPath = 'batch';
     $this->version = 'v1';
@@ -69,7 +70,15 @@ class Google_Service_AndroidManagement extends Google_Service
               'path' => 'v1/enterprises',
               'httpMethod' => 'POST',
               'parameters' => array(
+                'agreementAccepted' => array(
+                  'location' => 'query',
+                  'type' => 'boolean',
+                ),
                 'enterpriseToken' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                ),
+                'projectId' => array(
                   'location' => 'query',
                   'type' => 'string',
                 ),
@@ -77,9 +86,15 @@ class Google_Service_AndroidManagement extends Google_Service
                   'location' => 'query',
                   'type' => 'string',
                 ),
-                'projectId' => array(
-                  'location' => 'query',
+              ),
+            ),'delete' => array(
+              'path' => 'v1/{+name}',
+              'httpMethod' => 'DELETE',
+              'parameters' => array(
+                'name' => array(
+                  'location' => 'path',
                   'type' => 'string',
+                  'required' => true,
                 ),
               ),
             ),'get' => array(
@@ -90,6 +105,27 @@ class Google_Service_AndroidManagement extends Google_Service
                   'location' => 'path',
                   'type' => 'string',
                   'required' => true,
+                ),
+              ),
+            ),'list' => array(
+              'path' => 'v1/enterprises',
+              'httpMethod' => 'GET',
+              'parameters' => array(
+                'pageSize' => array(
+                  'location' => 'query',
+                  'type' => 'integer',
+                ),
+                'pageToken' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                ),
+                'projectId' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                ),
+                'view' => array(
+                  'location' => 'query',
+                  'type' => 'string',
                 ),
               ),
             ),'patch' => array(
@@ -154,6 +190,10 @@ class Google_Service_AndroidManagement extends Google_Service
                   'type' => 'string',
                   'repeated' => true,
                 ),
+                'wipeReasonMessage' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                ),
               ),
             ),'get' => array(
               'path' => 'v1/{+name}',
@@ -184,13 +224,13 @@ class Google_Service_AndroidManagement extends Google_Service
                   'type' => 'string',
                   'required' => true,
                 ),
-                'pageToken' => array(
-                  'location' => 'query',
-                  'type' => 'string',
-                ),
                 'pageSize' => array(
                   'location' => 'query',
                   'type' => 'integer',
+                ),
+                'pageToken' => array(
+                  'location' => 'query',
+                  'type' => 'string',
                 ),
               ),
             ),'patch' => array(
@@ -260,13 +300,13 @@ class Google_Service_AndroidManagement extends Google_Service
                   'location' => 'query',
                   'type' => 'string',
                 ),
-                'pageToken' => array(
-                  'location' => 'query',
-                  'type' => 'string',
-                ),
                 'pageSize' => array(
                   'location' => 'query',
                   'type' => 'integer',
+                ),
+                'pageToken' => array(
+                  'location' => 'query',
+                  'type' => 'string',
                 ),
               ),
             ),
@@ -338,13 +378,13 @@ class Google_Service_AndroidManagement extends Google_Service
                   'type' => 'string',
                   'required' => true,
                 ),
-                'pageToken' => array(
-                  'location' => 'query',
-                  'type' => 'string',
-                ),
                 'pageSize' => array(
                   'location' => 'query',
                   'type' => 'integer',
+                ),
+                'pageToken' => array(
+                  'location' => 'query',
+                  'type' => 'string',
                 ),
               ),
             ),'patch' => array(
@@ -410,13 +450,13 @@ class Google_Service_AndroidManagement extends Google_Service
                   'type' => 'string',
                   'required' => true,
                 ),
-                'pageToken' => array(
-                  'location' => 'query',
-                  'type' => 'string',
-                ),
                 'pageSize' => array(
                   'location' => 'query',
                   'type' => 'integer',
+                ),
+                'pageToken' => array(
+                  'location' => 'query',
+                  'type' => 'string',
                 ),
               ),
             ),'patch' => array(
@@ -467,11 +507,11 @@ class Google_Service_AndroidManagement extends Google_Service
               'path' => 'v1/signupUrls',
               'httpMethod' => 'POST',
               'parameters' => array(
-                'projectId' => array(
+                'callbackUrl' => array(
                   'location' => 'query',
                   'type' => 'string',
                 ),
-                'callbackUrl' => array(
+                'projectId' => array(
                   'location' => 'query',
                   'type' => 'string',
                 ),

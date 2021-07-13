@@ -19,6 +19,8 @@ class Google_Service_CloudFilestore_GoogleCloudSaasacceleratorManagementProvider
 {
   public $canReschedule;
   public $endTime;
+  public $rolloutManagementPolicy;
+  public $scheduleDeadlineTime;
   public $startTime;
 
   public function setCanReschedule($canReschedule)
@@ -36,6 +38,22 @@ class Google_Service_CloudFilestore_GoogleCloudSaasacceleratorManagementProvider
   public function getEndTime()
   {
     return $this->endTime;
+  }
+  public function setRolloutManagementPolicy($rolloutManagementPolicy)
+  {
+    $this->rolloutManagementPolicy = $rolloutManagementPolicy;
+  }
+  public function getRolloutManagementPolicy()
+  {
+    return $this->rolloutManagementPolicy;
+  }
+  public function setScheduleDeadlineTime($scheduleDeadlineTime)
+  {
+    $this->scheduleDeadlineTime = $scheduleDeadlineTime;
+  }
+  public function getScheduleDeadlineTime()
+  {
+    return $this->scheduleDeadlineTime;
   }
   public function setStartTime($startTime)
   {

@@ -30,23 +30,24 @@
  */
 class Google_Service_CloudFunctions extends Google_Service
 {
-  /** View and manage your data across Google Cloud Platform services. */
+  /** See, edit, configure, and delete your Google Cloud Platform data. */
   const CLOUD_PLATFORM =
       "https://www.googleapis.com/auth/cloud-platform";
 
   public $operations;
   public $projects_locations;
   public $projects_locations_functions;
-  
+
   /**
    * Constructs the internal representation of the CloudFunctions service.
    *
-   * @param Google_Client $client
+   * @param Google_Client $client The client used to deliver requests.
+   * @param string $rootUrl The root URL used for requests to the service.
    */
-  public function __construct(Google_Client $client)
+  public function __construct(Google_Client $client, $rootUrl = null)
   {
     parent::__construct($client);
-    $this->rootUrl = 'https://cloudfunctions.googleapis.com/';
+    $this->rootUrl = $rootUrl ?: 'https://cloudfunctions.googleapis.com/';
     $this->servicePath = '';
     $this->batchPath = 'batch';
     $this->version = 'v1';
@@ -80,13 +81,13 @@ class Google_Service_CloudFunctions extends Google_Service
                   'location' => 'query',
                   'type' => 'string',
                 ),
-                'pageToken' => array(
-                  'location' => 'query',
-                  'type' => 'string',
-                ),
                 'pageSize' => array(
                   'location' => 'query',
                   'type' => 'integer',
+                ),
+                'pageToken' => array(
+                  'location' => 'query',
+                  'type' => 'string',
                 ),
               ),
             ),
@@ -108,7 +109,7 @@ class Google_Service_CloudFunctions extends Google_Service
                   'type' => 'string',
                   'required' => true,
                 ),
-                'pageToken' => array(
+                'filter' => array(
                   'location' => 'query',
                   'type' => 'string',
                 ),
@@ -116,7 +117,7 @@ class Google_Service_CloudFunctions extends Google_Service
                   'location' => 'query',
                   'type' => 'integer',
                 ),
-                'filter' => array(
+                'pageToken' => array(
                   'location' => 'query',
                   'type' => 'string',
                 ),
@@ -200,6 +201,10 @@ class Google_Service_CloudFunctions extends Google_Service
                   'type' => 'string',
                   'required' => true,
                 ),
+                'options.requestedPolicyVersion' => array(
+                  'location' => 'query',
+                  'type' => 'integer',
+                ),
               ),
             ),'list' => array(
               'path' => 'v1/{+parent}/functions',
@@ -210,13 +215,13 @@ class Google_Service_CloudFunctions extends Google_Service
                   'type' => 'string',
                   'required' => true,
                 ),
-                'pageToken' => array(
-                  'location' => 'query',
-                  'type' => 'string',
-                ),
                 'pageSize' => array(
                   'location' => 'query',
                   'type' => 'integer',
+                ),
+                'pageToken' => array(
+                  'location' => 'query',
+                  'type' => 'string',
                 ),
               ),
             ),'patch' => array(

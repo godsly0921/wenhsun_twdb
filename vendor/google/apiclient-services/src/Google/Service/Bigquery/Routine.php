@@ -22,10 +22,14 @@ class Google_Service_Bigquery_Routine extends Google_Collection
   protected $argumentsDataType = 'array';
   public $creationTime;
   public $definitionBody;
+  public $description;
+  public $determinismLevel;
   public $etag;
   public $importedLibraries;
   public $language;
   public $lastModifiedTime;
+  protected $returnTableTypeType = 'Google_Service_Bigquery_StandardSqlTableType';
+  protected $returnTableTypeDataType = '';
   protected $returnTypeType = 'Google_Service_Bigquery_StandardSqlDataType';
   protected $returnTypeDataType = '';
   protected $routineReferenceType = 'Google_Service_Bigquery_RoutineReference';
@@ -33,14 +37,14 @@ class Google_Service_Bigquery_Routine extends Google_Collection
   public $routineType;
 
   /**
-   * @param Google_Service_Bigquery_Argument
+   * @param Google_Service_Bigquery_Argument[]
    */
   public function setArguments($arguments)
   {
     $this->arguments = $arguments;
   }
   /**
-   * @return Google_Service_Bigquery_Argument
+   * @return Google_Service_Bigquery_Argument[]
    */
   public function getArguments()
   {
@@ -61,6 +65,22 @@ class Google_Service_Bigquery_Routine extends Google_Collection
   public function getDefinitionBody()
   {
     return $this->definitionBody;
+  }
+  public function setDescription($description)
+  {
+    $this->description = $description;
+  }
+  public function getDescription()
+  {
+    return $this->description;
+  }
+  public function setDeterminismLevel($determinismLevel)
+  {
+    $this->determinismLevel = $determinismLevel;
+  }
+  public function getDeterminismLevel()
+  {
+    return $this->determinismLevel;
   }
   public function setEtag($etag)
   {
@@ -93,6 +113,20 @@ class Google_Service_Bigquery_Routine extends Google_Collection
   public function getLastModifiedTime()
   {
     return $this->lastModifiedTime;
+  }
+  /**
+   * @param Google_Service_Bigquery_StandardSqlTableType
+   */
+  public function setReturnTableType(Google_Service_Bigquery_StandardSqlTableType $returnTableType)
+  {
+    $this->returnTableType = $returnTableType;
+  }
+  /**
+   * @return Google_Service_Bigquery_StandardSqlTableType
+   */
+  public function getReturnTableType()
+  {
+    return $this->returnTableType;
   }
   /**
    * @param Google_Service_Bigquery_StandardSqlDataType

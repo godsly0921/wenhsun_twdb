@@ -21,6 +21,8 @@ class Google_Service_RemoteBuildExecution_BuildBazelRemoteExecutionV2OutputFile 
   protected $digestType = 'Google_Service_RemoteBuildExecution_BuildBazelRemoteExecutionV2Digest';
   protected $digestDataType = '';
   public $isExecutable;
+  protected $nodePropertiesType = 'Google_Service_RemoteBuildExecution_BuildBazelRemoteExecutionV2NodeProperties';
+  protected $nodePropertiesDataType = '';
   public $path;
 
   public function setContents($contents)
@@ -52,6 +54,20 @@ class Google_Service_RemoteBuildExecution_BuildBazelRemoteExecutionV2OutputFile 
   public function getIsExecutable()
   {
     return $this->isExecutable;
+  }
+  /**
+   * @param Google_Service_RemoteBuildExecution_BuildBazelRemoteExecutionV2NodeProperties
+   */
+  public function setNodeProperties(Google_Service_RemoteBuildExecution_BuildBazelRemoteExecutionV2NodeProperties $nodeProperties)
+  {
+    $this->nodeProperties = $nodeProperties;
+  }
+  /**
+   * @return Google_Service_RemoteBuildExecution_BuildBazelRemoteExecutionV2NodeProperties
+   */
+  public function getNodeProperties()
+  {
+    return $this->nodeProperties;
   }
   public function setPath($path)
   {

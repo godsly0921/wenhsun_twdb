@@ -18,11 +18,13 @@
 class Google_Service_ShoppingContent_ProductsCustomBatchRequestEntry extends Google_Model
 {
   public $batchId;
+  public $feedId;
   public $merchantId;
   public $method;
   protected $productType = 'Google_Service_ShoppingContent_Product';
   protected $productDataType = '';
   public $productId;
+  public $updateMask;
 
   public function setBatchId($batchId)
   {
@@ -31,6 +33,14 @@ class Google_Service_ShoppingContent_ProductsCustomBatchRequestEntry extends Goo
   public function getBatchId()
   {
     return $this->batchId;
+  }
+  public function setFeedId($feedId)
+  {
+    $this->feedId = $feedId;
+  }
+  public function getFeedId()
+  {
+    return $this->feedId;
   }
   public function setMerchantId($merchantId)
   {
@@ -69,5 +79,13 @@ class Google_Service_ShoppingContent_ProductsCustomBatchRequestEntry extends Goo
   public function getProductId()
   {
     return $this->productId;
+  }
+  public function setUpdateMask($updateMask)
+  {
+    $this->updateMask = $updateMask;
+  }
+  public function getUpdateMask()
+  {
+    return $this->updateMask;
   }
 }

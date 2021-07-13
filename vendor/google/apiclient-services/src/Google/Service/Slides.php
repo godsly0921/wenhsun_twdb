@@ -33,7 +33,7 @@ class Google_Service_Slides extends Google_Service
   /** See, edit, create, and delete all of your Google Drive files. */
   const DRIVE =
       "https://www.googleapis.com/auth/drive";
-  /** View and manage Google Drive files and folders that you have opened or created with this app. */
+  /** See, edit, create, and delete only the specific Google Drive files you use with this app. */
   const DRIVE_FILE =
       "https://www.googleapis.com/auth/drive.file";
   /** See and download all your Google Drive files. */
@@ -54,16 +54,17 @@ class Google_Service_Slides extends Google_Service
 
   public $presentations;
   public $presentations_pages;
-  
+
   /**
    * Constructs the internal representation of the Slides service.
    *
-   * @param Google_Client $client
+   * @param Google_Client $client The client used to deliver requests.
+   * @param string $rootUrl The root URL used for requests to the service.
    */
-  public function __construct(Google_Client $client)
+  public function __construct(Google_Client $client, $rootUrl = null)
   {
     parent::__construct($client);
-    $this->rootUrl = 'https://slides.googleapis.com/';
+    $this->rootUrl = $rootUrl ?: 'https://slides.googleapis.com/';
     $this->servicePath = '';
     $this->batchPath = 'batch';
     $this->version = 'v1';

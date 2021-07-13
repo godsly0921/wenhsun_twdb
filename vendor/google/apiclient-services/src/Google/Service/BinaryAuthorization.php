@@ -16,7 +16,7 @@
  */
 
 /**
- * Service definition for BinaryAuthorization (v1beta1).
+ * Service definition for BinaryAuthorization (v1).
  *
  * <p>
  * The management interface for Binary Authorization, a system providing policy
@@ -31,26 +31,28 @@
  */
 class Google_Service_BinaryAuthorization extends Google_Service
 {
-  /** View and manage your data across Google Cloud Platform services. */
+  /** See, edit, configure, and delete your Google Cloud Platform data. */
   const CLOUD_PLATFORM =
       "https://www.googleapis.com/auth/cloud-platform";
 
   public $projects;
   public $projects_attestors;
   public $projects_policy;
-  
+  public $systempolicy;
+
   /**
    * Constructs the internal representation of the BinaryAuthorization service.
    *
-   * @param Google_Client $client
+   * @param Google_Client $client The client used to deliver requests.
+   * @param string $rootUrl The root URL used for requests to the service.
    */
-  public function __construct(Google_Client $client)
+  public function __construct(Google_Client $client, $rootUrl = null)
   {
     parent::__construct($client);
-    $this->rootUrl = 'https://binaryauthorization.googleapis.com/';
+    $this->rootUrl = $rootUrl ?: 'https://binaryauthorization.googleapis.com/';
     $this->servicePath = '';
     $this->batchPath = 'batch';
-    $this->version = 'v1beta1';
+    $this->version = 'v1';
     $this->serviceName = 'binaryauthorization';
 
     $this->projects = new Google_Service_BinaryAuthorization_Resource_Projects(
@@ -60,7 +62,7 @@ class Google_Service_BinaryAuthorization extends Google_Service
         array(
           'methods' => array(
             'getPolicy' => array(
-              'path' => 'v1beta1/{+name}',
+              'path' => 'v1/{+name}',
               'httpMethod' => 'GET',
               'parameters' => array(
                 'name' => array(
@@ -70,7 +72,7 @@ class Google_Service_BinaryAuthorization extends Google_Service
                 ),
               ),
             ),'updatePolicy' => array(
-              'path' => 'v1beta1/{+name}',
+              'path' => 'v1/{+name}',
               'httpMethod' => 'PUT',
               'parameters' => array(
                 'name' => array(
@@ -90,7 +92,7 @@ class Google_Service_BinaryAuthorization extends Google_Service
         array(
           'methods' => array(
             'create' => array(
-              'path' => 'v1beta1/{+parent}/attestors',
+              'path' => 'v1/{+parent}/attestors',
               'httpMethod' => 'POST',
               'parameters' => array(
                 'parent' => array(
@@ -104,7 +106,7 @@ class Google_Service_BinaryAuthorization extends Google_Service
                 ),
               ),
             ),'delete' => array(
-              'path' => 'v1beta1/{+name}',
+              'path' => 'v1/{+name}',
               'httpMethod' => 'DELETE',
               'parameters' => array(
                 'name' => array(
@@ -114,7 +116,7 @@ class Google_Service_BinaryAuthorization extends Google_Service
                 ),
               ),
             ),'get' => array(
-              'path' => 'v1beta1/{+name}',
+              'path' => 'v1/{+name}',
               'httpMethod' => 'GET',
               'parameters' => array(
                 'name' => array(
@@ -124,7 +126,7 @@ class Google_Service_BinaryAuthorization extends Google_Service
                 ),
               ),
             ),'getIamPolicy' => array(
-              'path' => 'v1beta1/{+resource}:getIamPolicy',
+              'path' => 'v1/{+resource}:getIamPolicy',
               'httpMethod' => 'GET',
               'parameters' => array(
                 'resource' => array(
@@ -132,9 +134,13 @@ class Google_Service_BinaryAuthorization extends Google_Service
                   'type' => 'string',
                   'required' => true,
                 ),
+                'options.requestedPolicyVersion' => array(
+                  'location' => 'query',
+                  'type' => 'integer',
+                ),
               ),
             ),'list' => array(
-              'path' => 'v1beta1/{+parent}/attestors',
+              'path' => 'v1/{+parent}/attestors',
               'httpMethod' => 'GET',
               'parameters' => array(
                 'parent' => array(
@@ -142,17 +148,17 @@ class Google_Service_BinaryAuthorization extends Google_Service
                   'type' => 'string',
                   'required' => true,
                 ),
-                'pageToken' => array(
-                  'location' => 'query',
-                  'type' => 'string',
-                ),
                 'pageSize' => array(
                   'location' => 'query',
                   'type' => 'integer',
                 ),
+                'pageToken' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                ),
               ),
             ),'setIamPolicy' => array(
-              'path' => 'v1beta1/{+resource}:setIamPolicy',
+              'path' => 'v1/{+resource}:setIamPolicy',
               'httpMethod' => 'POST',
               'parameters' => array(
                 'resource' => array(
@@ -162,7 +168,7 @@ class Google_Service_BinaryAuthorization extends Google_Service
                 ),
               ),
             ),'testIamPermissions' => array(
-              'path' => 'v1beta1/{+resource}:testIamPermissions',
+              'path' => 'v1/{+resource}:testIamPermissions',
               'httpMethod' => 'POST',
               'parameters' => array(
                 'resource' => array(
@@ -172,10 +178,20 @@ class Google_Service_BinaryAuthorization extends Google_Service
                 ),
               ),
             ),'update' => array(
-              'path' => 'v1beta1/{+name}',
+              'path' => 'v1/{+name}',
               'httpMethod' => 'PUT',
               'parameters' => array(
                 'name' => array(
+                  'location' => 'path',
+                  'type' => 'string',
+                  'required' => true,
+                ),
+              ),
+            ),'validateAttestationOccurrence' => array(
+              'path' => 'v1/{+attestor}:validateAttestationOccurrence',
+              'httpMethod' => 'POST',
+              'parameters' => array(
+                'attestor' => array(
                   'location' => 'path',
                   'type' => 'string',
                   'required' => true,
@@ -192,7 +208,7 @@ class Google_Service_BinaryAuthorization extends Google_Service
         array(
           'methods' => array(
             'getIamPolicy' => array(
-              'path' => 'v1beta1/{+resource}:getIamPolicy',
+              'path' => 'v1/{+resource}:getIamPolicy',
               'httpMethod' => 'GET',
               'parameters' => array(
                 'resource' => array(
@@ -200,9 +216,13 @@ class Google_Service_BinaryAuthorization extends Google_Service
                   'type' => 'string',
                   'required' => true,
                 ),
+                'options.requestedPolicyVersion' => array(
+                  'location' => 'query',
+                  'type' => 'integer',
+                ),
               ),
             ),'setIamPolicy' => array(
-              'path' => 'v1beta1/{+resource}:setIamPolicy',
+              'path' => 'v1/{+resource}:setIamPolicy',
               'httpMethod' => 'POST',
               'parameters' => array(
                 'resource' => array(
@@ -212,10 +232,30 @@ class Google_Service_BinaryAuthorization extends Google_Service
                 ),
               ),
             ),'testIamPermissions' => array(
-              'path' => 'v1beta1/{+resource}:testIamPermissions',
+              'path' => 'v1/{+resource}:testIamPermissions',
               'httpMethod' => 'POST',
               'parameters' => array(
                 'resource' => array(
+                  'location' => 'path',
+                  'type' => 'string',
+                  'required' => true,
+                ),
+              ),
+            ),
+          )
+        )
+    );
+    $this->systempolicy = new Google_Service_BinaryAuthorization_Resource_Systempolicy(
+        $this,
+        $this->serviceName,
+        'systempolicy',
+        array(
+          'methods' => array(
+            'getPolicy' => array(
+              'path' => 'v1/{+name}',
+              'httpMethod' => 'GET',
+              'parameters' => array(
+                'name' => array(
                   'location' => 'path',
                   'type' => 'string',
                   'required' => true,

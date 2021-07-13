@@ -15,11 +15,15 @@
  * the License.
  */
 
-class Google_Service_ShoppingContent_AccountsLinkRequest extends Google_Model
+class Google_Service_ShoppingContent_AccountsLinkRequest extends Google_Collection
 {
+  protected $collection_key = 'services';
   public $action;
   public $linkType;
   public $linkedAccountId;
+  protected $paymentServiceProviderLinkInfoType = 'Google_Service_ShoppingContent_PaymentServiceProviderLinkInfo';
+  protected $paymentServiceProviderLinkInfoDataType = '';
+  public $services;
 
   public function setAction($action)
   {
@@ -44,5 +48,27 @@ class Google_Service_ShoppingContent_AccountsLinkRequest extends Google_Model
   public function getLinkedAccountId()
   {
     return $this->linkedAccountId;
+  }
+  /**
+   * @param Google_Service_ShoppingContent_PaymentServiceProviderLinkInfo
+   */
+  public function setPaymentServiceProviderLinkInfo(Google_Service_ShoppingContent_PaymentServiceProviderLinkInfo $paymentServiceProviderLinkInfo)
+  {
+    $this->paymentServiceProviderLinkInfo = $paymentServiceProviderLinkInfo;
+  }
+  /**
+   * @return Google_Service_ShoppingContent_PaymentServiceProviderLinkInfo
+   */
+  public function getPaymentServiceProviderLinkInfo()
+  {
+    return $this->paymentServiceProviderLinkInfo;
+  }
+  public function setServices($services)
+  {
+    $this->services = $services;
+  }
+  public function getServices()
+  {
+    return $this->services;
   }
 }

@@ -18,12 +18,22 @@
 class Google_Service_Dataflow_ParameterMetadata extends Google_Collection
 {
   protected $collection_key = 'regexes';
+  public $customMetadata;
   public $helpText;
   public $isOptional;
   public $label;
   public $name;
+  public $paramType;
   public $regexes;
 
+  public function setCustomMetadata($customMetadata)
+  {
+    $this->customMetadata = $customMetadata;
+  }
+  public function getCustomMetadata()
+  {
+    return $this->customMetadata;
+  }
   public function setHelpText($helpText)
   {
     $this->helpText = $helpText;
@@ -55,6 +65,14 @@ class Google_Service_Dataflow_ParameterMetadata extends Google_Collection
   public function getName()
   {
     return $this->name;
+  }
+  public function setParamType($paramType)
+  {
+    $this->paramType = $paramType;
+  }
+  public function getParamType()
+  {
+    return $this->paramType;
   }
   public function setRegexes($regexes)
   {

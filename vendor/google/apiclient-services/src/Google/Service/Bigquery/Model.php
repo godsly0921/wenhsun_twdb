@@ -18,8 +18,11 @@
 class Google_Service_Bigquery_Model extends Google_Collection
 {
   protected $collection_key = 'trainingRuns';
+  public $bestTrialId;
   public $creationTime;
   public $description;
+  protected $encryptionConfigurationType = 'Google_Service_Bigquery_EncryptionConfiguration';
+  protected $encryptionConfigurationDataType = '';
   public $etag;
   public $expirationTime;
   protected $featureColumnsType = 'Google_Service_Bigquery_StandardSqlField';
@@ -36,6 +39,14 @@ class Google_Service_Bigquery_Model extends Google_Collection
   protected $trainingRunsType = 'Google_Service_Bigquery_TrainingRun';
   protected $trainingRunsDataType = 'array';
 
+  public function setBestTrialId($bestTrialId)
+  {
+    $this->bestTrialId = $bestTrialId;
+  }
+  public function getBestTrialId()
+  {
+    return $this->bestTrialId;
+  }
   public function setCreationTime($creationTime)
   {
     $this->creationTime = $creationTime;
@@ -51,6 +62,20 @@ class Google_Service_Bigquery_Model extends Google_Collection
   public function getDescription()
   {
     return $this->description;
+  }
+  /**
+   * @param Google_Service_Bigquery_EncryptionConfiguration
+   */
+  public function setEncryptionConfiguration(Google_Service_Bigquery_EncryptionConfiguration $encryptionConfiguration)
+  {
+    $this->encryptionConfiguration = $encryptionConfiguration;
+  }
+  /**
+   * @return Google_Service_Bigquery_EncryptionConfiguration
+   */
+  public function getEncryptionConfiguration()
+  {
+    return $this->encryptionConfiguration;
   }
   public function setEtag($etag)
   {
@@ -69,14 +94,14 @@ class Google_Service_Bigquery_Model extends Google_Collection
     return $this->expirationTime;
   }
   /**
-   * @param Google_Service_Bigquery_StandardSqlField
+   * @param Google_Service_Bigquery_StandardSqlField[]
    */
   public function setFeatureColumns($featureColumns)
   {
     $this->featureColumns = $featureColumns;
   }
   /**
-   * @return Google_Service_Bigquery_StandardSqlField
+   * @return Google_Service_Bigquery_StandardSqlField[]
    */
   public function getFeatureColumns()
   {
@@ -91,14 +116,14 @@ class Google_Service_Bigquery_Model extends Google_Collection
     return $this->friendlyName;
   }
   /**
-   * @param Google_Service_Bigquery_StandardSqlField
+   * @param Google_Service_Bigquery_StandardSqlField[]
    */
   public function setLabelColumns($labelColumns)
   {
     $this->labelColumns = $labelColumns;
   }
   /**
-   * @return Google_Service_Bigquery_StandardSqlField
+   * @return Google_Service_Bigquery_StandardSqlField[]
    */
   public function getLabelColumns()
   {
@@ -151,14 +176,14 @@ class Google_Service_Bigquery_Model extends Google_Collection
     return $this->modelType;
   }
   /**
-   * @param Google_Service_Bigquery_TrainingRun
+   * @param Google_Service_Bigquery_TrainingRun[]
    */
   public function setTrainingRuns($trainingRuns)
   {
     $this->trainingRuns = $trainingRuns;
   }
   /**
-   * @return Google_Service_Bigquery_TrainingRun
+   * @return Google_Service_Bigquery_TrainingRun[]
    */
   public function getTrainingRuns()
   {
