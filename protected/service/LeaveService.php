@@ -268,8 +268,8 @@ class LeaveService
                             "employee_name" => $empName,
                             "start_date" => $commonLeaveStartDateTime->format('Y-m-d'),
                             "end_date" => $commonLeaveEndDateTime->format('Y-m-d'),
-                            "leave_applied" => $appliedAnnualLeave / 60,
-                            "leave_available" => $annualLeaveMinutes / 60 - $appliedAnnualLeave / 60,
+                            "leave_applied" => round($appliedAnnualLeave / 60, 2),
+                            "leave_available" => round($annualLeaveMinutes / 60 - $appliedAnnualLeave / 60, 2),
                         );
                     }
                 }
@@ -292,8 +292,8 @@ class LeaveService
                             "employee_name" => $employee->name,
                             "start_date" => $annualLeave_value["start_date"],
                             "end_date" => $annualLeave_value["end_date"],
-                            "leave_applied" => $appliedAnnualLeave / 60,
-                            "leave_available" => $annualLeave_value["special_leave"] / 60 - $appliedAnnualLeave / 60,
+                            "leave_applied" => round($appliedAnnualLeave / 60, 2),
+                            "leave_available" => round($annualLeave_value["special_leave"] / 60 - $appliedAnnualLeave / 60, 2),
                         );
                     }  
                 }
@@ -339,8 +339,8 @@ class LeaveService
                     "employee_name" => $empName,
                     "start_date" => $commonLeaveStartDateTime->format('Y-m-d'),
                     "end_date" => $commonLeaveEndDateTime->format('Y-m-d'),
-                    "leave_applied" => $appliedAnnualLeave / 60,
-                    "leave_available" => $annualLeaveMinutes / 60 - $appliedAnnualLeave / 60,
+                    "leave_applied" => round($appliedAnnualLeave / 60, 2),
+                    "leave_available" => round($annualLeaveMinutes / 60 - $appliedAnnualLeave / 60, 2),
                 );
             }            
         }else{
@@ -358,8 +358,8 @@ class LeaveService
                     "employee_name" => $empName,
                     "start_date" => $value["start_date"],
                     "end_date" => $value["end_date"],
-                    "leave_applied" => $appliedAnnualLeave / 60,
-                    "leave_available" => $value["special_leave"] / 60 - $appliedAnnualLeave / 60,
+                    "leave_applied" => round($appliedAnnualLeave / 60, 2),
+                    "leave_available" => round($value["special_leave"] / 60 - $appliedAnnualLeave / 60, 2),
                 );
             }  
         }
