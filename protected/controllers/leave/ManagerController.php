@@ -426,8 +426,8 @@ class ManagerController extends Controller
             ],
             [
                 'category' => '年假(特別休假)',
-                'leave_applied' => $appliedAnnualLeave / 60,
-                'leave_available' => $annualLeaveMinutes / 60 - $appliedAnnualLeave / 60,
+                'leave_applied' => round($appliedAnnualLeave / 60, 2),
+                'leave_available' => round($annualLeaveMinutes / 60 - $appliedAnnualLeave / 60, 2),
             ],
             [
                 'category' => '分娩假含例假日',
@@ -882,28 +882,6 @@ class ManagerController extends Controller
             );
             $check_role = CHECKROLE;
             if($AnnualLeaveType == 1 && $attendanceRecord->take == 5 && in_array($employeeOrmEnt->role, $check_role)){
-                $now_year = new DateTime($attendanceRecord->day);
-                $now_year->setTime(0, 0, 0);
-                if($now_year->format("m")<=3){
-                    $last_year = $now_year->modify('-1 year');
-                    $last_year->setTime(0, 0, 0);
-                    $last_annualLeaveMinutes = $leaveService->calcAnnualLeaveSummaryYear_FiscalYear($attendanceRecord->employee_id, $last_year->format('Y'));
-                    $last_annual_leave_available = 0;
-                    if(!empty($last_annualLeaveMinutes)){
-                        $last_annualLeaveMinutes = $last_annualLeaveMinutes[0];
-                        $appliedAnnualLeave = $leaveService->getEmployeeLeaves_FiscalYear(
-                            $last_annualLeaveMinutes["id"],
-                            $attendanceRecord->employee_id
-                        );
-                        $last_annual_leave_available = $last_annualLeaveMinutes["special_leave"] - $appliedAnnualLeave;
-                    }
-
-                    if($last_annual_leave_available >= (FLOAT)(filter_input(INPUT_POST, 'leave_minutes') * 60) && $last_annualLeaveMinutes["is_close"] == '0'){
-                        $special_leave_year_id = $last_annualLeaveMinutes["id"];
-                        $can_apply_annual_last = true;
-                    }
-                }
-
                 if($can_apply_annual_last == false){
                     $now_year = new DateTime($attendanceRecord->day);
                     $now_year->setTime(0, 0, 0);
@@ -983,32 +961,6 @@ class ManagerController extends Controller
             $check_role = CHECKROLE;
 			
             if($AnnualLeaveType == 1 && $_POST['leave_type'] == 5){
-				
-			
-                $now_year = new DateTime($_POST['leave_date']);
-                $now_year->setTime(0, 0, 0);
-                if($now_year->format("m")<=3){
-                    $last_year = $now_year->modify('-1 year');
-                    $last_year->setTime(0, 0, 0);
-                    $last_annualLeaveMinutes = $leaveService->calcAnnualLeaveSummaryYear_FiscalYear($attendanceRecord->employee_id, $last_year->format('Y'));
-                    $last_annual_leave_available = 0;
-                    if(!empty($last_annualLeaveMinutes)){
-                        $last_annualLeaveMinutes = $last_annualLeaveMinutes[0];
-                        $appliedAnnualLeave = $leaveService->getEmployeeLeaves_FiscalYear(
-                            $last_annualLeaveMinutes["id"],
-                            $attendanceRecord->employee_id
-                        );
-                        $last_annual_leave_available = $last_annualLeaveMinutes["special_leave"] - $appliedAnnualLeave;
-                    }
-
-                    if($last_annual_leave_available >= (FLOAT)(filter_input(INPUT_POST, 'leave_minutes') * 60) && $last_annualLeaveMinutes["is_close"] == '0'){
-                        $special_leave_year_id = $last_annualLeaveMinutes["id"];
-                        $can_apply_annual_last = true;
-                    }
-                }
-				
-				
-
                 if($can_apply_annual_last == false){
                     $now_year = new DateTime($_POST['leave_date']);
                     $now_year->setTime(0, 0, 0);

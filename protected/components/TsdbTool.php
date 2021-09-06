@@ -21,7 +21,7 @@ class TsdbTool
   }
 
   public  static function getIPAddress()
-  { 
+  {
     if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
       //ip from share internet
       $ip = $_SERVER['HTTP_CLIENT_IP'];
@@ -46,7 +46,7 @@ class TsdbTool
 
   public static function getFunctionName()
   {
-    return ucfirst(Yii::app()->controller->id).'_'.ucfirst(Yii::app()->controller->action->id);
+    return ucfirst(Yii::app()->controller->id) . '_' . ucfirst(Yii::app()->controller->action->id);
   }
 
   public static function getDomain()
@@ -55,25 +55,30 @@ class TsdbTool
   }
   public static function getLocationInfo()
   {
-    $url = "https://www.ifreesite.com/ipaddress/address.php?q=" . TsdbTool::getIPAddress();
+    $url = "http://ip-api.com/batch?fields=message,country,countryCode,region,regionName,city,zip,lat,lon,timezone,isp,org,as,query";
 
-
-    $contents = file_get_contents($url);
+    //$ip = ['39.9.75.112']; 
+    $ip = TsdbTool::getIPAddress();  
+    $endpoint = 'https://api.ip.sb/geoip/'.$ip; 
+    $contents = file_get_contents($endpoint);
     $locationInfo = array();
 
-    if ($contents === 'alert("請檢查輸入的域名/IP地址是否完整!");') {
-      $info = explode(",",$contents); 
-      $locationInfo['ip']= TsdbTool::getIPAddress();
-      $locationInfo['country']= 'Taiwan';
-      $locationInfo['city']= 'Taipei';
-    }else{
-      $info = explode(",",$contents); 
-      $locationInfo['ip']=$info[1];
-      $locationInfo['country']=$info[4];
-      $locationInfo['city']=$info[6];
+    if (!isset($contents['country_code'])) {
+      $locationInfo['ip'] = $ip;
+      $locationInfo['country_code'] = 'TW';
+      $locationInfo['country'] = 'Taiwan';
+      $locationInfo['city'] = 'Taipei';
+      $locationInfo['latitude'] = '23.5';
+      $locationInfo['longitude'] = '121';
+    } else {
+      $locationInfo['ip'] =  $ip;
+      $locationInfo['country_code'] = $contents['country_code'];
+      $locationInfo['country'] = $contents['country'];
+      $locationInfo['city'] =$contents['city'];
+      $locationInfo['latitude'] = $contents['latitude'];
+      $locationInfo['longitude'] = $contents['longitude'];
     }
 
     return $locationInfo;
-
   }
 }

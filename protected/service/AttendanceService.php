@@ -646,7 +646,7 @@ class AttendanceService
                         $attendance_record_service = new AttendancerecordService();
                         $model = $attendance_record_service->create($employee_id, $day, $first_time, $last_time, $abnormal_type,     $abnormal);
 
-                        if ($send_mail == true) {
+                        if ($send_mail == true && $value->role != 40 && $value->delete_status != 1) {
                             $mail = new MailService();
                             $mail_type = $mail->sendMail($abnormal_type, $employee_email, $abnormal, $model->id, $employee_name);
                         }
@@ -829,7 +829,7 @@ class AttendanceService
                             $attendance_record_service = new AttendancerecordService();
                             $model = $attendance_record_service->create($employee_id, $day, $first_time, $last_time, $abnormal_type, $abnormal);
 							
-							if($send_mail==true){
+							if($send_mail==true && $value->delete_status != 1 && $value->role != 40){
 								$mail = new MailService();
 								$mail_type = $mail->sendMail($abnormal_type,$employee_email,$abnormal,$model->id,$employee_name);
 							}
@@ -878,7 +878,7 @@ class AttendanceService
 
                         $attendance_record_service = new AttendancerecordService();
                         $model = $attendance_record_service->create($employee_id, $day, $first_time, $last_time, $abnormal_type, $abnormal);
-                        if($send_mail == true){
+                        if($send_mail == true && $value->delete_status != 1 && $value->role != 40){
                             $mail = new MailService();
                             $mail_type = $mail->sendMail($abnormal_type, $employee_email, $abnormal, $model->id, $employee_name);
                         }
