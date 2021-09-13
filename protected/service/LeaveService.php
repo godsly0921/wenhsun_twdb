@@ -365,5 +365,18 @@ class LeaveService
         }
         return $sumary;
     }
+    // 歷史特休管理 - 查詢指定員工
+    public function findEmployeeLeaveByDay($employee_id, $day){
+        $data = array();
+        if(!empty($employee_id) && !empty($day)){
+            $sql = "SELECT * FROM `attendance_record` WHERE employee_id = :employee_id AND status='1' AND day like :day AND take <> 11";
+            $query = Yii::app()->db->createCommand($sql);
+            $query->params = array(
+                "employee_id" => $employee_id,
+                "day" => $day . "%",
+            );
+            $data = $query->queryAll();
+        }
+    }
 }
 ?>
