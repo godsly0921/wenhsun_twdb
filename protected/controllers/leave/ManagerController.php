@@ -201,6 +201,7 @@ class ManagerController extends Controller
             Yii::app()->session[Controller::ERR_MSG_KEY] = '時間區間請確實選擇';
             $this->redirect('all_index');
         }
+        Yii::app()->session['fullholidayList'] = $holidayList;
         $this->render('all_hist', [
             'leaveMap'=>$this->leaveMap,
             'holidayList' => $holidayList,
@@ -209,6 +210,78 @@ class ManagerController extends Controller
         ]);
     }
     
+    // 匯出excel
+    function actionGetFullExcel()
+    {
+        $model = Yii::app()->session['fullholidayList'];
+        $leaveMap = $this->leaveMap;
+        error_reporting(E_ALL);
+        ini_set('display_errors', '1');
+        ini_set('display_startup_errors', '1');
+        //date_default_timezone_set('Europe/London');
+        if (PHP_SAPI == 'cli')
+            die('This example should only be run from a Web Browser');
+        /** Include PHPExcel */
+        require_once dirname(__FILE__) . '/../../components/PHPExcel.php';
+        // Create new PHPExcel object
+        $objPHPExcel = new PHPExcel();
+        // Set document properties
+        $objPHPExcel->getProperties()->setCreator("文訊")
+            ->setLastModifiedBy("文訊")
+            ->setTitle("文訊")
+            ->setSubject("文訊")
+            ->setDescription("文訊")
+            ->setKeywords("文訊")
+            ->setCategory("文訊");
+        // Add some data 設定匯出欄位資料
+        $objPHPExcel->setActiveSheetIndex(0)
+            ->setCellValue('A1', '員工帳號')
+            ->setCellValue('B1', '員工姓名')
+            ->setCellValue('C1', '申請日期')
+            ->setCellValue('D1', '假別')
+            ->setCellValue('E1', '事由')
+            ->setCellValue('F1', '請假日期')
+            ->setCellValue('G1', '請假時間')
+            ->setCellValue('H1', '申請時數(小時)')
+            ->setCellValue('I1', '審核狀態');
+
+        // Miscellaneous glyphs, UTF-8 設定內容資料
+        $i = 2;
+        foreach ($model as $value) {
+            if($value['status'] == 0){
+                $status = '未審核';
+            }elseif($value['status'] == 1){
+                $status = '已審核';
+            }
+            $objPHPExcel->setActiveSheetIndex(0)
+                ->setCellValue('A' . $i, $value['user_name'])
+                ->setCellValue('B' . $i, $value['name'])
+                ->setCellValue('C' . $i, substr($value['create_at'], 0, 10))
+                ->setCellValue('D' . $i, isset($leaveMap[$value['take']])?$leaveMap[$value['take']]:$value['take'])
+                ->setCellValue('E' . $i, $value['reason'])
+                ->setCellValue('F' . $i, date('Y-m-d', strtotime($value['leave_time'])))
+                ->setCellValue('G' . $i, substr($value['start_time'], 11, 8) . ' - ' . substr($value['end_time'], 11, 8))
+                ->setCellValue('H' . $i, $value['leave_minutes'] / 60)
+                ->setCellValue('I' . $i, $status);
+            $i++;
+        }
+        // Rename worksheet 表單名稱
+        $objPHPExcel->getActiveSheet()->setTitle('全體請假查詢明細表');
+        // Set active sheet index to the first sheet, so Excel opens this as the first sheet
+        $objPHPExcel->setActiveSheetIndex(0);
+        $filename = urlencode( "全體請假查詢明細表" . ".xlsx" );
+        ob_end_clean();
+        header( "Content-type: text/html; charset=utf-8" );
+        header( "Content-Type: application/vnd.ms-excel" );
+        header( "Content-Disposition: attachment;filename=" . $filename );
+        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, "Excel2007");
+       // $objWriter = PHPExcel_IOFactory::createWriter( $objPHPExcel, 'Excel5' );
+        $objWriter->save( 'php://output' );
+        exit();
+
+
+    }
+
     public function actionHist(): void
     {
         $employeeUserName = $_GET['user_name'];
@@ -403,6 +476,13 @@ class ManagerController extends Controller
             Attendance::PRENATAL_LEAVE
         );
 
+        $overtimeMins = $attendanceRecordServ->summaryMinutesByPeriodOfTimeAndLeaveType(
+            $employee->getEmployeeId()->value(),
+            $commonLeaveStartDate,
+            $commonLeaveEndDate,
+            Attendance::OVERTIME
+        );
+
         $summary = [
             [
                 'category' => '普通傷病假',
@@ -447,6 +527,11 @@ class ManagerController extends Controller
             [
                 'category' => '補休假',
                 'leave_applied' => $compensatoryLeavedMins / 60,
+                'leave_available' => '-',
+            ],
+            [
+                'category' => '加班',
+                'leave_applied' => $overtimeMins / 60,
                 'leave_available' => '-',
             ],
             [
@@ -909,6 +994,27 @@ class ManagerController extends Controller
             if($attendanceRecord->take){
                 $attendanceRecord->special_leave_year_id = $special_leave_year_id;
             }
+            $attendanceRecord->update();
+        } catch (Exception $e) {
+            echo json_encode(array("status"=>false,"msg"=>"核準失敗\nCaught exception: " . $e->getMessage()));
+            return;
+        }
+        echo json_encode(array("status"=>true,"msg"=>'核準成功'));
+        return;
+    }
+
+    public function actionAjaxUpdateOvertime(){
+        $id = $_POST['id'];
+        $attendanceRecord = Attendancerecord::model()->findByPk($id);
+        if(empty($attendanceRecord)){
+            throw new Exception('找不到此筆加班記錄');
+        }
+
+        try {
+            
+            $attendanceRecord->status = 1;
+            $now = Common::now();
+            $attendanceRecord->update_at = $now;
             $attendanceRecord->update();
         } catch (Exception $e) {
             echo json_encode(array("status"=>false,"msg"=>"核準失敗\nCaught exception: " . $e->getMessage()));

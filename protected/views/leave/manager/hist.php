@@ -16,7 +16,7 @@
                             <tr>
                                 <th>假別</th>
                                 <th>已請時數(小時)</th>
-                                <th>可請時數(小時)</th>
+                                <th>剩餘可請時數(小時)</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -133,6 +133,13 @@
                                         <?php endif; ?>
                                     </td>
                                     <td>
+                                        <?php if ($row['status'] == 0){ ?>
+                                            <button type="button" class="btn btn-link" onclick="approve_overtime('<?=$row['id']?>')" style="margin:0;padding:0">
+                                                <i class="fa fa-check-square-o" style="font-size:18px"></i>
+                                                核準
+                                            </button>
+                                            <br/>
+                                        <?php }?>
                                         <a href="<?= Yii::app()->createUrl('/leave/manager/edit?id=' . $row['id']); ?>">
                                             <i class="fa fa-edit" style="font-size:18px"></i>
                                         </a>
@@ -228,6 +235,31 @@
         else {
             return;
         }
+    }
+
+    function approve_overtime(id){
+        var values = [];
+        values.push(id);
+        $.ajax({
+            url: "<?= Yii::app()->createUrl('/leave/manager/AjaxUpdateOvertime') ?>",
+            type: "POST",
+            dataType: "json",
+            data: {
+                id: id
+            },
+            success: function(response) {
+                if (response.status) {
+                    alert(response.msg);
+                    window.location.reload();
+                } else {
+                    alert(response.msg);
+                }
+            },
+            error: function(xhr) {
+                console.log(xhr.responseText);
+                alert(response.msg);
+            }
+        });
     }
 
     function approve(id) {

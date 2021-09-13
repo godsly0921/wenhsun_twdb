@@ -283,12 +283,14 @@ class AttendancerecordService
               AND take = :leave_type
               AND leave_time >= :start_time
               AND leave_time < :end_time
+              AND status = :status
             '
         )->bindValues([
             ':employee_id' => $employeeId,
             ':leave_type' => $leaveType,
             ':start_time' => $startDateTime,
             ':end_time' => $endDateTime,
+            ':status' => '1',
         ])->queryRow();
 
         if (empty($r)) {

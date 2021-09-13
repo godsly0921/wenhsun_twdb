@@ -144,6 +144,12 @@ class EmployeeController extends Controller
             '9'
         );
 
+        $overtimeMins = $attendanceRecordServ->summaryMinutesByPeriodOfTimeAndLeaveType(
+            $employee->getEmployeeId()->value(),
+            $commonLeaveStartDate,
+            $commonLeaveEndDate,
+            Attendance::OVERTIME
+        );
         $sum = [
             [
                 'category' => '年假(特別休假)',
@@ -163,6 +169,11 @@ class EmployeeController extends Controller
             [
                 'category' => '補休假',
                 'leave_applied' => $compensatoryLeavedMinutes / 60,
+                'leave_available' => '-',
+            ],
+            [
+                'category' => '加班',
+                'leave_applied' => $overtimeMins / 60,
                 'leave_available' => '-',
             ],
 
