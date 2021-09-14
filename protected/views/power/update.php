@@ -27,8 +27,8 @@
     <div class="panel-body">
         <form class="form-horizontal" method="post" action="<?php echo Yii::app()->createUrl('power/update'); ?>">
             <?php CsrfProtector::genHiddenField(); ?>
-            <input type="hidden" name="power_id" value="<?= $powers->id ?>">
-            <input type="hidden" id="power_number" name="power_number" value="<?= $powers->power_number ?>">
+            <input type="hidden" name="power_id" value="<?= $powers->power_number ?>">
+            <input type="hidden" id="power_number" name="power_number" readonly="readonly" value="<?= $powers->power_number ?>">
 
             <div class="form-group">
                 <label class="col-sm-2 control-label">功能編號:</label>

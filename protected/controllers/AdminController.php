@@ -347,7 +347,7 @@ class AdminController extends CController
         $this->setLoginSession($sysAccount, $input['login_type']);
 
         $account_group_list = ExtGroup::findByGroupNumber($account['group']);
-        
+
         $account_group_lists = $account_group_list->group_list;
 
         $power_name_arrays = ExtPower::findPowerNameArray($account_group_lists);

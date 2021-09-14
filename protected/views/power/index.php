@@ -16,28 +16,34 @@
                 <th>操作</th>
             </tr>
             </thead>
-            <tbody>            <?php foreach ($powers as $power): ?>
-                <tr class="gradeC" role="row">
-                    <!--<td><?= $power->power_number ?></td>-->
-                    <td><?= $power->power_name ?></td>
-                    <td><?= $power->power_controller ?></td>
-                    <td>                        <?php foreach ($systems as $system): ?><?php if ($power->power_master_number == $system->system_number): ?>                                <?= $system->system_name ?><?php endif; ?><?php endforeach; ?>                    </td>
-                    <td><?= $power->power_range ?></td>
-                    <td><?php echo ($power->power_display == 1) ? "顯示" : "隱藏" ?></td>
-                    <td><a class="oprate-right"
-                           href="<?php echo Yii::app()->createUrl('power/update') ?>/<?= $power->id ?>"><i
-                                class="fa fa-pencil-square-o fa-lg"></i></a> <a class="oprate-right oprate-del"
-                                                                                data-pow-id="<?= $power->id ?>"
-                                                                                data-pow-neme="<?= $power->power_name ?>"><i
-                                class="fa fa-times fa-lg"></i></a></td>
-                </tr>            <?php endforeach; ?>            </tbody>
+            <tbody>
+                <?php foreach ($powers as $power): ?>
+                    <tr class="gradeC" role="row">
+                        <!--<td><?= $power->power_number ?></td>-->
+                        <td><?= $power->power_name ?></td>
+                        <td><?= $power->power_controller ?></td>
+                        <td>
+                            <?php foreach ($systems as $system): ?>
+                                <?php if ($power->power_master_number == $system->system_number): ?>    <?= $system->system_name ?>
+                                <?php endif; ?>
+                            <?php endforeach; ?>
+                        </td>
+                        <td><?= $power->power_range ?></td>
+                        <td><?php echo ($power->power_display == 1) ? "顯示" : "隱藏" ?></td>
+                        <td>
+                            <a class="oprate-right" href="<?php echo Yii::app()->createUrl('power/update') ?>/<?= $power->power_number ?>"><i class="fa fa-pencil-square-o fa-lg"></i></a>
+                            <a class="oprate-right oprate-del" data-pow-id="<?= $power->power_number ?>" data-pow-neme="<?= $power->power_name ?>"><i class="fa fa-times fa-lg"></i></a>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
         </table>
     </div>
 </div>
 <script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/admin/ext/js/jquery.dataTables.min.js"></script>
 <script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/admin/ext/js/dataTables.bootstrap.min.js"></script>
 <script>
-    $(document).ready(function() {
+    $(document).ready(function(){
         $('#powerTable').DataTable( {
             "scrollX": true,
             "lengthChange": false,
@@ -45,8 +51,8 @@
                 "oPaginate": {"sFirst": "第一頁", "sPrevious": "上一頁", "sNext": "下一頁", "sLast": "最後一頁"},
                 "sEmptyTable": "無任何功能資料"
             }
-        } );
-    } );
+        });
+    });
     $(".oprate-del").on('click', function () {
         var powId = $(this).data("pow-id");
         var powName = $(this).data("pow-neme");
@@ -63,4 +69,5 @@
             document.body.appendChild(form);
             form.submit();
         }
-    });</script>
+    });
+</script>

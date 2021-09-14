@@ -40,7 +40,7 @@ class PowerController extends Controller
         }
 
         $inputs = [];
-        $inputs["power_number"] = filter_input(INPUT_POST, "power_number");
+        // $inputs["power_number"] = filter_input(INPUT_POST, "power_number");
         $inputs["power_name"] = filter_input(INPUT_POST, "power_name");
         $inputs["power_controller"] = filter_input(INPUT_POST, "power_controller");
         $inputs["power_master_number"] = filter_input(INPUT_POST, "power_master_number");
@@ -73,9 +73,8 @@ class PowerController extends Controller
         $powers = ExtPower::model()->power_list();
         $systems = ExtSystem::model()->system_list();
         $service = new PowerService();
-        $p_id = $service->genPowerId();
 
-        $data = ['powers'=>$powers,'systems'=>$systems,'power_display'=>$this->defaultPowerDisplay,'p_id'=>$p_id];
+        $data = ['powers'=>$powers,'systems'=>$systems,'power_display'=>$this->defaultPowerDisplay];
 
         $this->render('create', $data);
         $this->clearMsg();

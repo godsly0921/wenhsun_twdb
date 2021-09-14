@@ -85,15 +85,9 @@ class GroupService
     {
         $group = new Group();
         $group->group_name = $inputs['group_name'];
-        $group->group_number = $inputs['group_number'];
         $group->group_list = $inputs['group_list'];
-
+        $group->system_list = $inputs['system_list'];
         if (!$group->validate()) {
-            return $group;
-        }
-
-        if ($this->groupNumberExist($group->group_number)) {
-            $group->addError('group_exist', '新增群組功能失敗，功能編號已經存在');
             return $group;
         }
 
@@ -116,8 +110,8 @@ class GroupService
     public function groupNumberExist($id)
     {
         $result = Group::model()->find([
-            'select' => 'id',
-            'condition'=>'id=:id',
+            'select' => 'group_number',
+            'condition'=>'group_number=:id',
             'params'=> [
                 ':id' => $id,
             ]
@@ -130,7 +124,7 @@ class GroupService
     {
         $result = Group::model()->find([
             'select' => 'group_number',
-            'condition'=>'id=:id',
+            'condition'=>'group_number=:id',
             'params'=> [
                 ':id' => $id,
             ]
@@ -141,12 +135,10 @@ class GroupService
 
     public function update(array $inputs)
     {
-        $group = Group::model()->findByPk($inputs["group_id"]);
-
-        $group->group_number = $inputs["group_number"];
+        $group = Group::model()->findByPk($inputs["group_number"]);
         $group->group_name = $inputs["group_name"];
         $group->group_list = $inputs["group_list"];
-
+        $group->system_list = $inputs["system_list"];
         if ($group->validate()) {
             $group->update();
         }

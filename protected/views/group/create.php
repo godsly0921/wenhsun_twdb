@@ -19,9 +19,6 @@
 
     <div class="panel panel-default">
         <div class="panel-body">
-
-            <input type="hidden" class="form-control" id="group_number" name="group_number" placeholder="請輸入權重(數字)" value="100">
-
             <div class="form-group">
                 <label for="group_name" class="col-sm-2 control-label">角色名稱:</label>
                 <div class="col-sm-3">
@@ -37,7 +34,7 @@
                             <div class="col-sm-offset-1 col-sm-10">
                                 <div class="checkbox">
                                     <label style="color:red;">
-                                        <input type="checkbox" name="group_list[<?=$system['system_number']?>][]" onclick="checkall(<?= $system['system_number']?>, this);" value="<?=$system['system_number']?>"><?= $system['system_name'] ?>
+                                        <input type="checkbox" name="system_list[<?=$system['system_number']?>][]" onclick="checkall(<?= $system['system_number']?>, this);" value="<?=$system['system_number']?>"><?= $system['system_name'] ?>
                                     </label>
                                 </div>
                             </div>

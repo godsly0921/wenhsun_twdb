@@ -19,7 +19,7 @@ class ExtPower extends Power
 	
 	public function power_list(){
 		return Power::model() -> findAll(array(
-		'select' => 'id,power_number,power_name,power_controller,power_master_number,power_range,power_display',
+		'select' => 'power_number,power_name,power_controller,power_master_number,power_range,power_display',
 		'order' => 'power_number ASC ,power_master_number ASC , power_range ASC',
 		));
 	}

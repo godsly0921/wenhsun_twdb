@@ -9,7 +9,7 @@ class PowerService
     public function findPower()
     {
         $result = Power::model() -> findAll(array(
-		'select' => 'id,power_number,power_name,power_controller,power_master_number,power_range,power_display',
+		'select' => 'power_number,power_name,power_controller,power_master_number,power_range,power_display',
 		'order' => 'power_number ASC ,power_master_number ASC , power_range ASC',
 		));
         return $result;
@@ -18,7 +18,7 @@ class PowerService
     public function genPowerId()
     {
         $result = Power::model() -> findAll(array(
-            'select' => 'id,power_number,power_name,power_controller,power_master_number,power_range,power_display',
+            'select' => 'power_number,power_name,power_controller,power_master_number,power_range,power_display',
             'order' => 'power_number ASC ,power_master_number ASC , power_range ASC',
         ));
 
@@ -39,7 +39,7 @@ class PowerService
     public function create(array $inputs)
     {
         $power = new Power();
-        $power->power_number = $inputs['power_number'];
+        // $power->power_number = $inputs['power_number'];
         $power->power_name = $inputs['power_name'];
         $power->power_controller = $inputs['power_controller'];
 		$power->power_master_number = $inputs['power_master_number'];
@@ -52,10 +52,10 @@ class PowerService
             return $power;
         }
 
-        if ($this->powerNumberExist($power->power_number)) {
-            $power->addError('power_exist', '新增功能失敗，功能編號已經存在');
-            return $power;
-        }
+        // if ($this->powerNumberExist($power->power_number)) {
+        //     $power->addError('power_exist', '新增功能失敗，功能編號已經存在');
+        //     return $power;
+        // }
 
         if (!$power->hasErrors()) {
             $success = $power->save();
@@ -88,7 +88,7 @@ class PowerService
     {
         $power = Power::model()->findByPk($inputs["id"]);
 
-        $power->power_number = $inputs["power_number"];
+        // $power->power_number = $inputs["power_number"];
         $power->power_name = $inputs["power_name"];
         $power->power_controller = $inputs["power_controller"];
 		$power->power_master_number = $inputs["power_master_number"];

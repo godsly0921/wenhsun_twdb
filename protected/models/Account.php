@@ -53,13 +53,6 @@ class Account extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'_BookAuthor' => array(self::BELONGS_TO, 'BookAuthor', 'id'),
-		   	'_Bookpublishplace' => array(self::HAS_MANY, 'Bookpublishplace', 'id'),
-		   	'_BookPublishUnit' => array(self::BELONGS_TO, 'BookPublishUnit', 'id'),
-		   	'_BookSize' => array(self::BELONGS_TO, 'BookSize', 'id'),
-		   	'_BookSeries' => array(self::BELONGS_TO, 'BookSeries', 'id'),
-		   	'_BookCategory' => array(self::BELONGS_TO, 'BookCategory', 'id'),
-		   	'_Video' => array(self::BELONGS_TO, 'Video', 'id'),
 		);
 	}
 
