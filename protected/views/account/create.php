@@ -7,7 +7,7 @@
 <?php if(isset(Yii::app()->session['error_msg']) && Yii::app()->session['error_msg'] !== ''): ?>
     <div class="alert alert-danger">
         <ul>
-            <?php foreach (Yii::app()->session['acc_error'] as $error): ?>
+            <?php foreach (Yii::app()->session['error_msg'] as $error): ?>
                 <li><?= $error[0] ?></li>
             <?php endforeach; ?>
         </ul>

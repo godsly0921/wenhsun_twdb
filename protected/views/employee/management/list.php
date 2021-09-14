@@ -59,26 +59,26 @@
 
                         <?php foreach($list as $data):?>
                             <tr>
-                                <td><?=$data->user_name?></td>
-                                <td><?=$data->name?></td>
-                                <td><?= isset($data->ext->ext_number) ? $data->ext->ext_number : '未設定分機' ?></td>
+                                <td><?=$data['user_name']?></td>
+                                <td><?=$data['name']?></td>
+                                <td><?= isset($data['ext_number']) ? $data['ext_number'] : '未設定分機' ?></td>
                                 <td>
-                                    <?php if(isset($data->seat->seat_number)):?>
-                                        <?=$data->seat->seat_number?>(<?=$data->seat->seat_name?>)
+                                    <?php if(isset($data['seat_number'])):?>
+                                        <?=$data['seat_number']?>(<?=$data['seat_name']?>)
                                     <?php else:?>
                                         未設定座位
                                     <?php endif;?>
                                 </td>
-                                <td><?=$data->update_at?></td>
-                                <td><?=$data->create_at?></td>
+                                <td><?=$data['update_at']?></td>
+                                <td><?=$data['create_at']?></td>
                                 <td>
                                     <?php foreach ($session_jsons as $jsons):?>
                                         <?php if ($jsons["power_controller"] == 'employee/management/edit'):?>
-                                            <a href="<?= Yii::app()->createUrl('/employee/management/edit?id='.$data->id);?>"><i class="fa fa-edit" style="font-size:18px"></i></a>
+                                            <a href="<?= Yii::app()->createUrl('/employee/management/edit?id='.$data['id']);?>"><i class="fa fa-edit" style="font-size:18px"></i></a>
                                         <?php endif; ?>
 
                                         <?php if ($jsons["power_controller"] == 'employee/management/contract'):?>
-                                            <a href="<?= Yii::app()->createUrl('/employee/management/contract?id='.$data->id);?>" target="_blank" class="print-btn" data-id="<?=$data->id?>"><i class="fa fa-print" style="font-size:18px"></i></a>
+                                            <a href="<?= Yii::app()->createUrl('/employee/management/contract?id='.$data['id']);?>" target="_blank" class="print-btn" data-id="<?=$data['id']?>"><i class="fa fa-print" style="font-size:18px"></i></a>
                                         <?php endif; ?>
                                     <?php endforeach; ?>
                                 </td>

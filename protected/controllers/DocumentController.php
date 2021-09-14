@@ -70,8 +70,21 @@ class DocumentController extends Controller
             }
 
             $tx->commit();
-
-            $this->redirect('index');
+            switch ($_POST['document_department']) {
+                case '1':
+                    $this->redirect(array('index','document_department'=>1));
+                    break;
+                case '2':
+                    $this->redirect(array('index','document_department'=>2));
+                    break;
+                case '3':
+                    $this->redirect(array('index','document_department'=>3));
+                    break;
+                default:
+                    $this->redirect('index');
+                    break;
+            }
+            
 
         } catch (Throwable $ex) {
             Yii::log($ex->getMessage(), CLogger::LEVEL_ERROR);

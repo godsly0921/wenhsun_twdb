@@ -392,7 +392,7 @@ class AttendancerecordController extends Controller
         foreach ($model as $value) {
             if($value->absence == false) {
                 $objPHPExcel->setActiveSheetIndex(0)
-                    ->setCellValue('A' . $i, $value->id)
+                    ->setCellValue('A' . $i, $value->user_name)
                     ->setCellValue('B' . $i, $value->name)
                     ->setCellValue('C' . $i, date('m/d/Y', $value->start_date))
                     ->setCellValue('D' . $i, date('m/d/Y', $value->end_date))

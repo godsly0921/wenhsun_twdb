@@ -27,11 +27,11 @@
                                 <?php foreach ($session_jsons as $jsons):?>
 
                                     <?php if ($jsons["power_controller"] == 'group/update'):?>
-                                        <a class="oprate-right" href="<?php echo Yii::app()->createUrl('group/update') ?>/<?= $group->id ?>"><i class="fa fa-pencil-square-o fa-lg"></i></a>
+                                        <a class="oprate-right" href="<?php echo Yii::app()->createUrl('group/update') ?>/<?= $group->group_number ?>"><i class="fa fa-pencil-square-o fa-lg"></i></a>
                                     <?php endif; ?>
 
                                     <?php if ($jsons["power_controller"] == 'group/delete'):?>
-                                        <a class="oprate-right oprate-del" data-grp-id="<?=$group->id?>" data-grp-name="<?=$group->group_name?>"><i class="fa fa-times fa-lg"></i></a>
+                                        <a class="oprate-right oprate-del" data-grp-id="<?=$group->group_number?>" data-grp-name="<?=$group->group_name?>"><i class="fa fa-times fa-lg"></i></a>
                                     <?php endif; ?>
 
                                 <?php endforeach; ?>

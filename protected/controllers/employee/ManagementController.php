@@ -17,7 +17,25 @@ class ManagementController extends Controller
 
     public function actionIndex()
     {
-        $list = EmployeeModel::model()->byUsernameAsc()->findAll(array('condition'=>'delete_status<>1'));
+
+        $sql = "SELECT 
+        CASE
+            WHEN e.user_name LIKE 'HSUN%' THEN CONCAT('HSUN',LPAD(CONVERT(SUBSTRING_INDEX(e.user_name,'HSUN',-1),UNSIGNED INTEGER),3,0))
+            WHEN e.user_name LIKE 'KSPT%' THEN CONCAT('KSPT',LPAD(CONVERT(SUBSTRING_INDEX(e.user_name,'KSPT',-1),UNSIGNED INTEGER),3,0))
+            WHEN e.user_name LIKE 'KS%' THEN CONCAT('KS',LPAD(CONVERT(SUBSTRING_INDEX(e.user_name,'KS',-1),UNSIGNED INTEGER),3,0))
+            WHEN e.user_name LIKE 'PT%' THEN CONCAT('PT',LPAD(CONVERT(SUBSTRING_INDEX(e.user_name,'PT',-1),UNSIGNED INTEGER),3,0))
+        END as num,
+        e.*,
+        ext.ext_number,
+        seats.seat_number,
+        seats.seat_name
+        FROM `employee` e
+        LEFT JOIN employee_extensions ext ON e.ext_num=ext.id
+        LEFT JOIN employee_seats seats ON e.seat_num=seats.id
+        WHERE e.delete_status<>1
+        ORDER BY num ASC";
+        $list = Yii::app()->db->createCommand($sql)->queryAll();
+        // $list = EmployeeModel::model()->byUsernameAsc()->findAll(array('condition'=>'delete_status<>1'));
         $this->render('list', ['list' => $list]);
     }
 

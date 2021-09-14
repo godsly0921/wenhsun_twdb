@@ -4,7 +4,6 @@
  * This is the model class for table "system".
  *
  * The followings are the available columns in table 'system':
- * @property integer $id
  * @property integer $system_number
  * @property string $system_name
  * @property string $system_controller
@@ -29,23 +28,13 @@ class System extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array(
-                'system_number, system_name, system_type, system_range',
-                'required',
-                'message' => '請輸入{attribute}'
-            ),
-			array(
-                'system_number, system_type, system_range',
-                'numerical',
-                'integerOnly'=> true,
-                'min' => 0,
-                'max' => 255
-            ),
+			array('system_name, system_type, system_range', 'required'),
+			array('system_type, system_range', 'numerical', 'integerOnly'=>true),
 			array('system_name', 'length', 'max'=>50),
 			array('system_controller', 'length', 'max'=>100),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, system_number, system_name, system_controller, system_type, system_range', 'safe', 'on'=>'search'),
+			array('system_number, system_name, system_controller, system_type, system_range', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -66,7 +55,6 @@ class System extends CActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'id' => 'ID',
 			'system_number' => '系統編號',
 			'system_name' => '系統名稱',
 			'system_controller' => '系統Controller',
@@ -93,7 +81,6 @@ class System extends CActiveRecord
 
 		$criteria=new CDbCriteria;
 
-		$criteria->compare('id',$this->id);
 		$criteria->compare('system_number',$this->system_number);
 		$criteria->compare('system_name',$this->system_name,true);
 		$criteria->compare('system_controller',$this->system_controller,true);

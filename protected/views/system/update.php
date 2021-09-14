@@ -24,14 +24,14 @@
 
 <form class="form-horizontal" method="post" action="<?php echo Yii::app()->createUrl('system/update'); ?>">
     <?php CsrfProtector::genHiddenField(); ?>
-    <input type="hidden" name="system_id" size="3" value="<?=$systems->id?>"/>
+    <input type="hidden" name="system_id" size="3" value="<?=$systems->system_number?>"/>
     <div class="panel panel-default">
         <div class="panel-body">
 
             <div class="form-group">
                 <label for="group_number"  class="col-sm-2 control-label">系統編號:</label>
                 <div class="col-sm-4">
-                    <input type="text" class="form-control" id="system_number" name="system_number" value="<?=$systems->system_number?>" placeholder="請輸入系統編號(數字)">
+                    <input type="text" class="form-control" id="system_number" name="system_number" value="<?=$systems->system_number?>" readonly="readonly" placeholder="請輸入系統編號(數字)">
                 </div>
             </div>
 

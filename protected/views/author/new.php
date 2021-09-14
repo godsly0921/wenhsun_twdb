@@ -54,6 +54,9 @@
                                 <div class="col-md-6 col-sm-6 col-xs-12">
                                     <input type="text" id="birth" name="birth" class="form-control col-md-7 col-xs-12">
                                 </div>
+                                <div class="col-md-3 col-sm-3 col-xs-12">
+                                    <span>格式範式：2021/07/28<br/>月日未知：2021/00/00</span>
+                                </div>
                             </div>
 
                             <div class="form-group">
@@ -61,6 +64,9 @@
                                 </label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
                                     <input type="text" id="death" name="death" class="form-control col-md-7 col-xs-12">
+                                </div>
+                                <div class="col-md-3 col-sm-3 col-xs-12">
+                                    <span>格式範式：2021/07/28<br/>月日未知：2021/00/00</span>
                                 </div>
                             </div>
 

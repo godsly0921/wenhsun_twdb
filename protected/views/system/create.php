@@ -19,13 +19,13 @@
     <div class="panel panel-default">
         <div class="panel-body">
 
-            <div class="form-group">
+            <!-- <div class="form-group">
                 <label for="group_number"  class="col-sm-2 control-label">系統編號:</label>
                 <div class="col-sm-4">
                     <input type="text" class="form-control" id="system_number" name="system_number" placeholder="請輸入系統編號(數字)">
                 </div>
             </div>
-
+ -->
             <div class="form-group">
                 <label for="system_name"  class="col-sm-2 control-label">系統名稱:</label>
                 <div class="col-sm-4">

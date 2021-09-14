@@ -24,15 +24,14 @@
 
 <form name="group_form" class="form-horizontal" method="post" action="<?php echo Yii::app()->createUrl('group/update');?>">
     <?php CsrfProtector::genHiddenField(); ?>
-    <input type="hidden" name="group_id" value="<?= $groups->id ?>">
     <div class="panel panel-default">
         <div class="panel-body">
 
             <input type="hidden" min="0" max="255" class="form-control" id="group_number" name="group_number" value="<?=$groups->group_number?>">
             <div class="form-group">
-                <label for="group_number"  class="col-sm-2 control-label">角色權重:</label>
+                <label for="group_number"  class="col-sm-2 control-label">角色編號:</label>
                 <div class="col-sm-1">
-                    <input type="number" min="0" max="255" class="form-control" id="group_number" name="group_number" value="<?=$groups->group_number?>">
+                    <input type="text" min="0" max="255" class="form-control" id="group_number" name="group_number" readonly="readonly" value="<?=$groups->group_number?>">
                 </div>
             </div>
 
@@ -51,29 +50,28 @@
                             <div class="col-sm-offset-1 col-sm-10">
                                 <div class="checkbox">
                                     <label style="color:red;">
-                                        <input type="checkbox" name="group_list[<?=$system['system_number']?>][]" onclick="checkall(<?= $system['system_number']?>, this);" value="<?=$system['system_number']?>" <?=$system['system_checked_type']?>><?= $system['system_name'] ?>
+                                        <input type="checkbox" name="system_list[<?=$system['system_number']?>][]" onclick="checkall(<?= $system['system_number']?>, this);" value="<?=$system['system_number']?>" <?=$system['system_checked_type']?>><?= $system['system_name'] ?>
                                     </label>
                                 </div>
                             </div>
                         </div>
-
-                        <?php if (!empty($system['powers'])): ?>
-                            <div class="form-group">
-                                <div class="col-sm-offset-1 col-sm-10">
-                                    <div class="panel panel-default">
-                                        <div class="panel-body">
-                                            <?php foreach($system['powers'] as $power): ?>
+                        <div class="form-group">
+                            <div class="col-sm-offset-1 col-sm-10">
+                                <div class="panel panel-default">
+                                    <div class="panel-body">
+                                        <?php foreach($power_checked_list as $power): ?>
+                                            <?php if($system['system_number'] == $power['power_master_number']){?>
                                                 <div class="checkbox-inline">
                                                     <label style="color:#999999">
                                                         <input type="checkbox" value="<?=$power['power_number']?>" name="group_list[<?=$system['system_number']?>][]" <?=$power['power_checked_type']?> ><?=$power['power_name']?>
                                                     </label>
                                                 </div>
-                                            <?php endforeach; ?>
-                                        </div>
+                                            <?php }?>
+                                        <?php endforeach; ?>
                                     </div>
                                 </div>
                             </div>
-                        <?php endif ?>
+                        </div>
                     <?php else: ?>
                         <div class="form-group">
                             <div class="col-sm-offset-1 col-sm-10">

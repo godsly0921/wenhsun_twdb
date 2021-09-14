@@ -4,10 +4,10 @@
  * This is the model class for table "group".
  *
  * The followings are the available columns in table 'group':
- * @property integer $id
  * @property integer $group_number
  * @property string $group_name
  * @property string $group_list
+ * @property string $system_list
  */
 class Group extends CActiveRecord
 {
@@ -27,12 +27,11 @@ class Group extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-            array('group_list', 'required', 'message' => '請勾選{attribute}'),
-			//array('group_number', 'numerical', 'integerOnly' => true, 'min' => 0, 'max' => 255),
-			array('group_name', 'length', 'max' => 20),
+			array('group_name, group_list, system_list', 'required'),
+			array('group_name', 'length', 'max'=>20),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, group_number, group_name, group_list', 'safe', 'on'=>'search'),
+			array('group_number, group_name, group_list, system_list', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -53,10 +52,10 @@ class Group extends CActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'id' => 'id',
-			'group_number' => '群組權重',
-			'group_name' => '群組名稱',
-			'group_list' => '權限',
+			'group_number' => '權限編號',
+			'group_name' => '權限名稱',
+			'group_list' => '權限表',
+			'system_list' => '系統列表',
 		);
 	}
 
@@ -78,10 +77,10 @@ class Group extends CActiveRecord
 
 		$criteria=new CDbCriteria;
 
-		$criteria->compare('id',$this->id);
 		$criteria->compare('group_number',$this->group_number);
 		$criteria->compare('group_name',$this->group_name,true);
 		$criteria->compare('group_list',$this->group_list,true);
+		$criteria->compare('system_list',$this->system_list,true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,

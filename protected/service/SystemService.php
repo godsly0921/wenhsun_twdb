@@ -12,7 +12,7 @@ class SystemService
     public function create(array $inputs)
     {
         $system = new System();
-        $system->system_number = $inputs['system_number'];
+        // $system->system_number = $inputs['system_number'];
         $system->system_name = $inputs['system_name'];
         $system->system_controller = $inputs['system_controller'];
         $system->system_range = $inputs['system_range'];
@@ -22,10 +22,10 @@ class SystemService
             return $system;
         }
 
-        if ($this->systemNumberExist($system->system_number)) {
-            $system->addError('system_exist', '系統編號已存在');
-            return $system;
-        }
+        // if ($this->systemNumberExist($system->system_number)) {
+        //     $system->addError('system_exist', '系統編號已存在');
+        //     return $system;
+        // }
 
         if (!$system->hasErrors()) {
             $success = $system->save();
@@ -70,7 +70,7 @@ class SystemService
             return $system;
         }
 
-        $system->system_number = $inputs['system_number'];
+        // $system->system_number = $inputs['system_number'];
         $system->system_name = $inputs['system_name'];
         $system->system_controller = $inputs['system_controller'];
         $system->system_range = $inputs['system_range'];

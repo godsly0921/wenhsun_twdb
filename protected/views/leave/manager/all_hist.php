@@ -11,6 +11,11 @@
             <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="x_panel">
                     <div class="x_title">
+                        <div class='col-md-2'>
+                            <form class="form-horizontal" action="<?php echo Yii::app()->createUrl('leave/manager/getFullExcel');?>" method="post">
+                                <button type="submit" class="btn btn-default">匯出excel</button>
+                            </form>
+                        </div>
                         <button class="btn btn-default pull-right" onclick="history.back();">返回</button>
                         <div class="clearfix"></div>
                     </div>

@@ -4,7 +4,6 @@
  * This is the model class for table "power".
  *
  * The followings are the available columns in table 'power':
- * @property integer $id
  * @property integer $power_number
  * @property string $power_name
  * @property string $power_controller
@@ -30,13 +29,13 @@ class Power extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('power_name, power_master_number, power_range', 'required','message' => '請輸入{attribute}'),
-			array('power_number, power_master_number, power_range, power_display', 'numerical', 'integerOnly'=>true),
+			array('power_name, power_master_number, power_range', 'required'),
+			array('power_master_number, power_range, power_display', 'numerical', 'integerOnly'=>true),
 			array('power_name', 'length', 'max'=>50),
 			array('power_controller', 'length', 'max'=>100),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, power_number, power_name, power_controller, power_master_number, power_range, power_display', 'safe', 'on'=>'search'),
+			array('power_number, power_name, power_controller, power_master_number, power_range, power_display', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -57,13 +56,12 @@ class Power extends CActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'id' => 'ID',
-			'power_number' => 'Power Number',
-			'power_name' => 'Power Name',
-			'power_controller' => 'Power Controller',
-			'power_master_number' => 'Power Master Number',
-			'power_range' => 'Power Range',
-			'power_display' => 'Power Display',
+			'power_number' => '功能編號',
+			'power_name' => '功能名稱',
+			'power_controller' => 'Controller位置',
+			'power_master_number' => '系統編號',
+			'power_range' => '排序',
+			'power_display' => '是否於前台顯示1為是0為否',
 		);
 	}
 
@@ -85,7 +83,6 @@ class Power extends CActiveRecord
 
 		$criteria=new CDbCriteria;
 
-		$criteria->compare('id',$this->id);
 		$criteria->compare('power_number',$this->power_number);
 		$criteria->compare('power_name',$this->power_name,true);
 		$criteria->compare('power_controller',$this->power_controller,true);
