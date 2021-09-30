@@ -1331,7 +1331,18 @@ class AttendanceService
             $data = $this->getAttxendanceAndCheckPT($start_date,$end_date,$pt_start_date,$pt_end_date);
             foreach ($data as $key => $value) {
                 $checkattendancerecord = $this->checkAttendanceRecordStartTime($day . ' 09:30:00',$value['employee_id']);
-                if (empty($value['flashDate']) && empty($checkattendancerecord) && $checkattendancerecord[0]['abnormal_type'] == 2) {
+                $leaveService = new LeaveService();
+                $leave_data = $leaveService->findEmployeeLeaveByDay($value['employee_id'], $day);
+                $leave = false;
+                if(!empty($leave_data)){
+                    foreach ($leave_data as $leave_key => $leave_value) {
+                        // 早上有請假
+                        if(date('H',strtotime($leave_value['start_time'])) == '9'){
+                            $leave = true;
+                        }
+                    }
+                }
+                if (empty($value['flashDate']) && empty($checkattendancerecord) && $leave == false) {
                     $abnormal_type = 2;
                     $employee_email = $value['email'];
                     $employee_name = $value['name'];
