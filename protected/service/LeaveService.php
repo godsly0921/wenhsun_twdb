@@ -378,5 +378,20 @@ class LeaveService
             $data = $query->queryAll();
         }
     }
+
+    // 歷史特休管理 - 查詢指定員工在幾點前有請假
+    public function findEmployeeLeaveByDayAndTime($employee_id, $day, $daytime){
+        $data = array();
+        if(!empty($employee_id) && !empty($day)){
+            $sql = "SELECT * FROM `attendance_record` WHERE employee_id = :employee_id AND status='1' AND day like :day AND take <> 11 AND start_time <= :start_time";
+            $query = Yii::app()->db->createCommand($sql);
+            $query->params = array(
+                "employee_id" => $employee_id,
+                "day" => $day . "%",
+                "start_time" => $daytime
+            );
+            $data = $query->queryAll();
+        }
+    }
 }
 ?>
