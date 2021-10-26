@@ -1331,7 +1331,13 @@ class AttendanceService
             $data = $this->getAttxendanceAndCheckPT($start_date,$end_date,$pt_start_date,$pt_end_date);
             foreach ($data as $key => $value) {
                 $checkattendancerecord = $this->checkAttendanceRecordStartTime($day . ' 09:30:00',$value['employee_id']);
-                if (empty($value['flashDate']) && empty($checkattendancerecord) && $checkattendancerecord[0]['abnormal_type'] == 2) {
+                $leaveService = new LeaveService();
+                $leave_data = $leaveService->findEmployeeLeaveByDayAndTime($value['employee_id'], $day, $day . ' 09:30:59');
+                $leave = false;
+                if(!empty($leave_data)){
+                    $leave = true;
+                }
+                if (empty($value['flashDate']) && empty($checkattendancerecord) && $leave == false) {
                     $abnormal_type = 2;
                     $employee_email = $value['email'];
                     $employee_name = $value['name'];
@@ -1361,7 +1367,7 @@ class AttendanceService
         $checkPTtime = $apartments2 = Yii::app()->db->createCommand()
         ->select("e.name,e.id as employee_id,e.email,e.user_name,e.door_card_num,r.flashDate,r.memol,r.id")
         ->from('employee e')
-        ->rightjoin('part_time pt',"e.id=pt.part_time_empolyee_id and pt.start_time BETWEEN '".$pt_start_date."' and '".$pt_end_date."'")
+        ->rightjoin('part_time pt',"e.id=pt.part_time_empolyee_id and pt.start_time BETWEEN '".$pt_start_date."' and '".$pt_end_date."' AND pt.status<>'3'")
         ->leftjoin('record r', "SUBSTRING(e.door_card_num,1,5) = r.start_five and SUBSTRING(e.door_card_num,6)=r.end_five and r.flashDate BETWEEN '".$start_date."' and '".$end_date."'")
         ->where('e.role=7 and e.role <> 37 and e.role <> 38 and e.role <> 39 and e.role <> 40 and e.role <> 43 and e.role <> 44 and e.role <> 45 and e.role <> 42 and e.delete_status <> 1 and e.user_name NOT LIKE "KS%"')
         ->getText();
@@ -1379,7 +1385,7 @@ class AttendanceService
             $start_date = $day . ' 00:00:00';
             $end_date = $day . ' 09:30:59';
             $pt_start_date = $day . ' 00:00:00';
-            $pt_end_date = $day . ' 23:59:59';
+            $pt_end_date = $day . ' 09:30:59';
             $data = $this->getAttxendanceAndCheckPT($start_date,$end_date,$pt_start_date,$pt_end_date);
             $table = '<h2>正常出勤記錄明細</h2><table border="1" style="color:black;border-color:black;"><tr><th>員工帳號</th><th>員工姓名</th><th>卡號</th><th>刷卡時間</th><th>刷卡狀態</th><th>原廠紀錄編號</th></tr>';
             $table_abnormal = '<h2>異常出勤記錄明細</h2><table border="1" style="color:black;border-color:black;"><tr><th>員工帳號</th><th>員工姓名</th><th>卡號</th><th>刷卡時間</th><th>刷卡狀態</th><th>原廠紀錄編號</th></tr>';

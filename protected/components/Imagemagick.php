@@ -167,19 +167,19 @@ class Imagemagick {
 		$dpi = Imagemagick::$size_bound_settings[$size_type]['dpi'];
 		switch ($size_type) {
 			case "XL" :
-				exec('convert -strip -density ' . $dpi . ' "' . $file_path . '" "' . $target_path . $filename . '"');
+				exec('convert -strip -auto-orient -density ' . $dpi . ' "' . $file_path . '" "' . $target_path . $filename . '"');
 				break;
 				
 			case "L" :
-				exec('convert -strip -density ' . $dpi . ' -geometry 2000x2000 "' . $file_path . '" "' . $target_path . $filename . '"');
+				exec('convert -strip -auto-orient -density ' . $dpi . ' -geometry 2000x2000 "' . $file_path . '" "' . $target_path . $filename . '"');
 				break;
 
 			case "M" :
-				exec('convert -strip -density ' . $dpi . ' -geometry 1200x1200 "' . $file_path . '" "' . $target_path . $filename . '"');
+				exec('convert -strip -auto-orient -density ' . $dpi . ' -geometry 1200x1200 "' . $file_path . '" "' . $target_path . $filename . '"');
 				break;
 
 			case "S" :
-				exec('convert -strip -density ' . $dpi . ' -geometry 600x600 "' . $file_path . '" "' . $target_path . $filename . '"');
+				exec('convert -strip -auto-orient -density ' . $dpi . ' -geometry 600x600 "' . $file_path . '" "' . $target_path . $filename . '"');
 				break;
 			default :
 				break;
@@ -239,10 +239,10 @@ class Imagemagick {
         $filename = $single_id . '.jpg';
 		//p
 		$target_p_path = $storeFolder . 'P' . $ds;
-		exec('convert -strip -density 72 -geometry 150x150 "' . $source_folder . $filename . '" "' . $target_p_path . $filename . '" &');
+		exec('convert -strip -auto-orient -density 72 -geometry 150x150 "' . $source_folder . $filename . '" "' . $target_p_path . $filename . '" &');
 		//o
 		$target_o_path = $storeFolder . 'O' . $ds;
-		exec('convert -strip -density 72 -geometry 500x500 "' . $source_folder . $filename . '" "' . $target_o_path . $filename . '" &');
+		exec('convert -strip -auto-orient -density 72 -geometry 500x500 "' . $source_folder . $filename . '" "' . $target_o_path . $filename . '" &');
 		exec('composite -dissolve 25 -tile "' . WATERMARK . '" "' . $target_o_path .$filename . '" "' . $target_o_path . $filename . '" &');
 		return array('p_path' => $target_p_path, 'o_path' => $target_o_path);
 	}
