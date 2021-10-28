@@ -59,11 +59,11 @@
                                         <select class="form-control" id="role" name="role">
                                             <?php if (!empty($roles)): ?>
                                                 <?php foreach ($roles as $role): ?>
-                                                    <?php if ($role['id'] === $data->role): ?>
-                                                        <option value="<?= $role['id'] ?>"
+                                                    <?php if ($role['group_number'] === $data->role): ?>
+                                                        <option value="<?= $role['group_number'] ?>"
                                                                 selected><?= $role['group_name'] ?></option>
                                                     <?php else: ?>
-                                                        <option value="<?= $role['id'] ?>"><?= $role['group_name'] ?></option>
+                                                        <option value="<?= $role['group_number'] ?>"><?= $role['group_name'] ?></option>
                                                     <?php endif; ?>
                                                 <?php endforeach; ?>
                                             <?php else: ?>
