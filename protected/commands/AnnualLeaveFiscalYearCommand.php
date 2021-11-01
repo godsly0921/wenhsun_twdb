@@ -24,7 +24,7 @@ class AnnualLeaveFiscalYearCommand extends CConsoleCommand
         try {
             $nowDate = !empty($arrpara['date']) ? new DateTime($arrpara['date']) : new DateTime();
             if(!empty($arrpara['init'])){
-                $emp = $empService->findEmployeeInRolesListObject(CHECKROLE);//列出文訊正職員工狀態為啟用中的
+                $emp = $empService->findEmployeeInDepartmentListObject(CHECKDEPARTMENT);//列出要計算特休的部門，且員工狀態為啟用中的
                 if($emp){
                     foreach($emp as $key => $value) {
                         $nowDate = new DateTime();
@@ -75,7 +75,7 @@ class AnnualLeaveFiscalYearCommand extends CConsoleCommand
                         // $leaveService->calcAnnualLeaveSummaryOnBoardDate_FiscalYear($nowDate, $emp);
                     }
                 }else{
-                    $emp = $empService->findEmployeeInRolesListObject(CHECKROLE);//列出文訊正職員工狀態為啟用中的
+                    $emp = $empService->findEmployeeInDepartmentListObject(CHECKDEPARTMENT);//列出要計算特休的部門，且員工狀態為啟用中的
                     if($emp){
                         foreach($emp as $key => $value) {
                             $employee = Employee::model()->findByPk($value["id"]);

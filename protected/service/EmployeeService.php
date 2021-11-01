@@ -46,6 +46,16 @@ class EmployeeService
         return $result;
     }
 
+    public function findEmployeeInDepartmentListObject($department)
+    {
+        $criteria = new CDbCriteria();
+        $criteria->select = '*';
+        $criteria->addColumnCondition(array('enable'=>'Y','delete_status'=>'0'));
+        $criteria->addInCondition('department', $department);
+        $result = Employee::model() -> findAll($criteria);
+        return $result;
+    }
+
     public function findEmployeeNotInRolesListObject($rolse)
     {
         $criteria = new CDbCriteria();
