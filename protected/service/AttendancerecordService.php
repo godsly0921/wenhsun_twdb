@@ -593,8 +593,8 @@ class AttendancerecordService
                 ],
                 [
                     'category' => '年假(特別休假)',
-                    'leave_applied' => $appliedAnnualLeave / 60,
-                    'leave_available' => $annualLeaveMinutes / 60 - $appliedAnnualLeave / 60,
+                    'leave_applied' => round($appliedAnnualLeave / 60,2),
+                    'leave_available' => round($annualLeaveMinutes / 60 - $appliedAnnualLeave / 60, 2),
                 ],
                 [
                     'category' => '分娩假含例假日',
