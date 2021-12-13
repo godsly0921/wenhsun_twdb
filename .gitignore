@@ -5,4 +5,9 @@ node_modules/
 image_storage/
 
 data/document/*
+.phpintel/*
+assets/26fa218d/*
+assets/439e8485/*
+assets/ebadd046/*
+assets/f3bbc1b3/*
 !data/document/.gitkeep

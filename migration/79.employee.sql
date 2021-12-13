@@ -1,0 +1,1 @@
+ALTER TABLE `employee` ADD `position_type` INT(1) NOT NULL DEFAULT '1' COMMENT '職位 1:正職 2:兼職' AFTER `delete_status`;

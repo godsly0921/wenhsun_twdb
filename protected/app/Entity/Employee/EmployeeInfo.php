@@ -35,6 +35,7 @@ class EmployeeInfo
     public $seat_num;
     public $department;
     public $position;
+    public $position_type;
     public $memo;
 
     public $bank_name;
@@ -100,9 +101,8 @@ class EmployeeInfo
         $now = date('Y-m-d H:i:s');
         $employeeModel->create_at = $now;
         $employeeModel->update_at = $now;
-
+        $employeeModel->position_type = $this->position_type;
         $employeeModel->save();
-
         if ($employeeModel->hasErrors()) {
             throw new RuntimeException(serialize($employeeModel->getErrors()));
         }

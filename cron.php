@@ -15,6 +15,7 @@ $config = dirname(__FILE__).'/protected/config/console.php';
 // 44 紀州庵正職－行銷企劃
 // 45 紀州庵正職－茶館
 define('CHECKROLE', array( 2,5,26,27,33,40,44,45 ));
+define('CHECKDEPARTMENT', array( '文訊','紀州庵' ));
 require_once($yii);
 require dirname(__FILE__) . '/vendor/autoload.php';
 

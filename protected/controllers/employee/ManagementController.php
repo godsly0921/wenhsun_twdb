@@ -49,7 +49,7 @@ class ManagementController extends Controller
         $roles = Group::model()->findAll();
         $roles_map = array();
         foreach ($roles as $key => $value) {
-            $roles_map[$value['id']] = $value['group_name'];
+            $roles_map[$value['group_number']] = $value['group_name'];
         }
         $list = EmployeeModel::model()->byUsernameAsc()->findAll(array('condition'=>'delete_status<>1'));
 

@@ -59,11 +59,11 @@
                                         <select class="form-control" id="role" name="role">
                                             <?php if (!empty($roles)): ?>
                                                 <?php foreach ($roles as $role): ?>
-                                                    <?php if ($role['id'] === $data->role): ?>
-                                                        <option value="<?= $role['id'] ?>"
+                                                    <?php if ($role['group_number'] === $data->role): ?>
+                                                        <option value="<?= $role['group_number'] ?>"
                                                                 selected><?= $role['group_name'] ?></option>
                                                     <?php else: ?>
-                                                        <option value="<?= $role['id'] ?>"><?= $role['group_name'] ?></option>
+                                                        <option value="<?= $role['group_number'] ?>"><?= $role['group_name'] ?></option>
                                                     <?php endif; ?>
                                                 <?php endforeach; ?>
                                             <?php else: ?>
@@ -277,7 +277,15 @@
                                                class="form-control col-md-7 col-xs-12">
                                     </div>
                                 </div>
-
+                                <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="position_type">正職/兼職</label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                        <select class="form-control" id="position_type" name="position_type">
+                                            <option value="1" <?=$data->department == 1?'selected':''?>>正職</option>
+                                            <option value="2" <?=$data->department == 2?'selected':''?>>兼職</option>    
+                                        </select>
+                                    </div>
+                                </div>
                                 <div class="form-group">
                                     <label class="control-label col-md-3 col-sm-3 col-xs-12" for="memo">備註</label>
                                     <div class="col-md-6 col-sm-6 col-xs-12">

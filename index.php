@@ -72,6 +72,7 @@ define("AnnualLeaveFiscalYearClose", "04");
 // 44 紀州庵正職－行銷企劃
 // 45 紀州庵正職－茶館
 define('CHECKROLE', array( 2,5,26,27,33,40,44,45 ));
+define('CHECKDEPARTMENT', array( '文訊','紀州庵' ));
 require_once("code.inc.php");
 require_once($yii);
 Yii::createWebApplication($config)->run();
