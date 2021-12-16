@@ -1329,6 +1329,7 @@ class AttendanceService
             $pt_end_date = $day . ' 09:31:00';
             //找出所有的刷卡紀錄
             $data = $this->getAttxendanceAndCheckPT($start_date,$end_date,$pt_start_date,$pt_end_date);
+            
             foreach ($data as $key => $value) {
                 $checkattendancerecord = $this->checkAttendanceRecordStartTime($day . ' 09:30:00',$value['employee_id']);
                 $leaveService = new LeaveService();
@@ -1369,14 +1370,17 @@ class AttendanceService
         ->from('employee e')
         ->rightjoin('part_time pt',"e.id=pt.part_time_empolyee_id and pt.start_time BETWEEN '".$pt_start_date."' and '".$pt_end_date."' AND pt.status<>'3'")
         ->leftjoin('record r', "SUBSTRING(e.door_card_num,1,5) = r.start_five and SUBSTRING(e.door_card_num,6)=r.end_five and r.flashDate BETWEEN '".$start_date."' and '".$end_date."'")
-        ->where('e.role=7 and e.role <> 37 and e.role <> 38 and e.role <> 39 and e.role <> 40 and e.role <> 43 and e.role <> 44 and e.role <> 45 and e.role <> 42 and e.delete_status <> 1 and e.user_name NOT LIKE "KS%"')
+        ->where('e.position_type = 2 and e.delete_status <> 1 and e.user_name NOT LIKE "KS%"')
         ->getText();
         $data = Yii::app()->db->createCommand()
         ->select('e.name,e.id as employee_id,e.email,e.user_name,e.door_card_num,r.flashDate,r.memol,r.id')
         ->from('employee e')
         ->leftjoin('record r', "SUBSTRING(e.door_card_num,1,5) = r.start_five and SUBSTRING(e.door_card_num,6)=r.end_five and r.flashDate BETWEEN '".$start_date."' and '".$end_date."'")
-        ->where('e.role <> 7 and e.role <> 37 and e.role <> 38 and e.role <> 39 and e.role <> 40 and e.role <> 43 and e.role <> 44 and e.role <> 45 and e.role <> 42 and e.delete_status <> 1 and e.user_name NOT LIKE "KS%"')
+        ->where('e.position_type = 1 and e.delete_status <> 1 and e.user_name NOT LIKE "KS%"')
         ->union($checkPTtime)
+        // ->getText();
+        // var_dump($data);
+        // exit();
         ->queryAll();
         return $data;
     }

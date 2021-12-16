@@ -385,6 +385,7 @@ class LeaveService
         if(!empty($employee_id) && !empty($day)){
             $sql = "SELECT * FROM `attendance_record` WHERE employee_id = :employee_id AND status='1' AND day like :day AND take <> 11 AND start_time <= :start_time";
             $query = Yii::app()->db->createCommand($sql);
+
             $query->params = array(
                 "employee_id" => $employee_id,
                 "day" => $day . "%",
@@ -392,6 +393,7 @@ class LeaveService
             );
             $data = $query->queryAll();
         }
+        return $data;
     }
 }
 ?>
