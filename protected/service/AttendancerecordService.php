@@ -189,7 +189,7 @@ class AttendancerecordService
         if ($keyword_selected == 1) {
             //echo '1';
             if ($key_column == 0) {
-                echo '2';
+                // echo '2';
                 $data = Yii::app()->db->createCommand()
                     ->select('e.*,a.*,a.create_at as att_create_at,a.id as attendance_record_id')
                     ->from('employee e')
@@ -197,6 +197,8 @@ class AttendancerecordService
                     ->where(array('like', 'e.name', "%$keyword%"))
                     ->andWhere("a.day >= '$choose_start'")
                     ->andWhere("a.day <= '$choose_end'")
+                    ->andWhere("e.delete_status = '0'")
+                    ->andWhere("e.department <> '紀州庵'")
                     ->order('e.user_name DESC,CONVERT(e.name using big5) ASC,a.day ASC')
                     ->queryAll();
                 return $data;
@@ -209,6 +211,8 @@ class AttendancerecordService
                     ->where('e.door_card_num = :door_card_num', array(':door_card_num' => $keyword))
                     ->andWhere("a.day >= '$choose_start'")
                     ->andWhere("a.day <= '$choose_end'")
+                    ->andWhere("e.delete_status = '0'")
+                    ->andWhere("e.department <> '紀州庵'")
                     ->order('e.user_name DESC,CONVERT(e.name using big5) ASC,a.day ASC')
                     ->queryAll();
                 return $data;
@@ -221,6 +225,8 @@ class AttendancerecordService
                     ->where('e.user_name = :user_name', array(':user_name' => $keyword))
                     ->andWhere("a.day >= '$choose_start'")
                     ->andWhere("a.day <= '$choose_end'")
+                    ->andWhere("e.delete_status = '0'")
+                    ->andWhere("e.department <> '紀州庵'")
                     ->order('e.user_name DESC,CONVERT(e.name using big5) ASC,a.day ASC')
                     ->queryAll();
                 return $data;
@@ -233,6 +239,8 @@ class AttendancerecordService
                     ->where('e.id = :employee_id', array(':employee_id' => $keyword))
                     ->andWhere("a.day >= '$choose_start'")
                     ->andWhere("a.day <= '$choose_end'")
+                    ->andWhere("e.delete_status = '0'")
+                    ->andWhere("e.department <> '紀州庵'")
                     ->order('e.user_name DESC,CONVERT(e.name using big5) ASC,a.day ASC')
                     ->queryAll();
                 return $data;
@@ -244,6 +252,8 @@ class AttendancerecordService
                 ->leftjoin('attendance_record a', 'a.employee_id = e.id')
                 ->andWhere("a.day >= '$choose_start'")
                 ->andWhere("a.day <= '$choose_end'")
+                ->andWhere("e.delete_status = '0'")
+                ->andWhere("e.department <> '紀州庵'")
                 ->order('e.user_name DESC,CONVERT(e.name using big5) ASC,a.day ASC')
                 ->queryAll();
             return $data;

@@ -54,7 +54,12 @@ class ManagerController extends Controller
 
     public function actionIndex(): void
     {
-        $employees = EmployeeORM::model()->findAll();
+        $employees = EmployeeORM::model()->findAll(array(
+            'condition'=>'delete_status=:delete_status',
+            'params'=>array(
+                ':delete_status' => "0",
+            )
+        ));
 
         $userNameSearchWord = $this->buildUsernameSearchWord($employees);
 
@@ -297,13 +302,19 @@ class ManagerController extends Controller
 
         if ($type == 1) {
             $emp = EmployeeORM::model()->find(
-                'user_name=:user_name',
-                [':user_name' => $employeeUserName]
+                'user_name=:user_name AND delete_status=:delete_status',
+                [
+                    ':user_name' => $employeeUserName,
+                    ':delete_status' => "0",
+                ]
             );
         } elseif ($type == 2) {
             $emp = EmployeeORM::model()->find(
-                'name=:name',
-                [':name' => $name]
+                'name=:name AND delete_status=:delete_status',
+                [
+                    ':name' => $name,
+                    ':delete_status' => "0",
+                ]
             );
         }
         if ($emp === null) {
