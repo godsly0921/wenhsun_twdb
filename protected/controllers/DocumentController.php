@@ -160,7 +160,8 @@ class DocumentController extends Controller
             $tx->commit();
 
             Yii::app()->session[Controller::SUCCESS_MSG_KEY] = '更新成功';
-            $this->redirect("edit?id={$_POST['id']}");
+            $this->redirect("index?document_department={$_POST['document_type']}");
+            // $this->redirect("edit?id={$_POST['id']}");
 
         } catch (Throwable $ex) {
             Yii::log($ex->getMessage(), CLogger::LEVEL_ERROR);
@@ -179,14 +180,20 @@ class DocumentController extends Controller
             $pk = filter_input(INPUT_POST, 'id');
             $employee = Document::model()->findByPk($pk);
             if (!$employee) {
+                Yii::app()->session[Controller::ERR_MSG_KEY] = '刪除失敗，資料不存在';
                 $this->sendErrAjaxRsp(404, "資料不存在");
             }
-
-            $employee->delete();
+            if($employee->delete()){
+                Yii::app()->session[Controller::SUCCESS_MSG_KEY] = '刪除成功';
+            }else{
+                Yii::app()->session[Controller::ERR_MSG_KEY] = '刪除失敗' . json_encode($document->getErrors(), JSON_UNESCAPED_UNICODE);
+            }
+            // $employee->delete();
             $this->sendSuccAjaxRsp();
 
         } catch (Throwable $ex) {
             Yii::log($ex->getMessage(), CLogger::LEVEL_ERROR);
+            Yii::app()->session[Controller::ERR_MSG_KEY] = '刪除失敗' . $ex->getMessage();
             $this->sendErrAjaxRsp(500, "系統錯誤");
         }
     }

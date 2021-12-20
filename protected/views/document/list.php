@@ -47,6 +47,18 @@
 
         <div class="row">
             <div class="col-md-12 col-sm-12 col-xs-12">
+                <?php if (!empty(Yii::app()->session[Controller::ERR_MSG_KEY])): ?>
+                    <div id="error_alert" class="alert alert-danger alert-dismissible fade in" role="alert">
+                        <?php echo Yii::app()->session[Controller::ERR_MSG_KEY];?>
+                        <?php unset(Yii::app()->session[Controller::ERR_MSG_KEY]);?>
+                    </div>
+                <?php endif; ?>
+                <?php if (!empty(Yii::app()->session[Controller::SUCCESS_MSG_KEY])): ?>
+                    <div id="succ-alert" class="alert alert-success alert-dismissible fade in" role="alert">
+                        <?php echo Yii::app()->session[Controller::SUCCESS_MSG_KEY];?>
+                        <?php unset(Yii::app()->session[Controller::SUCCESS_MSG_KEY]);?>
+                    </div>
+                <?php endif; ?>
                 <div class="x_panel">
                     <table id="datatable" class="table table-striped table-bordered">
                         <thead>
