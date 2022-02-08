@@ -51,7 +51,7 @@ class EmployeeService
         $criteria = new CDbCriteria();
         $criteria->select = '*';
         $criteria->addColumnCondition(array('enable'=>'Y','delete_status'=>'0','position_type'=>'1'));
-        $criteria->addInCondition('department', $department);
+        // $criteria->addInCondition('department', $department);
         $result = Employee::model() -> findAll($criteria);
         return $result;
     }
