@@ -9,7 +9,7 @@ use PHPUnit\Framework\Exception;
 class AttendancerecordService
 {
 
-    public $normal_take = [3, 4, 5, 6, 7, 8, 9, 10, 16, 17, 18]; // 不扣全勤的假
+    public $normal_take = [3, 4, 5, 6, 7, 8, 9, 10, 15, 16, 17, 18]; // 不扣全勤的假
 
     // 新增一筆紀錄
     public function create($employee_id, $day, $first_time, $last_time, $abnormal_type, $abnormal)
@@ -443,21 +443,21 @@ class AttendancerecordService
             $manager = EmployeeORM::model()->findByPk($leave->manager);
             $configService = new ConfigService();
             $AnnualLeaveType = $configService->findByConfigName("AnnualLeaveType");
-            if(!empty($AnnualLeaveType)){
+            if (!empty($AnnualLeaveType)) {
                 $AnnualLeaveType = $AnnualLeaveType[0]['config_value'];
-            }else{
+            } else {
                 $AnnualLeaveType = 1;
             }
 
             $leaveService = new LeaveService();
-            
+
             $employeeLeaveCalculator = new EmployeeLeaveCalculator();
             $annualLeaveMinutes = $employeeLeaveCalculator->calcAnnualLeaveSummaryOnBoardDate(new DateTime(), $employee);
 
             $attendanceRecordServ = new AttendancerecordService();
             $tomorrow = new DateTime();
             $tomorrow->add(DateInterval::createFromDateString('1 day'));
-            
+
 
             $personalLeaveAnnualMinutes = $employeeLeaveCalculator->personalLeaveAnnualMinutes();
             $sickLeaveAnnualMinutes = $employeeLeaveCalculator->sickLeaveAnnualMinutes();
@@ -468,7 +468,7 @@ class AttendancerecordService
             $commonLeaveEndDateTime->add(DateInterval::createFromDateString('1 year'));
             $commonLeaveEndDate = $commonLeaveEndDateTime->format('Y/m/d H:i:s');
 
-            if($AnnualLeaveType==2){
+            if ($AnnualLeaveType == 2) {
                 $annualLeaveMinutes = $employeeLeaveCalculator->calcAnnualLeaveSummaryOnBoardDate(new DateTime(), $employee);
                 // $annualLeaveMinutes = $leaveService->calcAnnualLeaveSummaryOnBoardDate(new DateTime(), $employee);
                 $appliedAnnualLeave = $attendanceRecordServ->summaryMinutesByPeriodOfTimeAndLeaveType(
@@ -478,11 +478,11 @@ class AttendancerecordService
                     Attendance::ANNUAL_LEAVE
                 );
                 $annualLeaveMinutes = $annualLeaveMinutes->minutesValue();
-            }else{
+            } else {
                 // 該年度可請特休數
                 $annualLeaveMinutes = $leaveService->calcAnnualLeaveSummaryYear_FiscalYear($employee->getEmployeeId()->value(), $year);
                 $holidayList = array();
-                if(!empty($annualLeaveMinutes)){
+                if (!empty($annualLeaveMinutes)) {
                     $annualLeaveMinutes = $annualLeaveMinutes[0];
                     // 該年度已請且審核通過特休數
                     $appliedAnnualLeave = $leaveService->getEmployeeLeaves_FiscalYear(
@@ -490,7 +490,7 @@ class AttendancerecordService
                         $employee->getEmployeeId()->value()
                     );
                     $annualLeaveMinutes = $annualLeaveMinutes["special_leave"];
-                }else{
+                } else {
                     $appliedAnnualLeave = 0;
                     $annualLeaveMinutes = 0;
                 }
@@ -603,7 +603,7 @@ class AttendancerecordService
                 ],
                 [
                     'category' => '年假(特別休假)',
-                    'leave_applied' => round($appliedAnnualLeave / 60,2),
+                    'leave_applied' => round($appliedAnnualLeave / 60, 2),
                     'leave_available' => round($annualLeaveMinutes / 60 - $appliedAnnualLeave / 60, 2),
                 ],
                 [
