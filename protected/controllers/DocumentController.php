@@ -114,6 +114,7 @@ class DocumentController extends Controller
 
     public function actionUpdate()
     {
+ 
         $id = $_POST['id'];
         $tx = Yii::app()->db->beginTransaction();
         try {
@@ -160,7 +161,7 @@ class DocumentController extends Controller
             $tx->commit();
 
             Yii::app()->session[Controller::SUCCESS_MSG_KEY] = '更新成功';
-            $this->redirect("index?document_department={$_POST['document_type']}");
+            $this->redirect("index?document_department={$_POST['document_department']}");
             // $this->redirect("edit?id={$_POST['id']}");
 
         } catch (Throwable $ex) {
