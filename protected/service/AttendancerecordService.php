@@ -9,7 +9,7 @@ use PHPUnit\Framework\Exception;
 class AttendancerecordService
 {
 
-    public $normal_take = [3, 4, 5, 6, 7, 8, 9, 10, 16, 17, 18]; // 不扣全勤的假
+    public $normal_take = [3, 4, 5, 6, 7, 8, 9, 10, 15, 16, 17, 18]; // 不扣全勤的假
 
     // 新增一筆紀錄
     public function create($employee_id, $day, $first_time, $last_time, $abnormal_type, $abnormal)
@@ -189,7 +189,7 @@ class AttendancerecordService
         if ($keyword_selected == 1) {
             //echo '1';
             if ($key_column == 0) {
-                echo '2';
+                // echo '2';
                 $data = Yii::app()->db->createCommand()
                     ->select('e.*,a.*,a.create_at as att_create_at,a.id as attendance_record_id')
                     ->from('employee e')
@@ -197,6 +197,8 @@ class AttendancerecordService
                     ->where(array('like', 'e.name', "%$keyword%"))
                     ->andWhere("a.day >= '$choose_start'")
                     ->andWhere("a.day <= '$choose_end'")
+                    ->andWhere("e.delete_status = '0'")
+                    ->andWhere("e.department <> '紀州庵'")
                     ->order('e.user_name DESC,CONVERT(e.name using big5) ASC,a.day ASC')
                     ->queryAll();
                 return $data;
@@ -209,6 +211,8 @@ class AttendancerecordService
                     ->where('e.door_card_num = :door_card_num', array(':door_card_num' => $keyword))
                     ->andWhere("a.day >= '$choose_start'")
                     ->andWhere("a.day <= '$choose_end'")
+                    ->andWhere("e.delete_status = '0'")
+                    ->andWhere("e.department <> '紀州庵'")
                     ->order('e.user_name DESC,CONVERT(e.name using big5) ASC,a.day ASC')
                     ->queryAll();
                 return $data;
@@ -221,6 +225,8 @@ class AttendancerecordService
                     ->where('e.user_name = :user_name', array(':user_name' => $keyword))
                     ->andWhere("a.day >= '$choose_start'")
                     ->andWhere("a.day <= '$choose_end'")
+                    ->andWhere("e.delete_status = '0'")
+                    ->andWhere("e.department <> '紀州庵'")
                     ->order('e.user_name DESC,CONVERT(e.name using big5) ASC,a.day ASC')
                     ->queryAll();
                 return $data;
@@ -233,6 +239,8 @@ class AttendancerecordService
                     ->where('e.id = :employee_id', array(':employee_id' => $keyword))
                     ->andWhere("a.day >= '$choose_start'")
                     ->andWhere("a.day <= '$choose_end'")
+                    ->andWhere("e.delete_status = '0'")
+                    ->andWhere("e.department <> '紀州庵'")
                     ->order('e.user_name DESC,CONVERT(e.name using big5) ASC,a.day ASC')
                     ->queryAll();
                 return $data;
@@ -244,6 +252,8 @@ class AttendancerecordService
                 ->leftjoin('attendance_record a', 'a.employee_id = e.id')
                 ->andWhere("a.day >= '$choose_start'")
                 ->andWhere("a.day <= '$choose_end'")
+                ->andWhere("e.delete_status = '0'")
+                ->andWhere("e.department <> '紀州庵'")
                 ->order('e.user_name DESC,CONVERT(e.name using big5) ASC,a.day ASC')
                 ->queryAll();
             return $data;
@@ -433,21 +443,21 @@ class AttendancerecordService
             $manager = EmployeeORM::model()->findByPk($leave->manager);
             $configService = new ConfigService();
             $AnnualLeaveType = $configService->findByConfigName("AnnualLeaveType");
-            if(!empty($AnnualLeaveType)){
+            if (!empty($AnnualLeaveType)) {
                 $AnnualLeaveType = $AnnualLeaveType[0]['config_value'];
-            }else{
+            } else {
                 $AnnualLeaveType = 1;
             }
 
             $leaveService = new LeaveService();
-            
+
             $employeeLeaveCalculator = new EmployeeLeaveCalculator();
             $annualLeaveMinutes = $employeeLeaveCalculator->calcAnnualLeaveSummaryOnBoardDate(new DateTime(), $employee);
 
             $attendanceRecordServ = new AttendancerecordService();
             $tomorrow = new DateTime();
             $tomorrow->add(DateInterval::createFromDateString('1 day'));
-            
+
 
             $personalLeaveAnnualMinutes = $employeeLeaveCalculator->personalLeaveAnnualMinutes();
             $sickLeaveAnnualMinutes = $employeeLeaveCalculator->sickLeaveAnnualMinutes();
@@ -458,7 +468,7 @@ class AttendancerecordService
             $commonLeaveEndDateTime->add(DateInterval::createFromDateString('1 year'));
             $commonLeaveEndDate = $commonLeaveEndDateTime->format('Y/m/d H:i:s');
 
-            if($AnnualLeaveType==2){
+            if ($AnnualLeaveType == 2) {
                 $annualLeaveMinutes = $employeeLeaveCalculator->calcAnnualLeaveSummaryOnBoardDate(new DateTime(), $employee);
                 // $annualLeaveMinutes = $leaveService->calcAnnualLeaveSummaryOnBoardDate(new DateTime(), $employee);
                 $appliedAnnualLeave = $attendanceRecordServ->summaryMinutesByPeriodOfTimeAndLeaveType(
@@ -468,11 +478,11 @@ class AttendancerecordService
                     Attendance::ANNUAL_LEAVE
                 );
                 $annualLeaveMinutes = $annualLeaveMinutes->minutesValue();
-            }else{
+            } else {
                 // 該年度可請特休數
                 $annualLeaveMinutes = $leaveService->calcAnnualLeaveSummaryYear_FiscalYear($employee->getEmployeeId()->value(), $year);
                 $holidayList = array();
-                if(!empty($annualLeaveMinutes)){
+                if (!empty($annualLeaveMinutes)) {
                     $annualLeaveMinutes = $annualLeaveMinutes[0];
                     // 該年度已請且審核通過特休數
                     $appliedAnnualLeave = $leaveService->getEmployeeLeaves_FiscalYear(
@@ -480,7 +490,7 @@ class AttendancerecordService
                         $employee->getEmployeeId()->value()
                     );
                     $annualLeaveMinutes = $annualLeaveMinutes["special_leave"];
-                }else{
+                } else {
                     $appliedAnnualLeave = 0;
                     $annualLeaveMinutes = 0;
                 }
@@ -593,8 +603,8 @@ class AttendancerecordService
                 ],
                 [
                     'category' => '年假(特別休假)',
-                    'leave_applied' => $appliedAnnualLeave / 60,
-                    'leave_available' => $annualLeaveMinutes / 60 - $appliedAnnualLeave / 60,
+                    'leave_applied' => round($appliedAnnualLeave / 60, 2),
+                    'leave_available' => round($annualLeaveMinutes / 60 - $appliedAnnualLeave / 60, 2),
                 ],
                 [
                     'category' => '分娩假含例假日',

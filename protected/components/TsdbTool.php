@@ -60,7 +60,7 @@ class TsdbTool
     //$ip = ['39.9.75.112']; 
     $ip = TsdbTool::getIPAddress();  
     $endpoint = 'https://api.ip.sb/geoip/'.$ip; 
-    $contents = file_get_contents($endpoint);
+    // $contents = file_get_contents($endpoint);
     $locationInfo = array();
 
     if (!isset($contents['country_code'])) {

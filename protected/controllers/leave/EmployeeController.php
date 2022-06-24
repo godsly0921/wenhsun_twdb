@@ -117,6 +117,7 @@ class EmployeeController extends Controller
                 );
                 $annualLeaveMinutes = $annualLeaveMinutes["special_leave"];
             }else{
+                $holidayList = $leaveService->getYearLeaves_FiscalYear($year,"", $employee->getEmployeeId()->value());
                 $appliedAnnualLeave = 0;
                 $annualLeaveMinutes = 0;
             }

@@ -54,7 +54,12 @@ class ManagerController extends Controller
 
     public function actionIndex(): void
     {
-        $employees = EmployeeORM::model()->findAll();
+        $employees = EmployeeORM::model()->findAll(array(
+            'condition'=>'delete_status=:delete_status',
+            'params'=>array(
+                ':delete_status' => "0",
+            )
+        ));
 
         $userNameSearchWord = $this->buildUsernameSearchWord($employees);
 
@@ -297,13 +302,19 @@ class ManagerController extends Controller
 
         if ($type == 1) {
             $emp = EmployeeORM::model()->find(
-                'user_name=:user_name',
-                [':user_name' => $employeeUserName]
+                'user_name=:user_name AND delete_status=:delete_status',
+                [
+                    ':user_name' => $employeeUserName,
+                    ':delete_status' => "0",
+                ]
             );
         } elseif ($type == 2) {
             $emp = EmployeeORM::model()->find(
-                'name=:name',
-                [':name' => $name]
+                'name=:name AND delete_status=:delete_status',
+                [
+                    ':name' => $name,
+                    ':delete_status' => "0",
+                ]
             );
         }
         if ($emp === null) {
@@ -646,7 +657,7 @@ class ManagerController extends Controller
             $can_apply_annual_last = $can_apply_annual_now = false;
             $special_leave_year_id = null;
             $check_department = CHECKDEPARTMENT;
-            if($AnnualLeaveType == 1 && $_POST['leave_type'] == 5 && in_array($employeeOrmEnt->department, $check_department) ){
+            if($AnnualLeaveType == 1 && $_POST['leave_type'] == 5 && $employeeOrmEnt->position_type == 1 ){
                 $now_year = new DateTime($start_time);
                 $now_year->setTime(0, 0, 0);
                 if($now_year->format("m")<=3){
@@ -966,7 +977,7 @@ class ManagerController extends Controller
                 [':id' => $attendanceRecord->employee_id]
             );
             $check_department = CHECKDEPARTMENT;
-            if($AnnualLeaveType == 1 && $attendanceRecord->take == 5 && in_array($employeeOrmEnt->department, $check_department)){
+            if($AnnualLeaveType == 1 && $attendanceRecord->take == 5 && $employeeOrmEnt->position_type == 1){
                 if($can_apply_annual_last == false){
                     $now_year = new DateTime($attendanceRecord->day);
                     $now_year->setTime(0, 0, 0);

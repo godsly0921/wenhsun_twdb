@@ -5,6 +5,7 @@ class CronService
     public function today_record($today)
     {
         try {
+            $log = array();
             if(!empty($today)){
                 //重跑資料跑這段code
                 // ST server 會以每月做資料夾命名
@@ -28,7 +29,8 @@ class CronService
                 $endd = date("Y-m-d 23:59:59");
 
             }
-            
+            $log["ST_Record"] = "C:/ST/Record/$month_dir/$today_st";
+            $log["ST_Record_exists"] = in_array($today_st, $alldir);
             // 如果有檔案才做接下來的動作
             if (in_array($today_st, $alldir)) {
 				
@@ -41,9 +43,14 @@ class CronService
 
                 // 暫存資料內容
                 $tmp_string = file_get_contents("C:/ST/Record/$month_dir/$today_st");
-
                 // 紀錄陣列,每185字串長度取一次
                 $record = str_split($tmp_string, 185);
+                // var_dump($record);exit();
+                $log["ST_Record_row"] = count($record);
+                $log["ST_Record_insert_success"] = 0;
+                $log["ST_Record_insert_fail"] = 0;
+                $log["ST_Record_insert_message"] = array();
+                $log["ST_Record_already_insert"] = 0;
 
                 $temp_point = 0;
                 foreach ($record as $key => $value) {
@@ -137,7 +144,7 @@ class CronService
                     //echo substr($value, $temp_point, 8)."|";
                     array_push($tmparr, trim(substr($value, $temp_point, 8)));
                     $temp_point = 0;
-
+                    
                     // 檢測
                     $tosave = true;
                     foreach ($record_exist as $key => $rex) {
@@ -146,6 +153,7 @@ class CronService
                             $rex->flashDate == $tmparr[7]
                         ) {
                             $tosave = false;
+                            $log["ST_Record_already_insert"] ++;
                         }
                     }
 					
@@ -179,18 +187,24 @@ class CronService
                         $post->Temperature = $tmparr[23];
                         $post->ClientNo = $tmparr[24];
                         $post->Preserve = $tmparr[25];
-                        $post->save();
+                        if($post->save()){
+                            $log["ST_Record_insert_success"] ++;
+                        }else{
+                            $log["ST_Record_insert_fail"] ++;
+                            array_push($log["ST_Record_insert_message"],json_encode($post->getErrors(),JSON_UNESCAPED_UNICODE));
+                        }
                         Yii::log(date("Y-m-d H:i:s").'====已寫入卡機刷卡紀錄====', CLogger::LEVEL_INFO);
                     }
 
                 }
-
             } else {
                 Yii::log(date("Y-m-d H:i:s").'====目前無資料====', CLogger::LEVEL_INFO);
             }
-
+            return $log;
         } catch (Exception $e) {
+            $log["Exception"] = $e->getMessage();
             Yii::log($e->getMessage(), CLogger::LEVEL_ERROR);
+            return $log;
         }
 
     }

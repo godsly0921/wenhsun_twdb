@@ -47,7 +47,7 @@
 
                             <?php CsrfProtector::genHiddenField(); ?>
                             <input type="hidden" id="id" name="id" value="<?=$data->id?>">
-
+                            <input type="hidden" id="document_department_hidden" name="document_department_hidden" value="<?=$data->document_department?>">
                             <div class="form-group">
                                 <label class="control-label col-md-3 col-sm-3 col-xs-12" for="receiver">受文者</label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
@@ -151,6 +151,8 @@
             if (r === true) {
                 var token = $("#_token").prop("value");
                 var id = $("#id").prop("value");
+                var document_department = $("#document_department_hidden").prop("value");
+
                 var request = $.ajax({
                     url: "<?=Yii::app()->createUrl('document/delete'); ?>",
                     method: "POST",
@@ -159,7 +161,7 @@
                 });
 
                 request.done(function(data) {
-                    location.href = "<?=Yii::app()->createUrl('document'); ?>";
+                    location.href = "<?=Yii::app()->createUrl('document/index?document_department='); ?>" + document_department;
                 });
 
                 request.fail(function(jqXHR, textStatus) {
