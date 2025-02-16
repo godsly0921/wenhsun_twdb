@@ -417,7 +417,7 @@ class PhotographService{
         $condition = " 1=1";
         $condition_param = [];
         if($search){
-            $condition .= " and s.id= :search_id or s.filming_name  like :search";
+            $condition .= " and s.single_id= :search_id or s.filming_name  like :search";
             $condition_param = [':search_id'=>$search, ':search'=>"%".$search."%"];
         }
         $model = Yii::app()->db->createCommand()
@@ -448,7 +448,7 @@ class PhotographService{
         $condition = " 1=1";
         $condition_param = [];
         if($search){
-            $condition .= " and s.id= :search_id or s.filming_name  like :search";
+            $condition .= " and s.single_id= :search_id or s.filming_name  like :search";
             $condition_param = [':search_id'=>$search, ':search'=>"%".$search."%"];
         }
         $result = Yii::app()->db->createCommand()
