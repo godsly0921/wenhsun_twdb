@@ -25,7 +25,7 @@
     <div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">
         <div class="tile-stats">
             <div class="icon"><i class="fa fa-sort-amount-desc"></i></div>
-            <div class="count"><?=count($all_operation_log)?></div>
+            <div class="count"><?= $count_operation_log?></div>
             <h3>系統操作</h3>
         </div>
     </div>
@@ -75,16 +75,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <?php foreach($all_operation_log as $key => $value){ ?>
-                        <tr class="gradeC" role="row">
-                            <td><?=$value['account_name']?></td>
-                            <td><?=$value['user_account']?></td>
-                            <td><?=$value['motion']?></td>
-                            <td><?=$value['log']?></td>
-                            <td><?=$value['status']==0?'失敗':'成功'?></td>
-                            <td><?=$value['time']?></td>  
-                       </tr>
-                    <?php } ?>
+
                     </tbody>
                 </table>
             </div>
@@ -196,11 +187,35 @@
         }
         $('#specialcaseTable').DataTable( {
             //"scrollX": true,
+            "processing": true,
+            "serverSide": true,  // 啟用 server-side 處理
             "lengthChange": false,
             "oLanguage": {
                 "oPaginate": {"sFirst": "第一頁", "sPrevious": "上一頁", "sNext": "下一頁", "sLast": "最後一頁"},
                 "sEmptyTable": "無任何聯繫資料"
-            }
+            },
+            "ajax": {
+                "url": "<?php echo Yii::app()->createUrl('report/ajaxOperationLog');?>",  // 你的資料來源 URL
+                "type": "POST",  // 或 POST
+                "data": function(d) {
+                    // 在發送請求時，可以向後端傳遞額外的參數
+                    // d 會包含 DataTables 的默認參數（如 page、length、search等）
+                    return {
+                        draw: d.draw,  // 用於頁碼控制
+                        start: d.start,  // 當前頁的起始索引
+                        length: d.length,  // 每頁的數量
+                        search: d.search.value  // 搜索條件
+                    };
+                }
+            },
+            "columns": [
+                { "data": "account_name" },
+                { "data": "user_account" },
+                { "data": "motion" },
+                { "data": "log" },
+                { "data": "status_text" },
+                { "data": "time" }
+            ]
         });
     })
 </script>

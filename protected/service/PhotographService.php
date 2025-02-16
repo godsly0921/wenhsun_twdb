@@ -413,5 +413,50 @@ class PhotographService{
             }  
         }
     }
+    public function findPhotographWithPageLimit($search, $limit, $page){
+        $condition = " 1=1";
+        $condition_param = [];
+        if($search){
+            $condition .= " and s.id= :search_id or s.filming_name  like :search";
+            $condition_param = [':search_id'=>$search, ':search'=>"%".$search."%"];
+        }
+        $model = Yii::app()->db->createCommand()
+        ->select("
+            s.*,
+            (
+                (
+                    select count(*) from image_queue 
+                    where s.single_id=single_id 
+                    and queue_status=1
+                )/(
+                    select count(*) from image_queue 
+                    where s.single_id=single_id
+                )
+            )*100 as percent
+        ")
+        ->from('single s ')
+        ->where($condition, $condition_param)
+        ->limit($limit, $page)
+        ->queryall();
+        if(count($model)!=0){
+            return $model;
+        }else{
+            return array();
+        }
+    }
+    public function countPhotograph($search){
+        $condition = " 1=1";
+        $condition_param = [];
+        if($search){
+            $condition .= " and s.id= :search_id or s.filming_name  like :search";
+            $condition_param = [':search_id'=>$search, ':search'=>"%".$search."%"];
+        }
+        $result = Yii::app()->db->createCommand()
+        ->select('count(*) as total')
+        ->from('single s')
+        ->where($condition, $condition_param)
+        ->queryAll();
+        return $result[0];
+    }
 }
 ?>

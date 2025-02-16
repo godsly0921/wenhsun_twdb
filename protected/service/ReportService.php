@@ -84,5 +84,36 @@ class ReportService
         $model = Product::model()->findByPk($id);
         return $model;
     }
-
+    public function GetOperationLogWithPageLimit($search, $limit, $page){
+        $condition = " 1=1";
+        $condition_param = [];
+        if($search){
+            $condition .= " and a.user_account like :search or a.account_name  like :search or o.motion  like :search or o.log  like :search";
+            $condition_param = [':search'=>"%".$search."%"];
+        }
+        $operation_log = Yii::app()->db->createCommand()
+        ->select('o.*,a.user_account,a.account_name,(CASE status WHEN 0 THEN "失敗" ELSE "成功" END) AS status_text')
+        ->from('operation_log o')
+        ->leftjoin('account a', 'o.account_id=a.id')
+        ->where($condition, $condition_param)
+        ->limit($limit, $page)
+        ->queryall();
+        return $operation_log;
+    }
+    public function countOperationLog($search){
+        $sql = "select count(*) as total from operation_log";
+        $condition = " 1=1";
+        $condition_param = [];
+        if($search){
+            $condition .= " and a.user_account like :search or a.account_name  like :search or o.motion  like :search or o.log  like :search";
+            $condition_param = [':search'=>"%".$search."%"];
+        }
+        $result = Yii::app()->db->createCommand()
+        ->select('count(*) as total')
+        ->from('operation_log o')
+        ->leftjoin('account a', 'o.account_id=a.id')
+        ->where($condition, $condition_param)
+        ->queryAll();
+        return $result[0];
+    }
 }

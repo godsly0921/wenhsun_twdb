@@ -7,43 +7,22 @@
     </div>
 </div>
 
-<div class="panel panel-default" style="width=100%; overflow-y:scroll;">
+<div class="panel panel-default" style="width:100%; overflow-y:scroll;">
     <div class="panel-body">
         <table id="specialcaseTable" width="100%" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid">
             <thead>
-            <tr role="row">
-                <th>圖檔編號</th>
-                <th>圖片名稱</th>
-                <th>著作權審核狀態</th>
-                <th>是否上架</th>
-                <th>切圖進度</th>
-                <th>建立時間</th>               
-                <th>操作</th>
-            </tr>
+                <tr role="row">
+                    <th>圖檔編號</th>
+                    <th>圖片名稱</th>
+                    <th>著作權審核狀態</th>
+                    <th>是否上架</th>
+                    <th>切圖進度</th>
+                    <th>建立時間</th>               
+                    <th>操作</th>
+                </tr>
             </thead>
-            <tbody> 
-            <?php foreach($photograph_data as $key => $value){ ?>
-                <tr class="" role="row">
-                    <td>
-                        <img src="<?php echo Yii::app()->createUrl('/'); ?>/image_storage/P/<?=$value['single_id']?>.jpg">
-                        <br>
-                        <center>圖片編號：<?=$value['single_id']?></center>
-                    </td>
-                    <td><?=$value['filming_name']?></td>
-                    <td><?=$value['copyright'] == 0 ?'不通過':'通過'?></td>
-                    <td><?=$value['publish'] == 0 ?'否':'是'?></td>
-                    <td><?=round($value['percent'],2)?> %</td>
-                    <td><?=$value['create_time']?></td>                    
-                    <td>
-                        <a class="oprate-right" href='<?php echo Yii::app()->createUrl('photograph/update/') ?>/<?=$value['single_id']?>'>
-                            <i class="fa fa-pencil-square-o fa-lg"></i>
-                        </a>
-                        <a
-                            class="oprate-right oprate-del" data-mem-id="<?= $value['single_id'] ?>" data-mem-name="<?= $value['single_id'] ?>"><i class="fa fa-times fa-lg"></i>
-                        </a>
-                    </td>
-               </tr>
-            <?php } ?>
+            <tbody>
+                
             </tbody>
         </table>
     </div>
@@ -53,14 +32,39 @@
 <script src="<?php echo Yii::app()->request->baseUrl;?>/assets/admin/ext/js/dataTables.bootstrap.min.js"></script>
 <script>
     $(document).ready(function() {
-        var table = $('#specialcaseTable').DataTable( {
+        $('#specialcaseTable').DataTable( {
+            "processing": true,
+            "serverSide": true,  // 啟用 server-side 處理
             "scrollX": true,
-            "stateSave" : true,
+            // "stateSave" : true,
             "lengthChange": false,
             "oLanguage": {
                 "oPaginate": {"sFirst": "第一頁", "sPrevious": "上一頁", "sNext": "下一頁", "sLast": "最後一頁"},
                 "sEmptyTable": "無任何聯繫資料"
             },
+            "ajax": {
+                "url": "<?php echo Yii::app()->createUrl('photograph/ajaxPhotographList');?>",  // 你的資料來源 URL
+                "type": "POST",  // 或 POST
+                "data": function(d) {
+                    // 在發送請求時，可以向後端傳遞額外的參數
+                    // d 會包含 DataTables 的默認參數（如 page、length、search等）
+                    return {
+                        draw: d.draw,  // 用於頁碼控制
+                        start: d.start,  // 當前頁的起始索引
+                        length: d.length,  // 每頁的數量
+                        search: d.search.value  // 搜索條件
+                    };
+                }
+            },
+            "columns": [
+                { "data": "img_base_info" },
+                { "data": "filming_name" },
+                { "data": "copyright" },
+                { "data": "publish" },
+                { "data": "percent" },
+                { "data": "create_time" },
+                { "data": "edit" }
+            ],
             "order": [[ 1, "desc" ]],
         } );
     } );

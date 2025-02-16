@@ -16,8 +16,37 @@ class ReportController extends Controller{
         $count_single = $reportService->countSingle();
         $count_single_publish = $reportService->countSinglePublish();
         $top_profile = $reportService->topProfile();
-        $all_operation_log = $reportService->AllOperationLog();
-        $this->render('system',array( 'count_eachday_upload'=>$count_eachday_upload, 'count_single_size'=>$count_single_size, 'count_single'=>$count_single, 'count_single_publish'=>$count_single_publish, 'top_profile'=>$top_profile, 'all_operation_log'=>$all_operation_log ));
+        $recordsTotal = $reportService->countOperationLog("");
+        // $all_operation_log = $reportService->AllOperationLog();
+        $this->render('system',array( 
+            'count_eachday_upload'=>$count_eachday_upload, 
+            'count_single_size'=>$count_single_size, 
+            'count_single'=>$count_single, 
+            'count_single_publish'=>$count_single_publish, 
+            'top_profile'=>$top_profile,
+            'count_operation_log' => $recordsTotal['total'] ? $recordsTotal['total'] :0
+        ));
+    }
+    public function ActionAjaxOperationLog(){
+        // 獲取 DataTable 發送的參數
+        $draw = $_POST['draw'];
+        $start = $_POST['start']; // 當前頁的起始記錄
+        $length = $_POST['length']; // 每頁顯示多少條數據
+        $search = $_POST['search'] ? $_POST['search'] : ""; // 搜索框中的搜尋條件
+        $reportService = new ReportService();
+        $all_operation_log = $reportService->GetOperationLogWithPageLimit($_POST['search'], $length, $start);
+        $recordsTotal = $reportService->countOperationLog($search);
+        // 返回 DataTable 所需的數據格式
+        $response = [
+            "draw" => $draw,
+            "recordsTotal" => (int)$recordsTotal['total'],
+            "recordsFiltered" => (int)$recordsTotal['total'],  // 可以根據過濾條件更改這裡
+            "data" => $all_operation_log
+        ];
+
+        echo json_encode($response);
+        // $post_data = $_POST;
+        // var_dump($post_data);
     }
 
     public function ActionOrder(){

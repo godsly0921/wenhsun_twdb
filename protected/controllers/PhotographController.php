@@ -136,10 +136,61 @@ class PhotographController extends Controller{
     public function Actionlist(){
         $photographService = new PhotographService();
         $photograph_data = array();
-        $photograph_data = $photographService->findAllPhotograph();
-        $this->render('list',['photograph_data'=>$photograph_data]);
+        // $photograph_data = $photographService->findAllPhotograph();
+        $data = [];
+        // if($photograph_data){
+        //     foreach ($photograph_data as $key => $value) {
+        //         $data[] = [
+        //             "img_base_info" => $value['single_id'],
+        //             "filming_name" => $value['filming_name'],
+        //             "copyright" => $value['copyright'] == 0 ? '不通過' : '通過',
+        //             "publish" => $value['publish'] == 0 ?'否':'是',
+        //             "percent" => round($value['percent'],2) . "%",
+        //             "create_time" => $value['create_time'],
+        //             "edit" => '<a class="oprate-right" href="'. Yii::app()->createUrl('photograph/update/') . '/' . $value['single_id'] . '"><i class="fa fa-pencil-square-o fa-lg"></i></a>',
+        //             "delete" => '<a class="oprate-right oprate-del" data-mem-id="' . $value['single_id'] . '" data-mem-name="' . $value['single_id'] .'"><i class="fa fa-times fa-lg"></i></a>',
+        //         ];
+        //     }
+        // }
+        $this->render('list',['data' => $data]);
     }
+    public function ActionAjaxPhotographList(){
+        // 獲取 DataTable 發送的參數
+        $draw = $_POST['draw'];
+        $start = $_POST['start']; // 當前頁的起始記錄
+        $length = $_POST['length']; // 每頁顯示多少條數據
+        $search = $_POST['search'] ? $_POST['search'] : ""; // 搜索框中的搜尋條件
+        $photographService = new PhotographService();
+        $photograph_data = array();
+        $photograph_data = $photographService->findPhotographWithPageLimit($_POST['search'], $length, $start);
+        $data = [];
+        if($photograph_data){
+            foreach ($photograph_data as $key => $value) {
+                $data[] = [
+                    "img_base_info" => '<img src="'. Yii::app()->createUrl('/') . '/image_storage/P/' . $value['single_id']. 'jpg"><br/><center>圖片編號：' . $value['single_id'] .'</center>',
+                    "filming_name" => $value['filming_name'],
+                    "copyright" => $value['copyright'] == 0 ? '不通過' : '通過',
+                    "publish" => $value['publish'] == 0 ?'否':'是',
+                    "percent" => round($value['percent'],2) . "%",
+                    "create_time" => $value['create_time'],
+                    "edit" => '
+                        <a class="oprate-right" href="'. Yii::app()->createUrl('photograph/update/') . '/' . $value['single_id'] . '"><i class="fa fa-pencil-square-o fa-lg"></i></a>
+                        <a class="oprate-right oprate-del" data-mem-id="' . $value['single_id'] . '" data-mem-name="' . $value['single_id'] .'"><i class="fa fa-times fa-lg"></i></a>
+                    '
+                ];
+            }
+        }
+        $recordsTotal = $photographService->countPhotograph($search);
+        // 返回 DataTable 所需的數據格式
+        $response = [
+            "draw" => $draw,
+            "recordsTotal" => (int)$recordsTotal['total'],
+            "recordsFiltered" => (int)$recordsTotal['total'],  // 可以根據過濾條件更改這裡
+            "data" => $data
+        ];
 
+        echo json_encode($response);
+    }
     public function ActionUpdateSingle(){
         $photographService = new PhotographService();      
         $single_data = array();
