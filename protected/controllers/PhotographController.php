@@ -167,7 +167,7 @@ class PhotographController extends Controller{
         if($photograph_data){
             foreach ($photograph_data as $key => $value) {
                 $data[] = [
-                    "img_base_info" => '<img src="'. Yii::app()->createUrl('/') . '/image_storage/P/' . $value['single_id']. 'jpg"><br/><center>圖片編號：' . $value['single_id'] .'</center>',
+                    "img_base_info" => '<img src="'. Yii::app()->createUrl('/') . '/image_storage/P/' . $value['single_id']. '.jpg"><br/><center>圖片編號：' . $value['single_id'] .'</center>',
                     "filming_name" => $value['filming_name'],
                     "copyright" => $value['copyright'] == 0 ? '不通過' : '通過',
                     "publish" => $value['publish'] == 0 ?'否':'是',
