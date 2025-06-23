@@ -2,7 +2,7 @@
 define ('_BEGIN_TIME',microtime(true));
 date_default_timezone_set('Asia/Taipei');
 
-require __DIR__ . '/vendor/autoload.php';
+require __DIR__ . '/protected/bootstrap.php';
 
 ini_set('mbstring.internal_encoding','UTF-8');
 //避免中文亂碼
@@ -75,4 +75,5 @@ define('CHECKROLE', array( 2,5,26,27,33,40,44,45 ));
 define('CHECKDEPARTMENT', array( '文訊','紀州庵' ));
 require_once("code.inc.php");
 require_once($yii);
+
 Yii::createWebApplication($config)->run();
