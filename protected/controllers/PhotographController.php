@@ -1,4 +1,9 @@
 <?php
+
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+
 class PhotographController extends Controller{
     // layout
     public $layout = "//layouts/back_end";
@@ -133,26 +138,12 @@ class PhotographController extends Controller{
         }
     }
 
-    public function Actionlist(){
-        $photographService = new PhotographService();
-        $photograph_data = array();
-        // $photograph_data = $photographService->findAllPhotograph();
-        $data = [];
-        // if($photograph_data){
-        //     foreach ($photograph_data as $key => $value) {
-        //         $data[] = [
-        //             "img_base_info" => $value['single_id'],
-        //             "filming_name" => $value['filming_name'],
-        //             "copyright" => $value['copyright'] == 0 ? '不通過' : '通過',
-        //             "publish" => $value['publish'] == 0 ?'否':'是',
-        //             "percent" => round($value['percent'],2) . "%",
-        //             "create_time" => $value['create_time'],
-        //             "edit" => '<a class="oprate-right" href="'. Yii::app()->createUrl('photograph/update/') . '/' . $value['single_id'] . '"><i class="fa fa-pencil-square-o fa-lg"></i></a>',
-        //             "delete" => '<a class="oprate-right oprate-del" data-mem-id="' . $value['single_id'] . '" data-mem-name="' . $value['single_id'] .'"><i class="fa fa-times fa-lg"></i></a>',
-        //         ];
-        //     }
-        // }
-        $this->render('list',['data' => $data]);
+    public function actionlist()
+    {
+        $this->render('list',[
+            'data' => [],
+            'categories' => $this->categories()
+        ]);
     }
     public function ActionAjaxPhotographList(){
         // 獲取 DataTable 發送的參數
@@ -279,5 +270,160 @@ class PhotographController extends Controller{
         }
         echo "已完成更新，共更新 " .$i . "筆";
     }
+
+    private function categories()
+    {
+        $result = [];
+
+        $criteria = new CDbCriteria();
+        $criteria->addCondition('isroot=1');
+        $criteria->addCondition('status=1');
+        $rootCategories = Category::model()->findAll($criteria);
+
+        foreach ($rootCategories as $rootCategory) {
+            foreach ($rootCategory->categories as $category) {
+                if ($category->status == 1) {
+                    $result[$category->category_id] = "{$rootCategory->name}_{$category->name}";
+                }
+            }
+        }
+        return $result;
+    }
+
+    public function actionPreview()
+    {
+        $input = $_POST;
+        $page = isset($input['page']) ? intval($input['page']) : 1;
+        $perPage = isset($input['per_page']) ? intval($input['per_page']) : 10;
+        $photos = $this->query($input, $page, $perPage);
+
+        header('Content-Type: application/json');
+        echo json_encode($photos, JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
+    }
+
+    public function actionExport()
+    {
+        $fields = $_GET['fields'];
+        $rows = [[
+            'url' => '圖片', 'id' => '圖庫編號', 'original_name' => '原始檔名', 'current_name' => '圖片名稱',
+            'category' => '圖片分類', 'persons' => '人物資訊', 'objects' => '物件名稱', 'event' => '事件名稱',
+            'location' => '拍攝地點',  'description' => '內容描述', 'date_taken' => '拍攝時間', 'status' => '保存狀況',
+            'source' => '入藏來源', 'index_limit' => '索引使用限制', 'original_limit' => '原件使用限制', 'photo_limit' => '影像使用限制',
+            'keyword' => '關鍵字', 'remark1' => '備註一', 'remark2' => '備註二'
+        ]];
+        $rows = array_merge($rows, $this->query($_GET));
+
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+        $scale = 0.2; // 縮放為原圖的 10%
+        foreach ($rows as $row => $values) {
+            $columnIndex = 65; // ASCII for 'A'
+            foreach ($values as $key => $value) {
+                if (!in_array($key, $fields)) continue;
+                $colLetter = chr($columnIndex++);
+                $coordinate = $colLetter . ($row + 1);
+                if (preg_match('/\.jpg$/i', $value) && file_exists(__DIR__ . '/../../' . $value)) {
+                    $imagePath = __DIR__ . '/../../' . $value;
+                    $imageSize = getimagesize($imagePath); // [width, height]
+
+                    if ($imageSize) {
+                        list($imgWidth, $imgHeight) = $imageSize;
+
+                        // 縮放尺寸
+                        $scaledWidth = $imgWidth * $scale;
+                        $scaledHeight = $imgHeight * $scale;
+
+                        // Excel 尺寸估算：欄寬 = px / 7.5、列高 = px * 0.75
+                        $columnWidth = $scaledWidth / 7.5;
+                        $rowHeight = $scaledHeight * 0.75;
+
+                        // 設定欄寬與列高（加一點 padding）
+                        $sheet->getColumnDimension($colLetter)->setWidth($columnWidth + 2);
+                        $sheet->getRowDimension($row + 1)->setRowHeight($rowHeight + 5);
+                    }
+
+                    $drawing = new Drawing();
+                    $drawing->setPath($imagePath);
+                    $drawing->setWidth($scaledWidth); // 縮放後的寬度
+                    $drawing->setOffsetX(5);
+                    $drawing->setOffsetY(5);
+                    $drawing->setCoordinates($coordinate);
+                    $drawing->setWorksheet($sheet);
+                } else {
+                    $sheet->setCellValue($coordinate, $value);
+                }
+            }
+        }
+
+        // 清除先前輸出
+        ob_end_clean(); // 有些情況需要避免亂碼或標頭錯誤
+
+        // 設定下載標頭
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment; filename="圖片匯出.xlsx"');
+        header('Cache-Control: max-age=0');
+
+        // 輸出到瀏覽器（不儲存）
+        $writer = new Xlsx($spreadsheet);
+        $writer->save('php://output');
+        exit;
+    }
+
+    private function query(array $input,  $page = null,  $perPage = 10)
+    {
+        $criteria = new CDbCriteria();
+        if (isset($input['category']) && !empty($input['category'])) {
+            $criteria->addCondition('category_id=' .$input['category']);
+        }
+        if ($page) {
+            $total = Single::model()->count($criteria);
+            $criteria->offset = ($page - 1) * $perPage;
+            $criteria->limit = $perPage;
+            $rows = Single::model()->findAll($criteria);
+            $rows = $this->transform($rows);
+            return [
+                'current_page' => $page,
+                'last_page' => ceil($total / 10),
+                'total_rows' =>  $total,
+                'per_page' => $perPage,
+                'data' => $rows
+            ];
+        }
+
+        return $this->transform(Single::model()->findAll($criteria));
+    }
+
+    private function transform(array $rows)
+    {
+        $result = [];
+
+        foreach ($rows as $row) {
+            $result[] = [
+                'url' => Yii::app()->createUrl("image_storage/S/{$row->single_id}.jpg"),
+                'id' => $row->single_id,
+                'original_name' => $row->photo_name,
+                'current_name' => $row->filming_name,
+                'category' => $row->present()->category,
+                'persons' => $row->people_info,
+                'objects'  => $row->object_name,
+                'event' => $row->event_name,
+                'location' => $row->filming_location,
+                'description' => $row->description,
+                'date_taken' => $row->present()->date_taken,
+                'status' => $row->present()->status,
+                'source' => $row->photo_source,
+                'index_limit' => $row->present()->index_limit,
+                'original_limit' => $row->present()->original_limit,
+                'photo_limit' => $row->present()->photo_limit,
+                'keyword' => $row->keyword,
+                'remark1' => $row->memo1,
+                'remark2' => $row->memo2
+            ];
+        }
+
+        return $result;
+    }
+
+
 }
 ?>

@@ -51,6 +51,17 @@ class Category extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
+            'parent' => array(
+                self::BELONGS_TO,
+                self::class,
+                'parents'
+            ),
+            'categories' => array(
+                self::HAS_MANY,
+                self::class,
+                'parents',
+                'order' => 'categories.sort ASC'
+            )
 		);
 	}
 

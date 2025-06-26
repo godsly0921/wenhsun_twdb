@@ -80,6 +80,10 @@ class ComposerStaticInite45597f2f6a7d3af6047475575265b4d
     );
 
     public static $prefixLengthsPsr4 = array (
+        't' => 
+        array (
+            'twdb\\' => 5,
+        ),
         'p' => 
         array (
             'phpseclib3\\' => 11,
@@ -147,15 +151,19 @@ class ComposerStaticInite45597f2f6a7d3af6047475575265b4d
     );
 
     public static $prefixDirsPsr4 = array (
+        'twdb\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/protected',
+        ),
         'phpseclib3\\' => 
         array (
             0 => __DIR__ . '/..' . '/phpseclib/phpseclib/phpseclib',
         ),
         'phpDocumentor\\Reflection\\' => 
         array (
-            0 => __DIR__ . '/..' . '/phpdocumentor/reflection-docblock/src',
-            1 => __DIR__ . '/..' . '/phpdocumentor/type-resolver/src',
-            2 => __DIR__ . '/..' . '/phpdocumentor/reflection-common/src',
+            0 => __DIR__ . '/..' . '/phpdocumentor/reflection-common/src',
+            1 => __DIR__ . '/..' . '/phpdocumentor/reflection-docblock/src',
+            2 => __DIR__ . '/..' . '/phpdocumentor/type-resolver/src',
         ),
         'Wenhsun\\' => 
         array (

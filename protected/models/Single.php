@@ -1,5 +1,7 @@
 <?php
 
+use twdb\presenters\SinglePresenter;
+
 /**
  * This is the model class for table "single".
  *
@@ -35,7 +37,12 @@
  */
 class Single extends CActiveRecord
 {
-	/**
+    /**
+     * @var SinglePresenter
+     */
+    private $presenter;
+
+    /**
 	 * @return string the associated database table name
 	 */
 	public function tableName()
@@ -73,6 +80,7 @@ class Single extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
+            'category' => [self::BELONGS_TO, Category::class, 'category_id']
 		);
 	}
 
@@ -175,4 +183,13 @@ class Single extends CActiveRecord
 	{
 		return parent::model($className);
 	}
+
+    public function present()
+    {
+        if (!$this->presenter) {
+            $this->presenter = new SinglePresenter($this);
+        }
+
+        return $this->presenter;
+    }
 }
