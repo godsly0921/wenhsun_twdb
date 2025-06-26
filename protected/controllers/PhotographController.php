@@ -303,6 +303,8 @@ class PhotographController extends Controller{
 
     public function actionExport()
     {
+        ini_set('memory_limit', -1);
+        ini_set('max_execution_time', 0);
         $fields = $_GET['fields'];
         $rows = [[
             'url' => '圖片', 'id' => '圖庫編號', 'original_name' => '原始檔名', 'current_name' => '圖片名稱',
