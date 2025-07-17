@@ -305,13 +305,13 @@ class PhotographController extends Controller{
     {
         ini_set('memory_limit', -1);
         ini_set('max_execution_time', 0);
-        $fields = $_GET['fields'];
+        $fields = array_merge($_GET['fields'], ['create_time']);
         $rows = [[
             'url' => '圖片', 'id' => '圖庫編號', 'original_name' => '原始檔名', 'current_name' => '圖片名稱',
             'category' => '圖片分類', 'persons' => '人物資訊', 'objects' => '物件名稱', 'event' => '事件名稱',
             'location' => '拍攝地點',  'description' => '內容描述', 'date_taken' => '拍攝時間', 'status' => '保存狀況',
             'source' => '入藏來源', 'index_limit' => '索引使用限制', 'original_limit' => '原件使用限制', 'photo_limit' => '影像使用限制',
-            'keyword' => '關鍵字', 'remark1' => '備註一', 'remark2' => '備註二'
+            'keyword' => '關鍵字', 'remark1' => '備註一', 'remark2' => '備註二', 'create_time' => '上傳時間'
         ]];
         $rows = array_merge($rows, $this->query($_GET));
 
@@ -419,7 +419,8 @@ class PhotographController extends Controller{
                 'photo_limit' => $row->present()->photo_limit,
                 'keyword' => $row->keyword,
                 'remark1' => $row->memo1,
-                'remark2' => $row->memo2
+                'remark2' => $row->memo2,
+                'create_time' => $row->create_time
             ];
         }
 
