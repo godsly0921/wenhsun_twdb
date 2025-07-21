@@ -1,3 +1,4 @@
+<link href="<?php echo Yii::app()->request->baseUrl; ?>/assets/gentelella/vendors/switchery/dist/switchery.min.css" rel="stylesheet">
 <style>
     .preview-table {
         margin-top: 20px;
@@ -25,6 +26,7 @@
             <a href="<?php echo Yii::app()->createUrl('photograph/new'); ?>" class="btn btn-success btn-right">圖片上傳</a>
        <!-- --><?php /*endif;*/?>
         <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#exportModal">匯出</a>
+        <button class="btn btn-info" data-toggle="modal" data-target="#batchUpdateModal" disabled id="batchUpdateBtn">批次更新</button>
     </div>
 </div>
 
@@ -33,6 +35,7 @@
         <table id="specialcaseTable" width="100%" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid">
             <thead>
                 <tr role="row">
+                    <th><input type="checkbox" id="chkAll" /></th>
                     <th>圖檔編號</th>
                     <th>圖片名稱</th>
                     <th>著作權審核狀態</th>
@@ -51,9 +54,28 @@
 
 <script src="<?php echo Yii::app()->request->baseUrl;?>/assets/admin/ext/js/jquery.dataTables.min.js"></script>
 <script src="<?php echo Yii::app()->request->baseUrl;?>/assets/admin/ext/js/dataTables.bootstrap.min.js"></script>
+<script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/gentelella/vendors/jquery.tagsinput/src/jquery.tagsinput.js"></script>
+<script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/gentelella/vendors/switchery/dist/switchery.min.js"></script>
 <script>
+    var selectedIds = new Set();
+    var table = null;
+
+    function syncHeaderCheckbox() {
+        var rows = table.rows({ page: 'current' }).data().toArray();
+        var allChecked = rows.length === 0 ? false : rows.every(function(r){
+            return selectedIds.has(String(r.id));
+        });
+        $('#chkAll').prop('checked', allChecked);
+    }
+
+    function updateBatchButtonState() {
+        var count = selectedIds.size;
+        if (count > 0) $('#batchUpdateBtn').removeAttr('disabled');
+        else $('#batchUpdateBtn').attr('disabled', true);
+    }
+
     $(document).ready(function() {
-        $('#specialcaseTable').DataTable( {
+        table = $('#specialcaseTable').DataTable( {
             "processing": true,
             "serverSide": true,  // 啟用 server-side 處理
             "scrollX": true,
@@ -77,7 +99,17 @@
                     };
                 }
             },
+            rowId: 'id',
             "columns": [
+                {
+                    data: null,
+                    orderable: false,
+                    searchable: false,
+                    render: function (data, type, row, meta) {
+                        var isChecked = selectedIds.has(row.id) ? 'checked' : '';
+                        return `<input type="checkbox" class="row-check" value="${row.id}" ${isChecked} />`;
+                    }
+                },
                 { "data": "img_base_info" },
                 { "data": "filming_name" },
                 { "data": "copyright" },
@@ -86,8 +118,106 @@
                 { "data": "create_time" },
                 { "data": "edit" }
             ],
-            "order": [[ 1, "desc" ]],
+            "order": [[ 2, "desc" ]],
+            drawCallback: function (settings) {
+                syncHeaderCheckbox();
+                updateBatchButtonState();
+            }
         } );
+
+        $('#specialcaseTable').on('change', 'input.row-check', function() {
+            var id = String(this.value);
+            if (this.checked) {
+                selectedIds.add(id);
+            } else {
+                selectedIds.delete(id);
+                // 取消本頁全選
+                $('#chkAll').prop('checked', false);
+            }
+
+            updateBatchButtonState();
+        });
+
+        $('#chkAll').on('change', function() {
+            var checked = this.checked;
+
+            // 只影響當前頁面的行
+            var rows = table.rows({ page: 'current' }).nodes();
+            $('input.row-check', rows).each(function() {
+                $(this).prop('checked', checked).trigger('change'); // 觸發上面事件維護 selectedIds
+            });
+        });
+
+        $('#batchUpdateBtn').on('click', function() {
+            var ids = Array.from(selectedIds);
+            if (!ids.length) {
+                alert('請先勾選至少一筆資料');
+                return;
+            }
+
+            // 顯示勾選數量
+            $('#batchUpdateCount').text(ids.length);
+
+            // 將 ID 存進 hidden input（後端可拆）
+            // 可用逗號，或 JSON。以下用逗號：
+            $('#batchUpdateIds').val(ids.join(','));
+        });
+
+        $('#batchUpdateForm').on('submit', function(e) {
+            e.preventDefault();
+
+            var idsStr = $('#batchUpdateIds').val();
+            var ids = idsStr ? idsStr.split(',') : [];
+
+            if (!ids.length) {
+                alert('沒有要更新的資料。');
+                return;
+            }
+
+            // 組 payload：僅加入已啟用的欄位
+            var payload = {
+                ids: ids,
+                category_id: $('#category_id').val(),
+                publish: $('#publish').prop('checked') ? 1 : 0,
+                keyword: $('#keyword').val(),
+                description: $('#description').val()
+            };
+
+
+            $('#batchUpdateWorking').show();
+
+            $.ajax({
+                url: "<?php echo Yii::app()->createUrl('photograph/batchUpdate');?>",
+                type: "POST",
+                data: payload,
+                dataType: "json"
+            }).done(function(resp){
+                $('#batchUpdateWorking').hide();
+
+                if (resp && resp.success) {
+                    alert('批次更新完成 (' + resp.updated + ' 筆)。');
+                    $('#batchUpdateModal').modal('hide');
+
+                    // 更新表格但停留在原頁
+                    table.ajax.reload(null, false);
+
+                    // 若後端更新後這些資料狀態已套用，可以選擇保留勾選或清空
+                    selectedIds.clear();
+                    updateBatchButtonState();
+                    syncHeaderCheckbox();
+                } else {
+                    alert('批次更新失敗：' + (resp && resp.message ? resp.message : '未知錯誤'));
+                }
+            }).fail(function(xhr){
+                $('#batchUpdateWorking').hide();
+                alert('批次更新發生錯誤（' + xhr.status + '）。');
+            });
+        });
+
+        $('#keyword').tagsInput({
+            width: 'auto'
+        });
+
     } );
 </script>
 <script>
@@ -207,6 +337,78 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="batchUpdateModal" tabindex="-1" role="dialog" aria-labelledby="batchUpdateModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+
+            <form id="batchUpdateForm" class="form-horizontal">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title" id="batchUpdateModalLabel">批次更新 (<span id="batchUpdateCount">0</span> 筆)</h4>
+                </div>
+
+                <div class="modal-body">
+                    <!-- 隱藏：要更新的多筆 ID (JSON or comma) -->
+                    <input type="hidden" name="ids" id="batchUpdateIds">
+
+                    <!-- 選擇要不要更新 publish -->
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label">
+                            圖片分類
+                        </label>
+                        <div class="col-sm-8">
+                            <select id="category_id" name="category_id[]" class="form-control" required multiple>
+                                <?php foreach ($categories as $id => $name) { ?>
+                                <option value="<?= $id?>"><?= $name?></option>
+                                <?php } ?>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- 選擇要不要更新 percent -->
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label">
+                            上架
+                        </label>
+                        <div class="col-sm-8">
+                            <input type="checkbox" name="publish" id="publish" class="js-switch" value="1" checked />
+                        </div>
+                    </div>
+
+                    <!-- 選擇要不要更新 percent -->
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label">
+                            關鍵字
+                        </label>
+                        <div class="col-sm-8">
+                            <input type="text" name="keyword" id="keyword" class="form-control" />
+                        </div>
+                    </div>
+
+                    <!-- 選擇要不要更新 percent -->
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label">
+                            描述
+                        </label>
+                        <div class="col-sm-8">
+                            <textarea name="description" id="description" class="form-control"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <span id="batchUpdateWorking" class="pull-left text-muted" style="display:none;">處理中...</span>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="submit" class="btn btn-primary">套用更新</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+
 
 <!-- Loading 遮罩 -->
 <div id="loadingOverlay" style="

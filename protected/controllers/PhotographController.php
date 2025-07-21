@@ -167,7 +167,8 @@ class PhotographController extends Controller{
                     "edit" => '
                         <a class="oprate-right" href="'. Yii::app()->createUrl('photograph/update/') . '/' . $value['single_id'] . '"><i class="fa fa-pencil-square-o fa-lg"></i></a>
                         <a class="oprate-right oprate-del" data-mem-id="' . $value['single_id'] . '" data-mem-name="' . $value['single_id'] .'"><i class="fa fa-times fa-lg"></i></a>
-                    '
+                    ',
+                    "id" => $value['single_id']
                 ];
             }
         }
@@ -427,6 +428,44 @@ class PhotographController extends Controller{
         return $result;
     }
 
+    public function actionBatchUpdate()
+    {
+        $input = $this->validateInputForBatchUpdate();
 
+        $photographService = new PhotographService();
+        $updated = 0;
+        foreach ($input['ids'] as $id) {
+            $updateResult = $photographService->updateSingle($id, $input);
+            if ($updateResult['status'] === true) $updated++;
+        }
+
+        echo CJSON::encode(['success' => true, 'message' => '批次更新成功', 'updated' => $updated]);
+        Yii::app()->end();
+    }
+
+    private function validateInputForBatchUpdate()
+    {
+        $input = [
+            'ids' => Yii::app()->request->getPost('ids', []),
+            'category_id' => Yii::app()->request->getPost('category_id'),
+            'publish' => Yii::app()->request->getPost('publish'),
+            'keywords' => Yii::app()->request->getPost('keywords'),
+            'description' => Yii::app()->request->getPost('description')
+        ];
+        if (count($input['ids']) === 0) {
+            echo CJSON::encode(['success' => false, 'message' => 'No IDs.']);
+            Yii::app()->end();
+        } elseif (count($input['category_id']) === 0) {
+            echo CJSON::encode(['success' => false, 'message' => 'No category.']);
+            Yii::app()->end();
+        } elseif (!preg_match('/^(0|1)$/', $input['publish'])) {
+            echo CJSON::encode(['success' => false, 'message' => 'Invalid publish.']);
+            Yii::app()->end();
+        }
+
+        $input['category_id'] = implode(',', $input['category_id']);
+
+        return $input;
+    }
 }
 ?>
