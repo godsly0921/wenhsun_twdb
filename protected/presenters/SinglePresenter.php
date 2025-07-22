@@ -5,6 +5,10 @@ namespace twdb\presenters;
 class SinglePresenter
 {
     /**
+     * @var \CActiveRecord|\CActiveRecord[]|null
+     */
+    private static $categories;
+    /**
      * @var \Single
      */
     private $entity;
@@ -63,14 +67,20 @@ class SinglePresenter
 
     public function category()
     {
-        $category = $this->entity->category;
-        if (!$category) {
-            return null;
-        } elseif ($category->parent) {
-            return "{$category->parent->name}_{$category->name}";
+        $categoryIds = explode(',', $this->entity->category_id);
+        $categoryNames = [];
+        foreach ($categoryIds as $categoryId) {
+            $category = $this->getCategory($categoryId);
+            if (!$category) {
+                continue;
+            } elseif ($category->parent) {
+                $categoryNames[] = "{$category->parent->name}_{$category->name}";
+            } else {
+                $categoryNames[] = $category->name;
+            }
         }
 
-        return $category->name;
+        return implode('、', $categoryNames);
     }
 
     public function date_taken()
@@ -94,5 +104,18 @@ class SinglePresenter
         }
 
         return $this->entity->{$name};
+    }
+
+    private function getCategory($categoryId)
+    {
+        if (!self::$categories) {
+            $categories = \Category::model()->with('parent')->findAll();
+            self::$categories = [];
+            foreach ($categories as $category) {
+                self::$categories[$category->category_id] = $category;
+            }
+        }
+
+        return self::$categories[$categoryId];
     }
 }

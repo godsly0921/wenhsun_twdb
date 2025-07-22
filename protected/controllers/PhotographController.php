@@ -378,7 +378,8 @@ class PhotographController extends Controller{
     {
         $criteria = new CDbCriteria();
         if (isset($input['category']) && !empty($input['category'])) {
-            $criteria->addCondition('category_id=' .$input['category']);
+            $criteria->addCondition("FIND_IN_SET(:catId, category_id)");
+            $criteria->params[':catId'] = $input['category'];
         }
         if ($page) {
             $total = Single::model()->count($criteria);
