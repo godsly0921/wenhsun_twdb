@@ -25,8 +25,12 @@
        <!-- --><?php /*if ($canCreate === true): */?>
             <a href="<?php echo Yii::app()->createUrl('photograph/new'); ?>" class="btn btn-success btn-right">圖片上傳</a>
        <!-- --><?php /*endif;*/?>
+        <?php if ($canExport) { ?>
         <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#exportModal">匯出</a>
+        <?php } ?>
+        <?php if ($canBatchUpdate) { ?>
         <button class="btn btn-info" data-toggle="modal" data-target="#batchUpdateModal" disabled id="batchUpdateBtn">批次更新</button>
+        <?php } ?>
     </div>
 </div>
 

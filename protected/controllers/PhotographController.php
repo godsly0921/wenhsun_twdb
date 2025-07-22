@@ -142,7 +142,9 @@ class PhotographController extends Controller{
     {
         $this->render('list',[
             'data' => [],
-            'categories' => $this->categories()
+            'categories' => $this->categories(),
+            'canExport' => $this->canExport(),
+            'canBatchUpdate' => $this->canBatchUpdate()
         ]);
     }
     public function ActionAjaxPhotographList(){
@@ -467,5 +469,30 @@ class PhotographController extends Controller{
 
         return $input;
     }
+
+    private function canExport()
+    {
+        return $this->can('photograph/export');
+    }
+
+    private function can(string $controller)
+    {
+        $rules = json_decode(Yii::app()->session['power_session_jsons'], true);
+
+        foreach ($rules as $rule) {
+            if ($rule['power_controller'] === $controller) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private function canBatchUpdate()
+    {
+        return $this->can('photograph/batchUpdate');
+    }
+
+
 }
 ?>
