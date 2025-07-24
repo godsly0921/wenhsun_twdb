@@ -168,29 +168,46 @@ class PhotographService{
     }
 
     public function updateSingle ( $single_id, $input ){
-        $mongo = new Mongo();  
+
         $operationlogService = new OperationlogService();
-    	$single = Single::model()->findByPk($single_id);;
-    	foreach ($input as $key => $value) {
-    		$single->$key = $value;
-    	}
-    	if($single->save()){
-            $update_find = array('single_id'=>$single_id);
-            // $input['author'] = explode(',', $single->author);
-            $input['keyword'] = explode(',', $single->keyword);
-            $input['category_id'] = explode(',', $single->category_id);
-            $update_input = array('$set' => $input);
-            $mongo->update_record('wenhsun', 'single', $update_find, $update_input);
-            $motion = "更新圖資";
-            $log = "更新 single_id = " . $single_id . " 圖資";
-            $operationlogService->create_operationlog( $motion, $log );
-    		return array('status'=>true,'data'=>$single);
-    	}else{
+    	$single = Single::model()->findByPk($single_id);
+        if (!$single) {
             $motion = "更新圖資";
             $log = "更新 single_id = " . $single_id . " 圖資";
             $operationlogService->create_operationlog( $motion, $log, 0 );
-    		return array('status'=>false,'data'=>$single);
+            return array('status'=>false,'data'=>$single);
+        }
+
+        //$mongo = new Mongo();
+        $keys = array_keys($single->attributes);
+        $dirty = [];
+        $motion = "更新圖資";
+        $log = "更新 single_id = " . $single_id . " 圖資";
+    	foreach ($input as $key => $value) {
+            if (in_array($key, $keys) && $single->$key != $value) {
+                $log .= "<br/> - {$key}: {$single->$key} => {$value}";
+                $single->$key = $value;
+                $dirty[$key] = $value;
+            }
     	}
+        if (count($dirty) === 0) {
+            $motion = "更新圖資";
+            $log = "更新 single_id = " . $single_id . " 圖資";
+            $operationlogService->create_operationlog( $motion, $log, 0 );
+            return array('status'=>false,'data'=>$single);
+        }
+
+        $single->save();
+        if (isset($dirty['category_id'])) {
+            $dirty['category_id'] = explode(',', $dirty['category_id']);
+        }
+        if (isset($dirty['keyword'])) {
+            $dirty['keyword'] = explode(',', $dirty['keyword']);
+        }
+        (new Mongo)->update_record('wenhsun', 'single', ['single_id' => $single], ['$set' => $dirty]);
+
+        $operationlogService->create_operationlog( $motion, $log );
+        return array('status'=>true,'data'=>$single);
     }
 
     public function updateAllSingle ( $single_id, $input ){

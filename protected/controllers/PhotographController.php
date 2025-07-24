@@ -142,7 +142,9 @@ class PhotographController extends Controller{
     {
         $this->render('list',[
             'data' => [],
-            'categories' => $this->categories()
+            'categories' => $this->categories(),
+            'canExport' => $this->canExport(),
+            'canBatchUpdate' => $this->canBatchUpdate()
         ]);
     }
     public function ActionAjaxPhotographList(){
@@ -167,7 +169,8 @@ class PhotographController extends Controller{
                     "edit" => '
                         <a class="oprate-right" href="'. Yii::app()->createUrl('photograph/update/') . '/' . $value['single_id'] . '"><i class="fa fa-pencil-square-o fa-lg"></i></a>
                         <a class="oprate-right oprate-del" data-mem-id="' . $value['single_id'] . '" data-mem-name="' . $value['single_id'] .'"><i class="fa fa-times fa-lg"></i></a>
-                    '
+                    ',
+                    "id" => $value['single_id']
                 ];
             }
         }
@@ -305,13 +308,13 @@ class PhotographController extends Controller{
     {
         ini_set('memory_limit', -1);
         ini_set('max_execution_time', 0);
-        $fields = $_GET['fields'];
+        $fields = array_merge($_GET['fields'], ['create_time']);
         $rows = [[
             'url' => '圖片', 'id' => '圖庫編號', 'original_name' => '原始檔名', 'current_name' => '圖片名稱',
             'category' => '圖片分類', 'persons' => '人物資訊', 'objects' => '物件名稱', 'event' => '事件名稱',
             'location' => '拍攝地點',  'description' => '內容描述', 'date_taken' => '拍攝時間', 'status' => '保存狀況',
             'source' => '入藏來源', 'index_limit' => '索引使用限制', 'original_limit' => '原件使用限制', 'photo_limit' => '影像使用限制',
-            'keyword' => '關鍵字', 'remark1' => '備註一', 'remark2' => '備註二'
+            'keyword' => '關鍵字', 'remark1' => '備註一', 'remark2' => '備註二', 'create_time' => '上傳時間'
         ]];
         $rows = array_merge($rows, $this->query($_GET));
 
@@ -375,7 +378,8 @@ class PhotographController extends Controller{
     {
         $criteria = new CDbCriteria();
         if (isset($input['category']) && !empty($input['category'])) {
-            $criteria->addCondition('category_id=' .$input['category']);
+            $criteria->addCondition("FIND_IN_SET(:catId, category_id)");
+            $criteria->params[':catId'] = $input['category'];
         }
         if ($page) {
             $total = Single::model()->count($criteria);
@@ -419,11 +423,75 @@ class PhotographController extends Controller{
                 'photo_limit' => $row->present()->photo_limit,
                 'keyword' => $row->keyword,
                 'remark1' => $row->memo1,
-                'remark2' => $row->memo2
+                'remark2' => $row->memo2,
+                'create_time' => $row->create_time
             ];
         }
 
         return $result;
+    }
+
+    public function actionBatchUpdate()
+    {
+        $input = $this->validateInputForBatchUpdate();
+
+        $photographService = new PhotographService();
+        $updated = 0;
+        foreach ($input['ids'] as $id) {
+            $updateResult = $photographService->updateSingle($id, $input);
+            if ($updateResult['status'] === true) $updated++;
+        }
+
+        echo CJSON::encode(['success' => true, 'message' => '批次更新成功', 'updated' => $updated]);
+        Yii::app()->end();
+    }
+
+    private function validateInputForBatchUpdate()
+    {
+        $input = [
+            'ids' => Yii::app()->request->getPost('ids', []),
+            'category_id' => Yii::app()->request->getPost('category_id'),
+            'publish' => Yii::app()->request->getPost('publish'),
+            'keywords' => Yii::app()->request->getPost('keywords'),
+            'description' => Yii::app()->request->getPost('description')
+        ];
+        if (count($input['ids']) === 0) {
+            echo CJSON::encode(['success' => false, 'message' => 'No IDs.']);
+            Yii::app()->end();
+        } elseif (count($input['category_id']) === 0) {
+            echo CJSON::encode(['success' => false, 'message' => 'No category.']);
+            Yii::app()->end();
+        } elseif (!preg_match('/^(0|1)$/', $input['publish'])) {
+            echo CJSON::encode(['success' => false, 'message' => 'Invalid publish.']);
+            Yii::app()->end();
+        }
+
+        $input['category_id'] = implode(',', $input['category_id']);
+
+        return $input;
+    }
+
+    private function canExport()
+    {
+        return $this->can('photograph/export');
+    }
+
+    private function can(string $controller)
+    {
+        $rules = json_decode(Yii::app()->session['power_session_jsons'], true);
+
+        foreach ($rules as $rule) {
+            if ($rule['power_controller'] === $controller) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private function canBatchUpdate()
+    {
+        return $this->can('photograph/batchUpdate');
     }
 
 
