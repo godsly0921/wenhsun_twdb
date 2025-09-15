@@ -34,6 +34,12 @@ class PhotographController extends Controller{
             $transaction = Yii::app()->db->beginTransaction();
             try {
 //                $exist_filename = $photographService->existPhotoNameExist($fileName); // 查詢此張圖片是否有上傳過，用原始檔名判斷
+                if (!preg_match('/\.(jpg|jpeg|gif|png|bmp)$/i', $fileName)) {
+                    throw new RuntimeException('上傳檔案格式必須是jpg/jpeg/gif/png/bmp。');
+                } elseif ($fileName === 0) {
+                    throw new RuntimeException('檔案大小為0');
+                }
+
                 $exist_filename = false;
                 if (!$exist_filename) {
                     $single_data['photo_name'] = $fileName;
@@ -96,7 +102,7 @@ class PhotographController extends Controller{
                     'fileName' => '',
                     'fileSize' => '',
                     'status' => false,
-                    'errorMsg' => 'unknown failed'
+                    'errorMsg' => $e->getMessage()
                 );
                 $time = microtime(true) - $time_start;
                 $return_data['runtime'] = $time;
