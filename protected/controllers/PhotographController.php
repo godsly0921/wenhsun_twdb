@@ -33,8 +33,9 @@ class PhotographController extends Controller{
             $fileSize = $_FILES['file']['size']; //上傳檔案的檔案大小
             $transaction = Yii::app()->db->beginTransaction();
             try {
-                $exist_filename = $photographService->existPhotoNameExist($fileName); // 查詢此張圖片是否有上傳過，用原始檔名判斷
-                if(!$exist_filename){
+//                $exist_filename = $photographService->existPhotoNameExist($fileName); // 查詢此張圖片是否有上傳過，用原始檔名判斷
+                $exist_filename = false;
+                if (!$exist_filename) {
                     $single_data['photo_name'] = $fileName;
                     $ext = explode('.', $fileName);
                     $ext = strtolower(end($ext));
