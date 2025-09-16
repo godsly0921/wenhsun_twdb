@@ -167,7 +167,8 @@ class PhotographService{
         }
     }
 
-    public function updateSingle ( $single_id, $input ){
+    public function updateSingle ( $single_id, $input )
+    {
 
         $operationlogService = new OperationlogService();
     	$single = Single::model()->findByPk($single_id);
@@ -180,31 +181,24 @@ class PhotographService{
 
         //$mongo = new Mongo();
         $keys = array_keys($single->attributes);
-        $dirty = [];
+        $update = [];
         $motion = "更新圖資";
         $log = "更新 single_id = " . $single_id . " 圖資";
     	foreach ($input as $key => $value) {
-            if (in_array($key, $keys) && $single->$key != $value) {
+            if (in_array($key, $keys)) {
                 $log .= "<br/> - {$key}: {$single->$key} => {$value}";
                 $single->$key = $value;
-                $dirty[$key] = $value;
+                $update[$key] = $value;
             }
     	}
-        if (count($dirty) === 0) {
-            $motion = "更新圖資";
-            $log = "更新 single_id = " . $single_id . " 圖資";
-            $operationlogService->create_operationlog( $motion, $log, 0 );
-            return array('status'=>false,'data'=>$single);
-        }
-
         $single->save();
-        if (isset($dirty['category_id'])) {
-            $dirty['category_id'] = explode(',', $dirty['category_id']);
+        if (isset($update['category_id'])) {
+            $update['category_id'] = explode(',', $update['category_id']);
         }
-        if (isset($dirty['keyword'])) {
-            $dirty['keyword'] = explode(',', $dirty['keyword']);
+        if (isset($update['keyword'])) {
+            $update['keyword'] = explode(',', $update['keyword']);
         }
-        (new Mongo)->update_record('wenhsun', 'single', ['single_id' => $single], ['$set' => $dirty]);
+        (new Mongo)->update_record('wenhsun', 'single', ['single_id' => $single->single_id], ['$set' => $update]);
 
         $operationlogService->create_operationlog( $motion, $log );
         return array('status'=>true,'data'=>$single);
