@@ -1159,5 +1159,10 @@ class SiteController extends CController{
             }
         }
     }
+
+    public function actionCopyright()
+    {
+        $this->render('copyright');
+    }
 }
 ?>
