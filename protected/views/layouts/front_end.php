@@ -82,15 +82,7 @@
             <p>本計畫受文化部推動國家文化記憶庫計畫補助</p>
           </div>
           <div class="col-lg-3">
-            <div class="row">
-              <div class="col-lg-4">
-                <a href="<?= Yii::app()->createUrl('site/privacy'); ?>">隱私條款</a>
-              </div>
-              <div class="col-lg-4">合作洽談</div>
-              <div class="col-lg-4">
-                <a href="<?= Yii::app()->createUrl('site/member_rule'); ?>">服務條款</a>
-              </div>
-            </div>
+              <a href="/site/copyright">著作權聲明</a>
           </div>
           <div class="col-lg-5 footer_right">
             <div class="row">
