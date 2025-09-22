@@ -19,7 +19,8 @@ class PhotographController extends Controller{
         $category_data = $category_service->findCategoryMate();
         $this->render('new',array('category_data'=>$category_data));
     }
-    public function ActionBatUploadFile(){
+    public function ActionBatUploadFile()
+    {
         // 如果檔案不為空，則上傳
         $time_start = microtime(true);
         if (!empty($_FILES['file'])) { 
@@ -34,8 +35,8 @@ class PhotographController extends Controller{
             $transaction = Yii::app()->db->beginTransaction();
             try {
 //                $exist_filename = $photographService->existPhotoNameExist($fileName); // 查詢此張圖片是否有上傳過，用原始檔名判斷
-                if (!preg_match('/\.(jpg|jpeg|gif|png|bmp)$/i', $fileName)) {
-                    throw new RuntimeException('上傳檔案格式必須是jpg/jpeg/gif/png/bmp。');
+                if (!preg_match('/\.(jpg|jpeg|gif|png|bmp|tif)$/i', $fileName)) {
+                    throw new RuntimeException('上傳檔案格式必須是jpg/jpeg/gif/png/bmp/tif。');
                 } elseif ($fileName === 0) {
                     throw new RuntimeException('檔案大小為0');
                 }
