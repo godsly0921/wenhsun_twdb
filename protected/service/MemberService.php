@@ -395,60 +395,42 @@ class MemberService
         }
     }
 
-    public function create(array $inputs)
+    public function create(array $attributes)
     {
-        $model = new Member();
-        $operationlogService = new OperationlogService();
-        $model->account = $inputs['account'];
-
-        $member = $this->findByAccount($inputs['account']);
-        if ($member != NULL) {
-            $model->addError('account', '該帳號已有人使用');
-            return $model;
+        $member = new Member;
+        $this->validateCreateInput($attributes, $member);
+        if ($member->hasErrors()) {
+            (new OperationlogService)->create_operationlog('建立會員', "建立 會員帳號 = {$attributes['account']};會員姓名 = {$attributes['name']}", 0);
+            return $member;
+        }
+        $member->account = $attributes['account'];
+        $member->password = md5($attributes['password']);
+        $member->name = isset($attributes['name']) ? $attributes['name'] : explode('@', $attributes['account'])[0];
+        $member->email = $attributes['account'];
+        $member->gender = isset($attributes['gender']) ? $attributes['gender'] : 'M';
+        $member->birthday = isset($attributes['birthday']) ? $attributes['birthday'] : '0000-00-00';
+        $member->phone = isset($attributes['phone']) ? $attributes['phone'] : null;
+        $member->mobile = isset($attributes['mobile']) ? $attributes['mobile'] : null;
+        $member->member_type = isset($attributes['member_type']) ? $attributes['member_type'] : 1;
+        $member->account_type = isset($attributes['account_type']) ? $attributes['account_type'] : 2;
+        $member->nationality = isset($attributes['nationality']) ? $attributes['nationality'] : 'TW';
+        $member->county = isset($attributes['county']) ? $attributes['county'] : null;
+        $member->town = isset($attributes['town']) ? $attributes['town'] : null;
+        $member->address = isset($attributes['address']) ? $attributes['address'] : null;
+        $member->active = isset($attributes['active']) ? $attributes['active'] : 'N';
+        $member->verification_code = isset($attributes['verification_code']) ? $attributes['verification_code'] : null;
+        $member->create_by = Yii::app()->session['uid'];
+        $member->create_date = date('Y-m-d H:i:s');
+        $member->update_by = Yii::app()->session['uid'];
+        $member->update_date = date('Y-m-d H:i:s');
+        $member->save();
+        if ($member->hasErrors()) {
+            (new OperationlogService)->create_operationlog('建立會員', "建立 會員帳號 = {$attributes['account']};會員姓名 = {$attributes['name']}", 0);
+            return $member;
         }
 
-        if ($inputs["password_confirm"] === "" || $inputs["password"] !== $inputs["password_confirm"]) {
-            $model->addError('password_confirm', '密碼不一致, 請重新輸入');
-            return $model;
-        }
-
-        $model->password = $inputs['password'];
-        $model->name = $inputs['name'];
-        $model->email = $inputs['account'];
-        $model->gender = $inputs['gender'];
-        $model->birthday = $inputs['birthday']?$inputs['birthday']:"0000-00-00";
-        $model->phone = $inputs['phone'];
-        $model->mobile = $inputs['mobile'];
-        $model->member_type = $inputs['member_type'];
-        $model->account_type = $inputs['account_type'];
-        $model->nationality = $inputs['nationality'];
-        $model->county = $inputs['county'];
-        $model->town = $inputs['town'];
-        $model->address = $inputs['address'];
-        $model->active_point = 0;
-        $model->inactive_point = 0;
-        $model->create_by = Yii::app()->session['uid'];
-        $model->update_by = Yii::app()->session['uid'];
-        $model->active = $inputs['active'];
-        $model->verification_code = isset($inputs['verification_code'])?$inputs['verification_code']:"";
-
-        $model->password = md5($inputs['password']);
-        $model->create_date = date('Y-m-d H:i:s');
-        $model->update_date = date('Y-m-d H:i:s');
-        $model = $this->validate($model);
-
-        if (!$model->save()) {
-            $model->addError('update_fail', '新增使用者失敗');
-            $motion = "建立會員";
-            $log = "建立 會員帳號 = " . $inputs['account'] . "；會員名稱 = " . $inputs["name"];
-            $operationlogService->create_operationlog( $motion, $log, 0 );
-            return $model;
-        } else {
-            $motion = "建立會員";
-            $log = "建立 會員帳號 = " . $inputs['account'] . "；會員名稱 = " . $inputs["name"];
-            $operationlogService->create_operationlog( $motion, $log );
-            return $model;
-        }
+        (new OperationlogService)->create_operationlog('建立會員', "建立 會員帳號 = {$attributes['account']};會員姓名 = {$attributes['name']}");
+        return $member;
     }
 
     public function createregister(array $inputs)
@@ -1133,6 +1115,47 @@ class MemberService
             }
         }else{
             return true;
+        }
+    }
+
+    private function validateCreateInput($attributes, CActiveRecord &$member)
+    {
+        if (!isset($attributes['account']) || empty($attributes['account'])) {
+            $member->addError('account', '帳號為必填。');
+        } elseif (!filter_var($attributes['account'], FILTER_VALIDATE_EMAIL)) {
+            $member->addError('account', '帳號必須是電子郵件地址。');
+        } elseif (Member::model()->findByAttributes([], 'account=:account', [':account' => $attributes['account']])) {
+            $member->addError('account', "帳號已被使用。");
+        }
+
+        if (!isset($attributes['password']) || empty($attributes['password'])) {
+            $member->addError('password', '密碼為必填。');
+        } elseif (!isset($attributes['password_confirm']) || empty($attributes['password_confirm'])) {
+            $member->addError('password_confirm', '密碼為必填。');
+        } elseif ($attributes['password'] !== $attributes['password_confirm']) {
+            $member->addError('password', '密碼與確認密碼不相符。');
+        } elseif (!preg_match('/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/', $attributes['password'])) {
+            $member->addError('password', '密碼必須是6碼以上英文加數字的組合。');
+        }
+
+        if (!isset($attributes['gender']) || empty($attributes['gender'])) {
+            $member->addError('gender', '性別為必填。');
+        } elseif (!in_array($attributes['gender'], ['M', 'F'])) {
+            $member->addError('gender', '性別必須是男 或 女。');
+        }
+
+        if (!isset($attributes['phone']) || empty($attributes['phone'])) {
+            $member->addError('phone', '行動電話為必填。');
+//        } elseif (!preg_match('/^09\d{8}$/', $attributes['phone'])) {
+        } elseif (!preg_match('/^\d*$/', $attributes['phone'])) {
+            $member->addError('phone', '行動電話必須符合格式:0912345678。');
+        }
+
+        if (!isset($attributes['mobile']) || empty($attributes['mobile'])) {
+            $member->addError('mobile', '電話為必填。');
+//        } elseif (!preg_match('/^\d{2,4}-\d{5,8}$/', $attributes['mobile'])) {
+        } elseif (!preg_match('/^\d*$/', $attributes['mobile'])) {
+            $member->addError('mobile', '電話必須符合格式: 02-23433142。');
         }
     }
 }
