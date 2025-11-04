@@ -225,7 +225,7 @@
     } );
 </script>
 <script>
-    $(".oprate-del").on('click', function(){
+    $(document).on('click', '.oprate-del', function(){
         var id = $(this).data("mem-id");
         var memName = $(this).data("mem-name");
         var answer = confirm("確定要刪除 (" + memName + ") ?");
