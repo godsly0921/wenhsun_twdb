@@ -460,6 +460,7 @@ class PhotographController extends Controller{
             'ids' => Yii::app()->request->getPost('ids', []),
             'category_id' => Yii::app()->request->getPost('category_id'),
             'publish' => Yii::app()->request->getPost('publish'),
+            'copyright' => Yii::app()->request->getPost('copyright'),
             'keywords' => Yii::app()->request->getPost('keywords'),
             'description' => Yii::app()->request->getPost('description')
         ];

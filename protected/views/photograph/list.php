@@ -183,6 +183,7 @@
                 ids: ids,
                 category_id: $('#category_id').val(),
                 publish: $('#publish').prop('checked') ? 1 : 0,
+                copyright: $('#copyright').prop('checked') ? 1 : 0,
                 keyword: $('#keyword').val(),
                 description: $('#description').val()
             };
@@ -378,6 +379,16 @@
                         </label>
                         <div class="col-sm-8">
                             <input type="checkbox" name="publish" id="publish" class="js-switch" value="1" checked />
+                        </div>
+                    </div>
+
+                    <!-- 選擇要不要更新 percent -->
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label">
+                            著作審核通過
+                        </label>
+                        <div class="col-sm-8">
+                            <input type="checkbox" name="copyright" id="copyright" class="js-switch" value="1" checked />
                         </div>
                     </div>
 
