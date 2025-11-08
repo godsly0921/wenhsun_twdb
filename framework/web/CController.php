@@ -1103,7 +1103,7 @@ class CController extends CBaseController
 	protected function afterAction($action)
 	{
 		Yii::log(date("Y-m-d H:i:s").' afterAction writeTimeSeriesInfo test', CLogger::LEVEL_INFO);
-		TsdbService::writeTimeSeriesInfo('S00000');
+		// TsdbService::writeTimeSeriesInfo('S00000');
 	}
 
 	/**
