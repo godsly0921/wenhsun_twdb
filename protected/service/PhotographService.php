@@ -47,7 +47,7 @@ class PhotographService{
                     $txt = $category_value['parent_name'] . ' => ' . $category_value['child_name'];
                     array_push($category, $txt);
                 }
-                $data['image'] = Yii::app()->createUrl('/') . '/image_storage/S/' . $value['single_id'] . '.jpg';
+                $data['image'] = Yii::app()->createUrl('/') . '/image_storage/O/' . $value['single_id'] . '.jpg';
                 $data['photograph_info'] = array(
                     'object_name' => $value['object_name'],
                     'event_name' => $value['event_name'],
