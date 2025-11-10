@@ -6,7 +6,7 @@
     <meta name="description" content=''/>
     <link href="https://fonts.googleapis.com/css?family=Noto+Sans+TC&amp;subset=chinese-traditional,japanese" rel="stylesheet" class="next-head">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
-    <title>台灣文學照片資料庫</title>
+    <title>Luckywave照片資料庫</title>
 
      <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" crossorigin="anonymous"> -->
     <link rel="stylesheet" href="<?php echo Yii::app()->request->baseUrl; ?>/assets/css/font-awesome.css">
@@ -38,7 +38,7 @@
                 </li>
             </ul>
         </div>
-        <a href="<?= Yii::app()->createUrl('site/');?>" class="navbar-brand mx-auto order-0 order-md-2 p-2">台灣文學照片資料庫</a>
+        <a href="<?= Yii::app()->createUrl('site/');?>" class="navbar-brand mx-auto order-0 order-md-2 p-2">Luckywave照片資料庫</a>
         <div class="navbar-collapse collapse dual-nav order-2 order-md-2 justify-content-end">
             <ul class="navbar-nav header_navbar_nav col-md-12 col-lg-8 mx-auto">
                 <li class="nav-item">
@@ -78,18 +78,18 @@
       <div class="container py-5">
         <div class="row">
           <div class="col-lg-4">
-            <a href="/"><h3 class="footer_company_name">台灣文學照片資料庫</h3></a>
-            <p>本計畫受文化部推動國家文化記憶庫計畫補助</p>
+            <a href="/"><h3 class="footer_company_name">Luckywave照片資料庫</h3></a>
+            <!-- <p>本計畫受文化部推動國家文化記憶庫計畫補助</p> -->
           </div>
-          <div class="col-lg-3">
+          <!-- <div class="col-lg-3">
               <a href="/site/copyright">著作權聲明</a>
-          </div>
+          </div> -->
           <div class="col-lg-5 footer_right">
             <div class="row">
-              <div class="col-lg-12">文訊雜誌社 地址：10048台北市中山南路11號B2</div>
-              <div class="col-lg-12">代表號:02-23433142 傳真:02-23946103 E-mail:wenhsun7@ms19.hinet.net</div>
+              <!-- <div class="col-lg-12">文訊雜誌社 地址：10048台北市中山南路11號B2</div>
+              <div class="col-lg-12">代表號:02-23433142 傳真:02-23946103 E-mail:wenhsun7@ms19.hinet.net</div> -->
               <div class="col-lg-12">本站台資料為版權所有，非經同意請勿作任何形式之轉載使用</div>
-              <p class="col-lg-12">Copyright © . All rights reserved.</p>
+              <p class="col-lg-12">Copyright © Lucky Wave All Rights Reserved.</p>
             </div>
           </div>
         </div>
