@@ -6,7 +6,7 @@
     <meta name="description" content=''/>
     <link href="https://fonts.googleapis.com/css?family=Noto+Sans+TC&amp;subset=chinese-traditional,japanese" rel="stylesheet" class="next-head">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
-    <title>Luckywave照片資料庫</title>
+    <title>LuckyWave 照片資料庫</title>
 
      <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" crossorigin="anonymous"> -->
     <link rel="stylesheet" href="<?php echo Yii::app()->request->baseUrl; ?>/assets/css/font-awesome.css">
@@ -38,7 +38,7 @@
                 </li>
             </ul>
         </div>
-        <a href="<?= Yii::app()->createUrl('site/');?>" class="navbar-brand mx-auto order-0 order-md-2 p-2">Luckywave照片資料庫</a>
+        <a href="<?= Yii::app()->createUrl('site/');?>" class="navbar-brand mx-auto order-0 order-md-2 p-2">LuckyWave 照片資料庫</a>
         <div class="navbar-collapse collapse dual-nav order-2 order-md-2 justify-content-end">
             <ul class="navbar-nav header_navbar_nav col-md-12 col-lg-8 mx-auto">
                 <li class="nav-item">
@@ -78,7 +78,7 @@
       <div class="container py-5">
         <div class="row">
           <div class="col-lg-4">
-            <a href="/"><h3 class="footer_company_name">Luckywave照片資料庫</h3></a>
+            <a href="/"><h3 class="footer_company_name">LuckyWave 照片資料庫</h3></a>
             <!-- <p>本計畫受文化部推動國家文化記憶庫計畫補助</p> -->
           </div>
           <!-- <div class="col-lg-3">
