@@ -37,7 +37,7 @@ define('BOOKAUTHORGALLERY', dirname(__FILE__).'/assets/book_author_gallery/');
 define('BOOKAUTHORGALLERY_SHOW', '/assets/book_author_gallery/');
 define('PHOTOGRAPH_STORAGE_URL', 'image_storage/O/');
 define('M3U8_STORAGE_URL', 'image_storage/video/');
-define('DOMAIN', 'https://www.twdb.com.tw/');
+define('DOMAIN', 'https://image.luckywave.com.tw/');
 //define('DOMAIN', 'http://localhost:8080/wenhsun_hr/'); //測試環境
 define('ABOUT_IMAGE', '/assets/image/about/');
 define('ABOUT_IMAGE_UPLOAD', dirname(__FILE__) . '/assets/image/about/');
