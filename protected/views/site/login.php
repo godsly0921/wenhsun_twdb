@@ -85,7 +85,7 @@
         <div class="form-group row">
             <label for="password" class="col-sm-2 col-form-label">驗證碼</label>
             <div class="col-sm-8">
-                <div class="g-recaptcha" data-sitekey="6LdxkAYTAAAAAPob7xfSwvYt6gm4Ivz75fEcpzZ2"></div>
+                <div class="g-recaptcha" data-sitekey="6LdioQ0sAAAAAJgLDeUb-jhIk-zDtILotdlvz_f3"></div>
             </div>
             <label class="col-sm-2 col-form-label" style="color:red;font-size: 14px;">必填 *</label>
         </div>

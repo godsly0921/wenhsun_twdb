@@ -407,7 +407,7 @@ class SiteController extends CController{
         $input['password'] = filter_input(INPUT_POST, 'password');
         require_once( dirname(__FILE__) . '/../../vendor/google/recaptcha/src/autoload.php');
         // _GOOGLE_RECAPTCHA_SEC_KEY 就是 google 給的 Secret Key
-        $recaptcha = new \ReCaptcha\ReCaptcha('6LdxkAYTAAAAAK5e5Ya6xva3naFgDAxtI_vLTgz8');
+        $recaptcha = new \ReCaptcha\ReCaptcha('6LdioQ0sAAAAAL93fW-WVSu6NxYTTDE88nk_Pbx6');
         $gRecaptchaResponse = $_POST['g-recaptcha-response'];
         $remoteIp = $_SERVER['REMOTE_ADDR'];
         $resp = $recaptcha->verify($gRecaptchaResponse, $remoteIp);

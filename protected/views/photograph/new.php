@@ -415,7 +415,7 @@ $(document).ready(function () {
     labelPrevious: '上一步',
     labelFinish: '送出表單',
     onFinish:onFinishCallback,
-    //onLeaveStep:onLeaveStepCallback
+    onLeaveStep:onLeaveStepCallback
   });
   function onFinishCallback(){
     if(fileupload_count == finishupload_count){
@@ -447,11 +447,14 @@ $(document).ready(function () {
     });
   }
   function validateSteps(fromStep,toStep){
+    console.log("validateSteps_fromStep", fromStep);
+    console.log("validateSteps_toStep", toStep);
     if(toStep == 4){
-      return false;
+      $('.buttonNext').addClass("buttonDisabled");
+      return true;
     }else if(fromStep == 2 && toStep == 3){
       $("#wizard").smartWizard('enableStep', 4);
-      $('.buttonNext').addClass("buttonDisabled");
+      // $('.buttonNext').addClass("buttonDisabled");
       return true;
     }else{
       if($('.buttonNext').hasClass('buttonDisabled')){
