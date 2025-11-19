@@ -51,11 +51,11 @@ unset( Yii::app()->session['success_msg'] );
                     <?php if ($about->image !== ''):;?>
                         <input class="form-control" id="pic" name="image_old" type="text" value="<?php echo ($about->image !== NULL) ? $about->image : '' ?>" readonly>
                         <br>
-                        <input type="file" class="form-control-file" id="image" name="image" value="<?php echo ($about->image !== NULL)?$about->image:'' ?>" onchange="checkImage(this)">
+                        <input type="file" class="form-control-file" id="image" name="image" value="<?php echo ($about->image !== NULL)?$about->image:'' ?>" onchange="checkImage(this, '<?=$about->title?>')">
                         <br>
                         <img id="image_pic" src="<?=Yii::app()->createUrl('/') . $about->image?>" width="100%"></td>
                     <?php else:; ?>
-                        <input type="file" class="form-control-file" id="image" name="image" value=""onchange="checkImage(this)">
+                        <input type="file" class="form-control-file" id="image" name="image" value=""onchange="checkImage(this, '<?=$about->title?>')">
                     <?php endif; ?>
                 </div>
                 <div class="col-sm-2">
@@ -77,11 +77,22 @@ unset( Yii::app()->session['success_msg'] );
     </div>
 </div>
 <script type="text/javascript">
-    function checkImage(image){
+    function checkImage(image, item){
         var file = image.files[0];
         var _URL = window.URL || window.webkitURL;
-        var maxwidth = 1170;
-        var maxheight = 400;
+        switch (item) {
+            case 'paragraph1':
+            case 'paragraph2': 
+            case 'paragraph3':
+                var maxwidth = 458;
+                var maxheight = 222;       
+                break;
+            default:
+                var maxwidth = 1170;
+            var maxheight = 400;
+                break;
+        }
+        
         img = new Image();
         img.src = _URL.createObjectURL(file);
         img.onload = function() {
