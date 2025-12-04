@@ -116,6 +116,6 @@ class SinglePresenter
             }
         }
 
-        return self::$categories[$categoryId];
+        return isset(self::$categories[$categoryId]) ? self::$categories[$categoryId] : null;
     }
 }
