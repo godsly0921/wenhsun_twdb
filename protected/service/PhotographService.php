@@ -469,5 +469,20 @@ class PhotographService{
         ->queryAll();
         return $result[0];
     }
+
+    public function updateMany($ids, array $attributes)
+    {
+        // 更新 mysql 的資料
+        $CDbCriteria = new CDbCriteria();
+        $CDbCriteria->addInCondition('single_id', $ids);
+        $updatedRows = Single::model()->updateAll($attributes, $CDbCriteria);
+
+        // 更新 mongodb 的資料
+        $filter = ['single_id' => ['$in' => $ids]];
+        $update = ['$set' => $attributes];
+        (new Mongo)->update_record('wenhsun', 'single', $filter, $update);
+
+        return $updatedRows;
+    }
 }
 ?>

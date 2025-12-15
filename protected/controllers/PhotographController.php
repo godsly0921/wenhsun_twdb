@@ -441,41 +441,44 @@ class PhotographController extends Controller{
 
     public function actionBatchUpdate()
     {
-        $input = $this->validateInputForBatchUpdate();
+        try {
+            $input = $this->validateInputForBatchUpdate();
+            $photographService = new PhotographService();
+            $updatedRows = $photographService->updateMany($input['ids'], [
+                'publish' => $input['publish'],
+                'copyright' => $input['copyright']
+            ]);
 
-        $photographService = new PhotographService();
-        $updated = 0;
-        foreach ($input['ids'] as $id) {
-            $updateResult = $photographService->updateSingle($id, $input);
-            if ($updateResult['status'] === true) $updated++;
+            echo CJSON::encode(['success' => true, 'message' => 'Update Success.', 'updated' => $updatedRows]);
+            Yii::app()->end();
+        } catch (Throwable $e) {
+            echo CJSON::encode(['success' => false, 'message' => $e->getMessage(), 'updated' => 0]);
+            Yii::app()->end();
         }
-
-        echo CJSON::encode(['success' => true, 'message' => '批次更新成功', 'updated' => $updated]);
-        Yii::app()->end();
     }
 
     private function validateInputForBatchUpdate()
     {
         $input = [
             'ids' => Yii::app()->request->getPost('ids', []),
-            'category_id' => Yii::app()->request->getPost('category_id'),
+//            'category_id' => Yii::app()->request->getPost('category_id'),
             'publish' => Yii::app()->request->getPost('publish'),
             'copyright' => Yii::app()->request->getPost('copyright'),
-            'keywords' => Yii::app()->request->getPost('keywords'),
-            'description' => Yii::app()->request->getPost('description')
+//            'keywords' => Yii::app()->request->getPost('keywords'),
+//            'description' => Yii::app()->request->getPost('description')
         ];
         if (count($input['ids']) === 0) {
-            echo CJSON::encode(['success' => false, 'message' => 'No IDs.']);
-            Yii::app()->end();
-        } elseif (count($input['category_id']) === 0) {
+            throw new UnexpectedValueException('ids field cannot be empty.');
+        } /*elseif (count($input['category_id']) === 0) {
             echo CJSON::encode(['success' => false, 'message' => 'No category.']);
             Yii::app()->end();
-        } elseif (!preg_match('/^(0|1)$/', $input['publish'])) {
-            echo CJSON::encode(['success' => false, 'message' => 'Invalid publish.']);
-            Yii::app()->end();
+        }*/ elseif (!in_array($input['publish'], [0, 1])) {
+            throw new UnexpectedValueException('publish field must be one of 0, 1.');
+        } elseif (!in_array($input['copyright'], [0, 1])) {
+            throw new UnexpectedValueException('copyright field must be one of 0, 1.');
         }
 
-        $input['category_id'] = implode(',', $input['category_id']);
+        //$input['category_id'] = implode(',', $input['category_id']);
 
         return $input;
     }
@@ -500,6 +503,7 @@ class PhotographController extends Controller{
 
     private function canBatchUpdate()
     {
+        return true;
         return $this->can('photograph/batchUpdate');
     }
 

@@ -181,11 +181,11 @@
             // 組 payload：僅加入已啟用的欄位
             var payload = {
                 ids: ids,
-                category_id: $('#category_id').val(),
+                // category_id: $('#category_id').val(),
                 publish: $('#publish').prop('checked') ? 1 : 0,
                 copyright: $('#copyright').prop('checked') ? 1 : 0,
-                keyword: $('#keyword').val(),
-                description: $('#description').val()
+                // keyword: $('#keyword').val(),
+                // description: $('#description').val()
             };
 
 
@@ -198,11 +198,9 @@
                 dataType: "json"
             }).done(function(resp){
                 $('#batchUpdateWorking').hide();
+                alert(resp.message);
 
                 if (resp && resp.success) {
-                    alert('批次更新完成 (' + resp.updated + ' 筆)。');
-                    $('#batchUpdateModal').modal('hide');
-
                     // 更新表格但停留在原頁
                     table.ajax.reload(null, false);
 
@@ -210,8 +208,6 @@
                     selectedIds.clear();
                     updateBatchButtonState();
                     syncHeaderCheckbox();
-                } else {
-                    alert('批次更新失敗：' + (resp && resp.message ? resp.message : '未知錯誤'));
                 }
             }).fail(function(xhr){
                 $('#batchUpdateWorking').hide();
@@ -359,6 +355,7 @@
                     <input type="hidden" name="ids" id="batchUpdateIds">
 
                     <!-- 選擇要不要更新 publish -->
+                    <!--
                     <div class="form-group">
                         <label class="col-sm-4 control-label">
                             圖片分類
@@ -371,6 +368,7 @@
                             </select>
                         </div>
                     </div>
+                    -->
 
                     <!-- 選擇要不要更新 percent -->
                     <div class="form-group">
@@ -393,6 +391,7 @@
                     </div>
 
                     <!-- 選擇要不要更新 percent -->
+                    <!--
                     <div class="form-group">
                         <label class="col-sm-4 control-label">
                             關鍵字
@@ -401,8 +400,10 @@
                             <input type="text" name="keyword" id="keyword" class="form-control" />
                         </div>
                     </div>
+                    -->
 
                     <!-- 選擇要不要更新 percent -->
+                    <!--
                     <div class="form-group">
                         <label class="col-sm-4 control-label">
                             描述
@@ -411,6 +412,7 @@
                             <textarea name="description" id="description" class="form-control"></textarea>
                         </div>
                     </div>
+                    -->
                 </div>
 
                 <div class="modal-footer">
