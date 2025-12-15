@@ -449,10 +449,10 @@ class PhotographController extends Controller{
                 'copyright' => $input['copyright']
             ]);
 
-            echo CJSON::encode(['success' => true, 'message' => 'Update Success.', 'updated' => $updatedRows]);
+            echo CJSON::encode(['success' => true, 'message' => '批次更新成功。', 'updated' => $updatedRows]);
             Yii::app()->end();
         } catch (Throwable $e) {
-            echo CJSON::encode(['success' => false, 'message' => $e->getMessage(), 'updated' => 0]);
+            echo CJSON::encode(['success' => false, 'message' => "批次更新失敗。ERR:{$e->getMessage()}", 'updated' => 0]);
             Yii::app()->end();
         }
     }
