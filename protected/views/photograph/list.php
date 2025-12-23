@@ -57,7 +57,6 @@
 </div>
 
 <script src="<?php echo Yii::app()->request->baseUrl;?>/assets/admin/ext/js/jquery.dataTables.min.js"></script>
-<script src="<?php echo Yii::app()->request->baseUrl;?>/assets/admin/ext/js/dataTables.bootstrap.min.js"></script>
 <script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/gentelella/vendors/jquery.tagsinput/src/jquery.tagsinput.js"></script>
 <script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/gentelella/vendors/switchery/dist/switchery.min.js"></script>
 <script>
@@ -126,6 +125,35 @@
             drawCallback: function (settings) {
                 syncHeaderCheckbox();
                 updateBatchButtonState();
+
+
+                var api = this.api();
+
+                // 使用 setTimeout 確保在 DataTables 完成所有 DOM 更新後才執行
+                setTimeout(function() {
+                    var container = $(api.table().container());
+                    var nav       = container.find('.dt-paging').find('nav');
+
+                    if (nav.length === 0) return;
+
+                    // 如果輸入框不存在，則插入
+                    if ($('#paginate_jump_wrapper').length === 0) {
+                        var jumpHtml = `
+                        <div id="paginate_jump_wrapper" style="display:inline-flex; align-items:center; gap:5px;">
+                            <span>跳至</span>
+                            <input type="text" id="paginate_input" min="1"
+                                   style="width: 50px; height: 28px; text-align: center; border: 1px solid #ccc; border-radius: 4px;">
+                            <span>頁</span>
+                        </div>`;
+
+                        // 插入到整個分頁容器的最後面
+                        nav.append(jumpHtml);
+                    }
+
+                    // 同步目前的頁碼
+                    var info = api.page.info();
+                    $('#paginate_input').val(info.page + 1);
+                }, 0);
             }
         } );
 
@@ -217,6 +245,32 @@
 
         $('#keyword').tagsInput({
             width: 'auto'
+        });
+
+        // 處理 Enter 跳轉
+        $(document).on('keypress', '#paginate_input', function (e) {
+            if (e.which === 13) { // 判斷 Enter 鍵
+                e.preventDefault();
+
+                var pageNum = parseInt($(this).val(), 10);
+                // 重要：直接透過 ID 重新取得 DataTable API 實例
+                var oTable = $('#specialcaseTable').DataTable();
+                var pageInfo = oTable.page.info();
+
+                if (!isNaN(pageNum) && pageNum > 0 && pageNum <= pageInfo.pages) {
+                    // DataTables 頁碼是從 0 開始，所以輸入的數字要減 1
+                    // 使用 .draw('page') 或是 .draw(false)
+                    oTable.page(pageNum - 1).draw(false);
+                } else {
+                    alert("請輸入有效的頁碼 (1 ~ " + pageInfo.pages + ")");
+                    $(this).val('');
+                }
+            }
+        });
+
+        // 防止點擊輸入框時觸發 DataTables 的點擊效果
+        $(document).on('click', '#paginate_input', function (e) {
+            e.stopPropagation();
         });
 
     } );
