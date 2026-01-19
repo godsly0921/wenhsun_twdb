@@ -148,11 +148,14 @@ class PhotographController extends Controller{
 
     public function actionlist()
     {
+        $request = Yii::app()->request;
         $this->render('list',[
             'data' => [],
             'categories' => $this->categories(),
             'canExport' => $this->canExport(),
-            'canBatchUpdate' => $this->canBatchUpdate()
+            'canBatchUpdate' => $this->canBatchUpdate(),
+            'page' => $request->getQuery('page', 1),
+            'search' => $request->getQuery('search', '')
         ]);
     }
     public function ActionAjaxPhotographList(){
@@ -220,12 +223,19 @@ class PhotographController extends Controller{
         echo json_encode(array('status'=>true));exit(); 
     }
 
-    public function ActionUpdate($id){
+    public function ActionUpdate($id)
+    {
+        $request = Yii::app()->request;
         $photographService = new PhotographService();
         $category_service = new CategoryService();
         $photograph_data = $photographService->findSingleAndSinglesize($id);    
         $category_data = $category_service->findCategoryMate();
-        $this->render('update',array( 'photograph_data' => $photograph_data, 'category_data' => $category_data ));
+
+        $this->render('update',array(
+            'photograph_data' => $photograph_data,
+            'category_data' => $category_data,
+            'reference' => Yii::app()->createUrl('photograph/list') . "?page={$request->getQuery('ref_page', 1)}&search={$request->getQuery('ref_search', '')}",
+        ));
     }
 
     public function ActionDelete(){

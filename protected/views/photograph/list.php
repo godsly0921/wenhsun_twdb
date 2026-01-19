@@ -77,8 +77,27 @@
         else $('#batchUpdateBtn').attr('disabled', true);
     }
 
-    $(document).ready(function() {
-        table = $('#specialcaseTable').DataTable( {
+    function initSpecialcaseTable()
+    {
+        // 1. 從網址取得參數
+        var urlParams = new URLSearchParams(window.location.search);
+        var pageParam = urlParams.get('page');     // 取得 40
+        var searchParam = urlParams.get('search'); // 取得 "文學"
+
+        // 2. 計算起始筆數 (假設每頁 10 筆)
+        // DataTables 的 displayStart 是「筆數索引」，從 0 開始
+        var pageLength = 10;
+        var startRecord = 0;
+        if (pageParam && pageParam > 0) {
+            startRecord = (parseInt(pageParam) - 1) * pageLength;
+        }
+
+        return $('#specialcaseTable').DataTable( {
+            displayStart: startRecord,
+            pageLength: pageLength,
+            search: {
+                search: searchParam ? searchParam : ""
+            },
             "processing": true,
             "serverSide": true,  // 啟用 server-side 處理
             "scrollX": true,
@@ -119,7 +138,26 @@
                 { "data": "publish" },
                 { "data": "percent" },
                 { "data": "create_time" },
-                { "data": "edit" }
+                {
+                    "data": "id", // 假設您的編輯連結需要 ID
+                    "render": function (data, type, row, meta) {
+                        // meta.settings 可以獲取當前表格的 API 實例
+                        var api = new $.fn.dataTable.Api(meta.settings);
+                        var page = api.page.info().page + 1; // DataTables 頁碼從 0 開始，所以 +1
+                        var search = encodeURIComponent(api.search());
+
+                        // 構建 URL (假設原本的 edit 欄位是後端產生的，我們現在在前端組合它)
+                        // 這裡建議先在 PHP 端產生一個基礎 URL 樣板
+                        return `
+                            <a href="<?= Yii::app()->createUrl('photograph/update')?>/${row.id}?ref_page=${page}&ref_search=${search}" class="oprate-right">
+                                <i class="fa fa-pencil-square-o fa-lg"></i>
+                            </a>
+                            <a href="javascript:void(0)" class="oprate-right oprate-del" data-mem-id="${row.id}" data-mem-name="${row.id}">
+                                <i class="fa fa-times fa-lg"></i>
+                            </a>
+                        `;
+                    }
+                },
             ],
             "order": [[ 2, "desc" ]],
             drawCallback: function (settings) {
@@ -156,6 +194,10 @@
                 }, 0);
             }
         } );
+    }
+
+    $(document).ready(function() {
+        table = initSpecialcaseTable();
 
         $('#specialcaseTable').on('change', 'input.row-check', function() {
             var id = String(this.value);

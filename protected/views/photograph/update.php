@@ -289,7 +289,7 @@
                 success:function(data){
                    result = JSON.parse(data)
                     if(result.status == true){
-                        window.location = '<?= Yii::app()->createUrl('photograph/list'); ?>';
+                        window.location = '<?= $reference?>';
                     }else{
                         alert('更新失敗');
                     }
@@ -321,9 +321,8 @@
                 },
                 success:function(data){
                     result = JSON.parse(data)
-		    console.log(result);
                     if(result.status == true){
-                        window.location = '<?= Yii::app()->createUrl('photograph/list'); ?>';
+                        window.location = '<?= $reference?>';
                     }else{
                         alert('更新失敗');
                     }
