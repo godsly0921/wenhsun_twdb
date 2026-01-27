@@ -6,6 +6,20 @@
     #single_data .form-group{
         margin: 10px auto;
     }
+    .photo-preview-wrapper{
+        position: relative;
+    }
+    .photo-upload-overlay{
+        position: absolute;
+        bottom: 10px;
+        right: 10px;
+        background: rgba(0,0,0,0.6);
+        color: #fff;
+        padding: 6px 10px;
+        border-radius: 4px;
+        font-size: 12px;
+        z-index: 2;
+    }
 </style>
 <div class="panel panel-default" style="width=100%; overflow-y:scroll;">
     <div class="panel-body">
@@ -16,8 +30,12 @@
             </div>  
             <div class="x_content">
                 <form id="single_data" class="form-horizontal form-label-left">
-                    <div class="col-lg-6">
-                        <img src="<?=$photograph_data['image']?>" width='100%'>
+                    <div class="col-lg-6 photo-preview-wrapper">
+                        <img id="photo-preview" src="<?=$photograph_data['image']?>" width='100%' style="cursor:pointer;">
+                        <div id="photo-upload-overlay" class="photo-upload-overlay" style="display:none;">
+                            已選擇新圖片，請記得儲存
+                        </div>
+                        <input type="file" id="image" name="image" accept="image/*" style="display:none;">
                     </div>
                     <div class="col-lg-6">
                         <div class="form-group">
@@ -263,6 +281,30 @@
 <script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/gentelella/vendors/switchery/dist/switchery.min.js"></script>
 <script>
     $(document).ready(function() {
+
+        // 點擊圖片開啟選擇檔案視窗
+        $('#photo-preview').on('click', function () {
+            $('#image').trigger('click');
+        });
+
+        // 選取新圖片後即時預覽（僅前端預覽，不影響既有儲存流程）
+        $('#image').on('change', function (e) {
+            var file = e.target.files[0];
+            if (!file) {
+                return;
+            }
+            if (!file.type.match(/^image\//)) {
+                alert('請選擇圖片檔案');
+                $(this).val('');
+                return;
+            }
+            var reader = new FileReader();
+            reader.onload = function (evt) {
+                $('#photo-preview').attr('src', evt.target.result);
+                $('#photo-upload-overlay').show();
+            };
+            reader.readAsDataURL(file);
+        });
 
         if(typeof $.fn.tagsInput !== 'undefined'){        
             $('#keywords').tagsInput({
