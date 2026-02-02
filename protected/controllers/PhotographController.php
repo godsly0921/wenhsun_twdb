@@ -21,105 +21,34 @@ class PhotographController extends Controller{
     }
     public function ActionBatUploadFile()
     {
-        // 如果檔案不為空，則上傳
-        $time_start = microtime(true);
-        if (!empty($_FILES['file'])) { 
-            $photographService = new PhotographService();
-            $return_data = $single_data = array();
-            $ds          = DIRECTORY_SEPARATOR; // '/'
-            $storeFolder = PHOTOGRAPH_STORAGE_DIR; //檔案儲存的路徑
-            $targetPath = $storeFolder . 'source' . $ds; // 原始檔存放路徑
-            $tempFile   = $_FILES['file']['tmp_name']; //上傳檔案的暫存
-            $fileName = $_FILES['file']['name']; //上傳檔案的檔名
-            $fileSize = $_FILES['file']['size']; //上傳檔案的檔案大小
-            $transaction = Yii::app()->db->beginTransaction();
-            try {
-//                $exist_filename = $photographService->existPhotoNameExist($fileName); // 查詢此張圖片是否有上傳過，用原始檔名判斷
-                if (!preg_match('/\.(jpg|jpeg|gif|png|bmp|tif)$/i', $fileName)) {
-                    throw new RuntimeException('上傳檔案格式必須是jpg/jpeg/gif/png/bmp/tif。');
-                } elseif ($fileName === 0) {
-                    throw new RuntimeException('檔案大小為0');
-                }
-
-                $exist_filename = false;
-                if (!$exist_filename) {
-                    $single_data['photo_name'] = $fileName;
-                    $ext = explode('.', $fileName);
-                    $ext = strtolower(end($ext));
-                    $single_data['ext'] = $ext;
-                    $single = $photographService->createSingleBase($single_data); // 先存圖片檔名、檔案格式進資料庫
-                    if($single['status']){
-                        $single =  $single['data'];
-                        $targetFile =  $targetPath . $single->single_id . "." . $ext; // 暫時用 single 資料表的流水號做圖檔命名
-                        if ( move_uploaded_file($tempFile,$targetFile) ) {
-                            if($ext !='jpg'){
-                                Imagemagick::SourcePhotographToJpgConvert( $single->single_id, $ext );//若不是 jpg 的圖檔，需先轉成 jpg
-                                Imagemagick::build_o_p( $storeFolder . 'source_to_jpg' . $ds, $single->single_id ); //背景執行切縮圖
-                                $targetFile =  $storeFolder . 'source_to_jpg' . $ds . $single->single_id . ".jpg"; // 暫時用 single 
-                            }else{
-                                Imagemagick::build_o_p( $storeFolder . 'source' . $ds, $single->single_id );//背景執行切縮圖
-                            }
-                            list($width, $height) = getimagesize($targetFile);
-                            $create_image_queue = $photographService->createImageQueue( $single->single_id, $width, $height, $ext ); // 切圖佇列資料寫入
-                            $return_data[] = array(
-                                'single_id' => $single->single_id,
-                                'fileName' => $fileName,
-                                'fileSize' => $fileSize,
-                                'status' => true,
-                                'errorMsg' => ''
-                            );
-                            $time = microtime(true) - $time_start;
-                            $return_data['runtime'] = $time;
-                            #echo json_encode($return_data);exit();
-                        }else{
-                            $return_data[] = array(
-                                'fileName' => $fileName,
-                                'fileSize' => $fileSize,
-                                'status' => false,
-                                'errorMsg' => 'upload image failed'
-                            );
-                            $time = microtime(true) - $time_start;
-                            $return_data['runtime'] = $time;
-                            echo json_encode($return_data);exit();
-                        }
-                    }
-                }else{
-                    $return_data[] = array(
-                        'fileName' => $fileName,
-                        'fileSize' => $fileSize,
-                        'status' => false,
-                        'errorMsg' => $fileName . ' is already exists'
-                    );
-                    $return_data['append'] = false;
-                    $time = microtime(true) - $time_start;
-                    $return_data['runtime'] = $time;
-                    echo json_encode($return_data);exit();
-                }                
-                $transaction->commit();
-                echo json_encode($return_data);exit();
-            }catch(Exception $e){
-                $transaction->rollback();
-                $return_data[] = array(
-                    'fileName' => '',
-                    'fileSize' => '',
-                    'status' => false,
-                    'errorMsg' => $e->getMessage()
-                );
-                $time = microtime(true) - $time_start;
-                $return_data['runtime'] = $time;
-                echo $e;
-                echo json_encode($return_data);exit();
-                exit();
+        $start = microtime(true);
+        try {
+            if (!isset($_FILES['file']) || $_FILES['file']['size'] === 0) {
+                throw new UnexpectedValueException('empty file.');
+            } elseif (!preg_match('/\.(jpg|jpeg|gif|png|bmp|tif)$/i', $_FILES['file']['name'])) {
+                throw new RuntimeException('上傳檔案格式必須是jpg/jpeg/gif/png/bmp/tif。');
             }
-        }else{
-            $return_data[] = array(
-                'fileName' => '',
-                'fileSize' => '',
-                'status' => false,
-            );
-            $time = microtime(true) - $time_start;
-            $return_data['runtime'] = $time;
-            echo json_encode($return_data);exit();
+
+            $single = $this->uploadFile($_FILES['file']);
+            $result = array(array(
+                'single_id' => $single->single_id,
+                'fileName'  => $single->photo_name,
+                'fileSize'  => $_FILES['file']['size'],
+                'status'    => true,
+                'errorMsg'  => '',
+                'runtime'   => microtime(true) - $start
+            ));
+        } catch(Exception $e) {
+            $result = array(array(
+                'fileName'  => isset($_FILES['file']) ? $_FILES['file']['name'] : null,
+                'fileSize'  => isset($_FILES['file']) ? $_FILES['file']['size'] : null,
+                'status'    => false,
+                'errorMsg'  => $e->getMessage(),
+                'runtime'   => microtime(true) - $start
+            ));
+        } finally {
+            echo json_encode($result);
+            exit;
         }
     }
 
@@ -517,6 +446,45 @@ class PhotographController extends Controller{
         return $this->can('photograph/batchUpdate');
     }
 
+    private function uploadFile(array $file, $id = null)
+    {
+        $photographService = new PhotographService();
+        $start = microtime(true);
+        $DIR   = rtrim(PHOTOGRAPH_STORAGE_DIR, '/');
+        $transaction = Yii::app()->db->beginTransaction();
+        try {
+            // 新增資料庫紀錄
+            preg_match('/^(?<name>.*\.(?<ext>[^.]+))$/', $file['name'], $matches);
+            $single = $photographService->updateOrCreateSingle([
+                'photo_name' => $matches['name'],
+                'ext' => $matches['ext']
+            ], $id);
 
+            // 搬移圖片到指定位置
+            $targetPath = "{$DIR}/source/{$single->single_id}.{$single->ext}";
+            if (!move_uploaded_file($file['tmp_name'], $targetPath)) {
+                throw new RuntimeException("{$targetPath} save failed.");
+            }
+
+            //
+            if($single->ext !='jpg') {
+                Imagemagick::SourcePhotographToJpgConvert( $single->single_id, $single->ext );//若不是 jpg 的圖檔，需先轉成 jpg
+                Imagemagick::build_o_p("{$DIR}/source_to_jpg/", $single->single_id ); //背景執行切縮圖
+                $targetFile =  "{$DIR}/source_to_jpg/{$single->single_id}.{$single->ext}";
+            }else{
+                Imagemagick::build_o_p("{$DIR}/source/", $single->single_id );//背景執行切縮圖
+            }
+            list($width, $height) = getimagesize($targetFile);
+            $photographService->createImageQueue( $single->single_id, $width, $height, $single->ext); // 切圖佇列資料寫入
+
+            //
+            $transaction->commit();
+
+            return $single;
+        } catch (Throwable $e) {
+            $transaction->rollback();
+            throw $e;
+        }
+    }
 }
 ?>
