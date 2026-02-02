@@ -178,7 +178,7 @@ class PhotographService{
         $keys = array_keys($single->attributes);
         $update = [];
         $motion = "更新圖資";
-        $log    = "single_id = {$single}";
+        $log    = "single_id = {$single_id}";
     	foreach ($input as $key => $value) {
             if (in_array($key, $keys) && $single->$key != $value) {
                 $log .= "<br/> - {$key}: {$single->$key} => {$value}";
@@ -186,14 +186,21 @@ class PhotographService{
                 $update[$key] = $value;
             }
     	}
-        $single->save();
+        if (!$single->save()) {
+            $error = array_shift($single->errors)[0];
+            throw new UnexpectedValueException($error);
+        }
+
+        //
         if (isset($update['category_id'])) {
             $update['category_id'] = explode(',', $update['category_id']);
         }
         if (isset($update['keyword'])) {
             $update['keyword'] = explode(',', $update['keyword']);
         }
-        (new Mongo)->update_record('wenhsun', 'single', ['single_id' => $single->single_id], ['$set' => $update]);
+        if (!empty($update)) {
+            (new Mongo)->update_record('wenhsun', 'single', ['single_id' => $single->single_id], ['$set' => $update]);
+        }
 
         $operationlogService->create_operationlog( $motion, $log );
         return $single;
