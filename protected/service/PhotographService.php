@@ -110,23 +110,23 @@ class PhotographService{
     }
 
     // 圖片上架時儲存的圖片資訊 - 是最初始的值
-    public function createSingleBase( $input ){
-    	$single = new Single();
-        $mongo = new Mongo();
+    public function createSingle($input)
+    {
+        $single = new Single();
+        $input['create_time'] = date('Y-m-d H:i:s');
+        $input['create_account_id'] = Yii::app()->session['uid'];
+
     	foreach ($input as $key => $value) {
     		$single->$key = $value;
     	}
-    	$single->create_time = date('Y-m-d h:i:s');
-    	$single->create_account_id = Yii::app()->session['uid'];
-    	if($single->save()){
-            $input['create_time'] = $single->create_time;
-            $input['create_account_id'] = $single->create_account_id;
-            $input['single_id'] = $single->single_id;
-            $mongo->insert_record('wenhsun', 'single', $input);
-    		return array('status'=>true,'data'=>$single);
-    	}else{
-    		return array('status'=>false,'data'=>$single);
-    	}
+        if (!$single->save()) {
+            $error = array_shift($single->errors)[0];
+            throw new UnexpectedValueException($error);
+        }
+
+        (new Mongo)->insert_record('wenhsun', 'single', $single->attributes);
+
+        return $single;
     }
 	// 圖片上架時儲存的圖片資訊 - 是最初始的值
     public function createSingleSize( $input ){
@@ -169,23 +169,18 @@ class PhotographService{
 
     public function updateSingle ( $single_id, $input )
     {
-
         $operationlogService = new OperationlogService();
     	$single = Single::model()->findByPk($single_id);
         if (!$single) {
-            $motion = "更新圖資";
-            $log = "更新 single_id = " . $single_id . " 圖資";
-            $operationlogService->create_operationlog( $motion, $log, 0 );
-            return array('status'=>false,'data'=>$single);
+            throw new UnexpectedValueException("single({$single_id}) not found.");
         }
 
-        //$mongo = new Mongo();
         $keys = array_keys($single->attributes);
         $update = [];
         $motion = "更新圖資";
-        $log = "更新 single_id = " . $single_id . " 圖資";
+        $log    = "single_id = {$single}";
     	foreach ($input as $key => $value) {
-            if (in_array($key, $keys)) {
+            if (in_array($key, $keys) && $single->$key != $value) {
                 $log .= "<br/> - {$key}: {$single->$key} => {$value}";
                 $single->$key = $value;
                 $update[$key] = $value;
@@ -201,7 +196,7 @@ class PhotographService{
         (new Mongo)->update_record('wenhsun', 'single', ['single_id' => $single->single_id], ['$set' => $update]);
 
         $operationlogService->create_operationlog( $motion, $log );
-        return array('status'=>true,'data'=>$single);
+        return $single;
     }
 
     public function updateAllSingle ( $single_id, $input ){
@@ -230,19 +225,21 @@ class PhotographService{
         $log = "更新 single_id = " . $single_id . " 圖片價格";
         $operationlogService->create_operationlog( $motion, $log );
     }
-    public function storeUpdataSingle( $single_id, $photograph_data ){
-        $mongo = new Mongo();
-        $single = Single::model()->findByPk($single_id);
-        $single_data = array();
-        $single_data['dpi'] = $photograph_data['resolution'];
-        $single_data['color'] = $photograph_data['colorspace'];
-        $single_data['direction'] = $photograph_data['direction'];
-        $update_single = $this->updateSingle( $single->single_id, $single_data);
-        //var_dump($update_single);exit();
-        if( $update_single['status'] ){
-            return array( 'status' => true, 'data' => $update_single['data'] );
-        }else{
-            return array( 'status' => false, 'data' => $update_single['data'] );
+    public function storeUpdataSingle( $single_id, $photograph_data )
+    {
+        try {
+            $mongo = new Mongo();
+            $single = Single::model()->findByPk($single_id);
+            $single_data = array();
+            $single_data['dpi'] = $photograph_data['resolution'];
+            $single_data['color'] = $photograph_data['colorspace'];
+            $single_data['direction'] = $photograph_data['direction'];
+            $update_single = $this->updateSingle($single->single_id, $single_data);
+            $result = ['status' => true, 'data' => $update_single->attributes];
+        } catch (Throwable $e) {
+            $result = array('status' => false, 'data' => $e->getMessage());
+        } finally {
+            return $result;
         }
     }
 

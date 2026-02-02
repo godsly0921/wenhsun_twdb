@@ -351,16 +351,30 @@
             if ($('#publish').is(':checked')) {
                 publish = 1;
             }
-            var single_data = $("#single_data").serialize();
+            
+            // 使用 FormData 來處理文件上傳
+            var formData = new FormData();
+            
+            // 將表單數據加入 FormData
+            var single_data = $("#single_data").serializeArray();
+            $.each(single_data, function(i, field){
+                formData.append(field.name, field.value);
+            });
+            formData.append('copyright', copyright);
+            formData.append('publish', publish);
+            formData.append('single_id', '<?=$_GET['id']?>');
+            
+            // 將圖片檔案加入 FormData（如果有選擇新圖片）
+            var imageFile = $('#image')[0].files[0];
+            if (imageFile) {
+                formData.append('image', imageFile);
+            }
             $.ajax({
                 type:"POST",
                 url: '<?php echo Yii::app()->createUrl('photograph/UpdateSingle'); ?>',
-                data: {
-                    single_data:single_data,
-                    copyright:copyright,
-                    publish:publish,
-                    single_id:'<?=$_GET['id']?>'
-                },
+                data: formData,
+                processData: false,
+                contentType: false,
                 success:function(data){
                     result = JSON.parse(data)
                     if(result.status == true){

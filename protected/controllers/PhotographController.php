@@ -23,7 +23,7 @@ class PhotographController extends Controller{
     {
         $start = microtime(true);
         try {
-            if (!isset($_FILES['file']) || $_FILES['file']['size'] === 0) {
+            if (empty($_FILES['file']) || $_FILES['file']['size'] === 0) {
                 throw new UnexpectedValueException('empty file.');
             } elseif (!preg_match('/\.(jpg|jpeg|gif|png|bmp|tif)$/i', $_FILES['file']['name'])) {
                 throw new RuntimeException('上傳檔案格式必須是jpg/jpeg/gif/png/bmp/tif。');
@@ -125,18 +125,25 @@ class PhotographController extends Controller{
 
         echo json_encode($response);
     }
-    public function ActionUpdateSingle(){
-        $photographService = new PhotographService();      
-        $single_data = array();
-        parse_str($_POST['single_data'], $single_data);
-        $single_data['copyright'] = $_POST["copyright"];
-        $single_data['publish'] = $_POST["publish"];
-        $single_data['category_id'] = implode(',', $single_data['category_id']);
-        $single_id = $_POST['single_id'];
-        $single_data['filming_date'] = $single_data['filming_date']==''?NULL:$single_data['filming_date'];
-        //var_dump($single_data);exit();
-        $result = $photographService->updateSingle( $single_id, $single_data );
-        echo json_encode($result);exit();
+    public function ActionUpdateSingle()
+    {
+        try {
+            $id = $_POST['single_id'];
+            if (isset($_FILES['image']) && !empty($_FILES['image']['tmp_name'])) {
+                $this->uploadFile($_FILES['image'], $id);
+            }
+
+            $input = $_POST;
+            $input['category_id'] = implode(',', $input['category_id']);
+            if (empty($input['filming_date'])) $input['filming_date'] = null;
+            $single = (new PhotographService)->updateSingle($id, $input);
+            $result = ['status' => true, 'data' => $single->attributes];
+        } catch (Throwable $e) {
+            $result = ['status' => false, 'data' => $e->getMessage()];
+        } finally {
+            echo json_encode($result);
+            exit;
+        }
     }
 
     public function ActionUpdateSingleSize(){
@@ -449,25 +456,22 @@ class PhotographController extends Controller{
     private function uploadFile(array $file, $id = null)
     {
         $photographService = new PhotographService();
-        $start = microtime(true);
         $DIR   = rtrim(PHOTOGRAPH_STORAGE_DIR, '/');
         $transaction = Yii::app()->db->beginTransaction();
         try {
             // 新增資料庫紀錄
             preg_match('/^(?<name>.*\.(?<ext>[^.]+))$/', $file['name'], $matches);
-            $single = $photographService->updateOrCreateSingle([
-                'photo_name' => $matches['name'],
-                'ext' => $matches['ext']
-            ], $id);
+            $attributes = ['photo_name' => $matches['name'], 'ext' => $matches['ext']];
+            $single = $id ? $photographService->updateSingle($id, $attributes) : $photographService->createSingle($attributes);
 
             // 搬移圖片到指定位置
-            $targetPath = "{$DIR}/source/{$single->single_id}.{$single->ext}";
-            if (!move_uploaded_file($file['tmp_name'], $targetPath)) {
-                throw new RuntimeException("{$targetPath} save failed.");
+            $targetFile = "{$DIR}/source/{$single->single_id}.{$single->ext}";
+            if (!move_uploaded_file($file['tmp_name'], $targetFile)) {
+                throw new RuntimeException("{$targetFile} save failed.");
             }
 
             //
-            if($single->ext !='jpg') {
+            if(!in_array($single->ext, ['jpg', 'jpeg'])) {
                 Imagemagick::SourcePhotographToJpgConvert( $single->single_id, $single->ext );//若不是 jpg 的圖檔，需先轉成 jpg
                 Imagemagick::build_o_p("{$DIR}/source_to_jpg/", $single->single_id ); //背景執行切縮圖
                 $targetFile =  "{$DIR}/source_to_jpg/{$single->single_id}.{$single->ext}";
@@ -479,7 +483,6 @@ class PhotographController extends Controller{
 
             //
             $transaction->commit();
-
             return $single;
         } catch (Throwable $e) {
             $transaction->rollback();
