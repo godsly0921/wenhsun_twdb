@@ -251,7 +251,12 @@ class PhotographService{
     }
 
     //建立切圖佇列資料
-    public function createImageQueue( $single_id, $width, $height, $ext ){
+    public function createImageQueue( $single_id, $width, $height, $ext )
+    {
+        // 刪除舊的資料(如果有)
+        Singlesize::model()->deleteAll('single_id = :single_id', array(':single_id' => $single_id));
+        Imagequeue::model()->deleteAll('single_id = :single_id', array(':single_id' => $single_id));
+
         $max_size_type = Imagemagick::getPhotographMaxSize( $width, $height );
         $status = true;
         if($ext != 'jpg'){

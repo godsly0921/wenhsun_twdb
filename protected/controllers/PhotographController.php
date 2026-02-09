@@ -474,7 +474,7 @@ class PhotographController extends Controller{
             if(!in_array($single->ext, ['jpg'])) {
                 Imagemagick::SourcePhotographToJpgConvert( $single->single_id, $single->ext );//若不是 jpg 的圖檔，需先轉成 jpg
                 Imagemagick::build_o_p("{$DIR}/source_to_jpg/", $single->single_id ); //背景執行切縮圖
-                $targetFile =  "{$DIR}/source_to_jpg/{$single->single_id}.{$single->ext}";
+                $targetFile =  "{$DIR}/source_to_jpg/{$single->single_id}.jpg";
             }else{
                 Imagemagick::build_o_p("{$DIR}/source/", $single->single_id );//背景執行切縮圖
             }
