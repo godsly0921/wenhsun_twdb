@@ -145,6 +145,15 @@
                 0 => '*',
             ),
         ),
+        'linfo/linfo' => array(
+            'pretty_version' => 'v4.0.9',
+            'version' => '4.0.9.0',
+            'reference' => '3228a8d35d7f4214aded8f68dffa907de79c0cab',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../linfo/linfo',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
         'markbaker/complex' => array(
             'pretty_version' => '1.4.7',
             'version' => '1.4.7.0',

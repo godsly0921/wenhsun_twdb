@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2f6990f99e1494380fe1e9ab106491c4",
+    "content-hash": "1d4bc1f47caa40fa7e6e6e99ec3c4150",
     "packages": [
         {
             "name": "facebook/graph-sdk",
@@ -597,6 +597,63 @@
                 "time series"
             ],
             "time": "2020-12-26T17:45:17+00:00"
+        },
+        {
+            "name": "linfo/linfo",
+            "version": "v4.0.9",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/jrgp/linfo.git",
+                "reference": "3228a8d35d7f4214aded8f68dffa907de79c0cab"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/jrgp/linfo/zipball/3228a8d35d7f4214aded8f68dffa907de79c0cab",
+                "reference": "3228a8d35d7f4214aded8f68dffa907de79c0cab",
+                "shasum": ""
+            },
+            "require": {
+                "ext-pcre": "*",
+                "php": ">=5.4.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "9.4.3"
+            },
+            "suggest": {
+                "ext-com": "On Windows"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Linfo\\": "src/Linfo"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Joe Gillotti",
+                    "email": "joe@joegillotti.com",
+                    "homepage": "http://joegillotti.com",
+                    "role": "Author"
+                }
+            ],
+            "description": "App and library for easily parsing and displaying system information of the host, like network/torrents/cpu/memory/usb/pci/sound cards/filesystems/raid array/ipmi/etc.",
+            "homepage": "http://github.com/jrgp/linfo",
+            "keywords": [
+                "CPU",
+                "health",
+                "linux",
+                "specs",
+                "system"
+            ],
+            "support": {
+                "issues": "https://github.com/jrgp/linfo/issues",
+                "source": "https://github.com/jrgp/linfo/tree/v4.0.9"
+            },
+            "time": "2025-11-11T04:37:52+00:00"
         },
         {
             "name": "markbaker/complex",
@@ -3481,7 +3538,9 @@
     },
     "prefer-stable": false,
     "prefer-lowest": false,
-    "platform": {},
+    "platform": {
+        "php": "^7.3"
+    },
     "platform-dev": {},
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.9.0"
 }

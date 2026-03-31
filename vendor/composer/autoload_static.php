@@ -80,32 +80,32 @@ class ComposerStaticInite45597f2f6a7d3af6047475575265b4d
     );
 
     public static $prefixLengthsPsr4 = array (
-        't' => 
+        't' =>
         array (
             'twdb\\' => 5,
         ),
-        'p' => 
+        'p' =>
         array (
             'phpseclib3\\' => 11,
             'phpDocumentor\\Reflection\\' => 25,
         ),
-        'W' => 
+        'W' =>
         array (
             'Wenhsun\\' => 8,
             'Webmozart\\Assert\\' => 17,
         ),
-        'S' => 
+        'S' =>
         array (
             'Symfony\\Polyfill\\Php80\\' => 23,
             'Symfony\\Polyfill\\Mbstring\\' => 26,
             'Symfony\\Polyfill\\Ctype\\' => 23,
             'Symfony\\Component\\VarDumper\\' => 28,
         ),
-        'R' => 
+        'R' =>
         array (
             'ReCaptcha\\' => 10,
         ),
-        'P' => 
+        'P' =>
         array (
             'Psr\\SimpleCache\\' => 16,
             'Psr\\Log\\' => 8,
@@ -116,16 +116,20 @@ class ComposerStaticInite45597f2f6a7d3af6047475575265b4d
             'PhpOffice\\PhpSpreadsheet\\' => 25,
             'ParagonIE\\ConstantTime\\' => 23,
         ),
-        'M' => 
+        'M' =>
         array (
             'Monolog\\' => 8,
             'Matrix\\' => 7,
         ),
-        'I' => 
+        'L' =>
+        array (
+            'Linfo\\' => 6,
+        ),
+        'I' =>
         array (
             'InfluxDB\\' => 9,
         ),
-        'G' => 
+        'G' =>
         array (
             'GuzzleHttp\\Psr7\\' => 16,
             'GuzzleHttp\\Promise\\' => 19,
@@ -133,174 +137,178 @@ class ComposerStaticInite45597f2f6a7d3af6047475575265b4d
             'Google\\Auth\\' => 12,
             'Google\\' => 7,
         ),
-        'F' => 
+        'F' =>
         array (
             'Firebase\\JWT\\' => 13,
             'Facebook\\' => 9,
         ),
-        'D' => 
+        'D' =>
         array (
             'Dotenv\\' => 7,
             'Doctrine\\Instantiator\\' => 22,
             'DeepCopy\\' => 9,
         ),
-        'C' => 
+        'C' =>
         array (
             'Complex\\' => 8,
         ),
     );
 
     public static $prefixDirsPsr4 = array (
-        'twdb\\' => 
+        'twdb\\' =>
         array (
             0 => __DIR__ . '/../..' . '/protected',
         ),
-        'phpseclib3\\' => 
+        'phpseclib3\\' =>
         array (
             0 => __DIR__ . '/..' . '/phpseclib/phpseclib/phpseclib',
         ),
-        'phpDocumentor\\Reflection\\' => 
+        'phpDocumentor\\Reflection\\' =>
         array (
-            0 => __DIR__ . '/..' . '/phpdocumentor/reflection-common/src',
-            1 => __DIR__ . '/..' . '/phpdocumentor/reflection-docblock/src',
-            2 => __DIR__ . '/..' . '/phpdocumentor/type-resolver/src',
+            0 => __DIR__ . '/..' . '/phpdocumentor/reflection-docblock/src',
+            1 => __DIR__ . '/..' . '/phpdocumentor/type-resolver/src',
+            2 => __DIR__ . '/..' . '/phpdocumentor/reflection-common/src',
         ),
-        'Wenhsun\\' => 
+        'Wenhsun\\' =>
         array (
             0 => __DIR__ . '/../..' . '/protected/app',
         ),
-        'Webmozart\\Assert\\' => 
+        'Webmozart\\Assert\\' =>
         array (
             0 => __DIR__ . '/..' . '/webmozart/assert/src',
         ),
-        'Symfony\\Polyfill\\Php80\\' => 
+        'Symfony\\Polyfill\\Php80\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-php80',
         ),
-        'Symfony\\Polyfill\\Mbstring\\' => 
+        'Symfony\\Polyfill\\Mbstring\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-mbstring',
         ),
-        'Symfony\\Polyfill\\Ctype\\' => 
+        'Symfony\\Polyfill\\Ctype\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-ctype',
         ),
-        'Symfony\\Component\\VarDumper\\' => 
+        'Symfony\\Component\\VarDumper\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/var-dumper',
         ),
-        'ReCaptcha\\' => 
+        'ReCaptcha\\' =>
         array (
             0 => __DIR__ . '/..' . '/google/recaptcha/src/ReCaptcha',
         ),
-        'Psr\\SimpleCache\\' => 
+        'Psr\\SimpleCache\\' =>
         array (
             0 => __DIR__ . '/..' . '/psr/simple-cache/src',
         ),
-        'Psr\\Log\\' => 
+        'Psr\\Log\\' =>
         array (
             0 => __DIR__ . '/..' . '/psr/log/Psr/Log',
         ),
-        'Psr\\Http\\Message\\' => 
+        'Psr\\Http\\Message\\' =>
         array (
             0 => __DIR__ . '/..' . '/psr/http-message/src',
         ),
-        'Psr\\Http\\Client\\' => 
+        'Psr\\Http\\Client\\' =>
         array (
             0 => __DIR__ . '/..' . '/psr/http-client/src',
         ),
-        'Psr\\Cache\\' => 
+        'Psr\\Cache\\' =>
         array (
             0 => __DIR__ . '/..' . '/psr/cache/src',
         ),
-        'PhpOption\\' => 
+        'PhpOption\\' =>
         array (
             0 => __DIR__ . '/..' . '/phpoption/phpoption/src/PhpOption',
         ),
-        'PhpOffice\\PhpSpreadsheet\\' => 
+        'PhpOffice\\PhpSpreadsheet\\' =>
         array (
             0 => __DIR__ . '/..' . '/phpoffice/phpspreadsheet/src/PhpSpreadsheet',
         ),
-        'ParagonIE\\ConstantTime\\' => 
+        'ParagonIE\\ConstantTime\\' =>
         array (
             0 => __DIR__ . '/..' . '/paragonie/constant_time_encoding/src',
         ),
-        'Monolog\\' => 
+        'Monolog\\' =>
         array (
             0 => __DIR__ . '/..' . '/monolog/monolog/src/Monolog',
         ),
-        'Matrix\\' => 
+        'Matrix\\' =>
         array (
             0 => __DIR__ . '/..' . '/markbaker/matrix/classes/src',
         ),
-        'InfluxDB\\' => 
+        'Linfo\\' =>
+        array (
+            0 => __DIR__ . '/..' . '/linfo/linfo/src/Linfo',
+        ),
+        'InfluxDB\\' =>
         array (
             0 => __DIR__ . '/..' . '/influxdb/influxdb-php/src/InfluxDB',
         ),
-        'GuzzleHttp\\Psr7\\' => 
+        'GuzzleHttp\\Psr7\\' =>
         array (
             0 => __DIR__ . '/..' . '/guzzlehttp/psr7/src',
         ),
-        'GuzzleHttp\\Promise\\' => 
+        'GuzzleHttp\\Promise\\' =>
         array (
             0 => __DIR__ . '/..' . '/guzzlehttp/promises/src',
         ),
-        'GuzzleHttp\\' => 
+        'GuzzleHttp\\' =>
         array (
             0 => __DIR__ . '/..' . '/guzzlehttp/guzzle/src',
         ),
-        'Google\\Auth\\' => 
+        'Google\\Auth\\' =>
         array (
             0 => __DIR__ . '/..' . '/google/auth/src',
         ),
-        'Google\\' => 
+        'Google\\' =>
         array (
             0 => __DIR__ . '/..' . '/google/apiclient/src',
         ),
-        'Firebase\\JWT\\' => 
+        'Firebase\\JWT\\' =>
         array (
             0 => __DIR__ . '/..' . '/firebase/php-jwt/src',
         ),
-        'Facebook\\' => 
+        'Facebook\\' =>
         array (
             0 => __DIR__ . '/..' . '/facebook/graph-sdk/src/Facebook',
         ),
-        'Dotenv\\' => 
+        'Dotenv\\' =>
         array (
             0 => __DIR__ . '/..' . '/vlucas/phpdotenv/src',
         ),
-        'Doctrine\\Instantiator\\' => 
+        'Doctrine\\Instantiator\\' =>
         array (
             0 => __DIR__ . '/..' . '/doctrine/instantiator/src/Doctrine/Instantiator',
         ),
-        'DeepCopy\\' => 
+        'DeepCopy\\' =>
         array (
             0 => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy',
         ),
-        'Complex\\' => 
+        'Complex\\' =>
         array (
             0 => __DIR__ . '/..' . '/markbaker/complex/classes/src',
         ),
     );
 
     public static $prefixesPsr0 = array (
-        'P' => 
+        'P' =>
         array (
-            'Prophecy\\' => 
+            'Prophecy\\' =>
             array (
                 0 => __DIR__ . '/..' . '/phpspec/prophecy/src',
             ),
         ),
-        'M' => 
+        'M' =>
         array (
-            'Mockery' => 
+            'Mockery' =>
             array (
                 0 => __DIR__ . '/..' . '/mockery/mockery/library',
             ),
         ),
-        'G' => 
+        'G' =>
         array (
-            'Google_Service_' => 
+            'Google_Service_' =>
             array (
                 0 => __DIR__ . '/..' . '/google/apiclient-services/src',
             ),
